@@ -21,7 +21,7 @@
 #include <LiquidCrystal.h>
 
 // Internal
-#include "../includes/alarm.h"
+#include "../includes/buzzer.h"
 #include "../includes/common.h"
 #include "../includes/debug.h"
 #include "../includes/keyboard.h"
@@ -45,8 +45,9 @@ HardwareTimer* hardwareTimer3;
  */
 void waitForInMs(uint16_t ms) {
     uint16_t start = millis();
-    while ((millis() - start) < ms)
+    while ((millis() - start) < ms) {
         continue;
+    }
 }
 
 void setup() {
@@ -54,8 +55,8 @@ void setup() {
     if (IWatchdog.isReset(true)) {
         /* Code in case of Watchdog detected */
         /* TODO */
-        Alarm_Init();
-        Alarm_Red_Start();
+        Buzzer_Init();
+        Buzzer_Long_Start();
         while (1) {
         }
     }
@@ -66,7 +67,7 @@ void setup() {
     startScreen();
 
     pinMode(PIN_PRESSURE_SENSOR, INPUT);
-    pinMode(PIN_ALARM, OUTPUT);
+    pinMode(PIN_BUZZER, OUTPUT);
 
     // Timer for servoBlower
     hardwareTimer1 = new HardwareTimer(TIM1);
@@ -92,7 +93,7 @@ void setup() {
     // Output compare activation on pin PIN_ESC_BLOWER
     hardwareTimer3->setMode(TIM_CHANNEL_ESC_BLOWER, TIMER_OUTPUT_COMPARE_PWM1, PIN_ESC_BLOWER);
     // Set PPM width to 1ms
-    hardwareTimer3->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, Angle2MicroSeconds(0),
+    hardwareTimer3->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, BlowerSpeed2MicroSeconds(0),
                                       MICROSEC_COMPARE_FORMAT);
     hardwareTimer3->resume();
 
@@ -108,17 +109,17 @@ void setup() {
 
     initKeyboard();
 
-    Alarm_Init();
+    Buzzer_Init();
 
     // escBlower needs 5s at speed 0 to be properly initalized
 
     // RCM-SW-17 (Christmas tree at startup)
-    Alarm_Boot_Start();
+    Buzzer_Boot_Start();
     digitalWrite(PIN_LED_GREEN, HIGH);
     digitalWrite(PIN_LED_RED, HIGH);
     digitalWrite(PIN_LED_YELLOW, HIGH);
     waitForInMs(1000);
-    Alarm_Stop();
+    Buzzer_Stop();
     digitalWrite(PIN_LED_GREEN, LOW);
     digitalWrite(PIN_LED_RED, LOW);
     digitalWrite(PIN_LED_YELLOW, LOW);
@@ -126,7 +127,7 @@ void setup() {
     waitForInMs(4000);
 
     // escBlower start
-    hardwareTimer3->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, Angle2MicroSeconds(170),
+    hardwareTimer3->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, BlowerSpeed2MicroSeconds(170),
                                       MICROSEC_COMPARE_FORMAT);
     DBG_DO(Serial.println("Blower is running.");)
 
@@ -137,10 +138,6 @@ void setup() {
 
 // Time of the previous loop iteration
 int32_t lastMicro = 0;
-
-// Number of cycles before LCD screen reset
-// (because this kind of screen is not reliable, we need to reset it every 5 min or so)
-int8_t cyclesBeforeScreenReset = LCD_RESET_PERIOD * CONST_MIN_CYCLE;
 
 void loop() {
     /********************************************/
@@ -160,7 +157,7 @@ void loop() {
 
         uint32_t currentDate = millis();
 
-        if (currentDate - lastpControllerComputeDate >= PCONTROLLER_COMPUTE_PERIOD) {
+        if ((currentDate - lastpControllerComputeDate) >= PCONTROLLER_COMPUTE_PERIOD) {
             lastpControllerComputeDate = currentDate;
 
             int32_t currentMicro = micros();
@@ -175,7 +172,7 @@ void loop() {
             keyboardLoop();
 
             // Display relevant information during the cycle
-            if (centiSec % LCD_UPDATE_PERIOD == 0) {
+            if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
                 displaySubPhase(pController.subPhase());
 
                 displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
@@ -195,14 +192,6 @@ void loop() {
     /********************************************/
     // END OF THE RESPIRATORY CYCLE
     /********************************************/
-
-    // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or so
-    cyclesBeforeScreenReset--;
-    if (cyclesBeforeScreenReset <= 0) {
-        DBG_DO(Serial.println("resetting LCD screen");)
-        resetScreen();
-        cyclesBeforeScreenReset = LCD_RESET_PERIOD * CONST_MIN_CYCLE;
-    }
 }
 
 #endif
