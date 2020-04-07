@@ -4,33 +4,75 @@
 /******************************************************************************
  * @author Makers For Life
  * @file alarm.h
- * @brief Alarm related functions
+ * @brief Alarm structure
  *****************************************************************************/
 
 #pragma once
 
-/// Watchdog timeout in microseconds
-#define WATCHDOG_TIMEOUT 1000000
+// INCLUDES =====================================================================
 
-/// Initialization of HardwareTimer for Alarm purpose
-void Alarm_Init();
+// Externals
 
-/**
- * Generic function to activate an alarm
- *
- * @param Alarm Alarm pattern array
- * @param Size of the alarm pattern array
- */
-void Alarm_Start(const uint32_t* Alarm, uint32_t Size);
+#include <stdint.h>
 
-/// Activate an yellow alarm
-void Alarm_Yellow_Start(void);
+// Internals
 
-/// Activate an red alarm
-void Alarm_Red_Start(void);
+// ENUMS =====================================================================
 
-/// Activate boot bip
-void Alarm_Boot_Start(void);
+enum AlarmPriority { LOW, MEDIUM, HIGH };
 
-/// Stop Alarm
-void Alarm_Stop(void);
+// CLASS =====================================================================
+
+class Alarm {
+ public:
+    /**
+     *
+     * @param p_priority Alarm priority
+     * @param p_code Alarm code
+     * @param p_detectionThreshold Alarm detection threshold
+     *
+     */
+    Alarm(AlarmPriority p_priority, uint8_t p_code, uint8_t p_detectionThreshold);
+
+    /**
+     * Get the alarm priority
+     */
+    AlarmPriority priotity();
+
+    /**
+     * Get the alarm code
+     */
+    uint8_t code();
+
+    /**
+     * True if the number of detection is equals or above the detection threshold, false otherwise
+     */
+    bool isTriggered();
+
+    /**
+     * If the alarm is detected, it increments the number of detection until the detection
+     * threshold.
+     */
+    void detected();
+
+    /**
+     * Reset alarm.
+     * Reset to zero the number of detection.
+     */
+    void notDetected();
+
+ private:
+    /// Alarm priority
+    AlarmPriority m_priority;
+
+    /// Alarm code
+    uint8_t m_code;
+
+    /// Alarm detection threshold
+    uint8_t m_detectionThreshold;
+
+    /// Number of detection
+    uint8_t m_detectionNumber;
+};
+
+// INITIALISATION =============================================================
