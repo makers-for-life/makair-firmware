@@ -21,7 +21,7 @@
  * @param sensorValue 
  * @return the pressure in mmH2O 
  */
-int convertSensor2Pressure(uint16_t sensorValue);
+int16_t convertSensor2Pressure(uint16_t sensorValue);
 
 /**
  * Get the measured or simulated pressure for the feedback control (in mmH2O)
@@ -30,4 +30,4 @@ int convertSensor2Pressure(uint16_t sensorValue);
  * used when in simulation mode)
  * @return         The current pressure in mmH20
  */
-int readPressureSensor(uint16_t centiSec);
+int16_t readPressureSensor(uint16_t centiSec);
