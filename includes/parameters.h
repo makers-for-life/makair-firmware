@@ -59,13 +59,12 @@ static const int32_t PID_BLOWER_KD = 4;
 static const int32_t PID_BLOWER_INTEGRAL_MAX = 1000;
 static const int32_t PID_BLOWER_INTEGRAL_MIN = -1000;
 
-static const int32_t PID_PATIENT_KP = 4;
-static const int32_t PID_PATIENT_KI = 32;
-static const int32_t PID_PATIENT_KD = 8;
+static const int32_t PID_PATIENT_KP = 1;
+static const int32_t PID_PATIENT_KI = 2;
+static const int32_t PID_PATIENT_KD = 4;
 
-static const int32_t PID_PATIENT_INTEGRAL_MAX = 500;
-static const int32_t PID_PATIENT_INTEGRAL_MIN = -500;
-
+static const int32_t PID_PATIENT_INTEGRAL_MAX = 1000;
+static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
 ///@}
 
 /**
@@ -109,6 +108,9 @@ static const int32_t PID_PATIENT_INTEGRAL_MIN = -500;
 /// Period between screen updates in hundredth of second
 #define LCD_UPDATE_PERIOD 20u
 
+/// Period between screen resets in minutes
+#define LCD_RESET_PERIOD 5
+
 ///@}
 
 /**
@@ -145,7 +147,14 @@ static const int32_t PID_PATIENT_INTEGRAL_MIN = -500;
 #define TIM_CHANNEL_ESC_BLOWER 1
 #define PIN_BATTERY A2
 
-/// Convert a speed to a value in microseconds for the blower controller
-#define BlowerSpeed2MicroSeconds(value) map(value, 0, 180, 1000, 2000)
+///@}
+
+/**
+ * @name Alarm thresholds
+ */
+///@{
+
+#define ALARM_THRESHOLD_PLATEAU_UNDER_2_CMH2O 20    // RCM-SW-19
+#define ALARM_THRESHOLD_PLATEAU_ABOVE_80_CMH2O 800  // RCM-SW-18
 
 ///@}
