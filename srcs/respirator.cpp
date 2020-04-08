@@ -21,8 +21,8 @@
 #include <LiquidCrystal.h>
 
 // Internal
-#include "../includes/battery.h"
 #include "../includes/buzzer.h"
+#include "../includes/common.h"
 #include "../includes/debug.h"
 #include "../includes/keyboard.h"
 #include "../includes/parameters.h"
@@ -67,7 +67,6 @@ void setup() {
     startScreen();
 
     pinMode(PIN_PRESSURE_SENSOR, INPUT);
-    pinMode(PIN_BATTERY, INPUT);
     pinMode(PIN_BUZZER, OUTPUT);
 
     // Timer for servoBlower
@@ -98,9 +97,11 @@ void setup() {
                                       MICROSEC_COMPARE_FORMAT);
     hardwareTimer3->resume();
 
+    AlarmController alarmController = AlarmController();
+
     pController = PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
                                      DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
-                                     servoBlower, servoPatient);
+                                     servoBlower, servoPatient, alarmController);
     pController.setup();
 
     // Prepare LEDs
@@ -109,7 +110,6 @@ void setup() {
     pinMode(PIN_LED_GREEN, OUTPUT);
 
     initKeyboard();
-    initBattery();
 
     Buzzer_Init();
 
@@ -177,20 +177,16 @@ void loop() {
             // Check if some buttons have been pushed
             keyboardLoop();
 
-            // Check if battery state has changed
-            batteryLoop();
-
             // Display relevant information during the cycle
             if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
-                displayCurrentPressure(pController.pressure(),
-                                       pController.cyclesPerMinuteCommand());
-
-                displayCurrentSettings(pController.maxPeakPressureCommand(),
-                                       pController.maxPlateauPressureCommand(),
-                                       pController.minPeepCommand());
+                displaySubPhase(pController.subPhase());
 
                 displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                          pController.peep());
+                                          pController.peep(), pController.pressure());
+
+                displaySettings(pController.maxPeakPressureCommand(),
+                                pController.maxPlateauPressureCommand(),
+                                pController.minPeepCommand(), pController.cyclesPerMinuteCommand());
             }
 
             // next tick

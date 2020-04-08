@@ -18,6 +18,7 @@
 #include <algorithm>
 
 // Internal libraries
+#include "../includes/alarm_controller.h"
 #include "../includes/buzzer.h"
 #include "../includes/config.h"
 #include "../includes/debug.h"
@@ -56,7 +57,8 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
                                        int16_t p_maxPlateauPressure,
                                        int16_t p_maxPeakPressure,
                                        PressureValve p_blower,
-                                       PressureValve p_patient)
+                                       PressureValve p_patient,
+                                       AlarmController p_alarmController)
     : m_cyclesPerMinuteCommand(p_cyclesPerMinute),
 
       m_vigilance(false),
@@ -75,7 +77,8 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_blower(p_blower),
       m_patient(p_patient),
       m_triggerHoldExpiDetectionTick(0),
-      m_triggerHoldExpiDetectionTickDeletion(0) {
+      m_triggerHoldExpiDetectionTickDeletion(0),
+      m_alarmController(p_alarmController) {
     computeCentiSecParameters();
 }
 
@@ -160,6 +163,8 @@ void PressureController::compute(uint16_t p_centiSec) {
                        m_blower.position, m_patient.command, m_patient.position)
 
     executeCommands();
+
+    m_alarmController.manageAlarm();
 }
 
 void PressureController::onCycleDecrease() {
@@ -404,7 +409,7 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     blowerLastError = error;
 
     int32_t blowerCommand = (PID_BLOWER_KP * error) + blowerIntegral
-                            + ((PID_BLOWER_KD * derivative) / 1000);  // Command computation
+                            + ((PID_BLOWER_KD * derivative) / 1000);  // calcul de la commande
 
     int32_t minAperture = m_blower.minAperture();
     int32_t maxAperture = m_blower.maxAperture();
@@ -420,9 +425,7 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 int32_t
 PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
     // Compute error
-    // Increase target pressure by 20mm H2O for safety, to ensure from going below the target
-    // pressure
-    int32_t error = targetPressure + 20 - currentPressure;
+    int32_t error = targetPressure - currentPressure;
 
     // Compute integral
     patientIntegral = patientIntegral + ((PID_PATIENT_KI * error * dt) / 1000000);
@@ -435,14 +438,16 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     patientLastError = error;
 
     int32_t patientCommand = (PID_PATIENT_KP * error) + patientIntegral
-                             + ((PID_PATIENT_KD * derivative) / 1000);  // Command computation
+                             + ((PID_PATIENT_KD * derivative) / 1000);  // calcul de la commande
 
     int32_t minAperture = m_blower.minAperture();
     int32_t maxAperture = m_blower.maxAperture();
 
     uint32_t patientAperture =
         max(minAperture,
-            min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
+            min(maxAperture, minAperture
+                                 + (patientCommand + targetPressure) * (maxAperture - minAperture)
+                                       / (2 * targetPressure)));
 
     return patientAperture;
 }
