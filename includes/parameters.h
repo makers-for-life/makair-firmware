@@ -59,12 +59,13 @@ static const int32_t PID_BLOWER_KD = 4;
 static const int32_t PID_BLOWER_INTEGRAL_MAX = 1000;
 static const int32_t PID_BLOWER_INTEGRAL_MIN = -1000;
 
-static const int32_t PID_PATIENT_KP = 1;
-static const int32_t PID_PATIENT_KI = 2;
-static const int32_t PID_PATIENT_KD = 4;
+static const int32_t PID_PATIENT_KP = 4;
+static const int32_t PID_PATIENT_KI = 32;
+static const int32_t PID_PATIENT_KD = 8;
 
-static const int32_t PID_PATIENT_INTEGRAL_MAX = 1000;
-static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
+static const int32_t PID_PATIENT_INTEGRAL_MAX = 500;
+static const int32_t PID_PATIENT_INTEGRAL_MIN = -500;
+
 ///@}
 
 /**
@@ -146,6 +147,8 @@ static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
 #define PIN_ESC_BLOWER D5  // PB4 / TIM3_CH1
 #define TIM_CHANNEL_ESC_BLOWER 1
 #define PIN_BATTERY A2
+
+
 
 ///@}
 

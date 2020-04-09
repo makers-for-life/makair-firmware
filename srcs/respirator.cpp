@@ -21,8 +21,9 @@
 #include <LiquidCrystal.h>
 
 // Internal
+#include "../includes/battery.h"
+#include "../includes/blower.h"
 #include "../includes/buzzer.h"
-#include "../includes/common.h"
 #include "../includes/debug.h"
 #include "../includes/keyboard.h"
 #include "../includes/parameters.h"
@@ -37,6 +38,9 @@ PressureValve servoBlower;
 PressureValve servoPatient;
 HardwareTimer* hardwareTimer1;
 HardwareTimer* hardwareTimer3;
+Blower* blower_pointer;
+Blower blower;
+PressureController pController;
 
 /**
  * Block execution for a given duration
@@ -69,6 +73,7 @@ void setup() {
     startScreen();
 
     pinMode(PIN_PRESSURE_SENSOR, INPUT);
+    pinMode(PIN_BATTERY, INPUT);
     pinMode(PIN_BUZZER, OUTPUT);
 
     // Timer for servoBlower
@@ -91,19 +96,15 @@ void setup() {
                                  VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     servoPatient.setup();
 
-    // Manual escBlower setup
-    // Output compare activation on pin PIN_ESC_BLOWER
-    hardwareTimer3->setMode(TIM_CHANNEL_ESC_BLOWER, TIMER_OUTPUT_COMPARE_PWM1, PIN_ESC_BLOWER);
-    // Set PPM width to 1ms
-    hardwareTimer3->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, BlowerSpeed2MicroSeconds(0),
-                                      MICROSEC_COMPARE_FORMAT);
-    hardwareTimer3->resume();
+    blower = Blower(hardwareTimer3, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
+    blower.setup();
+    blower_pointer = &blower;
 
     AlarmController alarmController = AlarmController();
 
     pController = PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
                                      DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
-                                     servoBlower, servoPatient, alarmController);
+                                     servoBlower, servoPatient, alarmController, blower_pointer);
     pController.setup();
 
     // Prepare LEDs
@@ -112,6 +113,7 @@ void setup() {
     pinMode(PIN_LED_GREEN, OUTPUT);
 
     initKeyboard();
+    initBattery();
 
     Buzzer_Init();
 
@@ -130,9 +132,7 @@ void setup() {
     waitForInMs(4000);
 
     // escBlower start
-    hardwareTimer3->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, BlowerSpeed2MicroSeconds(170),
-                                      MICROSEC_COMPARE_FORMAT);
-    DBG_DO(Serial.println("Blower is running.");)
+    blower.runSpeed(150);
 
     // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
     IWatchdog.begin(WATCHDOG_TIMEOUT);
@@ -180,16 +180,20 @@ void loop() {
             // Check if some buttons have been pushed
             keyboardLoop();
 
+            // Check if battery state has changed
+            batteryLoop();
+
             // Display relevant information during the cycle
             if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
-                displaySubPhase(pController.subPhase());
+                displayCurrentPressure(pController.pressure(),
+                                       pController.cyclesPerMinuteCommand());
+
+                displayCurrentSettings(pController.maxPeakPressureCommand(),
+                                       pController.maxPlateauPressureCommand(),
+                                       pController.minPeepCommand());
 
                 displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                          pController.peep(), pController.pressure());
-
-                displaySettings(pController.maxPeakPressureCommand(),
-                                pController.maxPlateauPressureCommand(),
-                                pController.minPeepCommand(), pController.cyclesPerMinuteCommand());
+                                          pController.peep());
             }
 
             // next tick
