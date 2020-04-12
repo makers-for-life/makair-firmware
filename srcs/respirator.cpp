@@ -121,7 +121,6 @@ void setup(void) {
     pController.setup();
 
     // Prepare LEDs
-    pinMode(PIN_LED_START, OUTPUT);
     pinMode(PIN_LED_RED, OUTPUT);
     pinMode(PIN_LED_YELLOW, OUTPUT);
     pinMode(PIN_LED_GREEN, OUTPUT);
@@ -136,12 +135,10 @@ void setup(void) {
 
     // RCM-SW-17 (Christmas tree at startup)
     Buzzer_Boot_Start();
-    digitalWrite(PIN_LED_START, LED_START_ACTIVE);
     digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
     digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
     digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
     waitForInMs(1000);
-    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
     digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
     digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
     digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
@@ -151,6 +148,7 @@ void setup(void) {
     lastpControllerComputeDate = millis();
 
     // Catch potential Watchdog reset
+    // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
     if (IWatchdog.isReset(true)) {
         // TODO holdExhale
         // Display something ?
@@ -178,7 +176,6 @@ void loop(void) {
     /********************************************/
     // INITIALIZE THE RESPIRATORY CYCLE
     /********************************************/
-    activationController.refreshState();
     bool shouldRun = activationController.isRunning();
     pController.initRespiratoryCycle();
 
@@ -198,8 +195,6 @@ void loop(void) {
             lastpControllerComputeDate = currentDate;
 
             if (shouldRun) {
-                digitalWrite(PIN_LED_START, LED_START_ACTIVE);
-
                 int32_t currentMicro = micros();
 
                 pController.updateDt(currentMicro - lastMicro);
@@ -208,7 +203,6 @@ void loop(void) {
                 // Perform the pressure control
                 pController.compute(centiSec);
             } else {
-                digitalWrite(PIN_LED_START, LED_START_INACTIVE);
                 blower.stop();
             }
 
@@ -226,7 +220,7 @@ void loop(void) {
                 displayCurrentSettings(pController.maxPeakPressureCommand(),
                                        pController.maxPlateauPressureCommand(),
                                        pController.minPeepCommand());
-                if (shouldRun) {
+                if (activationController.isRunning()) {
                     displayCurrentInformation(pController.peakPressure(),
                                               pController.plateauPressure(), pController.peep());
                 } else {
