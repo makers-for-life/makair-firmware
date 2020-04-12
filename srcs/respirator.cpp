@@ -151,7 +151,7 @@ void setup(void) {
     lastpControllerComputeDate = millis();
 
     // Catch potential Watchdog reset
-    if (IWatchdog.isReset(true)) {
+    if (IWatchdog.isReset(true) == true) {
         // TODO holdExhale
         // Display something ?
         // Alarm code ?
