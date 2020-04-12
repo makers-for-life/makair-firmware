@@ -1,0 +1,6 @@
+{
+    "script": "misra.py",
+    "args": [
+        "--rule-texts=./cppcheck/MISRA_C_2012_AppendixA.txt"
+    ]
+}
