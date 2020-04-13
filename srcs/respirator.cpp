@@ -19,6 +19,9 @@
 #include "Arduino.h"
 #include <IWatchdog.h>
 #include <LiquidCrystal.h>
+#if HARDWARE_VERSION == 2
+#include <HardwareSerial.h>
+#endif
 
 // Internal
 #include "../includes/activation.h"
@@ -33,6 +36,7 @@
 #include "../includes/pressure_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
+#include "../includes/telemetry.h"
 
 // PROGRAM =====================================================================
 
@@ -46,8 +50,10 @@ Blower blower;
 int16_t pressureOffset;
 int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
-int16_t minOffsetValue = 0;
-int16_t maxOffsetValue = 0;
+
+#if HARDWARE_VERSION == 2
+HardwareSerial Serial6(PIN_SERIAL_RX, PIN_SERIAL_TX);
+#endif
 
 /**
  * Block execution for a given duration
@@ -56,18 +62,10 @@ int16_t maxOffsetValue = 0;
  */
 void waitForInMs(uint16_t ms) {
     uint16_t start = millis();
-    minOffsetValue = readPressureSensor(0, 0);
-    maxOffsetValue = readPressureSensor(0, 0);
-    pressureOffsetSum = 0;
-    pressureOffsetCount = 0;
-
     while ((millis() - start) < ms) {
         // Measure 1 pressure per ms we wait
         if ((millis() - start) > pressureOffsetCount) {
-            int16_t pressureValue = readPressureSensor(0, 0);
-            pressureOffsetSum += pressureValue;
-            minOffsetValue = min(pressureValue, minOffsetValue);
-            maxOffsetValue = max(pressureValue, maxOffsetValue);
+            pressureOffsetSum += readPressureSensor(0, 0);
             pressureOffsetCount++;
         }
         continue;
@@ -79,6 +77,11 @@ uint32_t lastpControllerComputeDate;
 void setup(void) {
     DBG_DO(Serial.begin(115200);)
     DBG_DO(Serial.println("Booting the system...");)
+
+    initTelemetry();
+    sendDataSnapshot();
+    while (true) {
+    }
 
     startScreen();
 
@@ -175,7 +178,6 @@ void setup(void) {
     screen.setCursor(0, 3);
     screen.print("unplugged");
     waitForInMs(3000);
-
     resetScreen();
     pressureOffset = pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
     DBG_DO({
@@ -187,28 +189,6 @@ void setup(void) {
         Serial.print(pressureOffset);
         Serial.println();
     })
-
-    // Happens when patient is plugged at starting
-    if ((maxOffsetValue - minOffsetValue) >= 10) {
-        resetScreen();
-        screen.setCursor(0, 0);
-        char line1[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset is unstable");
-        screen.print(line1);
-        screen.setCursor(0, 1);
-        char line2[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "Max-Min: %3d mmH2O",
-                       maxOffsetValue - minOffsetValue);
-        screen.print(line2);
-        screen.setCursor(0, 2);
-        screen.print("Unplug patient and");
-        screen.setCursor(0, 3);
-        screen.print("reboot");
-        Buzzer_High_Prio_Start();
-        while (true) {
-        }
-    }
-
     if (pressureOffset >= MAX_PRESSURE_OFFSET) {
         resetScreen();
         screen.setCursor(0, 0);
