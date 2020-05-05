@@ -39,6 +39,7 @@
 #if HARDWARE_VERSION == 2
 #include "../includes/telemetry.h"
 #endif
+#include "../includes/mass_flow_meter.h"
 
 // PROGRAM =====================================================================
 
@@ -54,6 +55,13 @@ int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
+
+#if VALVE_TYPE == VT_FAULHABER
+bool isPlateauSquareModeOn = true;  
+#else
+bool isPlateauSquareModeOn = false;  
+#endif
+
 
 #if HARDWARE_VERSION == 2
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
@@ -151,7 +159,7 @@ void setup(void) {
 
     pController = PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
                                      DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
-                                     servoBlower, servoPatient, &alarmController, blower_pointer);
+                                     servoBlower, servoPatient, &alarmController, blower_pointer, isPlateauSquareModeOn);
     pController.setup();
 
     // Prepare LEDs
@@ -190,6 +198,12 @@ void setup(void) {
     screen.setCursor(0, 3);
     screen.print("unplugged");
     waitForInMs(3000);
+
+    // Mass Flow Meter, if any
+    #ifdef MASS_FLOW_METER
+        MFM_init();
+        MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter.
+    #endif
 
     resetScreen();
     if (pressureOffsetCount != 0u) {
@@ -253,6 +267,9 @@ void setup(void) {
     screen.print(message);
     waitForInMs(1000);
 
+    displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
+                                  pController.peep(), MFM_read_liters(false));
+
     lastpControllerComputeDate = millis();
 
     // Catch potential Watchdog reset
@@ -299,6 +316,9 @@ void loop(void) {
 
     while (centiSec < pController.centiSecPerCycle()) {
         uint32_t pressure = readPressureSensor(centiSec, pressureOffset);
+        // ADC should not be used in another higher level of interruption (reading adc is for from being atomic)
+        // So the mass flow meter value is updated here.
+        mfmLastValue = analogRead(MFM_ANALOG_INPUT);
 
         uint32_t currentDate = millis();
 
@@ -345,12 +365,10 @@ void loop(void) {
 
             // Display relevant information during the cycle
             if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
-                displayCurrentPressure(pController.pressure(),
-                                       pController.cyclesPerMinuteCommand());
-
                 displayCurrentSettings(pController.maxPeakPressureCommand(),
                                        pController.maxPlateauPressureCommand(),
-                                       pController.minPeepCommand());
+                                       pController.minPeepCommand(),
+                                       pController.cyclesPerMinuteCommand());
             }
 
             alarmController.runAlarmEffects(centiSec);
@@ -380,7 +398,7 @@ void loop(void) {
 
     if (shouldRun) {
         displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                  pController.peep());
+                                  pController.peep(), MFM_read_liters(false));
     } else {
         displayMachineStopped();
     }

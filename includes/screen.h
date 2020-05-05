@@ -36,14 +36,6 @@ void startScreen();
 void resetScreen();
 
 /**
- * Display the current step of the breathing
- *
- * @param pressure            The current pressure [mmH2O]
- * @param cyclesPerMinute     Next desired number of cycles per minute
- */
-void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute);
-
-/**
  * Display the current settings
  *
  * @param peakPressureMax      PeakPressureMax [mmH2O]
@@ -52,7 +44,8 @@ void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute);
  */
 void displayCurrentSettings(uint16_t peakPressureMax,
                             uint16_t plateauPressureMax,
-                            uint16_t peepMin);
+                            uint16_t peepMin,
+                            uint16_t cyclesPerMinute);
 
 /**
  * Display relevant values from the ongoing cycle
@@ -60,8 +53,9 @@ void displayCurrentSettings(uint16_t peakPressureMax,
  * @param peakPressure     The peak pressure [mmH2O]
  * @param plateauPressure  The plateau pressure [mmH2O]
  * @param peep             The Positive End Expiratory Pressure (PEEP) [mmH2O]
+ * @param tidalVolume      The tidal volume [mL]
  */
-void displayCurrentInformation(uint16_t peakPressure, uint16_t plateauPressure, uint16_t peep);
+void displayCurrentInformation(uint16_t peakPressure, uint16_t plateauPressure, uint16_t peep, int32_t tidalVolume);
 
 /**
  * Display triggered alarm codes

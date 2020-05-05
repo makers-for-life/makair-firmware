@@ -49,47 +49,47 @@ void startScreen() {
 
 void resetScreen() { screen.clear(); }
 
-void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute) {
-    screen.setCursor(0, 0);
-
-    char message[SCREEN_LINE_LENGTH + 1];
-
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "Pressure:%2u    %2ucpm",
-                   convertAndRound(pressure), cyclesPerMinute);
-
-    screen.print(message);
-}
 
 void displayCurrentSettings(uint16_t peakPressureMax,
                             uint16_t plateauPressureMax,
-                            uint16_t peepMin) {
+                            uint16_t peepMin,
+                            uint16_t cyclesPerMinute) {
+
+    screen.setCursor(0, 0);
+    char message0[7];
+    (void)snprintf(message0, 7, "Cpm:%2u",cyclesPerMinute);
+    screen.print(message0);
+
+
     screen.setCursor(0, 1);
-
-    char message[SCREEN_LINE_LENGTH + 1];
-
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u    %2u    %2u  set ",
+    char message1[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(message1, SCREEN_LINE_LENGTH + 1, "%2u    %2u    %2u  set ",
                    convertAndRound(peakPressureMax), convertAndRound(plateauPressureMax),
                    convertAndRound(peepMin));
-
-    screen.print(message);
+    screen.print(message1);
 }
 
-void displayCurrentInformation(uint16_t peakPressure, uint16_t plateauPressure, uint16_t peep) {
+void displayCurrentInformation(uint16_t peakPressure, uint16_t plateauPressure, uint16_t peep, int32_t tidalVolume) {
     // cppcheck-suppress misra-c2012-12.3 ; call to unknown external: screen.setCursor
     screen.setCursor(0, 3);
-    char message[SCREEN_LINE_LENGTH + 1];
+    char message3[SCREEN_LINE_LENGTH + 1];
 
     // If plateau was not detected
     if (plateauPressure == UINT16_MAX) {
-        (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u     ?    %2u  meas",
+        (void)snprintf(message3, SCREEN_LINE_LENGTH + 1, "%2u     ?    %2u  meas",
                        convertAndRound(peakPressure), convertAndRound(peep));
     } else {
-        (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u    %2u    %2u  meas",
+        (void)snprintf(message3, SCREEN_LINE_LENGTH + 1, "%2u    %2u    %2u  meas",
                        convertAndRound(peakPressure), convertAndRound(plateauPressure),
                        convertAndRound(peep));
     }
 
-    screen.print(message);
+    screen.print(message3);
+
+    screen.setCursor(10, 0);
+    char message0[9];
+    (void)snprintf(message0, 9, "Vt:%3u",tidalVolume);
+    screen.print(message0);
 }
 
 static uint8_t prevNbAlarmToPrint = 255;
