@@ -338,11 +338,25 @@ class PressureController {
     bool patientPIDFastMode;
 
     /**
+     * Fast mode at start of inspiration
+     *
+     * @note This must be persisted between computations
+     */
+    bool blowerPIDFastMode;
+
+    /**
      * Integral gain of the patient PID
      *
      * @note This must be persisted between computations
      */
     int32_t patientIntegral;
+
+    /**
+     * Last aperture of the blower valve
+     *
+     * @note This must be persisted between computations
+     */
+    uint32_t lastBlowerAperture;
 
     /**
      * Error of the last computation of the patient PID
