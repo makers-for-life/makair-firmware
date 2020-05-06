@@ -202,7 +202,7 @@ void setup(void) {
     // Mass Flow Meter, if any
     #ifdef MASS_FLOW_METER
         MFM_init();
-        MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter.
+        MFM_calibrate();  // Patient unplugged, also set the zero of mass flow meter.
     #endif
 
     resetScreen();
@@ -318,7 +318,7 @@ void loop(void) {
         uint32_t pressure = readPressureSensor(centiSec, pressureOffset);
         // ADC should not be used in another higher level of interruption (reading adc is for from being atomic)
         // So the mass flow meter value is updated here.
-        mfmLastValue = analogRead(MFM_ANALOG_INPUT);
+        MFM_last_value = analogRead(MFM_ANALOG_INPUT);
 
         uint32_t currentDate = millis();
 

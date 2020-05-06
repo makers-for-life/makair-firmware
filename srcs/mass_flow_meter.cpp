@@ -6,8 +6,14 @@
  *****************************************************************************/
 
 /**
- * SFM3300-D sensirion mass flow meter is connected on I2C bus.
- * To perform the integral of the mass flow, i2c polling must be done in a high priority timer
+ * To perform the volume measurement, integral of the flow must be done in a high priority timer.
+ *
+ * Three sensors are being tested:
+ * - SFM3300-D sensirion mass flow meter is connected on I2C bus.
+ * - SDP703_02 is a I2C differential pressure sensor.
+ * - OMRON D6F-V03A1 is an analog velocity sensor.
+ * 
+ * TODO : When the definitive sensor will be choosen, remove the floating point variables and operations.
  */
 
 // Associated header
@@ -52,9 +58,8 @@ HardwareTimer* massFlowTimer;
 volatile int32_t mfmCalibrationOffset = 0;
 
 volatile int32_t mfmAirVolumeSum = 0;
-volatile double mfm_flow = 0.0;
-volatile double mfm_voltage = 0.0;
-volatile double mfm_x2, mfm_x3, mfm_x4;
+volatile double MFM_flow = 0.0;
+volatile double mfm_x = 0.0;
 
 volatile int32_t mfmSensorDetected = 0;
 
@@ -62,7 +67,7 @@ volatile int32_t mfmSampleCount = 0;
 
 bool mfmFaultCondition = false;
 
-int32_t mfmLastValue = 0;
+int32_t MFM_last_value = 0;
 // Time to reset the sensor after I2C restart, in periods. => 5ms.
 #define MFM_WAIT_RESET_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
@@ -92,9 +97,9 @@ void MFM_Timer_Callback(HardwareTimer*) {
             mfmFaultCondition = true;
             mfmResetStateMachine = 5;
         }
-        mfmLastValue = (int32_t)mfmLastData.i - 0x8000;
-        if (mfmLastValue > 28) {
-            mfmAirVolumeSum += mfmLastValue;
+        MFM_last_value = (int32_t)mfmLastData.i - 0x8000;
+        if (MFM_last_value > 28) {
+            mfmAirVolumeSum += MFM_last_value;
         }
 #endif
 
@@ -107,9 +112,9 @@ void MFM_Timer_Callback(HardwareTimer*) {
             // mfmFaultCondition = true;
             // mfmResetStateMachine = 5;
         }
-        mfmLastValue = abs(mfmLastData.si);
-        if (mfmLastValue > 40) {
-            mfmAirVolumeSum += sqrt(mfmLastValue);
+        MFM_last_value = abs(mfmLastData.si);
+        if (MFM_last_value > 40) {
+            mfmAirVolumeSum += sqrt(MFM_last_value);
         }
 
         mfmSampleCount++;
@@ -117,23 +122,22 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
 
-
-        //mfmLastValue = analogRead(MFM_ANALOG_INPUT);
+        // MFM_last_value = analogRead(MFM_ANALOG_INPUT);
         static double mfm_x2, mfm_x3, mfm_x4, mfm_x5;
-        if (mfmLastValue > mfmCalibrationOffset + 5) {
-            mfm_voltage = mfmLastValue - mfmCalibrationOffset;
-            mfm_x2 = mfm_voltage * mfm_voltage;
-            mfm_x3 = mfm_x2 * mfm_voltage;
-            mfm_x4 = mfm_x3 * mfm_voltage;
-            mfm_x5 = mfm_x4 * mfm_voltage;
-            mfm_flow = 7.89e-12 * mfm_x5 - 1.164e-8 * mfm_x4 + 6.34e-6 * mfm_x3 - 0.001515 * mfm_x2
-                       + 0.2612 * mfm_voltage + 0.70069;
+        if (MFM_last_value > mfmCalibrationOffset + 5) {
+            mfm_x = MFM_last_value - mfmCalibrationOffset;
+            mfm_x2 = mfm_x * mfm_x;
+            mfm_x3 = mfm_x2 * mfm_x;
+            mfm_x4 = mfm_x3 * mfm_x;
+            mfm_x5 = mfm_x4 * mfm_x;
+            MFM_flow = 7.89e-12 * mfm_x5 - 1.164e-8 * mfm_x4 + 6.34e-6 * mfm_x3 - 0.001515 * mfm_x2
+                       + 0.2612 * mfm_x + 0.70069;
         } else {
-            mfm_flow = 0.0;
+            MFM_flow = 0.0;
         }
-        // Serial.println(mfm_flow);
+        // Serial.println(MFM_flow);
         // sum milliliters
-        mfmAirVolumeSum += (uint32_t)(mfm_flow * 1000.0);
+        mfmAirVolumeSum += (uint32_t)(MFM_flow * 1000.0);
 #endif
 
 #if MODE == MODE_MFM_TESTS
@@ -290,11 +294,16 @@ void MFM_reset(void) {
     mfmSampleCount = 0;
 }
 
+/*
+ * Read the flow
+ */
+double MFM_read_flow(void) { return MFM_flow; }
+
 /**
  * Calibrate the zero of the sensor :
  * mean of 10 samples.
  */
-void MFM_calibrateZero(void) {
+void MFM_calibrate(void) {
 #if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
     int32_t sum = 0;
     // 500ms with one point per ms is great
@@ -369,7 +378,7 @@ void setup(void) {
 
     btn_stop.attachClick(onStartClick);
     btn_stop.setDebounceTicks(0);
-    MFM_calibrateZero();
+    MFM_calibrate();
     mfmAirVolumeSum = 0;
     Serial.println("init done");
 }
@@ -398,8 +407,8 @@ void loop(void) {
             screen.print("sensor not OK");
         } else {
             screen.print("sensor OK ");
-            screen.print(mfm_flow);
-            // screen.print(mfmLastValue);
+            screen.print(MFM_flow);
+            // screen.print(MFM_last_value);
             screen.setCursor(0, 3);
             sprintf(buffer, "volume=%dmL", volume);
             screen.print(buffer);
@@ -413,4 +422,4 @@ void loop(void) {
 }
 #endif
 
-#endif 
+#endif

@@ -9,12 +9,25 @@
 
 #include <Arduino.h>
 
+// Read the volume, in milliliters
 int32_t MFM_read_liters(boolean reset_after_read);
-void MFM_calibrateZero(void);
+
+// Calibration set the sensor offset. Flow must be zero during 500ms
+void MFM_calibrate(void);
+
+// Reset the volume
 void MFM_reset(void);
+
+// Initialize the flow timer
 boolean MFM_init(void);
-extern int32_t mfmLastValue;
-extern volatile double mfm_flow;
+
+// This input must be refreshed as often as possible with analog input.
+// Analog input cannot be read inside the timer, it is not an atomic operation.
+extern int32_t MFM_last_value;
+
+// Instant flow in l/min. Value could be MASS_FLOw_ERROR_VALUE if no communication with a digital
+// sensor.
+double MFM_read_flow(void);
 
 #define MASS_FLOw_ERROR_VALUE 999999
 
