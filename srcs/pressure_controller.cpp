@@ -65,6 +65,9 @@ PressureController::PressureController()
       m_sumOfPressures(0),
       m_numberOfPressures(0),
       m_plateauStartTime(0u),
+      m_squarePlateauSum(0),
+      m_squarePlateauCount(0),
+      patientPIDFastMode(true),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeCentiSecParameters();
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -114,6 +117,9 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_sumOfPressures(0),
       m_numberOfPressures(0),
       m_plateauStartTime(0u),
+      m_squarePlateauSum(0),
+      m_squarePlateauCount(0),
+      patientPIDFastMode(true),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeCentiSecParameters();
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -192,7 +198,6 @@ void PressureController::initRespiratoryCycle() {
 }
 
 void PressureController::endRespiratoryCycle() {
-
 #if VALVE_TYPE == VT_FAULHABER
     // In square plateau mode, plateau pressure is the mean pressure during plateau
     m_plateauPressure = m_squarePlateauSum / m_squarePlateauCount;
@@ -263,7 +268,7 @@ void PressureController::compute(uint16_t p_centiSec) {
         // Plateau happens with delay related to the pressure command
 #if VALVE_TYPE == VT_FAULHABER
         // Do nothing
-#else 
+#else
         computePlateau(p_centiSec);
 #endif
         break;
@@ -473,6 +478,7 @@ void PressureController::exhale() {
 
 void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 
+#if VALVE_TYPE == VT_FAULHABER
 void PressureController::updateOnlyBlower() {
     int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
 
@@ -521,6 +527,7 @@ void PressureController::updateOnlyBlower() {
     DBG_DO(Serial.print("Plateau Start time:");)
     DBG_DO(Serial.println(m_plateauStartTime);)
 }
+#endif
 
 void PressureController::updatePeakPressure() {
     int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
@@ -734,10 +741,10 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     patientLastError = error;
 
     int32_t coefficientP;
-    int32_t coefficientI;
     if (patientPIDFastMode) {
         coefficientP = PID_PATIENT_KP * abs(error);
     } else {
+        int32_t coefficientI;
         coefficientP = 4000;
         if (abs(error) < 10) {
             coefficientI = PID_PATIENT_KI * 2;

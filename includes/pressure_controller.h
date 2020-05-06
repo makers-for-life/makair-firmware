@@ -13,6 +13,7 @@
 #include "../includes/alarm_controller.h"
 #include "../includes/blower.h"
 #include "../includes/cycle.h"
+#include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
 
 /// Number of values to aggregate when computing plateau pressure
@@ -231,8 +232,10 @@ class PressureController {
     /// At the end of a respiratory cycle, check if some alarms are triggered
     void checkCycleAlarm();
 
+#if VALVE_TYPE == VT_FAULHABER
     /// Update only blower speed
     void updateOnlyBlower();
+#endif
 
  private:
     /// Number of cycles per minute desired by the operator
