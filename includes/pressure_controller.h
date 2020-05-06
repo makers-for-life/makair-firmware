@@ -177,7 +177,7 @@ class PressureController {
     void inhale();
 
     /// Perform the pressure control and compute the transistors commands during the plateau phase
-    void plateau(uint16_t p_centiSec);
+    void plateau();
 
     /// Perform the pressure control and compute the transistors commands during the exhalation
     /// phase

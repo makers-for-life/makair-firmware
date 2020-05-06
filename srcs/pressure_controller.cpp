@@ -259,7 +259,7 @@ void PressureController::compute(uint16_t p_centiSec) {
         break;
     }
     case CycleSubPhases::HOLD_INSPIRATION: {
-        plateau(p_centiSec);
+        plateau();
         break;
     }
     case CycleSubPhases::EXHALE:
@@ -448,7 +448,7 @@ void PressureController::inhale() {
     m_peakPressure = max(m_pressure, m_peakPressure);
 }
 
-void PressureController::plateau(uint16_t p_centiSec) {
+void PressureController::plateau() {
     // Deviate the air stream outside
 #if VALVE_TYPE == VT_FAULHABER
     m_blower_valve.open(pidBlower(m_pressureCommand, m_pressure, m_dt));
@@ -756,7 +756,7 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
             max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, patientIntegral));
     }
 
-    int32_t patientCommand = (coefficientP * error) / 1000 + patientIntegral
+    int32_t patientCommand = ((coefficientP * error) / 1000) + patientIntegral
                              + ((PID_PATIENT_KD * derivative) / 1000);  // Command computation
 
     int32_t minAperture = m_blower_valve.minAperture();
