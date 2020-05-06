@@ -231,6 +231,9 @@ class PressureController {
     /// At the end of a respiratory cycle, check if some alarms are triggered
     void checkCycleAlarm();
 
+    /// Update only blower speed
+    void updateOnlyBlower();
+
  private:
     /// Number of cycles per minute desired by the operator
     uint16_t m_cyclesPerMinuteCommand;
@@ -264,6 +267,12 @@ class PressureController {
 
     /// Measured pressure
     uint16_t m_pressure;
+
+    /// Sum for calulating square plateau value
+    uint64_t m_squarePlateauSum;
+
+    /// Count for calulating square plateau value
+    uint16_t m_squarePlateauCount;
 
     /// Peak pressure
     uint16_t m_peakPressure;
@@ -317,6 +326,13 @@ class PressureController {
      * @note This must be persisted between computation in order to compute derivative gain
      */
     int32_t blowerLastError;
+
+    /**
+     * Fast mode at start of expiration
+     *
+     * @note This must be persisted between computations
+     */
+    bool patientPIDFastMode;
 
     /**
      * Integral gain of the patient PID

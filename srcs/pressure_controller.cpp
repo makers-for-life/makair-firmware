@@ -149,6 +149,7 @@ void PressureController::initRespiratoryCycle() {
     blowerLastError = INVALID_ERROR_MARKER;
     patientIntegral = 0;
     patientLastError = INVALID_ERROR_MARKER;
+    patientPIDFastMode = true;
 
     m_peakPressure = 0;
     computeCentiSecParameters();
@@ -185,10 +186,20 @@ void PressureController::initRespiratoryCycle() {
     m_numberOfPressures = 0u;
 
     m_plateauStartTime = 0u;
+
+    m_squarePlateauSum = 0u;
+    m_squarePlateauCount = 0u;
 }
 
 void PressureController::endRespiratoryCycle() {
+
+#if VALVE_TYPE == VT_FAULHABER
+    // In square plateau mode, plateau pressure is the mean pressure during plateau
+    m_plateauPressure = m_squarePlateauSum / m_squarePlateauCount;
+    updateOnlyBlower();
+#else
     updatePeakPressure();
+#endif
     checkCycleAlarm();
 
     // If plateau is not detected or is too close to PEEP, mark it as "unknown"
@@ -250,7 +261,11 @@ void PressureController::compute(uint16_t p_centiSec) {
     default: {
         exhale();
         // Plateau happens with delay related to the pressure command
+#if VALVE_TYPE == VT_FAULHABER
+        // Do nothing
+#else 
         computePlateau(p_centiSec);
+#endif
         break;
     }
     }
@@ -397,7 +412,11 @@ void PressureController::updatePhase(uint16_t p_centiSec) {
         if ((p_centiSec < ((m_centiSecPerInhalation * 80u) / 100u))
             && (m_pressure < (m_maxPeakPressureCommand - 10u))) {
             if (m_subPhase != CycleSubPhases::HOLD_INSPIRATION) {
+#if VALVE_TYPE == VT_FAULHABER
+                m_pressureCommand = m_maxPlateauPressureCommand;
+#else
                 m_pressureCommand = m_maxPeakPressureCommand;
+#endif
                 setSubPhase(CycleSubPhases::INSPIRATION, p_centiSec);
             }
         } else {
@@ -426,21 +445,16 @@ void PressureController::inhale() {
 
 void PressureController::plateau(uint16_t p_centiSec) {
     // Deviate the air stream outside
-    m_blower_valve.close();
-
 #if VALVE_TYPE == VT_FAULHABER
-    // With Faulhaber valves, gently close the air stream towards the patient's lungs
-    if (p_centiSec < (m_plateauStartTime + 10u)) {
-        m_blower_valve.open(((p_centiSec - m_plateauStartTime)
-                             * (VALVE_CLOSED_STATE - m_peakBlowerValveAngle) / 10u)
-                            + m_peakBlowerValveAngle);
-    } else {
-        m_patient_valve.close();
-    }
+    m_blower_valve.open(pidBlower(m_pressureCommand, m_pressure, m_dt));
+    m_squarePlateauSum += m_pressure;
+    m_squarePlateauCount += 1u;
 #else
-    (void)p_centiSec;
-    m_patient_valve.close();
+    m_blower_valve.close();
 #endif
+
+    // Close the air stream towards the patient's lungs
+    m_patient_valve.close();
 
     // Update the peak pressure
     m_peakPressure = max(m_pressure, m_peakPressure);
@@ -458,6 +472,55 @@ void PressureController::exhale() {
 }
 
 void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
+
+void PressureController::updateOnlyBlower() {
+    int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
+
+    DBG_DO(Serial.println("updatePeakPressure");)
+    // If plateau was reached quite early
+    if (m_plateauStartTime < ((m_centiSecPerInhalation * 10u) / 100u)) {
+        DBG_DO(Serial.println("BLOWER -20");)
+
+        // If the peak delta is high, decrease blower's speed a lot
+        if (plateauDelta < -20) {
+            m_blower_increment = -60;
+            DBG_DO(Serial.print("BLOWER -60, peak: ");)
+            DBG_DO(Serial.println(plateauDelta);)
+        } else {
+            m_blower_increment = -20;
+            DBG_DO(Serial.println("BLOWER -20");)
+        }
+    } else if ((m_plateauStartTime >= ((m_centiSecPerInhalation * 10u) / 100u))
+               && (m_plateauStartTime < ((m_centiSecPerInhalation * 20u) / 100u))) {
+        DBG_DO(Serial.println("BLOWER -10");)
+        m_blower_increment = -10;
+    } else if ((m_plateauStartTime > ((m_centiSecPerInhalation * 30u) / 100u))
+               && (m_plateauStartTime <= ((m_centiSecPerInhalation * 40u) / 100u))
+               && abs(plateauDelta) > 10) {
+        DBG_DO(Serial.println("BLOWER +10");)
+        m_blower_increment = +10;
+    } else if (m_plateauStartTime > ((m_centiSecPerInhalation * 40u) / 100u)) {
+        if (plateauDelta > 60) {
+            m_blower_increment = +60;
+            DBG_DO(Serial.print("BLOWER +60, peak: ");)
+            DBG_DO(Serial.print(m_maxPlateauPressureCommand);)
+            DBG_DO(Serial.print("-");)
+            DBG_DO(Serial.println(m_plateauPressure);)
+        } else if (plateauDelta > 40) {
+            m_blower_increment = +40;
+            DBG_DO(Serial.print("BLOWER +40, peak: ");)
+            DBG_DO(Serial.println(plateauDelta);)
+        } else {
+            m_blower_increment = +20;
+            DBG_DO(Serial.println("BLOWER +20");)
+        }
+    } else {
+        m_blower_increment = 0;
+        DBG_DO(Serial.println("BLOWER +0");)
+    }
+    DBG_DO(Serial.print("Plateau Start time:");)
+    DBG_DO(Serial.println(m_plateauStartTime);)
+}
 
 void PressureController::updatePeakPressure() {
     int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
@@ -657,17 +720,36 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     // Compute error
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
-    // Compute integral
-    patientIntegral = patientIntegral + ((PID_PATIENT_KI * error * dt) / 1000000);
-    patientIntegral = max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, patientIntegral));
+    if (error > -10) {
+        // change of state
+        if (patientPIDFastMode) {
+            patientIntegral = -1000;
+        }
+        patientPIDFastMode = false;
+    }
 
-    // Compute derivative
-    int32_t derivative = ((patientLastError == INVALID_ERROR_MARKER) || (dt == 0))
-                             ? 0
-                             : ((1000000 * (error - patientLastError)) / dt);
+    // Dont compute derivative
+    int32_t derivative = 0;
+
     patientLastError = error;
 
-    int32_t patientCommand = (PID_PATIENT_KP * error) + patientIntegral
+    int32_t coefficientP;
+    int32_t coefficientI;
+    if (patientPIDFastMode) {
+        coefficientP = PID_PATIENT_KP * abs(error);
+    } else {
+        coefficientP = 4000;
+        if (abs(error) < 10) {
+            coefficientI = PID_PATIENT_KI * 2;
+        } else {
+            coefficientI = PID_PATIENT_KI / 2;
+        }
+        patientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
+        patientIntegral =
+            max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, patientIntegral));
+    }
+
+    int32_t patientCommand = (coefficientP * error) / 1000 + patientIntegral
                              + ((PID_PATIENT_KD * derivative) / 1000);  // Command computation
 
     int32_t minAperture = m_blower_valve.minAperture();
