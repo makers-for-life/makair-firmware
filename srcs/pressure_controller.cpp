@@ -69,6 +69,7 @@ PressureController::PressureController()
       m_squarePlateauCount(0),
       patientPIDFastMode(true),
       blowerPIDFastMode(true),
+      m_lastBlowerPIDErrorIndex(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeCentiSecParameters();
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -122,10 +123,14 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_squarePlateauCount(0),
       patientPIDFastMode(true),
       blowerPIDFastMode(true),
+      m_lastBlowerPIDErrorIndex(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeCentiSecParameters();
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0;
+    }
+    for (uint8_t i = 0; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
+        m_lastBlowerPIDError[i] = 0;
     }
 }
 
@@ -154,7 +159,11 @@ void PressureController::initRespiratoryCycle() {
 
     // Reset PID integrals
     blowerIntegral = 0;
-    blowerLastError = INVALID_ERROR_MARKER;
+    #if VALVE_TYPE == VT_FAULHABER
+      blowerLastError =  m_maxPlateauPressureCommand - m_minPeepCommand ;
+    #else
+      blowerLastError =  m_maxPeakPressureCommand - m_minPeepCommand ;
+    #endif
     patientIntegral = 0;
     patientLastError = INVALID_ERROR_MARKER;
     patientPIDFastMode = true;
@@ -199,6 +208,11 @@ void PressureController::initRespiratoryCycle() {
 
     m_squarePlateauSum = 0u;
     m_squarePlateauCount = 0u;
+
+    for (uint8_t i = 0; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
+        m_lastBlowerPIDError[i] = 0;
+    } 
+
 }
 
 void PressureController::endRespiratoryCycle() {
@@ -233,6 +247,7 @@ void PressureController::endRespiratoryCycle() {
                              m_peakPressure, plateauPressureToDisplay, m_peep,
                              m_alarmController->triggeredAlarms());
 #endif
+
 }
 
 void PressureController::updatePressure(int16_t p_currentPressure) {
@@ -418,15 +433,17 @@ void PressureController::updatePhase(uint16_t p_centiSec) {
     if (p_centiSec < m_centiSecPerInhalation) {
         m_phase = CyclePhases::INHALATION;
 
+        #if VALVE_TYPE == VT_FAULHABER
+                int32_t pressureToTest =  m_maxPlateauPressureCommand;
+        #else
+                int32_t pressureToTest =  m_maxPeakPressureCommand;
+        #endif
+
         if ((p_centiSec < ((m_centiSecPerInhalation * 80u) / 100u))
-            && (m_pressure < (m_maxPeakPressureCommand))) {
+            && (m_pressure < (pressureToTest))) {
             if (m_subPhase != CycleSubPhases::HOLD_INSPIRATION) {
-#if VALVE_TYPE == VT_FAULHABER
-                m_pressureCommand = m_maxPlateauPressureCommand;
-#else
-                m_pressureCommand = m_maxPeakPressureCommand;
-#endif
-                setSubPhase(CycleSubPhases::INSPIRATION, p_centiSec);
+              m_pressureCommand = pressureToTest;
+              setSubPhase(CycleSubPhases::INSPIRATION, p_centiSec);
             }
         } else {
             m_pressureCommand = m_maxPlateauPressureCommand;
@@ -701,7 +718,8 @@ void PressureController::setSubPhase(CycleSubPhases p_subPhase, uint16_t p_centi
 
 int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
     // Compute error
-    int32_t error = targetPressure - currentPressure;
+    //int32_t error = targetPressure + m_plateauPressureOffset - currentPressure;
+  int32_t error = targetPressure - currentPressure;
 
     if (error < 50) {
         // change of state
@@ -715,50 +733,52 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     int32_t maxAperture = m_blower_valve.maxAperture();
     uint32_t blowerAperture;
     int32_t derivative = 0;
+    int32_t acceleration = 0;
+    int32_t smoothError = 0;
+    int32_t totalValues = 0;
+    int32_t coefficientI;
 
-    if (blowerPIDFastMode) {
-        blowerAperture = minAperture;
+    // Different KI in case of overshooting
+    if (error<0) {
+        coefficientI = PID_BLOWER_KI * 2;
     } else {
-        int32_t coefficientI = PID_BLOWER_KI;
-        /*if (abs(error) < 10) {
-            coefficientI = PID_BLOWER_KI * 2;
-        } else {
-            coefficientI = PID_BLOWER_KI / 2;
-        }*/
-        derivative = ((blowerLastError == INVALID_ERROR_MARKER) || (dt == 0))
-                             ? 0
-                             : ((1000000 * (error - blowerLastError)) / dt);
-    
-        blowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
-        blowerIntegral =
-            max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, blowerIntegral));
-        int32_t blowerCommand = (PID_BLOWER_KP * error) / 1000 + blowerIntegral + PID_BLOWER_KD*derivative/1000;  // Command computation
-        blowerAperture =
-        max(minAperture,
-            min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
+        coefficientI = PID_BLOWER_KI;
     }
+
+    m_lastBlowerPIDError[m_lastBlowerPIDErrorIndex] = error;
+    m_lastBlowerPIDErrorIndex++;
+    if (m_lastBlowerPIDErrorIndex >= NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN){
+      m_lastBlowerPIDErrorIndex = 0;
+    }
+    
+    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
+        totalValues += m_lastBlowerPIDError[i];
+    }
+    smoothError = totalValues / NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN;
+    //Serial.println(smoothError);
+
+    derivative = ((dt == 0))
+                         ? 0
+                         : ((1000000 * (blowerLastError - smoothError)) / dt);
+
+    blowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
+    blowerIntegral =
+        max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, blowerIntegral));
+    int32_t blowerCommand = (PID_BLOWER_KP * error) / 1000 + blowerIntegral + PID_BLOWER_KD*derivative/1000;// + PID_BLOWER_KA*acceleration;  // Command computation
+    blowerAperture =
+    max(minAperture,
+        min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
+    
 
     // Slow down aperture at starting
-    if (error>50 && blowerAperture > lastBlowerAperture + 10){
-      blowerAperture = lastBlowerAperture + 10;
-    } else if (error>50 && lastBlowerAperture >10 && blowerAperture < lastBlowerAperture - 10){
-      blowerAperture = lastBlowerAperture - 10;
+    if (error>50 && blowerAperture > lastBlowerAperture + 15){
+      blowerAperture = lastBlowerAperture + 15;
+    } else if (error>50 && lastBlowerAperture >15 && blowerAperture < lastBlowerAperture - 15){
+      blowerAperture = lastBlowerAperture - 15;
     }
-    lastBlowerAperture = blowerAperture;
-    blowerLastError = error;
-    Serial.print(targetPressure);
-    Serial.print(",");
-    Serial.print(currentPressure);
-    Serial.print(",");
-    Serial.print((PID_BLOWER_KP * error) / 1000);
-    Serial.print(",");
-    Serial.print(blowerIntegral);
-    Serial.print(",");
-    Serial.print(PID_BLOWER_KD*derivative/1000);
-    Serial.print(",");
-    Serial.print(blowerAperture);
-    Serial.println();
 
+    lastBlowerAperture = blowerAperture;
+    blowerLastError = smoothError;
 
     return blowerAperture;
 }

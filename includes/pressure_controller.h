@@ -377,6 +377,10 @@ class PressureController {
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
 
+    /// Last error in blower PID
+    int32_t m_lastBlowerPIDError[NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN];
+    int32_t m_lastBlowerPIDErrorIndex;
+
     /// Index of array for last pressure storage
     uint16_t m_lastPressureValuesIndex;
 
