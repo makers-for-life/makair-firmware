@@ -83,7 +83,8 @@ void toBytes64(byte bytes[], uint64_t data) {
 /**
  * Compute device ID
  *
- * @param deviceId Empty array of 12 elements
+ * @warning This requires (and mutates) a static deviceId variable (which must be an array of 12
+ * elements)
  */
 // cppcheck-suppress unusedFunction
 void computeDeviceId(void) {
