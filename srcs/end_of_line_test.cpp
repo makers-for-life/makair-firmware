@@ -14,11 +14,12 @@
 #include "../includes/screen.h"
 
 uint32_t clockEOLTimer = 0;
-uint32_t EolTestNumber = 1;
+uint32_t eolTestNumber = 1;
+HardwareTimer* eolTimer;
 
 EolTest::EolTest() {
     testActive = 0;
-    eolTimer = new HardwareTimer(TIM10);
+    ::eolTimer = new HardwareTimer(TIM10);
 }
 
 void EolTest::activate() {
@@ -33,7 +34,7 @@ void eolScreenMessage(char* message, boolean isFailed) {
     screen.clear();
     screen.setCursor(0, 0);
     screen.print("EOL TEST  #");
-    screen.print(EolTestNumber);
+    screen.print(eolTestNumber);
     if (isFailed) {
         screen.setCursor(16, 0);
         screen.print("FAIL");
@@ -59,23 +60,30 @@ void eolScreenMessage(char* message, boolean isFailed) {
     }
 }
 
+enum TestStep {
+    START,
+
+    END_SUCCESS
+};
+TestStep step = START;
+
 void millisecondTimerEOL(HardwareTimer*) {
     clockEOLTimer++;
     if (clockEOLTimer % 1000 == 0) {
         eolScreenMessage("test\nmessage", true);
-        EolTestNumber++;
+        eolTestNumber++;
     }
 }
 
 void EolTest::setupAndStart() {
     // set a 1 ms timer for the event loop
     // prescaler at 10khz. stm32f411 clock is 100mhz.
-    eolTimer->setPrescaleFactor((eolTimer->getTimerClkFreq() / 10000) - 1);
+    ::eolTimer->setPrescaleFactor((::eolTimer->getTimerClkFreq() / 10000) - 1);
     // set the period at 1ms
-    eolTimer->setOverflow(10);
-    eolTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
-    eolTimer->attachInterrupt(millisecondTimerEOL);
-    eolTimer->resume();
+    ::eolTimer->setOverflow(10);
+    ::eolTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
+    ::eolTimer->attachInterrupt(millisecondTimerEOL);
+    ::eolTimer->resume();
 }
 
 EolTest eolTest = EolTest();
