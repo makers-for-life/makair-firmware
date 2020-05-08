@@ -721,6 +721,7 @@ void PressureController::setSubPhase(CycleSubPhases p_subPhase, uint16_t p_centi
 }
 
 int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
+#if VALVE_TYPE == VT_FAULHABER
     // Compute error
     int32_t error = targetPressure - currentPressure;
 
@@ -782,13 +783,40 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 
     lastBlowerAperture = blowerAperture;
     blowerLastError = smoothError;
+#else
+    // Compute error
+    int32_t error = targetPressure - currentPressure;
+
+    // Compute integral
+    blowerIntegral = blowerIntegral + ((PID_BLOWER_KI * error * dt) / 1000000);
+    blowerIntegral = max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, blowerIntegral));
+
+    // Compute derivative
+    int32_t derivative = ((blowerLastError == INVALID_ERROR_MARKER) || (dt == 0))
+                             ? 0
+                             : ((1000000 * (error - blowerLastError)) / dt);
+    blowerLastError = error;
+
+    int32_t blowerCommand = (PID_BLOWER_KP * error) + blowerIntegral
+                            + ((PID_BLOWER_KD * derivative) / 1000);  // Command computation
+
+    int32_t minAperture = m_blower_valve.minAperture();
+    int32_t maxAperture = m_blower_valve.maxAperture();
+
+    uint32_t blowerAperture =
+        max(minAperture,
+            min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
+#endif
+
+    
 
     return blowerAperture;
 }
 
 int32_t
 PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
-    // Compute error
+#if VALVE_TYPE == VT_FAULHABER
+// Compute error
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
     if (error > -10) {
@@ -821,6 +849,31 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
             minAperture,
             min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
     }
+#else
+    // Compute error
+    int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
+    // Compute integral
+    patientIntegral = patientIntegral + ((PID_PATIENT_KI * error * dt) / 1000000);
+    patientIntegral = max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, patientIntegral));
+
+    // Compute derivative
+    int32_t derivative = ((patientLastError == INVALID_ERROR_MARKER) || (dt == 0))
+                             ? 0
+                             : ((1000000 * (error - patientLastError)) / dt);
+    patientLastError = error;
+
+    int32_t patientCommand = (PID_PATIENT_KP * error) + patientIntegral
+                             + ((PID_PATIENT_KD * derivative) / 1000);  // Command computation
+
+    int32_t minAperture = m_blower_valve.minAperture();
+    int32_t maxAperture = m_blower_valve.maxAperture();
+
+    uint32_t patientAperture =
+        max(minAperture,
+            min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
+
+#endif
+    
     return patientAperture;
 }
