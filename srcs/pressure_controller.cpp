@@ -439,8 +439,8 @@ void PressureController::updatePhase(uint16_t p_centiSec) {
                 int32_t pressureToTest =  m_maxPeakPressureCommand;
         #endif
 
-        if (p_centiSec < ((m_centiSecPerInhalation * 80u) / 100u))
-            && (m_pressure < (pressureToTest)) {
+        if (p_centiSec < (m_centiSecPerInhalation * 80u) / 100u
+            && (m_pressure < pressureToTest)) {
             if (m_subPhase != CycleSubPhases::HOLD_INSPIRATION) {
               m_pressureCommand = pressureToTest;
               setSubPhase(CycleSubPhases::INSPIRATION, p_centiSec);
