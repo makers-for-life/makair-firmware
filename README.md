@@ -4,11 +4,11 @@
 
 See [CHANGELOG.md](CHANGELOG.md).
 
-Pre-compiled binaries are available in the [Releases](https://github.com/makers-for-life/makair/releases) section.
+Pre-compiled binaries are available in the [Releases](https://github.com/makers-for-life/makair-firmware/releases) section.
 
 ## Documentation
 
-Code documentation can be [found there](https://makers-for-life.github.io/makair/docs/software/firmware/html/files.html).
+Code documentation can be [found there](https://makers-for-life.github.io/makair-firmware/files.html).
 
 ## How To Build?
 
