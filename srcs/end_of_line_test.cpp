@@ -19,6 +19,9 @@
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
 uint32_t eolTestNumber = 1;
+int32_t pressureValue = 0;
+int32_t MinPressureValue = INT32_MAX;
+int32_t MaxPressureValue = 0;
 HardwareTimer* eolTimer;
 
 EolTest::EolTest() {
@@ -78,6 +81,13 @@ enum TestStep {
     MAX_PRESSURE_REACHED_OK,
     MAX_PRESSURE_NOT_REACHED,
     START_LEAK_MESURE,
+    LEAK_IS_TOO_HIGH,
+    REACH_NULL_PRESSURE,
+    MIN_PRESSURE_NOT_REACHED,
+    START_O2_TEST,
+    O2_PRESSURE_NOT_REACH,
+    START_LONG_RUN_BLOWER,
+    PRESSURE_NOT_STABLE,
     END_SUCCESS
 };
 TestStep eolstep = PLUG_AIR_TEST_SYTEM;
@@ -227,12 +237,13 @@ void millisecondTimerEOL(HardwareTimer*) {
         servoPatient.execute();
         servoBlower.open();
         servoBlower.execute();
-        int16_t pressureValue = readPressureSensor(0, pressureOffset);
+        pressureValue = readPressureSensor(0, pressureOffset);
         blower.runSpeed(1790);
         snprintf(eolScreenBuffer, EOLSCREENSIZE, "Mise sous pression\n  \nP = %d mmH2O",
                  pressureValue);
         if (pressureValue > 650) {
             eolMSCount = 0;
+            eolTestNumber++;
             eolstep = MAX_PRESSURE_REACHED_OK;
         }
         if (eolMSCount > 20000) {
@@ -245,20 +256,106 @@ void millisecondTimerEOL(HardwareTimer*) {
     } else if (eolstep == MAX_PRESSURE_REACHED_OK) {
         servoBlower.close();
         servoBlower.execute();
+        servoPatient.close();
+        servoPatient.execute();
         snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fermeture valves...");
-        if (eolMSCount > 500) {
+        if (eolMSCount > 1000) {
             eolMSCount = 0;
             eolstep = START_LEAK_MESURE;
         }
     } else if (eolstep == START_LEAK_MESURE) {
         blower.stop();
-        int16_t pressureValue = readPressureSensor(0, pressureOffset);
-
+        servoBlower.close();
+        servoBlower.execute();
+        servoPatient.close();
+        servoPatient.execute();
+        pressureValue = readPressureSensor(0, pressureOffset);
         snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Fuite...\n  \nP = %d mmH2O", pressureValue);
+        if (eolMSCount > 10000) {
+            eolMSCount = 0;
+            if (pressureValue > 400){
+                eolstep = REACH_NULL_PRESSURE;
+                eolTestNumber++;
+            } else {
+                eolFail = true;
+                eolstep = LEAK_IS_TOO_HIGH;
+            }
+        }
 
-    }
+    } else if (eolstep == LEAK_IS_TOO_HIGH) {
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fuite importante\nPfinale = %d mmH2O", pressureValue);
+    } else if (eolstep == REACH_NULL_PRESSURE) {
+        servoPatient.open();
+        servoPatient.execute();
+        servoBlower.close();
+        servoBlower.execute();
+        pressureValue = readPressureSensor(0, pressureOffset);
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Ouverture valves...\n  \nP = %d mmH2O",
+                 pressureValue);
+        if (pressureValue < 20) {
+            eolMSCount = 0;
+            eolTestNumber++;
+            eolstep = START_O2_TEST;
+        }
+        if (eolMSCount > 10000) {
+            eolMSCount = 0;
+            eolFail = true;
+            eolstep = MIN_PRESSURE_NOT_REACHED;
+        }
+    } else if (eolstep == MIN_PRESSURE_NOT_REACHED) {
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Vidage valves\nimpossible ! ");
+    } else if (eolstep == START_O2_TEST) {
+        blower.runSpeed(1790);
+        servoBlower.close();
+        servoBlower.execute();
+        servoPatient.close();
+        servoPatient.execute();
+        pressureValue = readPressureSensor(0, pressureOffset);
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O", pressureValue);
+        if (pressureValue > 100){
+            eolstep = START_LONG_RUN_BLOWER;
+            eolTestNumber++;
+            eolMSCount = 0;
+        } else if (eolMSCount > 20000) {
+            eolMSCount = 0;
+            eolFail = true;
+            eolstep = O2_PRESSURE_NOT_REACH;
+        }
+
+    } else if (eolstep == O2_PRESSURE_NOT_REACH) {
+        blower.stop();
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Tuyau O2\nBouche ! ");
+    } else if (eolstep == START_LONG_RUN_BLOWER) {
+        blower.runSpeed(1790);
+        servoBlower.open();
+        servoBlower.execute();
+        servoPatient.open( (servoPatient.minAperture() + servoPatient.maxAperture()) / 2);
+        servoPatient.execute();
+        pressureValue = readPressureSensor(0, pressureOffset);
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O", pressureValue);
+        
+        if (eolMSCount > 5000){
+            MaxPressureValue = max(MaxPressureValue, pressureValue);
+            MinPressureValue = min(MinPressureValue, pressureValue);
+        } 
+
+        if (eolMSCount > 900000) {
+            if (MaxPressureValue - MinPressureValue < 50){
+                eolstep = END_SUCCESS;
+                eolMSCount = 0;
+                eolTestNumber++;
+            } else {
+                eolstep = PRESSURE_NOT_STABLE;
+                eolMSCount = 0; 
+            }
+        }
+
+    } else if (eolstep == PRESSURE_NOT_STABLE) {
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pression non stable\nMax= %d mmH2O \nMin= %d mmH2O", MaxPressureValue, MinPressureValue);
+    } 
 
     else if (eolstep == END_SUCCESS) {
+        blower.stop();
         snprintf(eolScreenBuffer, EOLSCREENSIZE,
                  "********************\n**** SUCCESS !! ****\n********************");
     }
