@@ -154,7 +154,7 @@ void setup(void) {
 
     // Activate test mode if one of these buttons is pressed. The end of line test mode cannot be
     // activated later on.
-    if (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12 || true)) {
+    if (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12)) {
         eolTest.activate();
         screen.clear();
         screen.print("EOL Test Mode");
@@ -166,7 +166,6 @@ void setup(void) {
 
     // Do not initialize pressure controller and keyboard in test mode
     if (!eolTest.isRunning()) {
-
         alarmController = AlarmController();
 
         pController =

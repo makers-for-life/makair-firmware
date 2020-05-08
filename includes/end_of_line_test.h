@@ -24,9 +24,9 @@ class EolTest {
 
  private:
     uint32_t testActive;
-    HardwareTimer* eolTimer;
 };
 
 void millisecondTimerEOL(HardwareTimer*);
 
+extern HardwareTimer* eolTimer;
 extern EolTest eolTest;
