@@ -30,3 +30,12 @@ void millisecondTimerEOL(HardwareTimer*);
 
 extern HardwareTimer* eolTimer;
 extern EolTest eolTest;
+
+#include "../includes/blower.h"
+#include "../includes/pressure_valve.h"
+
+// these are defined and initialized in the main program
+extern PressureValve servoBlower;
+extern PressureValve servoPatient;
+extern Blower blower;
+extern int16_t pressureOffset;

@@ -154,7 +154,7 @@ void setup(void) {
 
     // Activate test mode if one of these buttons is pressed. The end of line test mode cannot be
     // activated later on.
-    if (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12)) {
+    if (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12) || true) {
         eolTest.activate();
         screen.clear();
         screen.print("EOL Test Mode");
