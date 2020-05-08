@@ -1,4 +1,4 @@
-# Ventilator Firmware
+# MakAir Firmware
 
 ## Versions
 
