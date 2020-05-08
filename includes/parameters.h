@@ -94,7 +94,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #elif PNEUMATIC_HARDWARE_VERSION == PHW_FAULHABER
 
 static const int32_t PID_BLOWER_KP = 2400;
-static const int32_t PID_BLOWER_KI = 34;  
+static const int32_t PID_BLOWER_KI = 34;
 static const int32_t PID_BLOWER_KD = 50;
 static const int32_t PID_BLOWER_INTEGRAL_MAX = 10000;
 static const int32_t PID_BLOWER_INTEGRAL_MIN = -10000;
@@ -109,7 +109,8 @@ static const int32_t PID_PATIENT_INTEGRAL_MIN = -400;
 static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 #endif
-#define NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN 10
+
+#define NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN 10u
 
 ///@}
 
