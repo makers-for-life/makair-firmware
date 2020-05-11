@@ -13,6 +13,7 @@
 #include "../includes/alarm_controller.h"
 #include "../includes/blower.h"
 #include "../includes/cycle.h"
+#include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
 
 /// Number of values to aggregate when computing plateau pressure
@@ -176,7 +177,7 @@ class PressureController {
     void inhale();
 
     /// Perform the pressure control and compute the transistors commands during the plateau phase
-    void plateau(uint16_t p_centiSec);
+    void plateau();
 
     /// Perform the pressure control and compute the transistors commands during the exhalation
     /// phase
@@ -231,6 +232,11 @@ class PressureController {
     /// At the end of a respiratory cycle, check if some alarms are triggered
     void checkCycleAlarm();
 
+#if VALVE_TYPE == VT_FAULHABER
+    /// Update only blower speed
+    void updateOnlyBlower();
+#endif
+
  private:
     /// Number of cycles per minute desired by the operator
     uint16_t m_cyclesPerMinuteCommand;
@@ -264,6 +270,12 @@ class PressureController {
 
     /// Measured pressure
     uint16_t m_pressure;
+
+    /// Sum for calulating square plateau value
+    uint64_t m_squarePlateauSum;
+
+    /// Count for calulating square plateau value
+    uint16_t m_squarePlateauCount;
 
     /// Peak pressure
     uint16_t m_peakPressure;
@@ -319,11 +331,32 @@ class PressureController {
     int32_t blowerLastError;
 
     /**
+     * Fast mode at start of expiration
+     *
+     * @note This must be persisted between computations
+     */
+    bool patientPIDFastMode;
+
+    /**
+     * Fast mode at start of inspiration
+     *
+     * @note This must be persisted between computations
+     */
+    bool blowerPIDFastMode;
+
+    /**
      * Integral gain of the patient PID
      *
      * @note This must be persisted between computations
      */
     int32_t patientIntegral;
+
+    /**
+     * Last aperture of the blower valve
+     *
+     * @note This must be persisted between computations
+     */
+    uint32_t lastBlowerAperture;
 
     /**
      * Error of the last computation of the patient PID
@@ -343,6 +376,10 @@ class PressureController {
 
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
+
+    /// Last error in blower PID
+    int32_t m_lastBlowerPIDError[NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN];
+    int32_t m_lastBlowerPIDErrorIndex;
 
     /// Index of array for last pressure storage
     uint16_t m_lastPressureValuesIndex;
