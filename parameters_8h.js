@@ -32,6 +32,7 @@ var parameters_8h =
     [ "MAX_BLOWER_SPEED", "parameters_8h.html#a3ffa4d83d65bee55efc0a43440e9db2e", null ],
     [ "MAX_PRESSURE_OFFSET", "parameters_8h.html#af1c21e6533ef5528bd6aa463be29180d", null ],
     [ "MIN_BLOWER_SPEED", "parameters_8h.html#a9d2b8b8d0ab40857c2d65732708b8782", null ],
+    [ "NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN", "parameters_8h.html#ab28961f9db88958c2530533e0c08a8c3", null ],
     [ "PCONTROLLER_COMPUTE_PERIOD", "parameters_8h.html#a3b4d8868641a66472bfbef6ce635329d", null ],
     [ "PIN_BATTERY", "parameters_8h.html#adb925a5f9d18b6b2bc2b80357d94e5a1", null ],
     [ "PIN_BTN_ALARM_OFF", "parameters_8h.html#ad0e0ece098a3f92316c51120f831b418", null ],
