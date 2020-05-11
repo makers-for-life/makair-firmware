@@ -808,15 +808,13 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
             min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
 #endif
 
-    
-
     return blowerAperture;
 }
 
 int32_t
 PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 #if VALVE_TYPE == VT_FAULHABER
-// Compute error
+    // Compute error
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
     if (error > -10) {
@@ -874,6 +872,6 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
             min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
 
 #endif
-    
+
     return patientAperture;
 }
