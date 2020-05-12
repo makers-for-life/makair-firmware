@@ -70,9 +70,9 @@ class PressureController {
     /**
      * Perform the pressure control
      *
-     * @param p_centiSec  Duration in hundredth of second from the begining of the cycle
+     * @param p_tick  Duration in hundredth of second from the begining of the cycle
      */
-    void compute(uint16_t p_centiSec);
+    void compute(uint16_t p_tick);
 
     /// Decrease the desired number of cycles per minute
     void onCycleDecrease();
@@ -125,10 +125,10 @@ class PressureController {
     inline uint32_t cycleNumber() const { return m_cycleNb; }
 
     /// Get the duration of a cycle in hundredth of second
-    inline uint16_t centiSecPerCycle() const { return m_centiSecPerCycle; }
+    inline uint16_t tickPerCycle() const { return m_ticksPerCycle; }
 
     /// Get the duration of an inhalation in hundredth of second
-    inline uint16_t centiSecPerInhalation() const { return m_centiSecPerInhalation; }
+    inline uint16_t tickPerInhalation() const { return m_tickPerInhalation; }
 
     /// Get the current measured pressure
     inline int16_t pressure() const { return m_pressure; }
@@ -165,9 +165,9 @@ class PressureController {
     /**
      * Update the cycle phase
      *
-     * @param p_centiSec  Duration from the begining of the cycle in hundredth of second
+     * @param p_tick  Duration from the begining of the cycle in hundredth of second
      */
-    void updatePhase(uint16_t p_centiSec);
+    void updatePhase(uint16_t p_tick);
 
     /// Update peak pressure and blower ramp up
     void updatePeakPressure();
@@ -191,14 +191,14 @@ class PressureController {
      *
      *  N.B.: Inhalation lasts 1/3 of a cycle while exhalation lasts 2/3 of a cycle
      */
-    void computeCentiSecParameters();
+    void computetickParameters();
 
     /**
      * Compute plateau pressure
      *
-     * @param p_centiSec  Duration from the begining of the cycle in hundredth of second
+     * @param p_tick  Duration from the begining of the cycle in hundredth of second
      */
-    void computePlateau(uint16_t p_centiSec);
+    void computePlateau(uint16_t p_tick);
 
     /// Give the computed commands to actuators
     void executeCommands();
@@ -207,9 +207,9 @@ class PressureController {
      * Make a transition toward another subphase
      *
      * @param p_subPhase  Next cycle step
-     * @param p_centiSec  Duration from the begining of the cycle in hundredth of second
+     * @param p_tick  Duration from the begining of the cycle in hundredth of second
      */
-    void setSubPhase(CycleSubPhases p_subPhase, uint16_t p_centiSec);
+    void setSubPhase(CycleSubPhases p_subPhase, uint16_t p_tick);
 
     /**
      * PID to controller the blower valve during some specific steps of the cycle
@@ -254,10 +254,10 @@ class PressureController {
     uint16_t m_cyclesPerMinute;
 
     /// Number of hundredth of second per cycle
-    uint16_t m_centiSecPerCycle;
+    uint16_t m_ticksPerCycle;
 
     /// Number of hundredth of second per inhalation
-    uint16_t m_centiSecPerInhalation;
+    uint16_t m_tickPerInhalation;
 
     /// Maximal peak pressure
     uint16_t m_maxPeakPressure;
@@ -380,6 +380,10 @@ class PressureController {
     /// Last error in blower PID
     int32_t m_lastBlowerPIDError[NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN];
     int32_t m_lastBlowerPIDErrorIndex;
+
+    /// Last error in Patient PID
+    int32_t m_lastPatientPIDError[NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN];
+    int32_t m_lastPatientPIDErrorIndex;
 
     /// Index of array for last pressure storage
     uint16_t m_lastPressureValuesIndex;
