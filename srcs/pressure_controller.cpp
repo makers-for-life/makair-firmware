@@ -178,8 +178,8 @@ void PressureController::initRespiratoryCycle() {
     patientIntegral = 0;
     patientLastError = m_minPeepCommand - m_maxPlateauPressureCommand;
     lastBlowerAperture = m_blower_valve.maxAperture();
-    patientPIDFastMode = true;
     blowerPIDFastMode = false;
+    patientPIDFastMode = true;
 
     m_peakPressure = 0;
     computetickParameters();
@@ -222,7 +222,7 @@ void PressureController::initRespiratoryCycle() {
 
     for (uint8_t i = 0; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
         m_lastBlowerPIDError[i] = 0;
-        m_lastPatientPIDError[i] = 0;
+        m_lastPatientPIDError[i] = m_minPeepCommand - m_maxPlateauPressureCommand;
     }
 }
 
@@ -315,8 +315,10 @@ void PressureController::compute(uint16_t p_tick) {
 
 #if HARDWARE_VERSION == 2
     m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
-                     m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
+    if (p_tick%2==0){
+      sendDataSnapshot(p_tick/2, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
+                       m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
+    }
 #endif
 
     executeCommands();
@@ -827,22 +829,45 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t totalValues = 0;
     int32_t coefficientI = PID_PATIENT_KI;
     int32_t coefficientP = PID_PATIENT_KP;
+    int32_t coefficientD = PID_PATIENT_KD;
 
-    if (error > -40) {
+    
+
+    /*
+    if (abs(error) < 5 ){ 
+      coefficientP = PID_PATIENT_KP/4;
+      //coefficientI = PID_PATIENT_KI/2;
+      coefficientD = PID_PATIENT_KD/4;
+        
+    }if (abs(error) < 10 ) {
+      coefficientP = PID_PATIENT_KP/3;
+      //coefficientI = PID_PATIENT_KI/2;
+      coefficientD = PID_PATIENT_KD/4;
+        
+    } else if (abs(error) < 20 ) {
+      coefficientP = PID_PATIENT_KP/2;
+      //coefficientI = PID_PATIENT_KI/2;
+      coefficientD = PID_PATIENT_KD/3;
+        
+    } else if (abs(error) < 30 ) {
+      coefficientP = PID_PATIENT_KP/2;
+      //coefficientI = PID_PATIENT_KI/2;
+      coefficientD = PID_PATIENT_KD/2;
+        
+    } else {
+      coefficientP = PID_PATIENT_KP;
+      //coefficientI = PID_PATIENT_KI;
+      coefficientD = PID_PATIENT_KD;
+    }*/
+
+
+    if (error > -15) {
         // change of state
         if (patientPIDFastMode) {
-            patientIntegral = -1000 - (
-          ((PID_PATIENT_KP * error) / 1000)  + PID_PATIENT_KD*derivative/1000);
+            //patientDamping = (-1000 - (
+          //((coefficientP * error) / 1000)  + coefficientD*derivative/1000));
         }
         patientPIDFastMode = false;
-    }
-
-    if (abs(error) > 30 ) {
-        coefficientI = PID_PATIENT_KI;
-        coefficientP = PID_PATIENT_KP;
-    } else {
-        coefficientI = PID_PATIENT_KI*2;
-        coefficientP = PID_PATIENT_KP/2;
     }
 
     m_lastPatientPIDError[m_lastPatientPIDErrorIndex] = error;
@@ -858,27 +883,41 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     smoothError =
         totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
     
+    
+
+    derivative = (dt == 0) ? 0 : 1000000 * (patientLastError - smoothError) / dt;
+
     if (patientPIDFastMode) {
-        patientAperture = minAperture;
-    } else {
+       if (abs(derivative)<1500 ){
+      coefficientP = PID_PATIENT_KP*4;
+      }
+    } 
 
-      derivative = ((dt == 0)) ? 0 : ((1000000 * (patientLastError - smoothError)) / dt);
+    int32_t temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
+    temporaryPatientIntegral =
+        max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
 
-      patientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
-      patientIntegral =
-          max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, patientIntegral));
+    int32_t patientCommand =
+        ((coefficientP * error) / 1000) + patientIntegral - coefficientD*derivative/1000; 
 
-      int32_t patientCommand =
-          ((coefficientP * error) / 1000) + patientIntegral + PID_PATIENT_KD*derivative/1000; 
+    
 
-      patientAperture = max(
-          minAperture,
-          min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
+    /*if (derivative < 0){
+      patientDamping = min((int32_t)0, patientDamping - coefficientD*derivative/1000/2);
+    }*/
 
+    patientAperture = max(
+        minAperture,
+        min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
+
+    if (patientAperture !=  minAperture && patientAperture != maxAperture){
+      patientIntegral = temporaryPatientIntegral;
     }
+
+    
     patientLastError = smoothError;
-    Serial.print(dt);
-    Serial.print(",");
+    /*Serial.print(dt);
+    Serial.print(",");*/
     Serial.print(targetPressure);
     Serial.print(",");
     Serial.print(currentPressure);
@@ -919,4 +958,12 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
 #endif
 
     return patientAperture;
+}
+
+
+void PressureController::reachSafetyPosition(){
+  m_blower_valve.open();
+  m_blower_valve.execute();
+  m_patient_valve.open();
+  m_patient_valve.execute();
 }

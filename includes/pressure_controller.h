@@ -161,6 +161,9 @@ class PressureController {
      */
     void updateDt(int32_t p_dt);
 
+
+    void reachSafetyPosition();
+
  private:
     /**
      * Update the cycle phase

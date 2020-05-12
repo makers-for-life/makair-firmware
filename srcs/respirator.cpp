@@ -320,11 +320,10 @@ void loop(void) {
             } else {
                 digitalWrite(PIN_LED_START, LED_START_INACTIVE);
                 blower.stop();
+
                 // When stopped, open the valves
-                servoBlower.open();
-                servoBlower.execute();
-                servoPatient.open();
-                servoPatient.execute();
+                pController.reachSafetyPosition();
+                
                 // Stop alarms related to breathing cycle
                 alarmController.notDetectedAlarm(RCM_SW_1);
                 alarmController.notDetectedAlarm(RCM_SW_2);
@@ -348,7 +347,7 @@ void loop(void) {
             batteryLoop(pController.cycleNumber());
 
             // Display relevant information during the cycle
-            if ((tick % LCD_UPDATE_PERIOD_US) == 0u) { //TODO CORRECTION
+            if ((tick % 20) == 0u) { //TODO CORRECTION
                 displayCurrentPressure(pController.pressure(),
                                        pController.cyclesPerMinuteCommand());
 
