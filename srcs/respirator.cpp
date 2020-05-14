@@ -153,6 +153,7 @@ void setup(void) {
                                      DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
                                      servoBlower, servoPatient, &alarmController, blower_pointer);
     pController.setup();
+    pController.reachSafetyPosition();
 
     // Prepare LEDs
     pinMode(PIN_LED_START, OUTPUT);
