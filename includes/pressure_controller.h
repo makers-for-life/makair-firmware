@@ -273,6 +273,9 @@ class PressureController {
     /// Measured pressure
     uint16_t m_pressure;
 
+    /// Inhalation last Pressre
+    uint16_t m_inhalationLastPressure;
+
     /// Sum for calulating square plateau value
     uint64_t m_squarePlateauSum;
 
@@ -398,6 +401,9 @@ class PressureController {
 
     /// Number of hundredth of second from the begining of the cycle till the plateau phase
     uint16_t m_plateauStartTime;
+
+    // Tick index, given by the main loop
+    uint16_t m_tick;
 };
 
 // INITIALISATION =============================================================

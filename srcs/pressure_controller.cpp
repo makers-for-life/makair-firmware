@@ -44,6 +44,7 @@ PressureController::PressureController()
       m_maxPlateauPressure(CONST_MAX_PLATEAU_PRESSURE),  // [mmH20]
       m_minPeep(CONST_MIN_PEEP_PRESSURE),
       m_pressure(CONST_INITIAL_ZERO_PRESSURE),
+      m_inhalationLastPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_peakPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_plateauPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_peep(CONST_INITIAL_ZERO_PRESSURE),
@@ -72,6 +73,8 @@ PressureController::PressureController()
       m_lastPatientPIDErrorIndex(0),
       patientPIDFastMode(true),
       blowerPIDFastMode(true),
+      patientDamping(0),
+      m_tick(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computetickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -99,6 +102,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_maxPlateauPressure(p_maxPlateauPressure),
       m_minPeep(p_minPeepCommand),
       m_pressure(CONST_INITIAL_ZERO_PRESSURE),
+      m_inhalationLastPressure(CONST_INITIAL_ZERO_PRESSURE),
       // cppcheck-suppress misra-c2012-12.3
       m_peakPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_plateauPressure(CONST_INITIAL_ZERO_PRESSURE),
@@ -131,6 +135,8 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_lastPatientPIDErrorIndex(0),
       patientPIDFastMode(true),
       blowerPIDFastMode(true),
+      patientDamping(0),
+      m_tick(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computetickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -276,6 +282,7 @@ void PressureController::updatePressure(int16_t p_currentPressure) {
 void PressureController::compute(uint16_t p_tick) {
     // Update the cycle phase
     updatePhase(p_tick);
+    m_tick = p_tick;
 
     // Compute metrics for alarms
     m_sumOfPressures += m_pressure;
@@ -285,10 +292,12 @@ void PressureController::compute(uint16_t p_tick) {
     switch (m_subPhase) {
     case CycleSubPhases::INSPIRATION: {
         inhale();
+        m_inhalationLastPressure = m_pressure;
         break;
     }
     case CycleSubPhases::HOLD_INSPIRATION: {
         plateau();
+        m_inhalationLastPressure = m_pressure;
         break;
     }
     case CycleSubPhases::EXHALE:
@@ -830,45 +839,16 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t coefficientI = PID_PATIENT_KI;
     int32_t coefficientP = PID_PATIENT_KP;
     int32_t coefficientD = PID_PATIENT_KD;
+    int32_t slope = 0;
+    int32_t temporaryPatientIntegral = 0;
 
 
 
-    /*
-    if (abs(error) < 5 ){
-      coefficientP = PID_PATIENT_KP/4;
-      //coefficientI = PID_PATIENT_KI/2;
-      coefficientD = PID_PATIENT_KD/4;
 
-    }if (abs(error) < 10 ) {
-      coefficientP = PID_PATIENT_KP/3;
-      //coefficientI = PID_PATIENT_KI/2;
-      coefficientD = PID_PATIENT_KD/4;
-
-    } else if (abs(error) < 20 ) {
-      coefficientP = PID_PATIENT_KP/2;
-      //coefficientI = PID_PATIENT_KI/2;
-      coefficientD = PID_PATIENT_KD/3;
-
-    } else if (abs(error) < 30 ) {
-      coefficientP = PID_PATIENT_KP/2;
-      //coefficientI = PID_PATIENT_KI/2;
-      coefficientD = PID_PATIENT_KD/2;
-
-    } else {
-      coefficientP = PID_PATIENT_KP;
-      //coefficientI = PID_PATIENT_KI;
-      coefficientD = PID_PATIENT_KD;
-    }*/
-
-
-    if (error > -15) {
-        // change of state
-        if (patientPIDFastMode) {
-            //patientDamping = (-1000 - (
-          //((coefficientP * error) / 1000)  + coefficientD*derivative/1000));
-        }
+    if (error > -10) {
         patientPIDFastMode = false;
     }
+
 
     m_lastPatientPIDError[m_lastPatientPIDErrorIndex] = error;
     m_lastPatientPIDErrorIndex++;
@@ -885,15 +865,23 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
 
 
 
-    derivative = (dt == 0) ? 0 : 1000000 * (patientLastError - smoothError) / dt;
-
+    derivative = (dt == 0) ? 0 : (1000000 * (smoothError - patientLastError)) / dt;
     if (patientPIDFastMode) {
-       if (abs(derivative)<1500 ){
-      coefficientP = PID_PATIENT_KP*4;
-      }
+
+        int32_t initialError = m_minPeepCommand - m_inhalationLastPressure;
+        slope = ((m_tick - m_tickPerInhalation) == 0) ? 0 :
+          ((1000000/(int32_t)PCONTROLLER_COMPUTE_PERIOD_US) * (error - initialError)) / (m_tick - m_tickPerInhalation);
+
+        coefficientP = ((-2*PID_PATIENT_KP*slope/4000 + PID_PATIENT_KP) * (1000 + 10000*(m_tick - m_tickPerInhalation)/(2*m_tickPerInhalation)))/1000;
+        coefficientP = max(PID_PATIENT_KP/4, min(coefficientP, 2*PID_PATIENT_KP));
+        coefficientI = coefficientI /4 ;
+
+    } else {
+      coefficientP = PID_PATIENT_KP / 4;
+      coefficientI = coefficientI;
     }
 
-    int32_t temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
+    temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
     temporaryPatientIntegral =
         max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
 
@@ -914,8 +902,13 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
       patientIntegral = temporaryPatientIntegral;
     }
 
+<<<<<<< HEAD
 
     patientLastError = smoothError;
+=======
+
+
+>>>>>>> Peep is not bad
     /*Serial.print(dt);
     Serial.print(",");*/
     Serial.print(targetPressure);
@@ -928,9 +921,12 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     Serial.print(",");
     Serial.print(PID_PATIENT_KD*derivative/1000);
     Serial.print(",");
+    Serial.print(slope);
+    Serial.print(",");
     Serial.print(patientAperture);
     Serial.print(",");
     Serial.println();
+    patientLastError = smoothError;
 #else
     // Compute error
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
