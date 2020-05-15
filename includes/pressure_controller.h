@@ -365,6 +365,13 @@ class PressureController {
     uint32_t lastBlowerAperture;
 
     /**
+     * Last aperture of the blower valve
+     *
+     * @note This must be persisted between computations
+     */
+    uint32_t lastPatientAperture;
+
+    /**
      * Error of the last computation of the patient PID
      *
      * @note This must be persisted between computation in order to compute derivative gain

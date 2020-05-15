@@ -11,7 +11,7 @@
 
 static int32_t filteredRawPressure = 0;
 
-static const int32_t RAW_PRESSURE_FILTER_DIVIDER = 20;
+static const int32_t RAW_PRESSURE_FILTER_DIVIDER = 5;
 
 // Constants used in original conversion formula:
 //      RATIO_VOLTAGE_DIVIDER = 0.8192
