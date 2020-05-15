@@ -75,6 +75,7 @@ PressureController::PressureController()
       blowerPIDFastMode(true),
       patientDamping(0),
       m_tick(0),
+      lastPatientAperture(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computetickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -137,6 +138,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       blowerPIDFastMode(true),
       patientDamping(0),
       m_tick(0),
+      lastPatientAperture(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computetickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -184,8 +186,10 @@ void PressureController::initRespiratoryCycle() {
     patientIntegral = 0;
     patientLastError = m_minPeepCommand - m_maxPlateauPressureCommand;
     lastBlowerAperture = m_blower_valve.maxAperture();
+    lastPatientAperture = m_patient_valve.maxAperture();
     blowerPIDFastMode = false;
     patientPIDFastMode = true;
+
 
     m_peakPressure = 0;
     computetickParameters();
@@ -221,7 +225,7 @@ void PressureController::initRespiratoryCycle() {
     m_sumOfPressures = 0u;
     m_numberOfPressures = 0u;
 
-    m_plateauStartTime = 0u;
+    m_plateauStartTime = m_tickPerInhalation;
 
     m_squarePlateauSum = 0u;
     m_squarePlateauCount = 0u;
@@ -525,16 +529,14 @@ void PressureController::updateOnlyBlower() {
     DBG_DO(Serial.println("updatePeakPressure");)
     // If plateau was reached quite early
     if (m_plateauStartTime < ((m_tickPerInhalation * 10u) / 100u)) {
-        DBG_DO(Serial.println("BLOWER -20");)
-
         // If the peak delta is high, decrease blower's speed a lot
         if (plateauDelta < -20) {
             m_blower_increment = -60;
             DBG_DO(Serial.print("BLOWER -60, peak: ");)
             DBG_DO(Serial.println(plateauDelta);)
         } else {
-            m_blower_increment = -20;
-            DBG_DO(Serial.println("BLOWER -20");)
+            m_blower_increment = -30;
+            DBG_DO(Serial.println("BLOWER -30");)
         }
     } else if ((m_plateauStartTime >= ((m_tickPerInhalation * 10u) / 100u))
                && (m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))) {
@@ -730,53 +732,77 @@ void PressureController::checkCycleAlarm() {
 void PressureController::setSubPhase(CycleSubPhases p_subPhase, uint16_t p_tick) {
     if ((m_subPhase == CycleSubPhases::INSPIRATION)
         && (p_subPhase == CycleSubPhases::HOLD_INSPIRATION)) {
-        m_plateauStartTime = p_tick;
     }
     m_subPhase = p_subPhase;
 }
 
 int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 #if VALVE_TYPE == VT_FAULHABER
-    // Compute error
-    int32_t error = targetPressure - currentPressure;
+
     int32_t minAperture = m_blower_valve.minAperture();
     int32_t maxAperture = m_blower_valve.maxAperture();
     uint32_t blowerAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;
-    int32_t coefficientI;
+    int32_t integralWeight = 0;
+    int32_t proportionnalWeight = 0;
+    int32_t derivativeWeight = 0;
 
-    // Different KI in case of overshooting
-    if (error < 0) {
-        coefficientI = PID_BLOWER_KI * 2;
-    } else {
-        coefficientI = PID_BLOWER_KI;
-    }
+    int32_t coefficientP = PID_BLOWER_KP;
+    int32_t coefficientI = PID_BLOWER_KI;
+    int32_t coefficientD = PID_BLOWER_KD;
 
+    int32_t temporaryBlowerIntegral = 0;
+
+    // Compute error
+    int32_t error = targetPressure - currentPressure;
+
+
+    // Calculate Derivative part. Include a moving average on error for smoothing purpose
     m_lastBlowerPIDError[m_lastBlowerPIDErrorIndex] = error;
     m_lastBlowerPIDErrorIndex++;
     if (m_lastBlowerPIDErrorIndex
         >= static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN)) {
         m_lastBlowerPIDErrorIndex = 0;
     }
-
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
         totalValues += m_lastBlowerPIDError[i];
     }
     smoothError =
         totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
 
-    derivative = ((dt == 0)) ? 0 : ((1000000 * (blowerLastError - smoothError)) / dt);
 
-    blowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
-    blowerIntegral = max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, blowerIntegral));
+    // Fast mode at beginning
+    if (error < 10) {
+      if (blowerPIDFastMode){
+        m_plateauStartTime = m_tick;
+      }
+      blowerPIDFastMode = false;
+    }
 
-    int32_t blowerCommand =
-        ((PID_BLOWER_KP * error) / 1000) + blowerIntegral + ((PID_BLOWER_KD * derivative) / 1000);
-    blowerAperture =
-        max(minAperture,
-            min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
+    // In fast mode : everything is openned (Open loop)
+    if (blowerPIDFastMode){
+      blowerAperture = minAperture;
+    }
+    // Then use the PID to finish slowly
+    else {
+      derivative = ((dt == 0)) ? 0 : ((1000000 * (blowerLastError - smoothError)) / dt);
+
+      temporaryBlowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
+      temporaryBlowerIntegral = max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, temporaryBlowerIntegral));
+
+      proportionnalWeight =  ((coefficientP * error) / 1000);
+      integralWeight = temporaryBlowerIntegral;
+      derivativeWeight = coefficientD*derivative/1000;
+
+
+      int32_t blowerCommand = proportionnalWeight + integralWeight + derivativeWeight;
+      blowerAperture =
+          max(minAperture,
+              min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
+    }
+
 
     // Slow down aperture at starting
     if ((error > 50) && (blowerAperture > (lastBlowerAperture + 15u))) {
@@ -788,13 +814,24 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
         // Do nothing
     }
 
+    // If the valve is completly open or completly closed, dont update Integral
+    if (blowerAperture !=  minAperture && blowerAperture != maxAperture){
+      blowerIntegral = temporaryBlowerIntegral;
+    }
+
     lastBlowerAperture = blowerAperture;
     blowerLastError = smoothError;
-    /*Serial.print(((PID_BLOWER_KP * error) / 1000));
+    /*Serial.print(targetPressure);
     Serial.print(",");
-    Serial.print(blowerIntegral);
+    Serial.print(m_pressure);
+    Serial.print(",");
+    Serial.print(((PID_BLOWER_KP * error) / 1000));
+    Serial.print(",");
+    Serial.print(temporaryBlowerIntegral);
     Serial.print(",");
     Serial.print(((PID_BLOWER_KD * derivative) / 1000));
+    Serial.print(",");
+    Serial.print(blowerAperture);
     Serial.print(",");
     Serial.println();*/
 #else
@@ -836,97 +873,117 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;
-    int32_t coefficientI = PID_PATIENT_KI;
+    int32_t integralWeight = 0;
+    int32_t proportionnalWeight = 0;
+    int32_t derivativeWeight = 0;
+
     int32_t coefficientP = PID_PATIENT_KP;
+    int32_t coefficientI = PID_PATIENT_KI;
     int32_t coefficientD = PID_PATIENT_KD;
-    int32_t slope = 0;
+
     int32_t temporaryPatientIntegral = 0;
 
-
-
-
-    if (error > -10) {
-        patientPIDFastMode = false;
-    }
-
-
+    //Calculate derivative part
     m_lastPatientPIDError[m_lastPatientPIDErrorIndex] = error;
     m_lastPatientPIDErrorIndex++;
     if (m_lastPatientPIDErrorIndex
         >= static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN)) {
         m_lastPatientPIDErrorIndex = 0;
     }
-
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
         totalValues += m_lastPatientPIDError[i];
     }
     smoothError =
         totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
-
-
-
     derivative = (dt == 0) ? 0 : (1000000 * (smoothError - patientLastError)) / dt;
-    if (patientPIDFastMode) {
 
-        int32_t initialError = m_minPeepCommand - m_inhalationLastPressure;
-        slope = ((m_tick - m_tickPerInhalation) == 0) ? 0 :
-          ((1000000/(int32_t)PCONTROLLER_COMPUTE_PERIOD_US) * (error - initialError)) / (m_tick - m_tickPerInhalation);
-
-        coefficientP = ((-2*PID_PATIENT_KP*slope/4000 + PID_PATIENT_KP) * (1000 + 10000*(m_tick - m_tickPerInhalation)/(2*m_tickPerInhalation)))/1000;
-        coefficientP = max(PID_PATIENT_KP/4, min(coefficientP, 2*PID_PATIENT_KP));
-        coefficientI = coefficientI /4 ;
-
+    // Fenetrage
+    if (error<0){
+      coefficientI = 50; // 50o - 100n
+      coefficientP = 2500; // 5000o - 10000n
     } else {
-      coefficientP = PID_PATIENT_KP / 4;
-      coefficientI = coefficientI;
+      coefficientI = 120;
+      coefficientP = 2500 ;
     }
 
-    temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
-    temporaryPatientIntegral =
+    // Fast mode or not
+    if (error > -30) {
+      if (patientPIDFastMode){
+        proportionnalWeight = (coefficientP * error) / 1000;
+        int32_t derivativeWeight = (coefficientD*derivative/1000);
+        patientIntegral = 1000*((int32_t)lastPatientAperture - maxAperture)/(maxAperture - minAperture) - (proportionnalWeight + derivativeWeight);
+
+        /*Serial.print(lastPatientAperture);
+        Serial.print(",");
+        Serial.print(proportionnalWeight);
+        Serial.print(",");
+        Serial.print(derivativeWeight);
+        Serial.println();*/
+
+      }
+      patientPIDFastMode = false;
+    }
+
+    // Fast mode : open loop with ramp
+    if (patientPIDFastMode) {
+      int32_t increment = 5;
+      if (lastPatientAperture >= increment){
+        patientAperture =  patientAperture = max(minAperture,min(maxAperture,(int32_t)(lastPatientAperture - increment)));
+      } else {
+        patientAperture = 0;
+      }
+
+    }
+    // Then smooth PID
+    else {
+
+
+
+      temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
+      temporaryPatientIntegral =
         max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
 
-    int32_t patientCommand =
-        ((coefficientP * error) / 1000) + patientIntegral - coefficientD*derivative/1000;
+      proportionnalWeight =  ((coefficientP * error) / 1000);
+      integralWeight = temporaryPatientIntegral;
+      derivativeWeight = coefficientD*derivative/1000;
 
+      int32_t patientCommand = proportionnalWeight + integralWeight + derivativeWeight;
 
-
-    /*if (derivative < 0){
-      patientDamping = min((int32_t)0, patientDamping - coefficientD*derivative/1000/2);
-    }*/
-
-    patientAperture = max(
+      patientAperture = max(
         minAperture,
         min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
+    }
 
+
+
+
+
+    // If the valve is completly open or completly closed, dont update Integral
     if (patientAperture !=  minAperture && patientAperture != maxAperture){
       patientIntegral = temporaryPatientIntegral;
     }
 
-<<<<<<< HEAD
-
-    patientLastError = smoothError;
-=======
 
 
->>>>>>> Peep is not bad
     /*Serial.print(dt);
-    Serial.print(",");*/
-    Serial.print(targetPressure);
+    Serial.print(",");
+    /*Serial.print(targetPressure);
     Serial.print(",");
     Serial.print(currentPressure);
+    Serial.print(",");*/
+    Serial.print(m_pressure);
     Serial.print(",");
-    Serial.print(((coefficientP * error) / 1000));
+    Serial.print(proportionnalWeight/10);
     Serial.print(",");
-    Serial.print(patientIntegral);
+    Serial.print(integralWeight/10);
     Serial.print(",");
-    Serial.print(PID_PATIENT_KD*derivative/1000);
-    Serial.print(",");
-    Serial.print(slope);
-    Serial.print(",");
+    /*Serial.print(derivativeWeight*derivative/1000);
+    Serial.print(",");*/
     Serial.print(patientAperture);
     Serial.print(",");
     Serial.println();
     patientLastError = smoothError;
+    lastPatientAperture = patientAperture;
 #else
     // Compute error
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
