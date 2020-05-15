@@ -187,7 +187,7 @@ void PressureController::initRespiratoryCycle() {
     patientLastError = m_minPeepCommand - m_maxPlateauPressureCommand;
     lastBlowerAperture = m_blower_valve.maxAperture();
     lastPatientAperture = m_patient_valve.maxAperture();
-    blowerPIDFastMode = false;
+    blowerPIDFastMode = true;
     patientPIDFastMode = true;
 
 
@@ -458,7 +458,7 @@ void PressureController::updatePhase(uint16_t p_tick) {
         m_phase = CyclePhases::INHALATION;
 
 #if VALVE_TYPE == VT_FAULHABER
-        uint16_t pressureToTest = m_maxPlateauPressureCommand;
+        uint16_t pressureToTest = m_maxPlateauPressureCommand-5;
 #else
         uint16_t pressureToTest = m_maxPeakPressureCommand;
 #endif
@@ -524,48 +524,35 @@ void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 
 #if VALVE_TYPE == VT_FAULHABER
 void PressureController::updateOnlyBlower() {
-    int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
+    int16_t peakDelta = m_peakPressure - m_plateauPressure;
 
-    DBG_DO(Serial.println("updatePeakPressure");)
     // If plateau was reached quite early
-    if (m_plateauStartTime < ((m_tickPerInhalation * 10u) / 100u)) {
-        // If the peak delta is high, decrease blower's speed a lot
-        if (plateauDelta < -20) {
-            m_blower_increment = -60;
-            DBG_DO(Serial.print("BLOWER -60, peak: ");)
-            DBG_DO(Serial.println(plateauDelta);)
-        } else {
-            m_blower_increment = -30;
-            DBG_DO(Serial.println("BLOWER -30");)
-        }
-    } else if ((m_plateauStartTime >= ((m_tickPerInhalation * 10u) / 100u))
-               && (m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))) {
-        DBG_DO(Serial.println("BLOWER -10");)
-        m_blower_increment = -10;
-    } else if ((m_plateauStartTime > ((m_tickPerInhalation * 30u) / 100u))
-               && (m_plateauStartTime <= ((m_tickPerInhalation * 40u) / 100u))
-               && abs(plateauDelta) > 10) {
-        DBG_DO(Serial.println("BLOWER +10");)
-        m_blower_increment = +10;
-    } else if (m_plateauStartTime > ((m_tickPerInhalation * 40u) / 100u)) {
-        if (plateauDelta > 60) {
-            m_blower_increment = +60;
-            DBG_DO(Serial.print("BLOWER +60, peak: ");)
-            DBG_DO(Serial.print(m_maxPlateauPressureCommand);)
-            DBG_DO(Serial.print("-");)
-            DBG_DO(Serial.println(m_plateauPressure);)
-        } else if (plateauDelta > 40) {
-            m_blower_increment = +40;
-            DBG_DO(Serial.print("BLOWER +40, peak: ");)
-            DBG_DO(Serial.println(plateauDelta);)
-        } else {
-            m_blower_increment = +20;
-            DBG_DO(Serial.println("BLOWER +20");)
-        }
+    // TODO 20 prop to interval
+     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
+          if (m_plateauStartTime < 12 || peakDelta > 25) {
+            m_blower_increment = -100;
+            DBG_DO(Serial.println("BLOWER -100");)
+          } else {
+            m_blower_increment = 0;
+            DBG_DO(Serial.println("BLOWER 0");)
+          }
+    } else if (m_plateauStartTime < ((m_tickPerInhalation * 40u) / 100u)) {
+        DBG_DO(Serial.println("BLOWER +0");)
+        m_blower_increment = 0;
+    } else if (m_plateauStartTime < ((m_tickPerInhalation * 50u) / 100u) ) {
+        m_blower_increment = +25;
+        DBG_DO(Serial.println("BLOWER +25"));
+    } else if (m_plateauStartTime < ((m_tickPerInhalation * 60u) / 100u) ) {
+        m_blower_increment = +50;
+        DBG_DO(Serial.println("BLOWER +50"));
+    } else if (m_plateauStartTime >= ((m_tickPerInhalation * 60u) / 100u) ) {
+        m_blower_increment = +100;
+        DBG_DO(Serial.println("BLOWER +100"));
     } else {
         m_blower_increment = 0;
         DBG_DO(Serial.println("BLOWER +0");)
     }
+
     DBG_DO(Serial.print("Plateau Start time:");)
     DBG_DO(Serial.println(m_plateauStartTime);)
 }
@@ -732,6 +719,7 @@ void PressureController::checkCycleAlarm() {
 void PressureController::setSubPhase(CycleSubPhases p_subPhase, uint16_t p_tick) {
     if ((m_subPhase == CycleSubPhases::INSPIRATION)
         && (p_subPhase == CycleSubPhases::HOLD_INSPIRATION)) {
+        m_plateauStartTime = p_tick;
     }
     m_subPhase = p_subPhase;
 }
@@ -758,6 +746,14 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     // Compute error
     int32_t error = targetPressure - currentPressure;
 
+    // Fenetrage
+    if (error<0){
+      coefficientI = 200; // 50o - 100n
+      coefficientP = 2500; // 5000o - 10000n
+    } else {
+      coefficientI = 50;
+      coefficientP = 2500 ;
+    }
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
     m_lastBlowerPIDError[m_lastBlowerPIDErrorIndex] = error;
@@ -774,16 +770,25 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 
 
     // Fast mode at beginning
-    if (error < 10) {
+    if (error < 20) {
       if (blowerPIDFastMode){
-        m_plateauStartTime = m_tick;
+        proportionnalWeight = (coefficientP * error) / 1000;
+        derivativeWeight = (coefficientD*derivative/1000);
+        blowerIntegral = 1000*((int32_t)lastBlowerAperture - maxAperture)/(minAperture - maxAperture) - (proportionnalWeight + derivativeWeight);
+        //m_plateauStartTime = m_tick;
+
       }
       blowerPIDFastMode = false;
     }
 
     // In fast mode : everything is openned (Open loop)
     if (blowerPIDFastMode){
-      blowerAperture = minAperture;
+      int32_t increment = 5;
+      if (lastBlowerAperture >= increment){
+        blowerAperture = max(minAperture,min(maxAperture,(int32_t)(lastBlowerAperture - increment)));
+      } else {
+        blowerAperture = 0;
+      }
     }
     // Then use the PID to finish slowly
     else {
@@ -804,15 +809,7 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     }
 
 
-    // Slow down aperture at starting
-    if ((error > 50) && (blowerAperture > (lastBlowerAperture + 15u))) {
-        blowerAperture = lastBlowerAperture + 15u;
-    } else if ((error > 50) && (lastBlowerAperture > 15u)
-               && (blowerAperture < (lastBlowerAperture - 15u))) {
-        blowerAperture = lastBlowerAperture - 15u;
-    } else {
-        // Do nothing
-    }
+
 
     // If the valve is completly open or completly closed, dont update Integral
     if (blowerAperture !=  minAperture && blowerAperture != maxAperture){
@@ -821,18 +818,14 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 
     lastBlowerAperture = blowerAperture;
     blowerLastError = smoothError;
-    /*Serial.print(targetPressure);
+
+    /*Serial.print(m_pressure);
     Serial.print(",");
-    Serial.print(m_pressure);
+    Serial.print(proportionnalWeight/10);
     Serial.print(",");
-    Serial.print(((PID_BLOWER_KP * error) / 1000));
-    Serial.print(",");
-    Serial.print(temporaryBlowerIntegral);
-    Serial.print(",");
-    Serial.print(((PID_BLOWER_KD * derivative) / 1000));
+    Serial.print(integralWeight/10);
     Serial.print(",");
     Serial.print(blowerAperture);
-    Serial.print(",");
     Serial.println();*/
 #else
     // Compute error
@@ -910,7 +903,7 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     if (error > -30) {
       if (patientPIDFastMode){
         proportionnalWeight = (coefficientP * error) / 1000;
-        int32_t derivativeWeight = (coefficientD*derivative/1000);
+        derivativeWeight = (coefficientD*derivative/1000);
         patientIntegral = 1000*((int32_t)lastPatientAperture - maxAperture)/(maxAperture - minAperture) - (proportionnalWeight + derivativeWeight);
 
         /*Serial.print(lastPatientAperture);
@@ -971,17 +964,17 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     Serial.print(",");
     Serial.print(currentPressure);
     Serial.print(",");*/
-    Serial.print(m_pressure);
+    /*Serial.print(m_pressure);
     Serial.print(",");
     Serial.print(proportionnalWeight/10);
     Serial.print(",");
     Serial.print(integralWeight/10);
-    Serial.print(",");
+    Serial.print(",");*/
     /*Serial.print(derivativeWeight*derivative/1000);
     Serial.print(",");*/
-    Serial.print(patientAperture);
+    /*Serial.print(patientAperture);
     Serial.print(",");
-    Serial.println();
+    Serial.println();*/
     patientLastError = smoothError;
     lastPatientAperture = patientAperture;
 #else
