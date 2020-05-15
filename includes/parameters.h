@@ -96,8 +96,8 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 static const int32_t PID_BLOWER_KP = 2000;//1000
 static const int32_t PID_BLOWER_KI = 50;
 static const int32_t PID_BLOWER_KD = 0;//1000
-static const int32_t PID_BLOWER_INTEGRAL_MAX = 10000;
-static const int32_t PID_BLOWER_INTEGRAL_MIN = -10000;
+static const int32_t PID_BLOWER_INTEGRAL_MAX = 1000;
+static const int32_t PID_BLOWER_INTEGRAL_MIN = -1000;
 
 static const int32_t PID_PATIENT_KP = 15000;//2640
 static const int32_t PID_PATIENT_KI = 200;//42
@@ -162,7 +162,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 ///@{
 #define MIN_BLOWER_SPEED 300u
 #define MAX_BLOWER_SPEED 1800u
-#define DEFAULT_BLOWER_SPEED 1300u
+#define DEFAULT_BLOWER_SPEED 900u
 ///@}
 
 /**
