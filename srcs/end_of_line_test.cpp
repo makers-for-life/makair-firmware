@@ -90,7 +90,7 @@ enum TestStep {
     PRESSURE_NOT_STABLE,
     END_SUCCESS
 };
-TestStep eolstep = PLUG_AIR_TEST_SYTEM;
+TestStep eolstep = START;
 TestStep previousEolStep = START;
 boolean eolFail = false;
 #define EOLSCREENSIZE 100
