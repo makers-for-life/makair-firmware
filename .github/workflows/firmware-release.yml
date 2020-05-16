@@ -17,12 +17,13 @@ jobs:
           arduino-cli config init --additional-urls https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
           arduino-cli config dump
           arduino-cli core update-index
-          arduino-cli core install STM32:stm32
-          arduino-cli lib install LiquidCrystal
-          arduino-cli lib install "Analog Buttons"
-          arduino-cli lib install OneButton
-          sed -i '/recipe.output.tmp_file={build.project_name}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/1.8.0/platform.txt"
-          sed -i '/recipe.output.save_file={build.project_name}.{build.variant}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/1.8.0/platform.txt"
+          export STM32DUINO_VERSION="1.8.0"
+          arduino-cli core install STM32:stm32@$STM32DUINO_VERSION
+          arduino-cli lib install LiquidCrystal@1.0.7
+          arduino-cli lib install "Analog Buttons"@1.2.0
+          arduino-cli lib install OneButton@1.5.0
+          sed -i '/recipe.output.tmp_file={build.project_name}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/$STM32DUINO_VERSION/platform.txt"
+          sed -i '/recipe.output.save_file={build.project_name}.{build.variant}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/$STM32DUINO_VERSION/platform.txt"
 
       - name: Get the version
         id: version
