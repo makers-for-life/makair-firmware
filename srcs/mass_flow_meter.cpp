@@ -71,18 +71,17 @@ int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
 
 // cppcheck-suppress misra-c2012-19.2 ; union correctly used
 union {
-    unsigned short i;
-    signed short si;
+    uint16_t i;
+    int16_t si;
     unsigned char c[2];
     // cppcheck-suppress misra-c2012-19.2 ; union correctly used
 } mfmLastData;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void MFM_Timer_Callback(HardwareTimer*) {
-
     if (!mfmFaultCondition) {
-
 #if MODE == MODE_MFM_TESTS
+        // cppcheck-suppress misra-c2012-12.3
         digitalWrite(PIN_LED_START, HIGH);
 #endif
 
@@ -144,9 +143,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
                 mfmFaultCondition = true;
                 mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
             }
-        }
-
-        else {
+        } else {
             failureCount = 0;
         }
 
@@ -169,7 +166,6 @@ void MFM_Timer_Callback(HardwareTimer*) {
         digitalWrite(PIN_LED_START, LOW);
 #endif
     } else {
-
         if (mfmResetStateMachine == MFM_WAIT_RESET_PERIODS) {
             // reset attempt
             // I2C sensors
@@ -253,7 +249,6 @@ void MFM_Timer_Callback(HardwareTimer*) {
  *  If not detected, you will always read volume = 0 mL
  */
 boolean MFM_init(void) {
-
     mfmAirVolumeSum = 0;
 
     // set the timer
@@ -398,7 +393,6 @@ void MFM_calibrateZero(void) {
  * Can also perform the volume reset in the same atomic operation
  */
 int32_t MFM_read_liters(boolean reset_after_read) {
-
     int32_t result;
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -436,7 +430,6 @@ void onStartClick() { MFM_reset(); }
 OneButton btn_stop(PIN_BTN_ALARM_OFF, false, false);
 
 void setup(void) {
-
     Serial.begin(115200);
     Serial.println("init mass flow meter");
     boolean ok = MFM_init();
@@ -466,7 +459,6 @@ void setup(void) {
 int loopcounter = 0;
 
 void loop(void) {
-
     delay(10);
     loopcounter++;
     if (loopcounter == 50) {
@@ -489,7 +481,7 @@ void loop(void) {
             screen.print("sensor OK");
             // screen.print(mfmLastValue);
             screen.setCursor(0, 3);
-            sprintf(buffer, "volume=%dmL", volume);
+            (void)snprintf(buffer, "volume=%dmL", volume);
             screen.print(buffer);
         }
 
