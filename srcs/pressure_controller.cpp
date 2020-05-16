@@ -122,6 +122,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_pressureCommand(0),
       blowerIntegral(0),
       blowerLastError(0),
+      // cppcheck-suppress misra-c2012-12.3
       patientIntegral(0),
       lastBlowerAperture(0),
       patientLastError(0),
