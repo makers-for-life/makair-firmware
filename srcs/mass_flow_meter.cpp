@@ -79,9 +79,6 @@ union {
 
 void MFM_Timer_Callback(HardwareTimer*) {
 
-    int32_t rawValue;
-    int32_t newSum;
-
     if (!mfmFaultCondition) {
 
 #if MODE == MODE_MFM_TESTS
