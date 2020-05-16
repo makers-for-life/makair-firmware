@@ -51,7 +51,6 @@
 #define MASS_FLOW_PERIOD 100
 #endif
 
-#endif
 
 HardwareTimer* massFlowTimer;
 
@@ -525,4 +524,6 @@ void loop(void) {
     }
     btn_stop.tick();
 }
+#endif
+
 #endif

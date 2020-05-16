@@ -23,6 +23,7 @@
 #include "../includes/pressure_valve.h"
 #if HARDWARE_VERSION == 2
 #include "../includes/battery.h"
+#include "../includes/mass_flow_meter.h"
 #include "../includes/telemetry.h"
 #endif
 
@@ -285,6 +286,9 @@ void PressureController::compute(uint16_t p_centiSec) {
     }
     case CycleSubPhases::HOLD_INSPIRATION: {
         plateau();
+#ifdef MASS_FLOW_METER
+        MFM_reset();
+#endif
         break;
     }
     case CycleSubPhases::EXHALE:
