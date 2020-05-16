@@ -32,6 +32,7 @@
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
 #include "../includes/keyboard.h"
+#include "../includes/mass_flow_meter.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure.h"
 #include "../includes/pressure_controller.h"
@@ -213,6 +214,12 @@ void setup(void) {
     screen.print("unplugged");
     waitForInMs(3000);
 
+// Mass Flow Meter, if any
+#ifdef MASS_FLOW_METER
+    MFM_init();
+    MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter.
+#endif
+
     resetScreen();
     if (pressureOffsetCount != 0u) {
         pressureOffset = pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
@@ -377,8 +384,13 @@ void loop(void) {
 
                 // Display relevant information during the cycle
                 if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
+#ifdef MASS_FLOW_METER
+                    displayCurrentVolume(MFM_read_liters(false),
+                                         pController.cyclesPerMinuteCommand());
+#else
                     displayCurrentPressure(pController.pressure(),
                                            pController.cyclesPerMinuteCommand());
+#endif
 
                     displayCurrentSettings(pController.maxPeakPressureCommand(),
                                            pController.maxPlateauPressureCommand(),
