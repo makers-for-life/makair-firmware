@@ -14,7 +14,6 @@
 #include "../includes/mass_flow_meter.h"
 
 // External
-#include "../includes/config.h"
 #include <Arduino.h>
 #include <IWatchdog.h>
 #include <OneButton.h>
@@ -23,6 +22,7 @@
 
 // Internal
 #include "../includes/buzzer_control.h"
+#include "../includes/config.h"
 #include "../includes/parameters.h"
 #include "../includes/screen.h"
 
@@ -69,12 +69,15 @@ int32_t mfmLastValue = 0;
 #define MFM_WAIT_RESET_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
 
+// cppcheck-suppress misra-c2012-19.2 ; union correctly used
 union {
     unsigned short i;
     signed short si;
     unsigned char c[2];
+    // cppcheck-suppress misra-c2012-19.2 ; union correctly used
 } mfmLastData;
 
+// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void MFM_Timer_Callback(HardwareTimer*) {
 
     if (!mfmFaultCondition) {
@@ -147,8 +150,8 @@ void MFM_Timer_Callback(HardwareTimer*) {
             failureCount = 0;
         }
 
-        mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFF);
-        mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00;
+        mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
+        mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
         mfmLastValue = MFM_HONEYWELL_HAF_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1)
                        / 0.8;  // Output value in SLPM
@@ -418,7 +421,7 @@ int32_t MFM_read_liters(boolean reset_after_read) {
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     result = mfmFaultCondition ? 999999 : ((mfmAirVolumeSum * MASS_FLOW_PERIOD) / (60 * 10));
 #endif
-
+    // cppcheck-suppress misra-c2012-14.4 ; reset_after_read IS a boolean
     if (reset_after_read) {
         MFM_reset();
     }
