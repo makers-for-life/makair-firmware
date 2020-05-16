@@ -80,7 +80,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
     if (!mfmFaultCondition) {
 
 #if MODE == MODE_MFM_TESTS
-        digitalWrite(PIN_LED_START, true);
+        digitalWrite(PIN_LED_START, HIGH);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -122,7 +122,6 @@ void MFM_Timer_Callback(HardwareTimer*) {
         if (mfmLastValue > mfmCalibrationOffset + 10) {
             mfmAirVolumeSum += analogRead(MFM_ANALOG_INPUT);
         }
-        Serial.println(mfmLastValue);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
@@ -148,8 +147,8 @@ void MFM_Timer_Callback(HardwareTimer*) {
             failureCount = 0;
         }
 
-        mfmLastValue = (uint32_t)mfmLastData.c[1] & 0xFF;
-        mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0xFF00;
+        mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFF);
+        mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00;
 
         mfmLastValue = MFM_HONEYWELL_HAF_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1)
                        / 0.8;  // Output value in SLPM
@@ -157,14 +156,14 @@ void MFM_Timer_Callback(HardwareTimer*) {
         // The sensor (100SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
-        if (mfmLastValue < MFM_HONEYWELL_HAF_RANGE * 1.1) {
+        if (mfmLastValue < (MFM_HONEYWELL_HAF_RANGE * 1.1)) {
             mfmAirVolumeSum += mfmLastValue;
         }
 
 #endif
 
 #if MODE == MODE_MFM_TESTS
-        digitalWrite(PIN_LED_START, false);
+        digitalWrite(PIN_LED_START, LOW);
 #endif
     } else {
 
@@ -325,40 +324,12 @@ boolean MFM_init(void) {
         mfmFaultCondition = true;
         mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
     }
+#if MODE == MODE_MFM_TESTS
     Serial.println("Read 1");
     Serial.println(mfmLastData.i);
     Serial.println("fault condition:");
     Serial.println(mfmFaultCondition);
-    /*
-        //Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-        Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
-        mfmLastData.c[1] = Wire.read();
-        mfmLastData.c[0] = Wire.read();
-        if (Wire.endTransmission() != 0) {  // If transmission failed
-                mfmFaultCondition = true;
-                mfmResetStateMachine = 5;
-        }
-        Serial.println("Read 2");
-        Serial.println(mfmLastData.i);
-        Serial.println("fault condition:");
-        Serial.println(mfmFaultCondition);
-
-        //Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-        Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
-        mfmLastData.c[1] = Wire.read();
-        mfmLastData.c[0] = Wire.read();
-        if (Wire.endTransmission() != 0) {  // If transmission failed
-                mfmFaultCondition = true;
-                mfmResetStateMachine = 5;
-        }
-        Serial.println("Read 3");
-        Serial.println(mfmLastData.i);
-
-
-        Serial.println("fault condition:");
-        Serial.println(mfmFaultCondition);
-    */
-    // mfmFaultCondition = (Wire.endTransmission() != 0);
+#endif
     delay(100);
 #endif
 
@@ -457,10 +428,7 @@ int32_t MFM_read_liters(boolean reset_after_read) {
 
 #if MODE == MODE_MFM_TESTS
 
-void onStartClick() {
-    MFM_reset();
-    Serial.println("dtc");
-}
+void onStartClick() { MFM_reset(); }
 
 OneButton btn_stop(PIN_BTN_ALARM_OFF, false, false);
 
