@@ -131,7 +131,6 @@ void millisecondTimerEOL(HardwareTimer*) {
             }
         }
     } else if (eolstep == BATTERY_DEEP_DISCHARGE) {
-
         eolFail = true;
         snprintf(eolScreenBuffer, EOLSCREENSIZE,
                  "Test Vbat ECHEC\nBATTERIE TROP FAIBLE\n  V=%02d.%d", batlevel / 10,
@@ -273,7 +272,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Fuite...\n  \nP = %d mmH2O", pressureValue);
         if (eolMSCount > 10000) {
             eolMSCount = 0;
-            if (pressureValue > 400){
+            if (pressureValue > 400) {
                 eolstep = REACH_NULL_PRESSURE;
                 eolTestNumber++;
             } else {
@@ -281,9 +280,9 @@ void millisecondTimerEOL(HardwareTimer*) {
                 eolstep = LEAK_IS_TOO_HIGH;
             }
         }
-
     } else if (eolstep == LEAK_IS_TOO_HIGH) {
-        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fuite importante\nPfinale = %d mmH2O", pressureValue);
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fuite importante\nPfinale = %d mmH2O",
+                 pressureValue);
     } else if (eolstep == REACH_NULL_PRESSURE) {
         servoPatient.open();
         servoPatient.execute();
@@ -312,7 +311,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         servoPatient.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
         snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O", pressureValue);
-        if (pressureValue > 100){
+        if (pressureValue > 100) {
             eolstep = START_LONG_RUN_BLOWER;
             eolTestNumber++;
             eolMSCount = 0;
@@ -321,7 +320,6 @@ void millisecondTimerEOL(HardwareTimer*) {
             eolFail = true;
             eolstep = O2_PRESSURE_NOT_REACH;
         }
-
     } else if (eolstep == O2_PRESSURE_NOT_REACH) {
         blower.stop();
         snprintf(eolScreenBuffer, EOLSCREENSIZE, "Tuyau O2\nBouche ! ");
@@ -329,32 +327,32 @@ void millisecondTimerEOL(HardwareTimer*) {
         blower.runSpeed(1790);
         servoBlower.open();
         servoBlower.execute();
-        servoPatient.open( (servoPatient.minAperture() + servoPatient.maxAperture()) / 2);
+        servoPatient.open((servoPatient.minAperture() + servoPatient.maxAperture()) / 2);
         servoPatient.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
-        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O", pressureValue);
-        
-        if (eolMSCount > 5000){
+        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
+                 pressureValue);
+
+        if (eolMSCount > 5000) {
             MaxPressureValue = max(MaxPressureValue, pressureValue);
             MinPressureValue = min(MinPressureValue, pressureValue);
-        } 
+        }
 
         if (eolMSCount > 900000) {
-            if (MaxPressureValue - MinPressureValue < 50){
+            if (MaxPressureValue - MinPressureValue < 50) {
                 eolstep = END_SUCCESS;
                 eolMSCount = 0;
                 eolTestNumber++;
             } else {
                 eolstep = PRESSURE_NOT_STABLE;
-                eolMSCount = 0; 
+                eolMSCount = 0;
             }
         }
-
     } else if (eolstep == PRESSURE_NOT_STABLE) {
-        snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pression non stable\nMax= %d mmH2O \nMin= %d mmH2O", MaxPressureValue, MinPressureValue);
-    } 
-
-    else if (eolstep == END_SUCCESS) {
+        snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                 "Pression non stable\nMax= %d mmH2O \nMin= %d mmH2O", MaxPressureValue,
+                 MinPressureValue);
+    } else if (eolstep == END_SUCCESS) {
         blower.stop();
         snprintf(eolScreenBuffer, EOLSCREENSIZE,
                  "********************\n**** SUCCESS !! ****\n********************");
