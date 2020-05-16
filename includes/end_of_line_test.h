@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include "../includes/blower.h"
+#include "../includes/pressure_valve.h"
+
 #define EOL_TEST_ACTIVE 0xa240183a
 
 /// Controls an Pressure Valve's servomotor
@@ -30,9 +33,6 @@ void millisecondTimerEOL(HardwareTimer*);
 
 extern HardwareTimer* eolTimer;
 extern EolTest eolTest;
-
-#include "../includes/blower.h"
-#include "../includes/pressure_valve.h"
 
 // these are defined and initialized in the main program
 extern PressureValve servoBlower;

@@ -158,8 +158,9 @@ void setup(void) {
         eolTest.activate();
         screen.clear();
         screen.print("EOL Test Mode");
-        while (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12))
+        while (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12)) {
             continue;
+        }
     }
 
 #endif
