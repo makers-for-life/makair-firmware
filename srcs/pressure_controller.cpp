@@ -237,9 +237,6 @@ void PressureController::initRespiratoryCycle() {
 }
 
 void PressureController::endRespiratoryCycle() {
-#ifdef MASS_FLOW_METER
-    MFM_reset();
-#endif
 #if VALVE_TYPE == VT_FAULHABER
     // In square plateau mode, plateau pressure is the mean pressure during plateau
     m_plateauPressure = m_squarePlateauSum / m_squarePlateauCount;
@@ -265,11 +262,19 @@ void PressureController::endRespiratoryCycle() {
         plateauPressureToDisplay = 0;
     }
 
+#ifdef MASS_FLOW_METER
+    int32_t volume = MFM_read_milliliters(true);
+    uint16_t telemetryVolume =
+        ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
+#else
+    uint16_t telemetryVolume = 0u;
+#endif
+
     sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_maxPeakPressureCommand),
                              mmH2OtoCmH2O(m_maxPlateauPressureCommand),
                              mmH2OtoCmH2O(m_minPeepCommand), m_cyclesPerMinuteCommand,
                              m_peakPressure, plateauPressureToDisplay, m_peep,
-                             m_alarmController->triggeredAlarms());
+                             m_alarmController->triggeredAlarms(), telemetryVolume);
 #endif
 }
 
