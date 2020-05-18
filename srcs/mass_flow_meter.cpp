@@ -7,7 +7,7 @@
 
 /**
  * SFM3300-D sensirion mass flow meter is connected on I2C bus.
- * To perform the integral of the mass flow, i2c polling must be done in a high priority timer
+ * To perform the integral of the mass flow, I2C polling must be done in a high priority timer
  */
 
 // Associated header
@@ -26,14 +26,14 @@
 #include "../includes/parameters.h"
 #include "../includes/screen.h"
 
-// Linked to Hardware v2
+// Hardware is ensured to be at least v2
 #ifdef MASS_FLOW_METER
 
-// 2 khz => prescaler = 50000 => still OK for a 16 bit timer. it cannnot be slower
-// 10 khz => nice
+// 2 kHz => prescaler = 50000 => still OK for a 16 bit timer. it cannnot be slower
+// 10 kHz => nice
 #define MASS_FLOW_TIMER_FREQ 10000
 
-// the timer period in 100us multiple (because 10 khz prescale)
+// The timer period in 100 us multiple (because 10 kHz prescale)
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
 #define MASS_FLOW_PERIOD 10
@@ -65,7 +65,8 @@ bool mfmFaultCondition = false;
 volatile int failureCount = 0;
 
 int32_t mfmLastValue = 0;
-// Time to reset the sensor after I2C restart, in periods. => 5ms.
+
+// Time to reset the sensor after I2C restart, in periods => 5 ms
 #define MFM_WAIT_RESET_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
 
@@ -150,8 +151,8 @@ void MFM_Timer_Callback(HardwareTimer*) {
         mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
         mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
-        mfmLastValue = MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1)
-                       / 0.8;  // Output value in SLPM
+        mfmLastValue =
+            MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
 
         // The sensor (100SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
@@ -167,7 +168,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
 #endif
     } else {
         if (mfmResetStateMachine == MFM_WAIT_RESET_PERIODS) {
-            // reset attempt
+            // Reset attempt
             // I2C sensors
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
@@ -244,33 +245,29 @@ void MFM_Timer_Callback(HardwareTimer*) {
     }
 }
 
-/**
- *  Returns true if there is a Mass Flow Meter connected
- *  If not detected, you will always read volume = 0 mL
- */
-boolean MFM_init(void) {
+bool MFM_init(void) {
     mfmAirVolumeSum = 0;
 
-    // set the timer
+    // Set the timer
     massFlowTimer = new HardwareTimer(MASS_FLOW_TIMER);
 
-    // prescaler. stm32f411 clock is 100mhz
+    // Prescaler; stm32f411 clock is 100 mHz
     massFlowTimer->setPrescaleFactor((massFlowTimer->getTimerClkFreq() / MASS_FLOW_TIMER_FREQ) - 1);
 
-    // set the period
+    // Set the period
     massFlowTimer->setOverflow(MASS_FLOW_PERIOD);
     massFlowTimer->setMode(MASS_FLOW_CHANNEL, TIMER_OUTPUT_COMPARE, NC);
     massFlowTimer->attachInterrupt(MFM_Timer_Callback);
 
-    // interrupt priority is documented here:
+    // Interrupt priority is documented here:
     // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
     massFlowTimer->setInterruptPriority(2, 0);
 
-    /* mass flow needs to be corrected with pressure ?
+    /* Mass flow needs to be corrected with pressure?
      * flow (kg/s) = rho (kg/m3) x section (m²) x speed (m/s)
      * Rho = (Pressure * M) / (R * Temperature)
-     * sea level pressure : P0 = 101 325 Pa = 1 013,25 mbar = 1 013,25 hPa = 1032 cmH2O
-     * respirator reach 50cmH2O... it means 5% error.
+     * Sea level pressure: P0 = 101,325 Pa = 1,013.25 mbar = 1,013.25 hPa = 1032 cmH2O
+     * Respirator reaches 50 cmH2O which means 5% error
      */
 #if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
     pinMode(MFM_ANALOG_INPUT, INPUT);
@@ -279,13 +276,13 @@ boolean MFM_init(void) {
 // I2C sensors
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
     || MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
-    // detect if the sensor is connected
+    // Detect if the sensor is connected
     Wire.setSDA(PIN_I2C_SDA);
     Wire.setSCL(PIN_I2C_SCL);
 #endif
-    // init the sensor, test communication
+    // Init the sensor, test communication
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
-    Wire.begin();  // join i2c bus (address optional for master)
+    Wire.begin();  // Join I2C bus (address is optional for master)
     Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
 
     Wire.write(0x10);
@@ -300,7 +297,7 @@ boolean MFM_init(void) {
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 
     /*
-    Init sequence for Honeywell Zephyr mass flow sensor :
+    Init sequence for Honeywell Zephyr mass flow sensor:
     1st read operation: the sensor will send 0x0000
     2nd read operation: the sensor will send the first part of the serial number
     3rd read operation: the sensor will send the second part of the serial number
@@ -365,18 +362,11 @@ boolean MFM_init(void) {
     return !mfmFaultCondition;
 }
 
-/*
- * Reset the volume counter
- */
 void MFM_reset(void) {
     mfmAirVolumeSum = 0;
     mfmSampleCount = 0;
 }
 
-/**
- * Calibrate the zero of the sensor :
- * mean of 10 samples.
- */
 void MFM_calibrateZero(void) {
 #if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
     int32_t sum = 0;
@@ -388,15 +378,11 @@ void MFM_calibrateZero(void) {
 #endif
 }
 
-/**
- * return the number of milliliters since last reset
- * Can also perform the volume reset in the same atomic operation
- */
-int32_t MFM_read_liters(boolean reset_after_read) {
+int32_t MFM_read_milliliters(bool reset_after_read) {
     int32_t result;
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
-    // this should be an atomic operation (32 bits aligned data)
+    // This should be an atomic operation (32 bits aligned data)
     result = mfmFaultCondition ? 999999 : mfmAirVolumeSum / (60 * 120);
 
     // Correction factor is 120. Divide by 60 to convert ml.min-1 to ml.ms-1, hence the 7200 =
@@ -404,7 +390,7 @@ int32_t MFM_read_liters(boolean reset_after_read) {
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
-    // this should be an atomic operation (32 bits aligned data)
+    // This should be an atomic operation (32 bits aligned data)
     result = mfmFaultCondition ? 999999 : (mfmAirVolumeSum / 6.5);
 #endif
 
@@ -415,7 +401,7 @@ int32_t MFM_read_liters(boolean reset_after_read) {
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     result = mfmFaultCondition ? 999999 : ((mfmAirVolumeSum * MASS_FLOW_PERIOD) / (60 * 10));
 #endif
-    // cppcheck-suppress misra-c2012-14.4 ; reset_after_read IS a boolean
+
     if (reset_after_read) {
         MFM_reset();
     }
@@ -466,7 +452,7 @@ void loop(void) {
 
         char buffer[30];
 
-        int32_t volume = MFM_read_liters(false);
+        int32_t volume = MFM_read_milliliters(false);
 
         resetScreen();
         screen.setCursor(0, 0);

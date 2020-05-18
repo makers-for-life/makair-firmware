@@ -216,8 +216,8 @@ void setup(void) {
 
 // Mass Flow Meter, if any
 #ifdef MASS_FLOW_METER
-    MFM_init();
-    MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter.
+    (void)MFM_init();
+    MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter
 #endif
 
     resetScreen();
@@ -385,7 +385,7 @@ void loop(void) {
                 // Display relevant information during the cycle
                 if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
 #ifdef MASS_FLOW_METER
-                    displayCurrentVolume(MFM_read_liters(false),
+                    displayCurrentVolume(MFM_read_milliliters(false),
                                          pController.cyclesPerMinuteCommand());
 #else
                     displayCurrentPressure(pController.pressure(),
