@@ -663,7 +663,7 @@ void PressureController::updatePeakPressure() {
     }
 }
 
-void PressureController::computetickParameters() {
+void PressureController::computeTickParameters() {
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US)/ m_cyclesPerMinute;
     // Inhalation = 1/3 of the cycle duration,
     // Exhalation = 2/3 of the cycle duration
@@ -947,7 +947,7 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t derivative = ((patientLastError == INVALID_ERROR_MARKER) || (dt == 0))
                              ? 0
                              : ((1000000 * (error - patientLastError)) / dt);
-    patientLastError = error; 
+    patientLastError = error;
 
     int32_t patientCommand = (PID_PATIENT_KP * error) + patientIntegral
                              + ((PID_PATIENT_KD * derivative) / 1000);  // Command computation
