@@ -454,6 +454,8 @@ void PressureController::updatePhase(uint16_t p_tick) {
         m_phase = CyclePhases::INHALATION;
 
 #if VALVE_TYPE == VT_FAULHABER
+        /* -5 mmH2O is added to prevent plateau not detected in case the pressure is almost reached.
+         This is mandatory to help the blower regulation to converge */
         uint16_t pressureToTest = m_maxPlateauPressureCommand-5;
 #else
         uint16_t pressureToTest = m_maxPeakPressureCommand;
@@ -522,10 +524,12 @@ void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 void PressureController::updateOnlyBlower() {
     int16_t peakDelta = m_peakPressure - m_plateauPressure;
 
-    // If plateau was reached quite early
-    // TODO 20 prop to interval
+    // Number of tick for the half ramp (120ms)
+    int32_t halfRampNumberfTick = 1000 * 120 / PCONTROLLER_COMPUTE_PERIOD_US;
+
      if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
-          if (m_plateauStartTime < 12 || peakDelta > 25) {
+          // Only case for decreasing the blower : ramping is too fast or overshooting is too high
+          if (m_plateauStartTime < halfRampNumberfTick || peakDelta > 25) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
           } else {
@@ -778,7 +782,8 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 
     // In fast mode : everything is openned (Open loop)
     if (blowerPIDFastMode){
-      int32_t increment = 5;
+      // Ramp from 125 to 0 angle during 250ms. 
+      int32_t increment =  5 * ((int32_t) PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
       if (lastBlowerAperture >= increment){
         blowerAperture = max(minAperture,min(maxAperture,(int32_t)(lastBlowerAperture - increment)));
       } else {
@@ -898,7 +903,8 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
 
     // Fast mode : open loop with ramp
     if (patientPIDFastMode) {
-      int32_t increment = 5;
+      // Ramp from 125 to 0 angle during 250ms. 
+      int32_t increment =  5 * ((int32_t) PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
       if (lastPatientAperture >= increment){
         patientAperture =  patientAperture = max(minAperture,min(maxAperture,(int32_t)(lastPatientAperture - increment)));
       } else {

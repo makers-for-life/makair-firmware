@@ -24,7 +24,7 @@
  */
 ///@{
 
-// Période de traitement en millisecondes
+// Période de traitement en microseconds
 #define PCONTROLLER_COMPUTE_PERIOD_US 10000u
 
 // Minimum & maximum execution parameters
@@ -95,13 +95,13 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 static const int32_t PID_BLOWER_KP = 2000;
 static const int32_t PID_BLOWER_KI = 50;
-static const int32_t PID_BLOWER_KD = 0;//1000
+static const int32_t PID_BLOWER_KD = 0;
 static const int32_t PID_BLOWER_INTEGRAL_MAX = 1000;
 static const int32_t PID_BLOWER_INTEGRAL_MIN = -1000;
 
-static const int32_t PID_PATIENT_KP = 15000;//2640
-static const int32_t PID_PATIENT_KI = 200;//42
-static const int32_t PID_PATIENT_KD = 110;//205
+static const int32_t PID_PATIENT_KP = 15000;
+static const int32_t PID_PATIENT_KI = 200;
+static const int32_t PID_PATIENT_KD = 110;
 static const int32_t PID_PATIENT_INTEGRAL_MAX = 1000;
 static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
 
