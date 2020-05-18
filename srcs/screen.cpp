@@ -49,6 +49,7 @@ void startScreen() {
 
 void resetScreen() { screen.clear(); }
 
+// cppcheck-suppress unusedFunction
 void displayCurrentVolume(int32_t volumeMassFlow, uint16_t cyclesPerMinute) {
     screen.setCursor(0, 0);
 
@@ -60,6 +61,7 @@ void displayCurrentVolume(int32_t volumeMassFlow, uint16_t cyclesPerMinute) {
     screen.print(message);
 }
 
+// cppcheck-suppress unusedFunction
 void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute) {
     screen.setCursor(0, 0);
 
