@@ -101,7 +101,7 @@ static const int32_t PID_BLOWER_INTEGRAL_MIN = -1000;
 
 static const int32_t PID_PATIENT_KP = 15000;//2640
 static const int32_t PID_PATIENT_KI = 200;//42
-static const int32_t PID_PATIENT_KD = 0;//205
+static const int32_t PID_PATIENT_KD = 110;//205
 static const int32_t PID_PATIENT_INTEGRAL_MAX = 1000;
 static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
 
@@ -111,7 +111,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 #endif
 
-#define NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN 4u
+#define NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN 10u
 
 ///@}
 

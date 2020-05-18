@@ -73,7 +73,6 @@ PressureController::PressureController()
       m_lastPatientPIDErrorIndex(0),
       patientPIDFastMode(true),
       blowerPIDFastMode(true),
-      patientDamping(0),
       m_tick(0),
       lastPatientAperture(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
@@ -136,7 +135,6 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_lastPatientPIDErrorIndex(0),
       patientPIDFastMode(true),
       blowerPIDFastMode(true),
-      patientDamping(0),
       m_tick(0),
       lastPatientAperture(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
@@ -748,8 +746,8 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 
     // Fenetrage
     if (error<0){
-      coefficientI = 200; // 50o - 100n
-      coefficientP = 2500; // 5000o - 10000n
+      coefficientI = 200;
+      coefficientP = 2500;
     } else {
       coefficientI = 50;
       coefficientP = 2500 ;
@@ -819,14 +817,6 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     lastBlowerAperture = blowerAperture;
     blowerLastError = smoothError;
 
-    /*Serial.print(m_pressure);
-    Serial.print(",");
-    Serial.print(proportionnalWeight/10);
-    Serial.print(",");
-    Serial.print(integralWeight/10);
-    Serial.print(",");
-    Serial.print(blowerAperture);
-    Serial.println();*/
 #else
     // Compute error
     int32_t error = targetPressure - currentPressure;
@@ -892,11 +882,13 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
 
     // Fenetrage
     if (error<0){
-      coefficientI = 50; // 50o - 100n
-      coefficientP = 2500; // 5000o - 10000n
+      coefficientI = 50;
+      coefficientP = 2500;
+      coefficientD = 0;
     } else {
-      coefficientI = 120;
+      coefficientI = -130 * ((int32_t) m_minPeepCommand)/50 + 380;// 120
       coefficientP = 2500 ;
+      coefficientD = 0;
     }
 
     // Fast mode or not
@@ -906,12 +898,6 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
         derivativeWeight = (coefficientD*derivative/1000);
         patientIntegral = 1000*((int32_t)lastPatientAperture - maxAperture)/(maxAperture - minAperture) - (proportionnalWeight + derivativeWeight);
 
-        /*Serial.print(lastPatientAperture);
-        Serial.print(",");
-        Serial.print(proportionnalWeight);
-        Serial.print(",");
-        Serial.print(derivativeWeight);
-        Serial.println();*/
 
       }
       patientPIDFastMode = false;
@@ -956,25 +942,6 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
       patientIntegral = temporaryPatientIntegral;
     }
 
-
-
-    /*Serial.print(dt);
-    Serial.print(",");
-    /*Serial.print(targetPressure);
-    Serial.print(",");
-    Serial.print(currentPressure);
-    Serial.print(",");*/
-    /*Serial.print(m_pressure);
-    Serial.print(",");
-    Serial.print(proportionnalWeight/10);
-    Serial.print(",");
-    Serial.print(integralWeight/10);
-    Serial.print(",");*/
-    /*Serial.print(derivativeWeight*derivative/1000);
-    Serial.print(",");*/
-    /*Serial.print(patientAperture);
-    Serial.print(",");
-    Serial.println();*/
     patientLastError = smoothError;
     lastPatientAperture = patientAperture;
 #else
