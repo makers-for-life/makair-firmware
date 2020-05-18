@@ -941,7 +941,7 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t derivative = ((patientLastError == INVALID_ERROR_MARKER) || (dt == 0))
                              ? 0
                              : ((1000000 * (error - patientLastError)) / dt);
-    patientLastError = error; 
+    patientLastError = error;
 
     int32_t patientCommand = (PID_PATIENT_KP * error) + patientIntegral
                              + ((PID_PATIENT_KD * derivative) / 1000);  // Command computation
