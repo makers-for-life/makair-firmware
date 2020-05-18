@@ -46,6 +46,21 @@
 // Defines which valves are fitted
 #define VALVE_TYPE VT_SERVO_V1
 
+// Available Mass Flow Meters
+#define MFM_SFM_3300D 1
+#define MFM_SDP703_02 2
+#define MFM_OMRON_D6F 3
+#define MFM_HONEYWELL_HAF 4
+
+// Defines if the device has a Mass Flow Meter or not. Comment out when no sensor.
+// Note Hardware v1 cannot support any mass flow meter sensor.
+// #define MASS_FLOW_METER
+
+// Defines the type and the range of the mass flow meter.
+#define MASS_FLOW_METER_SENSOR MFM_HONEYWELL_HAF
+#define MFM_RANGE 100
+
+
 /**
  * Defines which hardware preset to use
  *
