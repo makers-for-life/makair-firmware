@@ -326,7 +326,7 @@ void PressureController::compute(uint16_t p_tick) {
 
 #if HARDWARE_VERSION == 2
     m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick/2, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
+    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
                        m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
 #endif
 
