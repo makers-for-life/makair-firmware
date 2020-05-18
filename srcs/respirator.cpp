@@ -30,6 +30,7 @@
 #include "../includes/buzzer.h"
 #include "../includes/buzzer_control.h"
 #include "../includes/debug.h"
+#include "../includes/end_of_line_test.h"
 #include "../includes/keyboard.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure.h"
@@ -145,22 +146,42 @@ void setup(void) {
     blower = Blower(hardwareTimer1, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
     blower_pointer = &blower;
+
+    // Autotest inputs: one of the rear button should be pressed while booting, either the right
+    // one or the left one
+    pinMode(PA15, INPUT);
+    pinMode(PB12, INPUT);
+
+    // Activate test mode if one of these buttons is pressed. The end of line test mode cannot be
+    // activated later on.
+    if ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
+        eolTest.activate();
+        screen.clear();
+        screen.print("EOL Test Mode");
+        while ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
+            continue;
+        }
+    }
+
 #endif
 
-    alarmController = AlarmController();
+    // Do not initialize pressure controller and keyboard in test mode
+    if (!eolTest.isRunning()) {
+        alarmController = AlarmController();
 
-    pController = PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
-                                     DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
-                                     servoBlower, servoPatient, &alarmController, blower_pointer);
-    pController.setup();
+        pController =
+            PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
+                               DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
+                               servoBlower, servoPatient, &alarmController, blower_pointer);
+        pController.setup();
+        initKeyboard();
+    }
 
     // Prepare LEDs
     pinMode(PIN_LED_START, OUTPUT);
     pinMode(PIN_LED_RED, OUTPUT);
     pinMode(PIN_LED_YELLOW, OUTPUT);
     pinMode(PIN_LED_GREEN, OUTPUT);
-
-    initKeyboard();
 
     // Initialize battery level estimation
     initBattery();
@@ -268,9 +289,14 @@ void setup(void) {
         }
     }
 
-    // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
-    IWatchdog.begin(WATCHDOG_TIMEOUT);
-    IWatchdog.reload();
+    // No watchdog in end of line test mode
+    if (!eolTest.isRunning()) {
+        // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
+        IWatchdog.begin(WATCHDOG_TIMEOUT);
+        IWatchdog.reload();
+    } else {
+        eolTest.setupAndStart();
+    }
 }
 
 // Time of the previous loop iteration
@@ -282,107 +308,109 @@ int8_t cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
 
 // cppcheck-suppress unusedFunction
 void loop(void) {
-    /********************************************/
-    // INITIALIZE THE RESPIRATORY CYCLE
-    /********************************************/
-    activationController.refreshState();
-    bool shouldRun = activationController.isRunning();
+    if (!eolTest.isRunning()) {
+        /********************************************/
+        // INITIALIZE THE RESPIRATORY CYCLE
+        /********************************************/
+        activationController.refreshState();
+        bool shouldRun = activationController.isRunning();
 
-    if (shouldRun) {
-        pController.initRespiratoryCycle();
-    }
+        if (shouldRun) {
+            pController.initRespiratoryCycle();
+        }
 
-    /********************************************/
-    // START THE RESPIRATORY CYCLE
-    /********************************************/
-    uint16_t centiSec = 0;
+        /********************************************/
+        // START THE RESPIRATORY CYCLE
+        /********************************************/
+        uint16_t centiSec = 0;
 
-    while (centiSec < pController.centiSecPerCycle()) {
-        uint32_t pressure = readPressureSensor(centiSec, pressureOffset);
+        while (centiSec < pController.centiSecPerCycle()) {
+            uint32_t pressure = readPressureSensor(centiSec, pressureOffset);
 
-        uint32_t currentDate = millis();
+            uint32_t currentDate = millis();
 
-        uint32_t diff = (currentDate - lastpControllerComputeDate);
+            uint32_t diff = (currentDate - lastpControllerComputeDate);
 
-        if (diff >= PCONTROLLER_COMPUTE_PERIOD) {
-            lastpControllerComputeDate = currentDate;
+            if (diff >= PCONTROLLER_COMPUTE_PERIOD) {
+                lastpControllerComputeDate = currentDate;
 
-            if (shouldRun) {
-                digitalWrite(PIN_LED_START, LED_START_ACTIVE);
-                pController.updatePressure(pressure);
-                int32_t currentMicro = micros();
+                if (shouldRun) {
+                    digitalWrite(PIN_LED_START, LED_START_ACTIVE);
+                    pController.updatePressure(pressure);
+                    int32_t currentMicro = micros();
 
-                pController.updateDt(currentMicro - lastMicro);
-                lastMicro = currentMicro;
+                    pController.updateDt(currentMicro - lastMicro);
+                    lastMicro = currentMicro;
 
-                // Perform the pressure control
-                pController.compute(centiSec);
-            } else {
-                digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-                blower.stop();
+                    // Perform the pressure control
+                    pController.compute(centiSec);
+                } else {
+                    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
+                    blower.stop();
 
-                // Stop alarms related to breathing cycle
-                alarmController.notDetectedAlarm(RCM_SW_1);
-                alarmController.notDetectedAlarm(RCM_SW_2);
-                alarmController.notDetectedAlarm(RCM_SW_3);
-                alarmController.notDetectedAlarm(RCM_SW_14);
-                alarmController.notDetectedAlarm(RCM_SW_15);
-                alarmController.notDetectedAlarm(RCM_SW_18);
-                alarmController.notDetectedAlarm(RCM_SW_19);
+                    // Stop alarms related to breathing cycle
+                    alarmController.notDetectedAlarm(RCM_SW_1);
+                    alarmController.notDetectedAlarm(RCM_SW_2);
+                    alarmController.notDetectedAlarm(RCM_SW_3);
+                    alarmController.notDetectedAlarm(RCM_SW_14);
+                    alarmController.notDetectedAlarm(RCM_SW_15);
+                    alarmController.notDetectedAlarm(RCM_SW_18);
+                    alarmController.notDetectedAlarm(RCM_SW_19);
 
 #if HARDWARE_VERSION == 2
-                if ((centiSec % 10u) == 0u) {
-                    sendStoppedMessage();
-                }
+                    if ((centiSec % 10u) == 0u) {
+                        sendStoppedMessage();
+                    }
 #endif
+                }
+
+                // Check if some buttons have been pushed
+                keyboardLoop();
+
+                // Check if battery state has changed
+                batteryLoop(pController.cycleNumber());
+
+                // Display relevant information during the cycle
+                if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
+                    displayCurrentPressure(pController.pressure(),
+                                           pController.cyclesPerMinuteCommand());
+
+                    displayCurrentSettings(pController.maxPeakPressureCommand(),
+                                           pController.maxPlateauPressureCommand(),
+                                           pController.minPeepCommand());
+                }
+
+                alarmController.runAlarmEffects(centiSec);
+
+                // next tick
+                centiSec++;
+                IWatchdog.reload();
             }
-
-            // Check if some buttons have been pushed
-            keyboardLoop();
-
-            // Check if battery state has changed
-            batteryLoop(pController.cycleNumber());
-
-            // Display relevant information during the cycle
-            if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
-                displayCurrentPressure(pController.pressure(),
-                                       pController.cyclesPerMinuteCommand());
-
-                displayCurrentSettings(pController.maxPeakPressureCommand(),
-                                       pController.maxPlateauPressureCommand(),
-                                       pController.minPeepCommand());
-            }
-
-            alarmController.runAlarmEffects(centiSec);
-
-            // next tick
-            centiSec++;
-            IWatchdog.reload();
         }
-    }
 
-    if (shouldRun) {
-        pController.endRespiratoryCycle();
-    }
+        if (shouldRun) {
+            pController.endRespiratoryCycle();
+        }
 
-    /********************************************/
-    // END OF THE RESPIRATORY CYCLE
-    /********************************************/
+        /********************************************/
+        // END OF THE RESPIRATORY CYCLE
+        /********************************************/
 
-    // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or so
-    cyclesBeforeScreenReset--;
-    if (cyclesBeforeScreenReset <= 0) {
-        DBG_DO(Serial.println("resetting LCD screen");)
-        resetScreen();
-        clearAlarmDisplayCache();
-        cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
-    }
+        // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or so
+        cyclesBeforeScreenReset--;
+        if (cyclesBeforeScreenReset <= 0) {
+            DBG_DO(Serial.println("resetting LCD screen");)
+            resetScreen();
+            clearAlarmDisplayCache();
+            cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
+        }
 
-    if (shouldRun) {
-        displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                  pController.peep());
-    } else {
-        displayMachineStopped();
+        if (shouldRun) {
+            displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
+                                      pController.peep());
+        } else {
+            displayMachineStopped();
+        }
     }
 }
 
