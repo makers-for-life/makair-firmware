@@ -237,6 +237,9 @@ void PressureController::initRespiratoryCycle() {
 }
 
 void PressureController::endRespiratoryCycle() {
+  #ifdef MASS_FLOW_METER
+        MFM_reset();
+#endif
 #if VALVE_TYPE == VT_FAULHABER
     // In square plateau mode, plateau pressure is the mean pressure during plateau
     m_plateauPressure = m_squarePlateauSum / m_squarePlateauCount;
@@ -315,6 +318,7 @@ void PressureController::compute(uint16_t p_tick) {
 #if VALVE_TYPE != VT_FAULHABER
         computePlateau(p_tick);
 #endif
+
         break;
     }
     }
