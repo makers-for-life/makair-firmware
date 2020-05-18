@@ -362,7 +362,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         if (eolMSCount > 10000u) {
             MaxPressureValue = max(MaxPressureValue, pressureValue);
             MinPressureValue = min(MinPressureValue, pressureValue);
-            if ((MaxPressureValue - MinPressureValue) > 25){
+            if ((MaxPressureValue - MinPressureValue) > 25) {
                 eolstep = PRESSURE_NOT_STABLE;
                 eolMSCount = 0;
             }
