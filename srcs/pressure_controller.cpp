@@ -76,7 +76,7 @@ PressureController::PressureController()
       m_tick(0),
       lastPatientAperture(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
-    computetickParameters();
+    computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0u;
     }
@@ -138,7 +138,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_tick(0),
       lastPatientAperture(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
-    computetickParameters();
+    computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0u;
     }
