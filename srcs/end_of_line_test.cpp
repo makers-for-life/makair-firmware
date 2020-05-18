@@ -39,6 +39,7 @@ bool EolTest::isRunning() { return (EOL_TEST_ACTIVE == testActive); }
 // Message display helper function
 void eolScreenMessage(char* message, bool isFailed) {
     screen.clear();
+    // cppcheck-suppress misra-c2012-12.3
     screen.setCursor(0, 0);
     screen.print("EOL TEST  #");
     screen.print(eolTestNumber);
@@ -49,7 +50,8 @@ void eolScreenMessage(char* message, bool isFailed) {
         screen.setCursor(18, 0);
         screen.print("OK");
     }
-    // print line by line, respect newlines.
+
+    // Print line by line, respect newlines
     int line = 1;
     screen.setCursor(0, line);
     int i = 0;
@@ -111,6 +113,7 @@ boolean eolFail = false;
 char eolScreenBuffer[EOLSCREENSIZE + 1];
 #define EOL_TOTALBUTTONS 11
 
+// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void millisecondTimerEOL(HardwareTimer*) {
     clockEOLTimer++;
     eolMSCount++;
@@ -119,12 +122,12 @@ void millisecondTimerEOL(HardwareTimer*) {
     static int maxbatlevel = 0;
     static int buttonsPushed[EOL_TOTALBUTTONS];
     if ((clockEOLTimer % 100u) == 0u) {
-        // refresh screen every 100ms, no more.
+        // Refresh screen every 100 ms, no more
         eolScreenMessage(eolScreenBuffer, eolFail);
     }
 
     if (eolstep == START) {
-        blower.runSpeed(1799);  // more current
+        blower.runSpeed(1799);  // More current
         eolstep = TEST_BAT_DEAD;
         eolMSCount = 0;
     } else if (eolstep == TEST_BAT_DEAD) {
@@ -165,7 +168,7 @@ void millisecondTimerEOL(HardwareTimer*) {
                        batlevel / 10, batlevel % 10);
         minbatlevel = min(minbatlevel, batlevel);
         maxbatlevel = max(maxbatlevel, batlevel);
-        // wait for 400mV raise
+        // Wait for 400 mV raise
         if ((maxbatlevel - minbatlevel) > 3) {
             BuzzerControl_On();
             eolTestNumber++;
@@ -236,7 +239,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         if (totalPushed == EOL_TOTALBUTTONS) {
             eolTestNumber++;
             while (digitalRead(PIN_BTN_START) == HIGH) {
-                continue;  // wait release if still pressed in previous test
+                continue;  // Wait release if still pressed in previous test
             }
             eolstep = PLUG_AIR_TEST_SYTEM;
         }
@@ -384,10 +387,10 @@ void millisecondTimerEOL(HardwareTimer*) {
 }
 
 void EolTest::setupAndStart() {
-    // set a 1 ms timer for the event loop
-    // prescaler at 10khz. stm32f411 clock is 100mhz.
+    // Set a 1 ms timer for the event loop
+    // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
     ::eolTimer->setPrescaleFactor((::eolTimer->getTimerClkFreq() / 10000) - 1);
-    // set the period at 1ms
+    // Set the period at 1 ms
     ::eolTimer->setOverflow(10);
     ::eolTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
     ::eolTimer->attachInterrupt(millisecondTimerEOL);
@@ -397,7 +400,6 @@ void EolTest::setupAndStart() {
     servoPatient.execute();
     servoBlower.close();
     servoBlower.execute();
-    // define all input and output
 }
 
 EolTest eolTest = EolTest();

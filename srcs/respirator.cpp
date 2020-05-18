@@ -147,18 +147,18 @@ void setup(void) {
     blower.setup();
     blower_pointer = &blower;
 
-    // Autotest inputs : one of the rear button should be pressed while booting, either the right
+    // Autotest inputs: one of the rear button should be pressed while booting, either the right
     // one or the left one
     pinMode(PA15, INPUT);
     pinMode(PB12, INPUT);
 
     // Activate test mode if one of these buttons is pressed. The end of line test mode cannot be
     // activated later on.
-    if (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12)) {
+    if ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
         eolTest.activate();
         screen.clear();
         screen.print("EOL Test Mode");
-        while (HIGH == digitalRead(PA15) || HIGH == digitalRead(PB12)) {
+        while ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
             continue;
         }
     }
@@ -289,7 +289,7 @@ void setup(void) {
         }
     }
 
-    // no watchdog in end of line test mode
+    // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
         IWatchdog.begin(WATCHDOG_TIMEOUT);

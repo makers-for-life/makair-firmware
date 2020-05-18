@@ -2,8 +2,7 @@
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
  * @file end_of_line_test.h
- * @brief End of line tests
- *
+ * @brief Auto test for end of line unit test
  *****************************************************************************/
 
 #pragma once
@@ -13,28 +12,34 @@
 
 #define EOL_TEST_ACTIVE 0xa240183a
 
-/// Controls an Pressure Valve's servomotor
+/// Controls the running of the embedded auto tests
 class EolTest {
  public:
     /// Default constructor
     EolTest();
 
-    void setupAndStart();
-
-    void mainLoop();
-    bool isRunning();
+    /// Enable test mode
     void activate();
 
+    /**
+     * Check if test mode is enabled
+     *
+     * @return True if test mode is enabled
+     */
+    bool isRunning();
+
+    /// Run test mode
+    void setupAndStart();
+
  private:
+    /// Test mode activation state
     uint32_t testActive;
 };
-
-void millisecondTimerEOL(HardwareTimer*);
 
 extern HardwareTimer* eolTimer;
 extern EolTest eolTest;
 
-// these are defined and initialized in the main program
+// These are defined and initialized in the main program
 extern PressureValve servoBlower;
 extern PressureValve servoPatient;
 extern Blower blower;
