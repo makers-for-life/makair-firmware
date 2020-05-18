@@ -122,12 +122,69 @@ void initKeyboard() {
     buttonPeepPressureDecrease.attachClick(onPeepPressureDecrease);
     buttonCycleIncrease.attachClick(onCycleIncrease);
     buttonCycleDecrease.attachClick(onCycleDecrease);
+#elif HARDWARE_VERSION == 3
+    // define the 3x3 matrix keyboard input and output
+    pinMode(PIN_OUT_COL1, OUTPUT);
+    pinMode(PIN_OUT_COL2, OUTPUT);
+    pinMode(PIN_OUT_COL3, OUTPUT);
+    digitalWrite(PIN_OUT_COL1, LOW);
+    digitalWrite(PIN_OUT_COL2, LOW);
+    digitalWrite(PIN_OUT_COL3, LOW);
+    pinMode(PIN_IN_ROW1, INPUT);
+    pinMode(PIN_IN_ROW2, INPUT);
+    pinMode(PIN_IN_ROW3, INPUT);
 #endif
 
     buttonAlarmOff.attachClick(onAlarmOff);
     buttonStart.attachClick(onStart);
     buttonStop.attachClick(onStop);
 }
+
+#if HARDWARE_VERSION == 3
+// current powered column of the matrix keyboard.
+int scanMatrixCurrentColumn = 1;
+// fast solution : no debouncing, no hardware timer. Close to Arduino philosophy.
+void scanMatrixLoop() {
+    if (1 == scanMatrixCurrentColumn) {
+        if (HIGH == digitalRead(PIN_IN_ROW1)) {
+            onPeakPressureIncrease();
+        }
+        if (HIGH == digitalRead(PIN_IN_ROW2)) {
+            onPeakPressureDecrease();
+        }
+        if (HIGH == digitalRead(PIN_IN_ROW3)) {
+            onPlateauPressureIncrease();
+        }
+    } else if (2 == scanMatrixCurrentColumn) {
+        if (HIGH == digitalRead(PIN_IN_ROW1)) {
+            onPlateauPressureDecrease();
+        }
+        if (HIGH == digitalRead(PIN_IN_ROW2)) {
+            onPeepPressureIncrease();
+        }
+        if (HIGH == digitalRead(PIN_IN_ROW3)) {
+            onPeepPressureDecrease();
+        }
+    } else if (3 == scanMatrixCurrentColumn) {
+        if (HIGH == digitalRead(PIN_IN_ROW1)) {
+            onCycleIncrease();
+        }
+        if (HIGH == digitalRead(PIN_IN_ROW2)) {
+            onCycleDecrease();
+        }
+        // there is no button on col3 x row3
+    }
+
+    // next column
+    scanMatrixCurrentColumn++;
+    if (4 == scanMatrixCurrentColumn) {
+        scanMatrixCurrentColumn = 1;
+    }
+    digitalWrite(PIN_OUT_COL1, 1 == scanMatrixCurrentColumn ? HIGH : LOW);
+    digitalWrite(PIN_OUT_COL2, 2 == scanMatrixCurrentColumn ? HIGH : LOW);
+    digitalWrite(PIN_OUT_COL3, 3 == scanMatrixCurrentColumn ? HIGH : LOW);
+}
+#endif
 
 void keyboardLoop() {
 #if HARDWARE_VERSION == 1
@@ -141,6 +198,8 @@ void keyboardLoop() {
     buttonPeepPressureDecrease.tick();
     buttonCycleIncrease.tick();
     buttonCycleDecrease.tick();
+#elif HARDWARE_VERSION == 3
+    scanMatrixLoop();
 #endif
     buttonAlarmOff.tick();
     buttonStart.tick();

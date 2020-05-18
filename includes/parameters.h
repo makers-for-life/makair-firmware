@@ -143,7 +143,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_SERVO_PATIENT D4  // PB5 / TIM3_CH2
 #define TIM_CHANNEL_SERVO_VALVE_BLOWER 3
 #define TIM_CHANNEL_SERVO_VALVE_PATIENT 2
-#elif HARDWARE_VERSION == 2
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #define PIN_SERVO_BLOWER D5   // PB4 / TIM3_CH1
 #define PIN_SERVO_PATIENT D4  // PB5 / TIM3_CH2
 #define TIM_CHANNEL_SERVO_VALVE_BLOWER 1
@@ -185,6 +185,14 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_LCD_D5 D10  // PB6
 #define PIN_LCD_D6 D11  // PA7
 #define PIN_LCD_D7 D12  // PA6
+#elif HARDWARE_VERSION == 3
+#define PIN_LCD_RS PA8
+#define PIN_LCD_RW PC12
+#define PIN_LCD_EN PA5
+#define PIN_LCD_D4 PC7   // PC7
+#define PIN_LCD_D5 PB10  // PB6
+#define PIN_LCD_D6 PA7  // PA7
+#define PIN_LCD_D7 PA6  // PA6
 #endif
 
 /// Number of lines
@@ -232,6 +240,17 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_BTN_PEEP_PRESSURE_DECREASE PC0
 #define PIN_BTN_CYCLE_INCREASE PA0
 #define PIN_BTN_CYCLE_DECREASE PB7
+#elif HARDWARE_VERSION == 3
+#define PIN_BTN_ALARM_OFF PB2
+#define PIN_BTN_START PC13
+#define PIN_BTN_STOP PB15
+//other buttons are in a matrix
+#define PIN_OUT_COL1 PC2
+#define PIN_OUT_COL2 PC3
+#define PIN_OUT_COL3 PC6
+#define PIN_IN_ROW1 PC9
+#define PIN_IN_ROW2 PC10
+#define PIN_IN_ROW3 PC11
 #endif
 
 ///@}
@@ -273,6 +292,22 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define LED_GREEN_ACTIVE LOW
 #define LED_GREEN_INACTIVE HIGH
 
+#elif HARDWARE_VERSION == 3
+
+#define PIN_LED_START PC8   // below start button, close to START label
+#define PIN_LED_GREEN PB13  // "alarm off"
+#define PIN_LED_YELLOW PB14 // "alarm med"
+#define PIN_LED_RED PC4     // "alarm high"
+
+#define LED_START_ACTIVE HIGH
+#define LED_START_INACTIVE LOW
+#define LED_RED_ACTIVE HIGH
+#define LED_RED_INACTIVE LOW
+#define LED_YELLOW_ACTIVE HIGH
+#define LED_YELLOW_INACTIVE LOW
+#define LED_GREEN_ACTIVE HIGH
+#define LED_GREEN_INACTIVE LOW
+
 #endif
 
 ///@}
@@ -295,6 +330,15 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define TIM_CHANNEL_ESC_BLOWER 3
 #define PIN_TEMP_BLOWER A4  // PC1
 #define PIN_BATTERY A2
+#define PIN_TELEMETRY_SERIAL_RX PA12
+#define PIN_TELEMETRY_SERIAL_TX PA11
+#elif HARDWARE_VERSION == 3
+#define PIN_PRESSURE_SENSOR PA1
+#define PIN_BUZZER PB7     // TIM4_CH2
+#define PIN_ESC_BLOWER PA10  // PA10 / TIM1_CH3
+#define TIM_CHANNEL_ESC_BLOWER 3
+#define PIN_TEMP_BLOWER PC1  
+#define PIN_BATTERY PA4
 #define PIN_TELEMETRY_SERIAL_RX PA12
 #define PIN_TELEMETRY_SERIAL_TX PA11
 #endif
