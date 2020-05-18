@@ -376,7 +376,7 @@ void loop(void) {
                 batteryLoop(pController.cycleNumber());
 
                 // Display relevant information during the cycle
-                if ((tick % LCD_UPDATE_PERIOD_US) == 0u) {  // TODO CORRECTION
+                if ((tick % (LCD_UPDATE_PERIOD_US/PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
                     displayCurrentPressure(pController.pressure(),
                                            pController.cyclesPerMinuteCommand());
 
