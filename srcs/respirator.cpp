@@ -19,7 +19,7 @@
 #include "Arduino.h"
 #include <IWatchdog.h>
 #include <LiquidCrystal.h>
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include <HardwareSerial.h>
 #endif
 
@@ -36,7 +36,7 @@
 #include "../includes/pressure_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "../includes/telemetry.h"
 #endif
 
@@ -55,7 +55,7 @@ uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 #endif
 
@@ -90,7 +90,7 @@ void setup(void) {
     DBG_DO(Serial.begin(115200);)
     DBG_DO(Serial.println("Booting the system...");)
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     initTelemetry();
     sendBootMessage();
 #endif
@@ -123,7 +123,7 @@ void setup(void) {
     blower = Blower(hardwareTimer3, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
     blower_pointer = &blower;
-#elif HARDWARE_VERSION == 2
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     // Timer for servos
     hardwareTimer3 = new HardwareTimer(TIM3);
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
@@ -330,7 +330,7 @@ void loop(void) {
                 alarmController.notDetectedAlarm(RCM_SW_18);
                 alarmController.notDetectedAlarm(RCM_SW_19);
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
                 if ((centiSec % 10u) == 0u) {
                     sendStoppedMessage();
                 }

@@ -16,7 +16,7 @@
 #include "../includes/buzzer.h"
 #include "../includes/cycle.h"
 #include "../includes/screen.h"
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "../includes/telemetry.h"
 #endif
 
@@ -169,7 +169,7 @@ void AlarmController::detectedAlarm(uint8_t p_alarmCode,
                     }
                 }
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
                 if (!wasTriggered) {
                     sendAlarmTrap(m_centile, m_pressure, m_phase, m_subphase, m_cycle_number,
                                   current->getCode(), current->getPriority(), true, p_expected,
@@ -216,7 +216,7 @@ void AlarmController::notDetectedAlarm(uint8_t p_alarmCode) {
                     }
                 }
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
                 if (wasTriggered) {
                     sendAlarmTrap(m_centile, m_pressure, m_phase, m_subphase, m_cycle_number,
                                   current->getCode(), current->getPriority(), false, 0u, 0u,

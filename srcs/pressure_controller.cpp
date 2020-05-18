@@ -21,7 +21,7 @@
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "../includes/battery.h"
 #include "../includes/telemetry.h"
 #endif
@@ -242,7 +242,7 @@ void PressureController::endRespiratoryCycle() {
         m_alarmController->notDetectedAlarm(RCM_SW_18);
     }
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint16_t plateauPressureToDisplay = m_plateauPressure;
     if (plateauPressureToDisplay == UINT16_MAX) {
         plateauPressureToDisplay = 0;
@@ -309,7 +309,7 @@ void PressureController::compute(uint16_t p_centiSec) {
                        m_blower_valve.command, m_blower_valve.position, m_patient_valve.command,
                        m_patient_valve.position)
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     m_alarmController->updateCoreData(p_centiSec, m_pressure, m_phase, m_subPhase, m_cycleNb);
     sendDataSnapshot(p_centiSec, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
                      m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
