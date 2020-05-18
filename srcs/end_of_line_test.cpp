@@ -359,13 +359,17 @@ void millisecondTimerEOL(HardwareTimer*) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
                        pressureValue);
 
-        if (eolMSCount > 5000u) {
+        if (eolMSCount > 10000u) {
             MaxPressureValue = max(MaxPressureValue, pressureValue);
             MinPressureValue = min(MinPressureValue, pressureValue);
+            if ((MaxPressureValue - MinPressureValue) > 25){
+                eolstep = PRESSURE_NOT_STABLE;
+                eolMSCount = 0;
+            }
         }
 
         if (eolMSCount > 900000u) {
-            if ((MaxPressureValue - MinPressureValue) < 50) {
+            if ((MaxPressureValue - MinPressureValue) < 25) {
                 eolstep = END_SUCCESS;
                 eolMSCount = 0;
                 eolTestNumber++;
