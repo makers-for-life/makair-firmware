@@ -29,6 +29,7 @@ EolTest::EolTest() {
     ::eolTimer = new HardwareTimer(TIM10);
 }
 
+// cppcheck-suppress unusedFunction
 void EolTest::activate() {
     testActive = EOL_TEST_ACTIVE;
     ::clockEOLTimer = 0;
@@ -37,6 +38,7 @@ void EolTest::activate() {
 bool EolTest::isRunning() { return (EOL_TEST_ACTIVE == testActive); }
 
 // Message display helper function
+// cppcheck-suppress unusedFunction
 void eolScreenMessage(char* message, bool isFailed) {
     screen.clear();
     // cppcheck-suppress misra-c2012-12.3
