@@ -191,8 +191,8 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_LCD_EN PA5
 #define PIN_LCD_D4 PC7   // PC7
 #define PIN_LCD_D5 PB10  // PB6
-#define PIN_LCD_D6 PA7  // PA7
-#define PIN_LCD_D7 PA6  // PA6
+#define PIN_LCD_D6 PA7   // PA7
+#define PIN_LCD_D7 PA6   // PA6
 #endif
 
 /// Number of lines
@@ -244,7 +244,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_BTN_ALARM_OFF PB2
 #define PIN_BTN_START PC13
 #define PIN_BTN_STOP PB15
-//other buttons are in a matrix
+// other buttons are in a 3x3 matrix
 #define PIN_OUT_COL1 PC2
 #define PIN_OUT_COL2 PC3
 #define PIN_OUT_COL3 PC6
@@ -294,10 +294,10 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 #elif HARDWARE_VERSION == 3
 
-#define PIN_LED_START PC8   // below start button, close to START label
-#define PIN_LED_GREEN PB13  // "alarm off"
-#define PIN_LED_YELLOW PB14 // "alarm med"
-#define PIN_LED_RED PC4     // "alarm high"
+#define PIN_LED_START PC8    // below start button, close to START label
+#define PIN_LED_GREEN PB13   // "alarm off"
+#define PIN_LED_YELLOW PB14  // "alarm med"
+#define PIN_LED_RED PC4      // "alarm high"
 
 #define LED_START_ACTIVE HIGH
 #define LED_START_INACTIVE LOW
@@ -334,13 +334,13 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_TELEMETRY_SERIAL_TX PA11
 #elif HARDWARE_VERSION == 3
 #define PIN_PRESSURE_SENSOR PA1
-#define PIN_BUZZER PB7     // TIM4_CH2
+#define PIN_BUZZER PB7       // TIM4_CH2
 #define PIN_ESC_BLOWER PA10  // PA10 / TIM1_CH3
 #define TIM_CHANNEL_ESC_BLOWER 3
-#define PIN_TEMP_BLOWER PC1  
+#define PIN_TEMP_BLOWER PC1
 #define PIN_BATTERY PA4
-#define PIN_TELEMETRY_SERIAL_RX PB3 // UART1
-#define PIN_TELEMETRY_SERIAL_TX PA9 // UART1
+#define PIN_TELEMETRY_SERIAL_RX PB3  // UART1
+#define PIN_TELEMETRY_SERIAL_TX PA9  // UART1
 #endif
 
 ///@}
