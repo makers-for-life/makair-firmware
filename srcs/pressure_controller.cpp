@@ -875,3 +875,8 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
 
     return patientAperture;
 }
+
+
+void PressureController::resetBlowerDefaultSpeed(){
+  blower.runSpeed(DEFAULT_BLOWER_SPEED);
+}
