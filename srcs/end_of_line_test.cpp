@@ -115,6 +115,7 @@ char eolScreenBuffer[EOLSCREENSIZE + 1];
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void millisecondTimerEOL(HardwareTimer*) {
+#if HARDWARE_VERSION == 2
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
@@ -384,6 +385,7 @@ void millisecondTimerEOL(HardwareTimer*) {
     }
 
     previousEolStep = eolstep;
+#endif
 }
 
 void EolTest::setupAndStart() {
