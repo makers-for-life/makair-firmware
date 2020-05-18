@@ -663,7 +663,7 @@ void PressureController::updatePeakPressure() {
     }
 }
 
-void PressureController::computetickParameters() {
+void PressureController::computeTickParameters() {
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US)/ m_cyclesPerMinute;
     // Inhalation = 1/3 of the cycle duration,
     // Exhalation = 2/3 of the cycle duration
