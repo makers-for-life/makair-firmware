@@ -326,10 +326,8 @@ void PressureController::compute(uint16_t p_tick) {
 
 #if HARDWARE_VERSION == 2
     m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    if (p_tick%2==0){
-      sendDataSnapshot(p_tick/2, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
+    sendDataSnapshot(p_tick/2, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
                        m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
-    }
 #endif
 
     executeCommands();
@@ -744,13 +742,15 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     // Compute error
     int32_t error = targetPressure - currentPressure;
 
-    // Fenetrage
+    // Windowing. It overides the parameter.h coefficients
     if (error<0){
       coefficientI = 200; 
       coefficientP = 2500; 
+      coefficientD = 0;
     } else {
       coefficientI = 50;
-      coefficientP = 2500 ;
+      coefficientP = 2500;
+      coefficientD = 0;
     }
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
@@ -766,15 +766,12 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     smoothError =
         totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
 
-    
-    // Fast mode at beginning 
+    // Fast mode ends at 20mmH20 from target. When changing from fast-mode to PID, Set the integral to the previous value
     if (error < 20) {
       if (blowerPIDFastMode){
         proportionnalWeight = (coefficientP * error) / 1000;
         derivativeWeight = (coefficientD*derivative/1000);  
         blowerIntegral = 1000*((int32_t)lastBlowerAperture - maxAperture)/(minAperture - maxAperture) - (proportionnalWeight + derivativeWeight);
-        //m_plateauStartTime = m_tick;
-
       }
       blowerPIDFastMode = false;
     }
@@ -798,16 +795,12 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
       proportionnalWeight =  ((coefficientP * error) / 1000);
       integralWeight = temporaryBlowerIntegral;
       derivativeWeight = coefficientD*derivative/1000;
-
       
       int32_t blowerCommand = proportionnalWeight + integralWeight + derivativeWeight; 
       blowerAperture =
           max(minAperture,
               min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
     }
-
-
-  
 
     // If the valve is completly open or completly closed, dont update Integral
     if (blowerAperture !=  minAperture && blowerAperture != maxAperture){
@@ -856,6 +849,7 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;
+    int32_t temporaryPatientIntegral = 0;
     int32_t integralWeight = 0;
     int32_t proportionnalWeight = 0;
     int32_t derivativeWeight = 0;
@@ -864,7 +858,7 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t coefficientI = PID_PATIENT_KI;
     int32_t coefficientD = PID_PATIENT_KD;
 
-    int32_t temporaryPatientIntegral = 0;
+    
     
     //Calculate derivative part
     m_lastPatientPIDError[m_lastPatientPIDErrorIndex] = error;
@@ -880,25 +874,24 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
         totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
     derivative = (dt == 0) ? 0 : (1000000 * (smoothError - patientLastError)) / dt;
 
-    // Fenetrage
+    //  Windowing. It overides the parameter.h coefficients
     if (error<0){
       coefficientI = 50; 
       coefficientP = 2500; 
       coefficientD = 0;
     } else {
-      coefficientI = -130 * ((int32_t) m_minPeepCommand)/50 + 380;// 120
+      // For a high peep, a lower KI is requiered. For Peep = 100mmH2O, KI = 120. For Peep = 50mmH2O, KI = 250.
+      coefficientI = -130 * ((int32_t) m_minPeepCommand)/50 + 380;
       coefficientP = 2500 ; 
       coefficientD = 0;
     }
 
-    // Fast mode or not
+    // Fast mode ends at 30mmH20 from target. Fast mode or not. When changing from fast-mode to PID, Set the integral to the previous value
     if (error > -30) {
       if (patientPIDFastMode){
         proportionnalWeight = (coefficientP * error) / 1000;
         derivativeWeight = (coefficientD*derivative/1000);  
         patientIntegral = 1000*((int32_t)lastPatientAperture - maxAperture)/(maxAperture - minAperture) - (proportionnalWeight + derivativeWeight);
-
-
       }
       patientPIDFastMode = false;
     }    
@@ -911,13 +904,9 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
       } else {
         patientAperture = 0;
       }
-
     } 
     // Then smooth PID
     else {
-
-
-
       temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
       temporaryPatientIntegral =
         max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
@@ -932,11 +921,6 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
         minAperture,
         min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
     }
-
-    
-
-
-    
 
     // If the valve is completly open or completly closed, dont update Integral
     if (patientAperture !=  minAperture && patientAperture != maxAperture){

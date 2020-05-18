@@ -256,7 +256,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         unsnooze = true;
     }
 
-    if ((p_tick % LCD_UPDATE_PERIOD_US) == 0u) {
+    if ((p_tick % (LCD_UPDATE_PERIOD_US/PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
         displayAlarmInformation(triggeredAlarmCodes, numberOfTriggeredAlarms);
     }
 
@@ -266,9 +266,9 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         }
 
         if ((p_tick % 100u) == 50u) {
-            //digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
+            digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
         } else if ((p_tick % 100u) == 0u) {
-            //digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
+            digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
         } else {
         }
         digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
@@ -276,7 +276,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         if ((m_highestPriority != highestPriority) || unsnooze) {
             Buzzer_Medium_Prio_Start();
         }
-        //digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
+        digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
         if ((p_tick % 100u) == 50u) {
             digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
         } else if ((p_tick % 100u) == 0u) {
@@ -288,12 +288,12 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
             Buzzer_Low_Prio_Start();
         }
 
-        //digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
+        digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
         digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
     } else {
         Buzzer_Stop();
 
-        //digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
+        digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
         digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
     }
 
