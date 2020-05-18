@@ -4,6 +4,7 @@ var hierarchy =
     [ "Alarm", "class_alarm.html", null ],
     [ "AlarmController", "class_alarm_controller.html", null ],
     [ "Blower", "class_blower.html", null ],
+    [ "EolTest", "class_eol_test.html", null ],
     [ "PressureController", "class_pressure_controller.html", null ],
     [ "PressureValve", "class_pressure_valve.html", null ],
     [ "Test", null, [

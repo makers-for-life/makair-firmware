@@ -8,6 +8,7 @@ var dir_b73b02d482d1c4a3db20c3d9ad52d395 =
     [ "build_opts.h", "build__opts_8h.html", null ],
     [ "buzzer.cpp", "buzzer_8cpp.html", "buzzer_8cpp" ],
     [ "buzzer_control.cpp", "buzzer__control_8cpp.html", "buzzer__control_8cpp" ],
+    [ "end_of_line_test.cpp", "end__of__line__test_8cpp.html", "end__of__line__test_8cpp" ],
     [ "integration_test.cpp", "integration__test_8cpp.html", null ],
     [ "keyboard.cpp", "keyboard_8cpp.html", "keyboard_8cpp" ],
     [ "pressure.cpp", "pressure_8cpp.html", "pressure_8cpp" ],
