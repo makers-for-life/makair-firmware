@@ -76,6 +76,7 @@ void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute) {
 void displayCurrentSettings(uint16_t peakPressureMax,
                             uint16_t plateauPressureMax,
                             uint16_t peepMin) {
+    // cppcheck-suppress misra-c2012-12.3
     screen.setCursor(0, 1);
 
     char message[SCREEN_LINE_LENGTH + 1];
