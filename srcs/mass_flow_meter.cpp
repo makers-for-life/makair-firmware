@@ -150,13 +150,13 @@ void MFM_Timer_Callback(HardwareTimer*) {
         mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
         mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
-        mfmLastValue = MFM_HONEYWELL_HAF_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1)
+        mfmLastValue = MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1)
                        / 0.8;  // Output value in SLPM
 
         // The sensor (100SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
-        if (mfmLastValue < (MFM_HONEYWELL_HAF_RANGE * 1.1)) {
+        if (mfmLastValue < (MFM_RANGE * 1.1)) {
             mfmAirVolumeSum += mfmLastValue;
         }
 

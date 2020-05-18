@@ -290,6 +290,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_ESC_BLOWER D5  // PB4 / TIM3_CH1
 #define TIM_CHANNEL_ESC_BLOWER 1
 #define PIN_BATTERY A2
+#ifdef MASS_FLOW_METER
+#error "Hardware v1 cannot support any kind of mass flow meter sensor"
+#endif
 #elif HARDWARE_VERSION == 2
 #define PIN_PRESSURE_SENSOR A1
 #define PIN_BUZZER D13     // PA5
@@ -299,13 +302,8 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_BATTERY A2
 #define PIN_TELEMETRY_SERIAL_RX PA12
 #define PIN_TELEMETRY_SERIAL_TX PA11
-#define MASS_FLOW_METER
-#endif
-
-///@}
-
 /**
- * Define the flow meter parameters
+ * Define the flow meter parameters for Hardware v2
  */
 #ifdef MASS_FLOW_METER
 #define MASS_FLOW_TIMER TIM10
@@ -313,17 +311,10 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_I2C_SDA PB9
 #define PIN_I2C_SCL PB8
 #define MFM_ANALOG_INPUT A3
-#define MFM_SFM_3300D 1
-#define MFM_SDP703_02 2
-#define MFM_OMRON_D6F 3
-#define MFM_HONEYWELL_HAF 4
-#define MFM_HONEYWELL_HAF_RANGE 100
-#define MASS_FLOW_METER_SENSOR MFM_HONEYWELL_HAF
+#endif
 #endif
 
-
-
-
+///@}
 
 /**
  * @name Alarm thresholds
