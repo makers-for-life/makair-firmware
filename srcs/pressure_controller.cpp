@@ -190,7 +190,7 @@ void PressureController::initRespiratoryCycle() {
 
 
     m_peakPressure = 0;
-    computetickParameters();
+    computeTickParameters();
 
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
 
