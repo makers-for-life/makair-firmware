@@ -49,6 +49,7 @@ void startScreen() {
 
 void resetScreen() { screen.clear(); }
 
+// cppcheck-suppress unusedFunction
 void displayCurrentVolume(int32_t volumeMassFlow, uint16_t cyclesPerMinute) {
     screen.setCursor(0, 0);
 
@@ -60,6 +61,7 @@ void displayCurrentVolume(int32_t volumeMassFlow, uint16_t cyclesPerMinute) {
     screen.print(message);
 }
 
+// cppcheck-suppress unusedFunction
 void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute) {
     screen.setCursor(0, 0);
 
@@ -74,6 +76,7 @@ void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute) {
 void displayCurrentSettings(uint16_t peakPressureMax,
                             uint16_t plateauPressureMax,
                             uint16_t peepMin) {
+    // cppcheck-suppress misra-c2012-12.3
     screen.setCursor(0, 1);
 
     char message[SCREEN_LINE_LENGTH + 1];
