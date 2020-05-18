@@ -193,7 +193,7 @@ class PressureController {
      *
      *  N.B.: Inhalation lasts 1/3 of a cycle while exhalation lasts 2/3 of a cycle
      */
-    void computetickParameters();
+    void computeTickParameters();
 
     /**
      * Compute plateau pressure
