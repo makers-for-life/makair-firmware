@@ -161,8 +161,6 @@ class PressureController {
      */
     void updateDt(int32_t p_dt);
 
-    void resetBlowerDefaultSpeed();
-
  private:
     /**
      * Update the cycle phase
