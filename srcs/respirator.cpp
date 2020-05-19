@@ -147,13 +147,13 @@ void setup(void) {
     blower.setup();
     blower_pointer = &blower;
 
+// Activate test mode if a service button is pressed. The end of line test mode cannot be
+// activated later on.
+#if HARDWARE_VERSION == 2
     // Autotest inputs: one of the rear button should be pressed while booting, either the right
     // one or the left one
     pinMode(PA15, INPUT);
     pinMode(PB12, INPUT);
-
-    // Activate test mode if one of these buttons is pressed. The end of line test mode cannot be
-    // activated later on.
     if ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
         eolTest.activate();
         screen.clear();
@@ -162,6 +162,19 @@ void setup(void) {
             continue;
         }
     }
+#endif
+#if HARDWARE_VERSION == 3
+    // Autotest inputs: the service button on PB12, top right of the board's rear side
+    pinMode(PB12, INPUT);
+    if (HIGH == digitalRead(PB12)) {
+        eolTest.activate();
+        screen.clear();
+        screen.print("EOL Test Mode");
+        while (HIGH == digitalRead(PB12)) {
+            continue;
+        }
+    }
+#endif
 
 #endif
 

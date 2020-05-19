@@ -117,7 +117,7 @@ char eolScreenBuffer[EOLSCREENSIZE + 1];
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void millisecondTimerEOL(HardwareTimer*) {
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
@@ -203,6 +203,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         if (digitalRead(PIN_BTN_ALARM_OFF) == HIGH) {
             buttonsPushed[0] = 1;
         }
+#if HARDWARE_VERSION == 2
         if (digitalRead(PIN_BTN_CYCLE_DECREASE) == HIGH) {
             buttonsPushed[1] = 1;
         }
@@ -227,6 +228,14 @@ void millisecondTimerEOL(HardwareTimer*) {
         if (digitalRead(PIN_BTN_PLATEAU_PRESSURE_INCREASE) == HIGH) {
             buttonsPushed[8] = 1;
         }
+#endif
+
+#if HARDWARE_VERSION == 3
+        // this switches are in a matrix.
+        // TODO
+
+#endif
+
         if (digitalRead(PIN_BTN_START) == HIGH) {
             buttonsPushed[9] = 1;
         }
@@ -408,6 +417,19 @@ void EolTest::setupAndStart() {
     servoPatient.execute();
     servoBlower.close();
     servoBlower.execute();
+
+#if HARDWARE_VERSION == 3
+    // define the 3x3 matrix keyboard input and output
+    pinMode(PIN_OUT_COL1, OUTPUT);
+    pinMode(PIN_OUT_COL2, OUTPUT);
+    pinMode(PIN_OUT_COL3, OUTPUT);
+    digitalWrite(PIN_OUT_COL1, LOW);
+    digitalWrite(PIN_OUT_COL2, LOW);
+    digitalWrite(PIN_OUT_COL3, LOW);
+    pinMode(PIN_IN_ROW1, INPUT);
+    pinMode(PIN_IN_ROW2, INPUT);
+    pinMode(PIN_IN_ROW3, INPUT);
+#endif
 }
 
 EolTest eolTest = EolTest();
