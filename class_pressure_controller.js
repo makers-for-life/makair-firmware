@@ -37,6 +37,7 @@ var class_pressure_controller =
     [ "plateau", "class_pressure_controller.html#a3c87527db7275a0474f4f7afff1b79bf", null ],
     [ "plateauPressure", "class_pressure_controller.html#a3a1a582bea8f502812b9932da5eab217", null ],
     [ "pressure", "class_pressure_controller.html#a61ee4afea7c585f5582ad85a0b47da7a", null ],
+    [ "resetBlowerDefaultSpeed", "class_pressure_controller.html#a75bd631acb6b11adbc9b08d3fdf69351", null ],
     [ "setSubPhase", "class_pressure_controller.html#a8db3c7d9967c6299654d9234e6d54b8d", null ],
     [ "setup", "class_pressure_controller.html#ae30a9ffc7ddd71bf17d0e6bccced181a", null ],
     [ "subPhase", "class_pressure_controller.html#ae3bdcb8cfea8a4e896e2503e59333a38", null ],
