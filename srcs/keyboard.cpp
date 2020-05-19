@@ -142,34 +142,116 @@ void initKeyboard() {
 
 #if HARDWARE_VERSION == 3
 // current powered column of the matrix keyboard.
-int scanMatrixCurrentColumn = 1;
-// fast solution : no debouncing, no hardware timer. Close to Arduino philosophy.
+uint16_t scanMatrixCurrentColumn = 1;
+uint16_t scanMatrixCounterC1R1 = 0;
+uint16_t scanMatrixCounterC1R2 = 0;
+uint16_t scanMatrixCounterC1R3 = 0;
+uint16_t scanMatrixCounterC2R1 = 0;
+uint16_t scanMatrixCounterC2R2 = 0;
+uint16_t scanMatrixCounterC2R3 = 0;
+uint16_t scanMatrixCounterC3R1 = 0;
+uint16_t scanMatrixCounterC3R2 = 0;
+uint16_t scanMatrixCounterC3R3 = 0;
+#define SM_DEBOUNCE 2  // number of debounce ticks before trigger an action
+#define SM_REPEAT 20   // number of ticks before starting continuous press action repeat
+#define SM_PERIOD 15   // period of action repeat in case of a continuous press
+
+// fast solution : no hardware timer, no interrupt priority or atomicity issue. Close to Arduino
+// philosophy.
 void scanMatrixLoop() {
     if (1 == scanMatrixCurrentColumn) {
+        // Increase counter for each column and row
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
-            onPeakPressureIncrease();
+            scanMatrixCounterC1R1++;
+        } else {
+            scanMatrixCounterC1R1 = 0;
         }
         if (HIGH == digitalRead(PIN_IN_ROW2)) {
-            onPeakPressureDecrease();
+            scanMatrixCounterC1R2++;
+        } else {
+            scanMatrixCounterC1R2 = 0;
         }
         if (HIGH == digitalRead(PIN_IN_ROW3)) {
+            scanMatrixCounterC1R3++;
+        } else {
+            scanMatrixCounterC1R3 = 0;
+        }
+        // first click (after debounce ticks) or
+        // later clicks if continuous press trigger action
+        if (SM_DEBOUNCE == scanMatrixCounterC1R1
+            || (scanMatrixCounterC1R1 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC1R1 - SM_REPEAT) % SM_PERIOD)) {
+            onPeakPressureIncrease();
+        }
+        if (SM_DEBOUNCE == scanMatrixCounterC1R2
+            || (scanMatrixCounterC1R2 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC1R2 - SM_REPEAT) % SM_PERIOD)) {
+            onPeakPressureDecrease();
+        }
+        if (SM_DEBOUNCE == scanMatrixCounterC1R3
+            || (scanMatrixCounterC1R3 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC1R3 - SM_REPEAT) % SM_PERIOD)) {
             onPlateauPressureIncrease();
         }
     } else if (2 == scanMatrixCurrentColumn) {
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
-            onPlateauPressureDecrease();
+            scanMatrixCounterC2R1++;
+        } else {
+            scanMatrixCounterC2R1 = 0;
         }
         if (HIGH == digitalRead(PIN_IN_ROW2)) {
-            onPeepPressureIncrease();
+            scanMatrixCounterC2R2++;
+        } else {
+            scanMatrixCounterC2R2 = 0;
         }
         if (HIGH == digitalRead(PIN_IN_ROW3)) {
+            scanMatrixCounterC2R3++;
+        } else {
+            scanMatrixCounterC2R3 = 0;
+        }
+        // first click (after debounce ticks) or
+        // later clicks if continuous press trigger action
+        if (SM_DEBOUNCE == scanMatrixCounterC2R1
+            || (scanMatrixCounterC2R1 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC2R1 - SM_REPEAT) % SM_PERIOD)) {
+            onPlateauPressureDecrease();
+        }
+        if (SM_DEBOUNCE == scanMatrixCounterC2R2
+            || (scanMatrixCounterC2R2 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC2R2 - SM_REPEAT) % SM_PERIOD)) {
+            onPeepPressureIncrease();
+        }
+        if (SM_DEBOUNCE == scanMatrixCounterC2R3
+            || (scanMatrixCounterC2R3 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC2R3 - SM_REPEAT) % SM_PERIOD)) {
             onPeepPressureDecrease();
         }
     } else if (3 == scanMatrixCurrentColumn) {
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
-            onCycleIncrease();
+            scanMatrixCounterC3R1++;
+        } else {
+            scanMatrixCounterC3R1 = 0;
         }
         if (HIGH == digitalRead(PIN_IN_ROW2)) {
+            scanMatrixCounterC3R2++;
+        } else {
+            scanMatrixCounterC3R2 = 0;
+        }
+        if (HIGH == digitalRead(PIN_IN_ROW3)) {
+            scanMatrixCounterC3R3++;
+        } else {
+            scanMatrixCounterC3R3 = 0;
+        }
+        // first click (after debounce ticks) or
+        // later clicks if continuous press trigger action
+        if (SM_DEBOUNCE == scanMatrixCounterC3R1
+            || (scanMatrixCounterC3R1 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC3R1 - SM_REPEAT) % SM_PERIOD)) {
+            onCycleIncrease();
+        }
+        if (SM_DEBOUNCE == scanMatrixCounterC3R2
+            || (scanMatrixCounterC3R2 >= SM_REPEAT
+                && 0 == (scanMatrixCounterC3R2 - SM_REPEAT) % SM_PERIOD)) {
             onCycleDecrease();
         }
         // there is no button on col3 x row3
