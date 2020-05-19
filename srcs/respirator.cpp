@@ -376,7 +376,7 @@ void loop(void) {
                 batteryLoop(pController.cycleNumber());
 
                 // Display relevant information during the cycle
-                if ((tick % (LCD_UPDATE_PERIOD_US/PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
+                if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
                     displayCurrentPressure(pController.pressure(),
                                            pController.cyclesPerMinuteCommand());
 
@@ -391,7 +391,6 @@ void loop(void) {
                 tick++;
                 IWatchdog.reload();
             }
-
         }
 
         if (shouldRun) {
@@ -419,7 +418,6 @@ void loop(void) {
         } else {
             displayMachineStopped();
         }
-        
     }
 }
 
