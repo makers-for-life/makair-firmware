@@ -317,6 +317,9 @@ void loop(void) {
 
         if (shouldRun) {
             pController.initRespiratoryCycle();
+        } else {
+            pController.resetBlowerDefaultSpeed();
+            blower.stop(); 
         }
 
         /********************************************/
@@ -346,7 +349,6 @@ void loop(void) {
                     pController.compute(centiSec);
                 } else {
                     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-                    pController.resetBlowerDefaultSpeed();
                     blower.stop();
 
                     // Stop alarms related to breathing cycle
