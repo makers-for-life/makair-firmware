@@ -392,31 +392,34 @@ void loop(void) {
                 IWatchdog.reload();
             }
 
-            if (shouldRun) {
-                pController.endRespiratoryCycle();
-            }
-
-            /********************************************/
-            // END OF THE RESPIRATORY CYCLE
-            /********************************************/
-
-            // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
-            // so
-            cyclesBeforeScreenReset--;
-            if (cyclesBeforeScreenReset <= 0) {
-                DBG_DO(Serial.println("resetting LCD screen");)
-                resetScreen();
-                clearAlarmDisplayCache();
-                cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
-            }
-
-            if (shouldRun) {
-                displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                          pController.peep());
-            } else {
-                displayMachineStopped();
-            }
         }
+
+        if (shouldRun) {
+            pController.endRespiratoryCycle();
+        }
+
+        /********************************************/
+        // END OF THE RESPIRATORY CYCLE
+        /********************************************/
+
+        // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
+        // so
+        cyclesBeforeScreenReset--;
+        DBG_DO(Serial.println(cyclesBeforeScreenReset);)
+        if (cyclesBeforeScreenReset <= 0) {
+            DBG_DO(Serial.println("resetting LCD screen");)
+            resetScreen();
+            clearAlarmDisplayCache();
+            cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
+        }
+
+        if (shouldRun) {
+            displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
+                                      pController.peep());
+        } else {
+            displayMachineStopped();
+        }
+        
     }
 }
 
