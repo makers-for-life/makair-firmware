@@ -195,8 +195,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7722b0a5c8fe849dd1298f4405e8fed5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_pressure_controller.html#a7722b0a5c8fe849dd1298f4405e8fed5">updateDt</a> (int32_t p_dt)</td></tr>
 <tr class="memdesc:a7722b0a5c8fe849dd1298f4405e8fed5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Input the real duration since the last pressure controller computation.  <a href="class_pressure_controller.html#a7722b0a5c8fe849dd1298f4405e8fed5">More...</a><br /></td></tr>
 <tr class="separator:a7722b0a5c8fe849dd1298f4405e8fed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75bd631acb6b11adbc9b08d3fdf69351"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_pressure_controller.html#a75bd631acb6b11adbc9b08d3fdf69351">resetBlowerDefaultSpeed</a> ()</td></tr>
-<tr class="separator:a75bd631acb6b11adbc9b08d3fdf69351"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -2089,26 +2087,6 @@ Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a75bd631acb6b11adbc9b08d3fdf69351"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75bd631acb6b11adbc9b08d3fdf69351">&#9670;&nbsp;</a></span>resetBlowerDefaultSpeed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void PressureController::resetBlowerDefaultSpeed </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8cpp_source.html#l00879">879</a> of file <a class="el" href="pressure__controller_8cpp_source.html">pressure_controller.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;{ <a class="code" href="class_pressure_controller.html#a2d8d619c54814ce288608d9ae600c65e">m_blower</a>-&gt;<a class="code" href="class_blower.html#a6661c79b02db6771db9cbdeaaff04f1c">runSpeed</a>(<a class="code" href="parameters_8h.html#a46c6bca2d6cf1361c017137e809e41fc">DEFAULT_BLOWER_SPEED</a>); }</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a8db3c7d9967c6299654d9234e6d54b8d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8db3c7d9967c6299654d9234e6d54b8d">&#9670;&nbsp;</a></span>setSubPhase()</h2>
 
@@ -2518,7 +2496,7 @@ Private Attributes</h2></td></tr>
 <p>Integral gain of the blower PID. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computations </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00326">326</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00324">324</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2545,7 +2523,7 @@ Private Attributes</h2></td></tr>
 <p>Error of the last computation of the blower PID. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computation in order to compute derivative gain </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00333">333</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00331">331</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2572,7 +2550,7 @@ Private Attributes</h2></td></tr>
 <p>Fast mode at start of inspiration. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computations </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00347">347</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00345">345</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2599,7 +2577,7 @@ Private Attributes</h2></td></tr>
 <p>Last aperture of the blower valve. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computations </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00361">361</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00359">359</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2625,7 +2603,7 @@ Private Attributes</h2></td></tr>
 
 <p><a class="el" href="class_alarm.html">Alarm</a> controller. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00371">371</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00369">369</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2651,7 +2629,7 @@ Private Attributes</h2></td></tr>
 
 <p><a class="el" href="class_blower.html" title="Controls a blower.">Blower</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00307">307</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00305">305</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2677,7 +2655,7 @@ Private Attributes</h2></td></tr>
 
 <p><a class="el" href="class_blower.html" title="Controls a blower.">Blower</a> increment. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00310">310</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00308">308</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2703,7 +2681,7 @@ Private Attributes</h2></td></tr>
 
 <p><a class="el" href="class_blower.html" title="Controls a blower.">Blower</a>'s transistor. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00301">301</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00299">299</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2729,7 +2707,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of hundredth of second per cycle. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00259">259</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00257">257</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2755,7 +2733,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of hundredth of second per inhalation. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00262">262</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00260">260</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2781,7 +2759,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of passed cycles. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00313">313</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00311">311</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2807,7 +2785,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of cycles per minute. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00256">256</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00254">254</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2833,7 +2811,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of cycles per minute desired by the operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00244">244</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00242">242</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2859,7 +2837,7 @@ Private Attributes</h2></td></tr>
 
 <p>Time since the last computation (in microsecond) </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00316">316</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00314">314</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2885,7 +2863,7 @@ Private Attributes</h2></td></tr>
 
 <p>Last error in blower PID. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00383">383</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00381">381</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2909,7 +2887,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00384">384</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00382">382</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2935,7 +2913,7 @@ Private Attributes</h2></td></tr>
 
 <p>Last pressure values. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00380">380</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00378">378</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2961,7 +2939,7 @@ Private Attributes</h2></td></tr>
 
 <p>Index of array for last pressure storage. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00387">387</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00385">385</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -2987,7 +2965,7 @@ Private Attributes</h2></td></tr>
 
 <p>Maximal peak pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00265">265</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00263">263</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3013,7 +2991,7 @@ Private Attributes</h2></td></tr>
 
 <p>Maximal peak pressure desired by the operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00247">247</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00245">245</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3039,7 +3017,7 @@ Private Attributes</h2></td></tr>
 
 <p>Maximal plateau pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00268">268</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00266">266</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3065,7 +3043,7 @@ Private Attributes</h2></td></tr>
 
 <p>Maximal plateau pressure desired by the operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00250">250</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00248">248</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3091,7 +3069,7 @@ Private Attributes</h2></td></tr>
 
 <p>Minimal PEEP. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00271">271</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00269">269</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3117,7 +3095,7 @@ Private Attributes</h2></td></tr>
 
 <p>Minimal PEEP desired by the operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00253">253</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00251">251</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3143,7 +3121,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of the current cycle's pressures. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00393">393</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00391">391</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3169,7 +3147,7 @@ Private Attributes</h2></td></tr>
 
 <p>Patient's transistor. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00304">304</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00302">302</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3195,7 +3173,7 @@ Private Attributes</h2></td></tr>
 
 <p><a class="el" href="class_blower.html" title="Controls a blower.">Blower</a> valve angle at peak. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00292">292</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00290">290</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3221,7 +3199,7 @@ Private Attributes</h2></td></tr>
 
 <p>Peak pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00283">283</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00281">281</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3247,7 +3225,7 @@ Private Attributes</h2></td></tr>
 
 <p>Positive End Expiratory Pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00289">289</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00287">287</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3273,7 +3251,7 @@ Private Attributes</h2></td></tr>
 
 <p>Current respiratory cycle phase. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00295">295</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00293">293</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3299,7 +3277,7 @@ Private Attributes</h2></td></tr>
 
 <p>True if plateau is computed, false otherwise. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00377">377</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00375">375</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3325,7 +3303,7 @@ Private Attributes</h2></td></tr>
 
 <p>Plateau pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00286">286</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00284">284</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3351,7 +3329,7 @@ Private Attributes</h2></td></tr>
 
 <p>Number of hundredth of second from the begining of the cycle till the plateau phase. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00396">396</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00394">394</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3377,7 +3355,7 @@ Private Attributes</h2></td></tr>
 
 <p>Measured pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00274">274</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00272">272</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3403,7 +3381,7 @@ Private Attributes</h2></td></tr>
 
 <p>Requested pressure at a given point in time. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00319">319</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00317">317</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3429,7 +3407,7 @@ Private Attributes</h2></td></tr>
 
 <p>Count for calulating square plateau value. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00280">280</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00278">278</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3455,7 +3433,7 @@ Private Attributes</h2></td></tr>
 
 <p>Sum for calulating square plateau value. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00277">277</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00275">275</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3481,7 +3459,7 @@ Private Attributes</h2></td></tr>
 
 <p>True if we started to compute plateau measure, false otherwise. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00374">374</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00372">372</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3507,7 +3485,7 @@ Private Attributes</h2></td></tr>
 
 <p>Current respiratory cycle phase. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00298">298</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00296">296</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3533,7 +3511,7 @@ Private Attributes</h2></td></tr>
 
 <p>Sum of the current cycle's pressures. </p>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00390">390</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00388">388</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3560,7 +3538,7 @@ Private Attributes</h2></td></tr>
 <p>Integral gain of the patient PID. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computations </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00354">354</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00352">352</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3587,7 +3565,7 @@ Private Attributes</h2></td></tr>
 <p>Error of the last computation of the patient PID. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computation in order to compute derivative gain </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00368">368</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00366">366</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3614,7 +3592,7 @@ Private Attributes</h2></td></tr>
 <p>Fast mode at start of expiration. </p>
 <dl class="section note"><dt>Note</dt><dd>This must be persisted between computations </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00340">340</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__controller_8h_source.html#l00338">338</a> of file <a class="el" href="pressure__controller_8h_source.html">pressure_controller.h</a>.</p>
 
 </div>
 </div>
@@ -3624,40 +3602,40 @@ Private Attributes</h2></td></tr>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_pressure_controller_html_a3c0ec874441a145632e0f32dee3d20dc"><div class="ttname"><a href="class_pressure_controller.html#a3c0ec874441a145632e0f32dee3d20dc">PressureController::m_maxPeakPressure</a></div><div class="ttdeci">uint16_t m_maxPeakPressure</div><div class="ttdoc">Maximal peak pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00265">pressure_controller.h:265</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a54e6e1cd4f96862b3e65ef27dd37fa6c"><div class="ttname"><a href="class_pressure_controller.html#a54e6e1cd4f96862b3e65ef27dd37fa6c">PressureController::patientPIDFastMode</a></div><div class="ttdeci">bool patientPIDFastMode</div><div class="ttdoc">Fast mode at start of expiration.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00340">pressure_controller.h:340</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a911036a822644347a9e135cf8b37f6bf"><div class="ttname"><a href="class_pressure_controller.html#a911036a822644347a9e135cf8b37f6bf">PressureController::m_maxPlateauPressureCommand</a></div><div class="ttdeci">uint16_t m_maxPlateauPressureCommand</div><div class="ttdoc">Maximal plateau pressure desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00250">pressure_controller.h:250</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_acb09661a1ee1e4c1284621b4efd3d316"><div class="ttname"><a href="class_pressure_controller.html#acb09661a1ee1e4c1284621b4efd3d316">PressureController::blowerLastError</a></div><div class="ttdeci">int32_t blowerLastError</div><div class="ttdoc">Error of the last computation of the blower PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00333">pressure_controller.h:333</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_ab60ae1d0c64b2283697372844944822a"><div class="ttname"><a href="class_pressure_controller.html#ab60ae1d0c64b2283697372844944822a">PressureController::m_pressureCommand</a></div><div class="ttdeci">int32_t m_pressureCommand</div><div class="ttdoc">Requested pressure at a given point in time.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00319">pressure_controller.h:319</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a3c0ec874441a145632e0f32dee3d20dc"><div class="ttname"><a href="class_pressure_controller.html#a3c0ec874441a145632e0f32dee3d20dc">PressureController::m_maxPeakPressure</a></div><div class="ttdeci">uint16_t m_maxPeakPressure</div><div class="ttdoc">Maximal peak pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00263">pressure_controller.h:263</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a54e6e1cd4f96862b3e65ef27dd37fa6c"><div class="ttname"><a href="class_pressure_controller.html#a54e6e1cd4f96862b3e65ef27dd37fa6c">PressureController::patientPIDFastMode</a></div><div class="ttdeci">bool patientPIDFastMode</div><div class="ttdoc">Fast mode at start of expiration.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00338">pressure_controller.h:338</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a911036a822644347a9e135cf8b37f6bf"><div class="ttname"><a href="class_pressure_controller.html#a911036a822644347a9e135cf8b37f6bf">PressureController::m_maxPlateauPressureCommand</a></div><div class="ttdeci">uint16_t m_maxPlateauPressureCommand</div><div class="ttdoc">Maximal plateau pressure desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00248">pressure_controller.h:248</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_acb09661a1ee1e4c1284621b4efd3d316"><div class="ttname"><a href="class_pressure_controller.html#acb09661a1ee1e4c1284621b4efd3d316">PressureController::blowerLastError</a></div><div class="ttdeci">int32_t blowerLastError</div><div class="ttdoc">Error of the last computation of the blower PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00331">pressure_controller.h:331</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_ab60ae1d0c64b2283697372844944822a"><div class="ttname"><a href="class_pressure_controller.html#ab60ae1d0c64b2283697372844944822a">PressureController::m_pressureCommand</a></div><div class="ttdeci">int32_t m_pressureCommand</div><div class="ttdoc">Requested pressure at a given point in time.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00317">pressure_controller.h:317</a></div></div>
 <div class="ttc" id="adebug_8h_html_a14aaacf7f7627afb892875da919a29ec"><div class="ttname"><a href="debug_8h.html#a14aaacf7f7627afb892875da919a29ec">DBG_AFFICHE_CSPCYCLE_CSPINSPI</a></div><div class="ttdeci">#define DBG_AFFICHE_CSPCYCLE_CSPINSPI(csparcycle, csparinspi)</div><div class="ttdoc">Send debug traces to serial when starting a new cycle.</div><div class="ttdef"><b>Definition:</b> <a href="debug_8h_source.html#l00031">debug.h:30</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a95fafca9da8f0eb7f1269d3b25d49bb8"><div class="ttname"><a href="class_pressure_controller.html#a95fafca9da8f0eb7f1269d3b25d49bb8">PressureController::m_lastPressureValuesIndex</a></div><div class="ttdeci">uint16_t m_lastPressureValuesIndex</div><div class="ttdoc">Index of array for last pressure storage.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00387">pressure_controller.h:387</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a95fafca9da8f0eb7f1269d3b25d49bb8"><div class="ttname"><a href="class_pressure_controller.html#a95fafca9da8f0eb7f1269d3b25d49bb8">PressureController::m_lastPressureValuesIndex</a></div><div class="ttdeci">uint16_t m_lastPressureValuesIndex</div><div class="ttdoc">Index of array for last pressure storage.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00385">pressure_controller.h:385</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_aeadd7baf8d4b728c89a824673a6d5eda"><div class="ttname"><a href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">PressureValve::close</a></div><div class="ttdeci">void close()</div><div class="ttdoc">Request closing of the Pressure Valve.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8cpp_source.html#l00047">pressure_valve.cpp:47</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_aae1bd115a9f6dcea106c27d3a9a11c50"><div class="ttname"><a href="class_pressure_controller.html#aae1bd115a9f6dcea106c27d3a9a11c50">PressureController::m_patient_valve</a></div><div class="ttdeci">PressureValve m_patient_valve</div><div class="ttdoc">Patient's transistor.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00304">pressure_controller.h:304</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_aae1bd115a9f6dcea106c27d3a9a11c50"><div class="ttname"><a href="class_pressure_controller.html#aae1bd115a9f6dcea106c27d3a9a11c50">PressureController::m_patient_valve</a></div><div class="ttdeci">PressureValve m_patient_valve</div><div class="ttdoc">Patient's transistor.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00302">pressure_controller.h:302</a></div></div>
 <div class="ttc" id="aparameters_8h_html_ad08aea28cd34e73f975c734a43b20bdc"><div class="ttname"><a href="parameters_8h.html#ad08aea28cd34e73f975c734a43b20bdc">PID_PATIENT_KD</a></div><div class="ttdeci">static const int32_t PID_PATIENT_KD</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00086">parameters.h:86</a></div></div>
 <div class="ttc" id="aclass_alarm_controller_html_af1ba1614c4d1c04d62a7ce835ef020d9"><div class="ttname"><a href="class_alarm_controller.html#af1ba1614c4d1c04d62a7ce835ef020d9">AlarmController::updateCoreData</a></div><div class="ttdeci">void updateCoreData(uint16_t p_centile, uint16_t p_pressure, CyclePhases p_phase, CycleSubPhases p_subphase, uint32_t p_cycle_number)</div><div class="ttdoc">Update internal state of alarm controller with data from pressure controller.</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8cpp_source.html#l00311">alarm_controller.cpp:311</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a3323cc40b9955ffd3073a97f7eb62edc"><div class="ttname"><a href="parameters_8h.html#a3323cc40b9955ffd3073a97f7eb62edc">INITIAL_CYCLE_NUMBER</a></div><div class="ttdeci">#define INITIAL_CYCLE_NUMBER</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00044">parameters.h:43</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a337781582e5173501d01063f7e30edf2"><div class="ttname"><a href="class_pressure_controller.html#a337781582e5173501d01063f7e30edf2">PressureController::m_blower_valve</a></div><div class="ttdeci">PressureValve m_blower_valve</div><div class="ttdoc">Blower's transistor.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00301">pressure_controller.h:301</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_ab9dd5ad92e34a4fd5cbab54585e91838"><div class="ttname"><a href="class_pressure_controller.html#ab9dd5ad92e34a4fd5cbab54585e91838">PressureController::m_lastPressureValues</a></div><div class="ttdeci">uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES]</div><div class="ttdoc">Last pressure values.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00380">pressure_controller.h:380</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a337781582e5173501d01063f7e30edf2"><div class="ttname"><a href="class_pressure_controller.html#a337781582e5173501d01063f7e30edf2">PressureController::m_blower_valve</a></div><div class="ttdeci">PressureValve m_blower_valve</div><div class="ttdoc">Blower's transistor.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00299">pressure_controller.h:299</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_ab9dd5ad92e34a4fd5cbab54585e91838"><div class="ttname"><a href="class_pressure_controller.html#ab9dd5ad92e34a4fd5cbab54585e91838">PressureController::m_lastPressureValues</a></div><div class="ttdeci">uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES]</div><div class="ttdoc">Last pressure values.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00378">pressure_controller.h:378</a></div></div>
 <div class="ttc" id="aclass_alarm_controller_html_a569c8bc1f402d4ec2cdf320c08c8eb4a"><div class="ttname"><a href="class_alarm_controller.html#a569c8bc1f402d4ec2cdf320c08c8eb4a">AlarmController::detectedAlarm</a></div><div class="ttdeci">void detectedAlarm(uint8_t p_alarmCode, uint32_t p_cycleNumber, uint32_t p_expected, uint32_t p_measured)</div><div class="ttdoc">Mark a specific alarm as detected.</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8cpp_source.html#l00146">alarm_controller.cpp:146</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a3c87527db7275a0474f4f7afff1b79bf"><div class="ttname"><a href="class_pressure_controller.html#a3c87527db7275a0474f4f7afff1b79bf">PressureController::plateau</a></div><div class="ttdeci">void plateau()</div><div class="ttdoc">Perform the pressure control and compute the transistors commands during the plateau phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00476">pressure_controller.cpp:476</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_acf658e8e5439b852da326f2ed5ddaf7d"><div class="ttname"><a href="class_pressure_controller.html#acf658e8e5439b852da326f2ed5ddaf7d">PressureController::m_pressure</a></div><div class="ttdeci">uint16_t m_pressure</div><div class="ttdoc">Measured pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00274">pressure_controller.h:274</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_acf658e8e5439b852da326f2ed5ddaf7d"><div class="ttname"><a href="class_pressure_controller.html#acf658e8e5439b852da326f2ed5ddaf7d">PressureController::m_pressure</a></div><div class="ttdeci">uint16_t m_pressure</div><div class="ttdoc">Measured pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00272">pressure_controller.h:272</a></div></div>
 <div class="ttc" id="aalarm__controller_8h_html_a4ee855bb82cc8f27f2d4d32760ed4ff7"><div class="ttname"><a href="alarm__controller_8h.html#a4ee855bb82cc8f27f2d4d32760ed4ff7">RCM_SW_18</a></div><div class="ttdeci">#define RCM_SW_18</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00031">alarm_controller.h:30</a></div></div>
 <div class="ttc" id="aalarm__controller_8h_html_a51f1a16f7aa1fbef996f317abdd5ccc5"><div class="ttname"><a href="alarm__controller_8h.html#a51f1a16f7aa1fbef996f317abdd5ccc5">RCM_SW_19</a></div><div class="ttdeci">#define RCM_SW_19</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00032">alarm_controller.h:31</a></div></div>
 <div class="ttc" id="apressure__controller_8h_html_a9031fac8a40d276c6ca360fe4b8df8ca"><div class="ttname"><a href="pressure__controller_8h.html#a9031fac8a40d276c6ca360fe4b8df8ca">MAX_PRESSURE_SAMPLES</a></div><div class="ttdeci">#define MAX_PRESSURE_SAMPLES</div><div class="ttdoc">Number of values to aggregate when computing plateau pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00021">pressure_controller.h:20</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_af498ace78724687e0999e19978fc7213"><div class="ttname"><a href="class_pressure_controller.html#af498ace78724687e0999e19978fc7213">PressureController::updatePhase</a></div><div class="ttdeci">void updatePhase(uint16_t p_centiSec)</div><div class="ttdoc">Update the cycle phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00437">pressure_controller.cpp:437</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a0c0a29ea90db7969e31c868823898baa"><div class="ttname"><a href="class_pressure_controller.html#a0c0a29ea90db7969e31c868823898baa">PressureController::lastBlowerAperture</a></div><div class="ttdeci">uint32_t lastBlowerAperture</div><div class="ttdoc">Last aperture of the blower valve.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00361">pressure_controller.h:361</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a0c0a29ea90db7969e31c868823898baa"><div class="ttname"><a href="class_pressure_controller.html#a0c0a29ea90db7969e31c868823898baa">PressureController::lastBlowerAperture</a></div><div class="ttdeci">uint32_t lastBlowerAperture</div><div class="ttdoc">Last aperture of the blower valve.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00359">pressure_controller.h:359</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a552e3e69a500d8c00dea9a1cd98edbeb"><div class="ttname"><a href="class_pressure_controller.html#a552e3e69a500d8c00dea9a1cd98edbeb">PressureController::computePlateau</a></div><div class="ttdeci">void computePlateau(uint16_t p_centiSec)</div><div class="ttdoc">Compute plateau pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00321">pressure_controller.cpp:321</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a9ceead2a4f2920c12e8c3ed8abfdfc80"><div class="ttname"><a href="class_pressure_controller.html#a9ceead2a4f2920c12e8c3ed8abfdfc80">PressureController::m_cyclesPerMinute</a></div><div class="ttdeci">uint16_t m_cyclesPerMinute</div><div class="ttdoc">Number of cycles per minute.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00256">pressure_controller.h:256</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a9ceead2a4f2920c12e8c3ed8abfdfc80"><div class="ttname"><a href="class_pressure_controller.html#a9ceead2a4f2920c12e8c3ed8abfdfc80">PressureController::m_cyclesPerMinute</a></div><div class="ttdeci">uint16_t m_cyclesPerMinute</div><div class="ttdoc">Number of cycles per minute.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00254">pressure_controller.h:254</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_a62c53895701feb0fff8e72a105b2fc2a"><div class="ttname"><a href="class_pressure_valve.html#a62c53895701feb0fff8e72a105b2fc2a">PressureValve::minAperture</a></div><div class="ttdeci">uint16_t minAperture() const</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8h_source.html#l00089">pressure_valve.h:89</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a5c417395f72de23e0710768c0ac558e4"><div class="ttname"><a href="class_pressure_controller.html#a5c417395f72de23e0710768c0ac558e4">PressureController::m_minPeep</a></div><div class="ttdeci">uint16_t m_minPeep</div><div class="ttdoc">Minimal PEEP.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00271">pressure_controller.h:271</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a5c417395f72de23e0710768c0ac558e4"><div class="ttname"><a href="class_pressure_controller.html#a5c417395f72de23e0710768c0ac558e4">PressureController::m_minPeep</a></div><div class="ttdeci">uint16_t m_minPeep</div><div class="ttdoc">Minimal PEEP.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00269">pressure_controller.h:269</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a53f7cd639ae07ab155bc69e410f4ee44"><div class="ttname"><a href="parameters_8h.html#a53f7cd639ae07ab155bc69e410f4ee44">CONST_MAX_PLATEAU_PRESSURE</a></div><div class="ttdeci">#define CONST_MAX_PLATEAU_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00034">parameters.h:33</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a8356becb004cad476e5ed2c7d4e6be55"><div class="ttname"><a href="class_pressure_controller.html#a8356becb004cad476e5ed2c7d4e6be55">PressureController::m_squarePlateauSum</a></div><div class="ttdeci">uint64_t m_squarePlateauSum</div><div class="ttdoc">Sum for calulating square plateau value.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00277">pressure_controller.h:277</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_abcf621d3cfa7921d7cd9ff7909384d22"><div class="ttname"><a href="class_pressure_controller.html#abcf621d3cfa7921d7cd9ff7909384d22">PressureController::m_centiSecPerCycle</a></div><div class="ttdeci">uint16_t m_centiSecPerCycle</div><div class="ttdoc">Number of hundredth of second per cycle.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00259">pressure_controller.h:259</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a8356becb004cad476e5ed2c7d4e6be55"><div class="ttname"><a href="class_pressure_controller.html#a8356becb004cad476e5ed2c7d4e6be55">PressureController::m_squarePlateauSum</a></div><div class="ttdeci">uint64_t m_squarePlateauSum</div><div class="ttdoc">Sum for calulating square plateau value.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00275">pressure_controller.h:275</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_abcf621d3cfa7921d7cd9ff7909384d22"><div class="ttname"><a href="class_pressure_controller.html#abcf621d3cfa7921d7cd9ff7909384d22">PressureController::m_centiSecPerCycle</a></div><div class="ttdeci">uint16_t m_centiSecPerCycle</div><div class="ttdoc">Number of hundredth of second per cycle.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00257">pressure_controller.h:257</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_abce6dd9d0c01d24f0b65a7057e1997ca"><div class="ttname"><a href="class_pressure_valve.html#abce6dd9d0c01d24f0b65a7057e1997ca">PressureValve::maxAperture</a></div><div class="ttdeci">uint16_t maxAperture() const</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8h_source.html#l00091">pressure_valve.h:91</a></div></div>
 <div class="ttc" id="aclass_alarm_controller_html_af1ed8c1cbf5e3c8fe36f534295865849"><div class="ttname"><a href="class_alarm_controller.html#af1ed8c1cbf5e3c8fe36f534295865849">AlarmController::notDetectedAlarm</a></div><div class="ttdeci">void notDetectedAlarm(uint8_t p_alarmCode)</div><div class="ttdoc">Reset detection of a specific alarm.</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8cpp_source.html#l00203">alarm_controller.cpp:203</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a1dc52ff1bdc9bf4f6275789058d5f5cb"><div class="ttname"><a href="parameters_8h.html#a1dc52ff1bdc9bf4f6275789058d5f5cb">PID_PATIENT_INTEGRAL_MIN</a></div><div class="ttdeci">static const int32_t PID_PATIENT_INTEGRAL_MIN</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00088">parameters.h:88</a></div></div>
 <div class="ttc" id="adebug_8h_html_ad5605de1af04a2763aae3c86f74f1b9d"><div class="ttname"><a href="debug_8h.html#ad5605de1af04a2763aae3c86f74f1b9d">DBG_PHASE_PRESSION</a></div><div class="ttdeci">#define DBG_PHASE_PRESSION(cycle, centieme, periode, phase, subPhase, pression, consigneBlower, positionBlower, consignePatient, positionPatient)</div><div class="ttdoc">Send metrics to serial.</div><div class="ttdef"><b>Definition:</b> <a href="debug_8h_source.html#l00109">debug.h:108</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_aaf2e35d9af679e316db93dfd29dfa561"><div class="ttname"><a href="class_pressure_controller.html#aaf2e35d9af679e316db93dfd29dfa561">PressureController::m_dt</a></div><div class="ttdeci">int32_t m_dt</div><div class="ttdoc">Time since the last computation (in microsecond)</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00316">pressure_controller.h:316</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_aaf2e35d9af679e316db93dfd29dfa561"><div class="ttname"><a href="class_pressure_controller.html#aaf2e35d9af679e316db93dfd29dfa561">PressureController::m_dt</a></div><div class="ttdeci">int32_t m_dt</div><div class="ttdoc">Time since the last computation (in microsecond)</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00314">pressure_controller.h:314</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a341d8dc42507e5f8b9a262b70be47b7b"><div class="ttname"><a href="parameters_8h.html#a341d8dc42507e5f8b9a262b70be47b7b">DEFAULT_MIN_PEEP_COMMAND</a></div><div class="ttdeci">#define DEFAULT_MIN_PEEP_COMMAND</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00040">parameters.h:39</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a354fe08d03a5021223551ceca19d3739"><div class="ttname"><a href="class_pressure_controller.html#a354fe08d03a5021223551ceca19d3739">PressureController::pidPatient</a></div><div class="ttdeci">int32_t pidPatient(int32_t targetPressure, int32_t currentPressure, int32_t dt)</div><div class="ttdoc">PID to controller the patient valve during some specific steps of the cycle.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00815">pressure_controller.cpp:815</a></div></div>
 <div class="ttc" id="aclass_blower_html_a09595a0fca56472ee69989104df4fd39"><div class="ttname"><a href="class_blower.html#a09595a0fca56472ee69989104df4fd39">Blower::getSpeed</a></div><div class="ttdeci">uint16_t getSpeed() const</div><div class="ttdoc">Get speed value.</div><div class="ttdef"><b>Definition:</b> <a href="blower_8cpp_source.html#l00060">blower.cpp:60</a></div></div>
@@ -3665,7 +3643,7 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="aparameters_8h_html_ab28961f9db88958c2530533e0c08a8c3"><div class="ttname"><a href="parameters_8h.html#ab28961f9db88958c2530533e0c08a8c3">NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN</a></div><div class="ttdeci">#define NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00114">parameters.h:113</a></div></div>
 <div class="ttc" id="aparameters_8h_html_ae4a1fc768fc44355ec045901ee92f883"><div class="ttname"><a href="parameters_8h.html#ae4a1fc768fc44355ec045901ee92f883">PID_PATIENT_SAFETY_PEEP_OFFSET</a></div><div class="ttdeci">static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET</div><div class="ttdoc">Increase target pressure by an offset (in mmH2O) for safety, to avoid going below the target pressure...</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00092">parameters.h:92</a></div></div>
 <div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a></div><div class="ttdeci">@ INHALATION</div><div class="ttdoc">Inspiration and inspiration holding.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00037">cycle.h:37</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a62f0f325c66f2654182f8afd4c188a6c"><div class="ttname"><a href="class_pressure_controller.html#a62f0f325c66f2654182f8afd4c188a6c">PressureController::m_subPhase</a></div><div class="ttdeci">CycleSubPhases m_subPhase</div><div class="ttdoc">Current respiratory cycle phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00298">pressure_controller.h:298</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a62f0f325c66f2654182f8afd4c188a6c"><div class="ttname"><a href="class_pressure_controller.html#a62f0f325c66f2654182f8afd4c188a6c">PressureController::m_subPhase</a></div><div class="ttdeci">CycleSubPhases m_subPhase</div><div class="ttdoc">Current respiratory cycle phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00296">pressure_controller.h:296</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a3168705fb44f50a7555981aed2271822"><div class="ttname"><a href="parameters_8h.html#a3168705fb44f50a7555981aed2271822">CONST_MIN_PEEP_PRESSURE</a></div><div class="ttdeci">#define CONST_MIN_PEEP_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00037">parameters.h:36</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a17b278faa2d18f90512d448cb1005a73"><div class="ttname"><a href="parameters_8h.html#a17b278faa2d18f90512d448cb1005a73">ALARM_THRESHOLD_DIFFERENCE_PERCENT</a></div><div class="ttdeci">#define ALARM_THRESHOLD_DIFFERENCE_PERCENT</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00312">parameters.h:311</a></div></div>
 <div class="ttc" id="apressure__controller_8cpp_html_a602fa4a2a92de0da954dcab814e946f0"><div class="ttname"><a href="pressure__controller_8cpp.html#a602fa4a2a92de0da954dcab814e946f0">INVALID_ERROR_MARKER</a></div><div class="ttdeci">static const int32_t INVALID_ERROR_MARKER</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00029">pressure_controller.cpp:29</a></div></div>
@@ -3674,53 +3652,52 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="aalarm__controller_8h_html_a6f0e2663c71ee9c927b0b8953653a19d"><div class="ttname"><a href="alarm__controller_8h.html#a6f0e2663c71ee9c927b0b8953653a19d">RCM_SW_1</a></div><div class="ttdeci">#define RCM_SW_1</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00021">alarm_controller.h:20</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a757067a1350f37315d7136ad0ef86acb"><div class="ttname"><a href="parameters_8h.html#a757067a1350f37315d7136ad0ef86acb">PID_PATIENT_INTEGRAL_MAX</a></div><div class="ttdeci">static const int32_t PID_PATIENT_INTEGRAL_MAX</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00087">parameters.h:87</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a3a48f441e0d36ed09913e312d33b2168"><div class="ttname"><a href="parameters_8h.html#a3a48f441e0d36ed09913e312d33b2168">ALARM_THRESHOLD_DIFFERENCE_PRESSURE</a></div><div class="ttdeci">#define ALARM_THRESHOLD_DIFFERENCE_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00313">parameters.h:312</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a05d97b0bd53bb1fa7fc3e4b883485831"><div class="ttname"><a href="class_pressure_controller.html#a05d97b0bd53bb1fa7fc3e4b883485831">PressureController::m_squarePlateauCount</a></div><div class="ttdeci">uint16_t m_squarePlateauCount</div><div class="ttdoc">Count for calulating square plateau value.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00280">pressure_controller.h:280</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a05d97b0bd53bb1fa7fc3e4b883485831"><div class="ttname"><a href="class_pressure_controller.html#a05d97b0bd53bb1fa7fc3e4b883485831">PressureController::m_squarePlateauCount</a></div><div class="ttdeci">uint16_t m_squarePlateauCount</div><div class="ttdoc">Count for calulating square plateau value.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00278">pressure_controller.h:278</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a62210c4e5811263ce8960d52c2631df9"><div class="ttname"><a href="parameters_8h.html#a62210c4e5811263ce8960d52c2631df9">CONST_MIN_PEAK_PRESSURE</a></div><div class="ttdeci">#define CONST_MIN_PEAK_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00033">parameters.h:32</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a548cb9b058d3c6b735c4b19a879fba36"><div class="ttname"><a href="parameters_8h.html#a548cb9b058d3c6b735c4b19a879fba36">DEFAULT_MAX_PLATEAU_COMMAND</a></div><div class="ttdeci">#define DEFAULT_MAX_PLATEAU_COMMAND</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00041">parameters.h:40</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a086fbe2d82a6e99661cafa051b00cfec"><div class="ttname"><a href="parameters_8h.html#a086fbe2d82a6e99661cafa051b00cfec">PID_PATIENT_KP</a></div><div class="ttdeci">static const int32_t PID_PATIENT_KP</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00084">parameters.h:84</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a2d8d619c54814ce288608d9ae600c65e"><div class="ttname"><a href="class_pressure_controller.html#a2d8d619c54814ce288608d9ae600c65e">PressureController::m_blower</a></div><div class="ttdeci">Blower * m_blower</div><div class="ttdoc">Blower.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00307">pressure_controller.h:307</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a2d8d619c54814ce288608d9ae600c65e"><div class="ttname"><a href="class_pressure_controller.html#a2d8d619c54814ce288608d9ae600c65e">PressureController::m_blower</a></div><div class="ttdeci">Blower * m_blower</div><div class="ttdoc">Blower.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00305">pressure_controller.h:305</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a741c03510de319b35dd8c50b1619be71"><div class="ttname"><a href="parameters_8h.html#a741c03510de319b35dd8c50b1619be71">CONST_MAX_PEAK_PRESSURE</a></div><div class="ttdeci">#define CONST_MAX_PEAK_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00032">parameters.h:31</a></div></div>
 <div class="ttc" id="aalarm__controller_8h_html_ac5bb0104101d427d99efad978abce54d"><div class="ttname"><a href="alarm__controller_8h.html#ac5bb0104101d427d99efad978abce54d">RCM_SW_2</a></div><div class="ttdeci">#define RCM_SW_2</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00022">alarm_controller.h:21</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a52ce94bf17c8c2f3595ffe623247d89a"><div class="ttname"><a href="parameters_8h.html#a52ce94bf17c8c2f3595ffe623247d89a">ALARM_THRESHOLD_MIN_PRESSURE</a></div><div class="ttdeci">#define ALARM_THRESHOLD_MIN_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00310">parameters.h:309</a></div></div>
 <div class="ttc" id="aparameters_8h_html_ad17bb2369daacb571e0cd64c9769c2a3"><div class="ttname"><a href="parameters_8h.html#ad17bb2369daacb571e0cd64c9769c2a3">PID_BLOWER_KP</a></div><div class="ttdeci">static const int32_t PID_BLOWER_KP</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00078">parameters.h:78</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a9d2b8b8d0ab40857c2d65732708b8782"><div class="ttname"><a href="parameters_8h.html#a9d2b8b8d0ab40857c2d65732708b8782">MIN_BLOWER_SPEED</a></div><div class="ttdeci">#define MIN_BLOWER_SPEED</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00163">parameters.h:162</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_aec1be0ec48f60a3e893d7e55cbb5bbd4"><div class="ttname"><a href="class_pressure_controller.html#aec1be0ec48f60a3e893d7e55cbb5bbd4">PressureController::m_peakPressure</a></div><div class="ttdeci">uint16_t m_peakPressure</div><div class="ttdoc">Peak pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00283">pressure_controller.h:283</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_aec1be0ec48f60a3e893d7e55cbb5bbd4"><div class="ttname"><a href="class_pressure_controller.html#aec1be0ec48f60a3e893d7e55cbb5bbd4">PressureController::m_peakPressure</a></div><div class="ttdeci">uint16_t m_peakPressure</div><div class="ttdoc">Peak pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00281">pressure_controller.h:281</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_a7770351c50ff4daf7f0692973d3355e1"><div class="ttname"><a href="class_pressure_valve.html#a7770351c50ff4daf7f0692973d3355e1">PressureValve::command</a></div><div class="ttdeci">uint16_t command</div><div class="ttdoc">Value of the requested aperture.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8h_source.html#l00094">pressure_valve.h:94</a></div></div>
 <div class="ttc" id="acycle_8h_html_acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088"><div class="ttname"><a href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088">HOLD_INSPIRATION</a></div><div class="ttdeci">@ HOLD_INSPIRATION</div><div class="ttdoc">Hold inhalation:</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00026">cycle.h:26</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a53da71fbb21a37354cf1207292c51315"><div class="ttname"><a href="parameters_8h.html#a53da71fbb21a37354cf1207292c51315">PID_BLOWER_KI</a></div><div class="ttdeci">static const int32_t PID_BLOWER_KI</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00079">parameters.h:79</a></div></div>
 <div class="ttc" id="aparameters_8h_html_ae40a069871060b9e0136e1d127e0436e"><div class="ttname"><a href="parameters_8h.html#ae40a069871060b9e0136e1d127e0436e">CONST_INITIAL_ZERO_PRESSURE</a></div><div class="ttdeci">#define CONST_INITIAL_ZERO_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00038">parameters.h:37</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a76cc29aa4768d04fba3a272c292a7a23"><div class="ttname"><a href="class_pressure_controller.html#a76cc29aa4768d04fba3a272c292a7a23">PressureController::checkCycleAlarm</a></div><div class="ttdeci">void checkCycleAlarm()</div><div class="ttdoc">At the end of a respiratory cycle, check if some alarms are triggered.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00674">pressure_controller.cpp:674</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_ab8a968bf853318bf5562fa6e260754be"><div class="ttname"><a href="class_pressure_controller.html#ab8a968bf853318bf5562fa6e260754be">PressureController::m_lastBlowerPIDError</a></div><div class="ttdeci">int32_t m_lastBlowerPIDError[NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN]</div><div class="ttdoc">Last error in blower PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00383">pressure_controller.h:383</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a70012f7acb89a187f91bfbba72176669"><div class="ttname"><a href="class_pressure_controller.html#a70012f7acb89a187f91bfbba72176669">PressureController::m_alarmController</a></div><div class="ttdeci">AlarmController * m_alarmController</div><div class="ttdoc">Alarm controller.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00371">pressure_controller.h:371</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_ae46a8739f575f94b44fea222b52d02a7"><div class="ttname"><a href="class_pressure_controller.html#ae46a8739f575f94b44fea222b52d02a7">PressureController::blowerPIDFastMode</a></div><div class="ttdeci">bool blowerPIDFastMode</div><div class="ttdoc">Fast mode at start of inspiration.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00347">pressure_controller.h:347</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_ab8a968bf853318bf5562fa6e260754be"><div class="ttname"><a href="class_pressure_controller.html#ab8a968bf853318bf5562fa6e260754be">PressureController::m_lastBlowerPIDError</a></div><div class="ttdeci">int32_t m_lastBlowerPIDError[NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN]</div><div class="ttdoc">Last error in blower PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00381">pressure_controller.h:381</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a70012f7acb89a187f91bfbba72176669"><div class="ttname"><a href="class_pressure_controller.html#a70012f7acb89a187f91bfbba72176669">PressureController::m_alarmController</a></div><div class="ttdeci">AlarmController * m_alarmController</div><div class="ttdoc">Alarm controller.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00369">pressure_controller.h:369</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_ae46a8739f575f94b44fea222b52d02a7"><div class="ttname"><a href="class_pressure_controller.html#ae46a8739f575f94b44fea222b52d02a7">PressureController::blowerPIDFastMode</a></div><div class="ttdeci">bool blowerPIDFastMode</div><div class="ttdoc">Fast mode at start of inspiration.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00345">pressure_controller.h:345</a></div></div>
 <div class="ttc" id="aparameters_8h_html_acd21b850c31e8e644d02462a46389c1e"><div class="ttname"><a href="parameters_8h.html#acd21b850c31e8e644d02462a46389c1e">DEFAULT_MAX_PEAK_PRESSURE_COMMAND</a></div><div class="ttdeci">#define DEFAULT_MAX_PEAK_PRESSURE_COMMAND</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00042">parameters.h:41</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a741378998e79fc0becd814da1ea3db50"><div class="ttname"><a href="class_pressure_controller.html#a741378998e79fc0becd814da1ea3db50">PressureController::computeCentiSecParameters</a></div><div class="ttdeci">void computeCentiSecParameters()</div><div class="ttdoc">Compute various cycle durations given the desired number of cycles per minute.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00662">pressure_controller.cpp:662</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a18114a340ab7dc42fcef449208708b36"><div class="ttname"><a href="class_pressure_controller.html#a18114a340ab7dc42fcef449208708b36">PressureController::m_startPlateauComputation</a></div><div class="ttdeci">bool m_startPlateauComputation</div><div class="ttdoc">True if we started to compute plateau measure, false otherwise.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00374">pressure_controller.h:374</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a1ea84bd598c3a045e4cb37434fdc4fe3"><div class="ttname"><a href="class_pressure_controller.html#a1ea84bd598c3a045e4cb37434fdc4fe3">PressureController::m_peakBlowerValveAngle</a></div><div class="ttdeci">uint32_t m_peakBlowerValveAngle</div><div class="ttdoc">Blower valve angle at peak.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00292">pressure_controller.h:292</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a18114a340ab7dc42fcef449208708b36"><div class="ttname"><a href="class_pressure_controller.html#a18114a340ab7dc42fcef449208708b36">PressureController::m_startPlateauComputation</a></div><div class="ttdeci">bool m_startPlateauComputation</div><div class="ttdoc">True if we started to compute plateau measure, false otherwise.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00372">pressure_controller.h:372</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a1ea84bd598c3a045e4cb37434fdc4fe3"><div class="ttname"><a href="class_pressure_controller.html#a1ea84bd598c3a045e4cb37434fdc4fe3">PressureController::m_peakBlowerValveAngle</a></div><div class="ttdeci">uint32_t m_peakBlowerValveAngle</div><div class="ttdoc">Blower valve angle at peak.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00290">pressure_controller.h:290</a></div></div>
 <div class="ttc" id="adebug_8h_html_a32bcd1c3e450a86dd238d44a94629e2d"><div class="ttname"><a href="debug_8h.html#a32bcd1c3e450a86dd238d44a94629e2d">DBG_DO</a></div><div class="ttdeci">#define DBG_DO(statement)</div><div class="ttdoc">Expand arbitrary code only when in debug mode.</div><div class="ttdef"><b>Definition:</b> <a href="debug_8h_source.html#l00019">debug.h:18</a></div></div>
 <div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a></div><div class="ttdeci">@ EXHALATION</div><div class="ttdoc">Exhalation and pause.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00040">cycle.h:39</a></div></div>
-<div class="ttc" id="aparameters_8h_html_a46c6bca2d6cf1361c017137e809e41fc"><div class="ttname"><a href="parameters_8h.html#a46c6bca2d6cf1361c017137e809e41fc">DEFAULT_BLOWER_SPEED</a></div><div class="ttdeci">#define DEFAULT_BLOWER_SPEED</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00165">parameters.h:164</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_ada9f59ebd95beeee0884e5c10e6dd33e"><div class="ttname"><a href="class_pressure_controller.html#ada9f59ebd95beeee0884e5c10e6dd33e">PressureController::m_blower_increment</a></div><div class="ttdeci">int32_t m_blower_increment</div><div class="ttdoc">Blower increment.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00310">pressure_controller.h:310</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_ada9f59ebd95beeee0884e5c10e6dd33e"><div class="ttname"><a href="class_pressure_controller.html#ada9f59ebd95beeee0884e5c10e6dd33e">PressureController::m_blower_increment</a></div><div class="ttdeci">int32_t m_blower_increment</div><div class="ttdoc">Blower increment.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00308">pressure_controller.h:308</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a1c6d5de492ac61ad29aec7aa9a436bbf"><div class="ttname"><a href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a></div><div class="ttdeci">#define VERSION</div><div class="ttdoc">Current version of the software.</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00021">parameters.h:20</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_afcd353879e7f04454f4efb4745da92a6"><div class="ttname"><a href="class_pressure_controller.html#afcd353879e7f04454f4efb4745da92a6">PressureController::patientLastError</a></div><div class="ttdeci">int32_t patientLastError</div><div class="ttdoc">Error of the last computation of the patient PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00368">pressure_controller.h:368</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a476f9040b262127eef42b825f61df242"><div class="ttname"><a href="class_pressure_controller.html#a476f9040b262127eef42b825f61df242">PressureController::m_minPeepCommand</a></div><div class="ttdeci">uint16_t m_minPeepCommand</div><div class="ttdoc">Minimal PEEP desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00253">pressure_controller.h:253</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_afcd353879e7f04454f4efb4745da92a6"><div class="ttname"><a href="class_pressure_controller.html#afcd353879e7f04454f4efb4745da92a6">PressureController::patientLastError</a></div><div class="ttdeci">int32_t patientLastError</div><div class="ttdoc">Error of the last computation of the patient PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00366">pressure_controller.h:366</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a476f9040b262127eef42b825f61df242"><div class="ttname"><a href="class_pressure_controller.html#a476f9040b262127eef42b825f61df242">PressureController::m_minPeepCommand</a></div><div class="ttdeci">uint16_t m_minPeepCommand</div><div class="ttdoc">Minimal PEEP desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00251">pressure_controller.h:251</a></div></div>
 <div class="ttc" id="aalarm__controller_8h_html_a7f26d70532c7edb3925168944c75743c"><div class="ttname"><a href="alarm__controller_8h.html#a7f26d70532c7edb3925168944c75743c">RCM_SW_14</a></div><div class="ttdeci">#define RCM_SW_14</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00028">alarm_controller.h:27</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_aaae95e2b24d9d77307121c70f604d2ae"><div class="ttname"><a href="class_pressure_controller.html#aaae95e2b24d9d77307121c70f604d2ae">PressureController::m_plateauComputed</a></div><div class="ttdeci">bool m_plateauComputed</div><div class="ttdoc">True if plateau is computed, false otherwise.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00377">pressure_controller.h:377</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_aaae95e2b24d9d77307121c70f604d2ae"><div class="ttname"><a href="class_pressure_controller.html#aaae95e2b24d9d77307121c70f604d2ae">PressureController::m_plateauComputed</a></div><div class="ttdeci">bool m_plateauComputed</div><div class="ttdoc">True if plateau is computed, false otherwise.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00375">pressure_controller.h:375</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a37111dcc07226fd1bb988d739553836e"><div class="ttname"><a href="class_pressure_controller.html#a37111dcc07226fd1bb988d739553836e">PressureController::executeCommands</a></div><div class="ttdeci">void executeCommands()</div><div class="ttdoc">Give the computed commands to actuators.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00669">pressure_controller.cpp:669</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_a9a411fb7dda2f8df75b9d5396aa58c55"><div class="ttname"><a href="class_pressure_valve.html#a9a411fb7dda2f8df75b9d5396aa58c55">PressureValve::open</a></div><div class="ttdeci">void open()</div><div class="ttdoc">Request opening of the Pressure Valve.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8cpp_source.html#l00045">pressure_valve.cpp:45</a></div></div>
 <div class="ttc" id="aparameters_8h_html_aead82b228645b76d7156430bbfa1a0c9"><div class="ttname"><a href="parameters_8h.html#aead82b228645b76d7156430bbfa1a0c9">PID_BLOWER_KD</a></div><div class="ttdeci">static const int32_t PID_BLOWER_KD</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00080">parameters.h:80</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a413a67558efe63a60a56b36b90aa6019"><div class="ttname"><a href="parameters_8h.html#a413a67558efe63a60a56b36b90aa6019">PID_BLOWER_INTEGRAL_MAX</a></div><div class="ttdeci">static const int32_t PID_BLOWER_INTEGRAL_MAX</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00081">parameters.h:81</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a617df9619eb39d020b6a672ab5707d23"><div class="ttname"><a href="class_pressure_controller.html#a617df9619eb39d020b6a672ab5707d23">PressureController::blowerIntegral</a></div><div class="ttdeci">int32_t blowerIntegral</div><div class="ttdoc">Integral gain of the blower PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00326">pressure_controller.h:326</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_abe40303a404b2dbcb38a8e44a41bbf49"><div class="ttname"><a href="class_pressure_controller.html#abe40303a404b2dbcb38a8e44a41bbf49">PressureController::m_maxPeakPressureCommand</a></div><div class="ttdeci">uint16_t m_maxPeakPressureCommand</div><div class="ttdoc">Maximal peak pressure desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00247">pressure_controller.h:247</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_ac8c10e19dbb61309f12495052467b9d3"><div class="ttname"><a href="class_pressure_controller.html#ac8c10e19dbb61309f12495052467b9d3">PressureController::m_centiSecPerInhalation</a></div><div class="ttdeci">uint16_t m_centiSecPerInhalation</div><div class="ttdoc">Number of hundredth of second per inhalation.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00262">pressure_controller.h:262</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a1d39004d1da7cfdcef1a978aed090bb2"><div class="ttname"><a href="class_pressure_controller.html#a1d39004d1da7cfdcef1a978aed090bb2">PressureController::m_numberOfPressures</a></div><div class="ttdeci">uint16_t m_numberOfPressures</div><div class="ttdoc">Number of the current cycle's pressures.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00393">pressure_controller.h:393</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a345bbee33fb6745ea78692fdbfc439d4"><div class="ttname"><a href="class_pressure_controller.html#a345bbee33fb6745ea78692fdbfc439d4">PressureController::m_lastBlowerPIDErrorIndex</a></div><div class="ttdeci">int32_t m_lastBlowerPIDErrorIndex</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00384">pressure_controller.h:384</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a617df9619eb39d020b6a672ab5707d23"><div class="ttname"><a href="class_pressure_controller.html#a617df9619eb39d020b6a672ab5707d23">PressureController::blowerIntegral</a></div><div class="ttdeci">int32_t blowerIntegral</div><div class="ttdoc">Integral gain of the blower PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00324">pressure_controller.h:324</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_abe40303a404b2dbcb38a8e44a41bbf49"><div class="ttname"><a href="class_pressure_controller.html#abe40303a404b2dbcb38a8e44a41bbf49">PressureController::m_maxPeakPressureCommand</a></div><div class="ttdeci">uint16_t m_maxPeakPressureCommand</div><div class="ttdoc">Maximal peak pressure desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00245">pressure_controller.h:245</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_ac8c10e19dbb61309f12495052467b9d3"><div class="ttname"><a href="class_pressure_controller.html#ac8c10e19dbb61309f12495052467b9d3">PressureController::m_centiSecPerInhalation</a></div><div class="ttdeci">uint16_t m_centiSecPerInhalation</div><div class="ttdoc">Number of hundredth of second per inhalation.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00260">pressure_controller.h:260</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a1d39004d1da7cfdcef1a978aed090bb2"><div class="ttname"><a href="class_pressure_controller.html#a1d39004d1da7cfdcef1a978aed090bb2">PressureController::m_numberOfPressures</a></div><div class="ttdeci">uint16_t m_numberOfPressures</div><div class="ttdoc">Number of the current cycle's pressures.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00391">pressure_controller.h:391</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a345bbee33fb6745ea78692fdbfc439d4"><div class="ttname"><a href="class_pressure_controller.html#a345bbee33fb6745ea78692fdbfc439d4">PressureController::m_lastBlowerPIDErrorIndex</a></div><div class="ttdeci">int32_t m_lastBlowerPIDErrorIndex</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00382">pressure_controller.h:382</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a8db3c7d9967c6299654d9234e6d54b8d"><div class="ttname"><a href="class_pressure_controller.html#a8db3c7d9967c6299654d9234e6d54b8d">PressureController::setSubPhase</a></div><div class="ttdeci">void setSubPhase(CycleSubPhases p_subPhase, uint16_t p_centiSec)</div><div class="ttdoc">Make a transition toward another subphase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00715">pressure_controller.cpp:715</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a7b38277cafd938c309ca912b3f76765b"><div class="ttname"><a href="class_pressure_controller.html#a7b38277cafd938c309ca912b3f76765b">PressureController::m_phase</a></div><div class="ttdeci">CyclePhases m_phase</div><div class="ttdoc">Current respiratory cycle phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00295">pressure_controller.h:295</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a34e8088a6546802fab2d541b89e14dbe"><div class="ttname"><a href="class_pressure_controller.html#a34e8088a6546802fab2d541b89e14dbe">PressureController::m_peep</a></div><div class="ttdeci">uint16_t m_peep</div><div class="ttdoc">Positive End Expiratory Pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00289">pressure_controller.h:289</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a7b38277cafd938c309ca912b3f76765b"><div class="ttname"><a href="class_pressure_controller.html#a7b38277cafd938c309ca912b3f76765b">PressureController::m_phase</a></div><div class="ttdeci">CyclePhases m_phase</div><div class="ttdoc">Current respiratory cycle phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00293">pressure_controller.h:293</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a34e8088a6546802fab2d541b89e14dbe"><div class="ttname"><a href="class_pressure_controller.html#a34e8088a6546802fab2d541b89e14dbe">PressureController::m_peep</a></div><div class="ttdeci">uint16_t m_peep</div><div class="ttdoc">Positive End Expiratory Pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00287">pressure_controller.h:287</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a54b778e5ab8651b487c2675e28edf8b9"><div class="ttname"><a href="class_pressure_controller.html#a54b778e5ab8651b487c2675e28edf8b9">PressureController::inhale</a></div><div class="ttdeci">void inhale()</div><div class="ttdoc">Perform the pressure control and compute the transistors commands during the inhalation phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00464">pressure_controller.cpp:464</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a90cc0d6c52c1b183712e74c3cfd3706a"><div class="ttname"><a href="class_pressure_controller.html#a90cc0d6c52c1b183712e74c3cfd3706a">PressureController::m_plateauStartTime</a></div><div class="ttdeci">uint16_t m_plateauStartTime</div><div class="ttdoc">Number of hundredth of second from the begining of the cycle till the plateau phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00396">pressure_controller.h:396</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_aca4216060b5faf306c8648324e1a5482"><div class="ttname"><a href="class_pressure_controller.html#aca4216060b5faf306c8648324e1a5482">PressureController::m_maxPlateauPressure</a></div><div class="ttdeci">uint16_t m_maxPlateauPressure</div><div class="ttdoc">Maximal plateau pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00268">pressure_controller.h:268</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a90cc0d6c52c1b183712e74c3cfd3706a"><div class="ttname"><a href="class_pressure_controller.html#a90cc0d6c52c1b183712e74c3cfd3706a">PressureController::m_plateauStartTime</a></div><div class="ttdeci">uint16_t m_plateauStartTime</div><div class="ttdoc">Number of hundredth of second from the begining of the cycle till the plateau phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00394">pressure_controller.h:394</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_aca4216060b5faf306c8648324e1a5482"><div class="ttname"><a href="class_pressure_controller.html#aca4216060b5faf306c8648324e1a5482">PressureController::m_maxPlateauPressure</a></div><div class="ttdeci">uint16_t m_maxPlateauPressure</div><div class="ttdoc">Maximal plateau pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00266">pressure_controller.h:266</a></div></div>
 <div class="ttc" id="aparameters_8h_html_aa24738c128b9fa7c48cab15790e7280b"><div class="ttname"><a href="parameters_8h.html#aa24738c128b9fa7c48cab15790e7280b">CONST_MAX_CYCLE</a></div><div class="ttdeci">#define CONST_MAX_CYCLE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00045">parameters.h:44</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_aea084adbc5a1f3075dffcd45ddf4b7e8"><div class="ttname"><a href="class_pressure_controller.html#aea084adbc5a1f3075dffcd45ddf4b7e8">PressureController::exhale</a></div><div class="ttdeci">void exhale()</div><div class="ttdoc">Perform the pressure control and compute the transistors commands during the exhalation phase.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00493">pressure_controller.cpp:493</a></div></div>
 <div class="ttc" id="abattery_8cpp_html_a6bcb1af204a68c17e23c0c0262cb1fab"><div class="ttname"><a href="battery_8cpp.html#a6bcb1af204a68c17e23c0c0262cb1fab">getBatteryLevel</a></div><div class="ttdeci">uint32_t getBatteryLevel()</div><div class="ttdoc">Returns battery level.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00106">battery.cpp:106</a></div></div>
@@ -3731,17 +3708,17 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="aclass_pressure_controller_html_a0e1a0329356e8a69e0bb45d91bfc2efa"><div class="ttname"><a href="class_pressure_controller.html#a0e1a0329356e8a69e0bb45d91bfc2efa">PressureController::pidBlower</a></div><div class="ttdeci">int32_t pidBlower(int32_t targetPressure, int32_t currentPressure, int32_t dt)</div><div class="ttdoc">PID to controller the blower valve during some specific steps of the cycle.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00723">pressure_controller.cpp:723</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a83ccc8990de27988b24e94bd648458d3"><div class="ttname"><a href="parameters_8h.html#a83ccc8990de27988b24e94bd648458d3">CONST_MIN_PLATEAU_PRESSURE</a></div><div class="ttdeci">#define CONST_MIN_PLATEAU_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00035">parameters.h:34</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_aef7011478d50cbe501f6bb4e876c8b75"><div class="ttname"><a href="class_pressure_valve.html#aef7011478d50cbe501f6bb4e876c8b75">PressureValve::position</a></div><div class="ttdeci">uint16_t position</div><div class="ttdoc">Current aperture.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8h_source.html#l00097">pressure_valve.h:97</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_aca634a5e636d19fbca68e5d5ccd2e25b"><div class="ttname"><a href="class_pressure_controller.html#aca634a5e636d19fbca68e5d5ccd2e25b">PressureController::m_cyclesPerMinuteCommand</a></div><div class="ttdeci">uint16_t m_cyclesPerMinuteCommand</div><div class="ttdoc">Number of cycles per minute desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00244">pressure_controller.h:244</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a9c15c8cd93c97d7ea6ce55984ca6b72d"><div class="ttname"><a href="class_pressure_controller.html#a9c15c8cd93c97d7ea6ce55984ca6b72d">PressureController::m_sumOfPressures</a></div><div class="ttdeci">uint32_t m_sumOfPressures</div><div class="ttdoc">Sum of the current cycle's pressures.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00390">pressure_controller.h:390</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_aca634a5e636d19fbca68e5d5ccd2e25b"><div class="ttname"><a href="class_pressure_controller.html#aca634a5e636d19fbca68e5d5ccd2e25b">PressureController::m_cyclesPerMinuteCommand</a></div><div class="ttdeci">uint16_t m_cyclesPerMinuteCommand</div><div class="ttdoc">Number of cycles per minute desired by the operator.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00242">pressure_controller.h:242</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a9c15c8cd93c97d7ea6ce55984ca6b72d"><div class="ttname"><a href="class_pressure_controller.html#a9c15c8cd93c97d7ea6ce55984ca6b72d">PressureController::m_sumOfPressures</a></div><div class="ttdeci">uint32_t m_sumOfPressures</div><div class="ttdoc">Sum of the current cycle's pressures.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00388">pressure_controller.h:388</a></div></div>
 <div class="ttc" id="aclass_alarm_controller_html_a6c7b9386cfef61fee8901a869259cfc2"><div class="ttname"><a href="class_alarm_controller.html#a6c7b9386cfef61fee8901a869259cfc2">AlarmController::triggeredAlarms</a></div><div class="ttdeci">uint8_t * triggeredAlarms()</div><div class="ttdoc">Get the alarms triggered during this cycle.</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00082">alarm_controller.h:82</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a635a743a1850dc2825f00b0a8b7359c1"><div class="ttname"><a href="parameters_8h.html#a635a743a1850dc2825f00b0a8b7359c1">CONST_MAX_PEEP_PRESSURE</a></div><div class="ttdeci">#define CONST_MAX_PEEP_PRESSURE</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00036">parameters.h:35</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a5511232cae942df7d5e0ee48638f5f5f"><div class="ttname"><a href="class_pressure_controller.html#a5511232cae942df7d5e0ee48638f5f5f">PressureController::m_cycleNb</a></div><div class="ttdeci">uint32_t m_cycleNb</div><div class="ttdoc">Number of passed cycles.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00313">pressure_controller.h:313</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a1c4cd3d6c3b9c30b98b2863b613f844e"><div class="ttname"><a href="class_pressure_controller.html#a1c4cd3d6c3b9c30b98b2863b613f844e">PressureController::patientIntegral</a></div><div class="ttdeci">int32_t patientIntegral</div><div class="ttdoc">Integral gain of the patient PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00354">pressure_controller.h:354</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a5511232cae942df7d5e0ee48638f5f5f"><div class="ttname"><a href="class_pressure_controller.html#a5511232cae942df7d5e0ee48638f5f5f">PressureController::m_cycleNb</a></div><div class="ttdeci">uint32_t m_cycleNb</div><div class="ttdoc">Number of passed cycles.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00311">pressure_controller.h:311</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a1c4cd3d6c3b9c30b98b2863b613f844e"><div class="ttname"><a href="class_pressure_controller.html#a1c4cd3d6c3b9c30b98b2863b613f844e">PressureController::patientIntegral</a></div><div class="ttdeci">int32_t patientIntegral</div><div class="ttdoc">Integral gain of the patient PID.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00352">pressure_controller.h:352</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a8702358b7d9d239791b9f951ffce847e"><div class="ttname"><a href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a></div><div class="ttdeci">uint8_t mmH2OtoCmH2O(uint16_t pressure)</div><div class="ttdoc">Convert and round a pressure in mmH2O to a pressure in cmH2O.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00445">telemetry.cpp:445</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a2b3ea905bb743120869e751af915a717"><div class="ttname"><a href="telemetry_8cpp.html#a2b3ea905bb743120869e751af915a717">sendMachineStateSnapshot</a></div><div class="ttdeci">void sendMachineStateSnapshot(uint32_t cycleValue, uint8_t peakCommand, uint8_t plateauCommand, uint8_t peepCommand, uint8_t cpmCommand, uint16_t previousPeakPressureValue, uint16_t previousPlateauPressureValue, uint16_t previousPeepPressureValue, uint8_t currentAlarmCodes[ALARMS_SIZE])</div><div class="ttdoc">Send a &quot;machine state snapshot&quot; message.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00242">telemetry.cpp:242</a></div></div>
 <div class="ttc" id="aclass_pressure_controller_html_a61500d6af56ad42f6a7b70f3417b8bcf"><div class="ttname"><a href="class_pressure_controller.html#a61500d6af56ad42f6a7b70f3417b8bcf">PressureController::updatePeakPressure</a></div><div class="ttdeci">void updatePeakPressure()</div><div class="ttdoc">Update peak pressure and blower ramp up.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8cpp_source.html#l00557">pressure_controller.cpp:557</a></div></div>
 <div class="ttc" id="acycle_8h_html_acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31"><div class="ttname"><a href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31">INSPIRATION</a></div><div class="ttdeci">@ INSPIRATION</div><div class="ttdoc">Push inhalation:</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00019">cycle.h:19</a></div></div>
-<div class="ttc" id="aclass_pressure_controller_html_a20484035807f94ccbc68f4ba4a16cea9"><div class="ttname"><a href="class_pressure_controller.html#a20484035807f94ccbc68f4ba4a16cea9">PressureController::m_plateauPressure</a></div><div class="ttdeci">uint16_t m_plateauPressure</div><div class="ttdoc">Plateau pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00286">pressure_controller.h:286</a></div></div>
+<div class="ttc" id="aclass_pressure_controller_html_a20484035807f94ccbc68f4ba4a16cea9"><div class="ttname"><a href="class_pressure_controller.html#a20484035807f94ccbc68f4ba4a16cea9">PressureController::m_plateauPressure</a></div><div class="ttdeci">uint16_t m_plateauPressure</div><div class="ttdoc">Plateau pressure.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__controller_8h_source.html#l00284">pressure_controller.h:284</a></div></div>
 <div class="ttc" id="aalarm__controller_8h_html_a1b0f7a329012a0295d56221d4067e430"><div class="ttname"><a href="alarm__controller_8h.html#a1b0f7a329012a0295d56221d4067e430">RCM_SW_15</a></div><div class="ttdeci">#define RCM_SW_15</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00029">alarm_controller.h:28</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a9c638cefa9f29db2a20baf563fde2692"><div class="ttname"><a href="parameters_8h.html#a9c638cefa9f29db2a20baf563fde2692">VALVE_CLOSED_STATE</a></div><div class="ttdeci">#define VALVE_CLOSED_STATE</div><div class="ttdoc">Angle when closed.</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00127">parameters.h:126</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a7bd65824a6ee66aac9741fd815bf301f"><div class="ttname"><a href="parameters_8h.html#a7bd65824a6ee66aac9741fd815bf301f">PID_BLOWER_INTEGRAL_MIN</a></div><div class="ttdeci">static const int32_t PID_BLOWER_INTEGRAL_MIN</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00082">parameters.h:82</a></div></div>

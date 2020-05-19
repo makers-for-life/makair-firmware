@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['waitforinms_508',['waitForInMs',['../respirator_8cpp.html#affc823d03733aba32ed4af66a75dcd50',1,'respirator.cpp']]],
-  ['watchdog_5ftimeout_509',['WATCHDOG_TIMEOUT',['../buzzer_8h.html#abf89628d486477bd0db5a5890cd38a05',1,'buzzer.h']]]
+  ['waitforinms_507',['waitForInMs',['../respirator_8cpp.html#affc823d03733aba32ed4af66a75dcd50',1,'respirator.cpp']]],
+  ['watchdog_5ftimeout_508',['WATCHDOG_TIMEOUT',['../buzzer_8h.html#abf89628d486477bd0db5a5890cd38a05',1,'buzzer.h']]]
 ];

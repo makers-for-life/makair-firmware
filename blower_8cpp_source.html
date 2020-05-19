@@ -144,7 +144,8 @@ $(document).ready(function(){initNavTree('blower_8cpp_source.html',''); initResi
 <div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="class_blower.html#aa8d7ed93ae09574c4a402e79f75eabc8">   62</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_blower.html#aa8d7ed93ae09574c4a402e79f75eabc8">Blower::stop</a>() {</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="class_blower.html#a04eae5c4a39977bc54219514b99c7503">actuator</a>-&gt;setCaptureCompare(<a class="code" href="class_blower.html#a7507a753f7558ae33cc93cdce684b15f">timerChannel</a>, <a class="code" href="blower_8h.html#a68bd79c1576a038b2004077c7e027cca">BlowerSpeed2MicroSeconds</a>(0), MICROSEC_COMPARE_FORMAT);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="class_blower.html#a2e12329bb9ce8a26c138e3dc90c928a3">m_stopped</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="class_blower.html#aef2f31292edca29c414939a6cbbf53f6">m_speed</a> = <a class="code" href="parameters_8h.html#a46c6bca2d6cf1361c017137e809e41fc">DEFAULT_BLOWER_SPEED</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aparameters_8h_html_a3ffa4d83d65bee55efc0a43440e9db2e"><div class="ttname"><a href="parameters_8h.html#a3ffa4d83d65bee55efc0a43440e9db2e">MAX_BLOWER_SPEED</a></div><div class="ttdeci">#define MAX_BLOWER_SPEED</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00164">parameters.h:163</a></div></div>
