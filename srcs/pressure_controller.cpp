@@ -82,6 +82,7 @@ PressureController::PressureController()
     }
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
         m_lastBlowerPIDError[i] = 0u;
+        m_lastPatientPIDError[i] = 0u;
     }
 }
 
@@ -187,7 +188,6 @@ void PressureController::initRespiratoryCycle() {
     lastPatientAperture = m_patient_valve.maxAperture();
     blowerPIDFastMode = true;
     patientPIDFastMode = true;
-
 
     m_peakPressure = 0;
     computeTickParameters();
@@ -327,7 +327,7 @@ void PressureController::compute(uint16_t p_tick) {
 #if HARDWARE_VERSION == 2
     m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
     sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
-                       m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
+                     m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
 #endif
 
     executeCommands();
@@ -350,8 +350,7 @@ void PressureController::computePlateau(uint16_t p_tick) {
     // - the last pressure values were close enough
     // - the hold inspiration phase is about to end
     // - plateau pressure computation was not already started
-    if (!m_plateauComputed && (diff < 10u)
-        && (p_tick >= ((m_tickPerInhalation * 95u) / 100u))) {
+    if (!m_plateauComputed && (diff < 10u) && (p_tick >= ((m_tickPerInhalation * 95u) / 100u))) {
         m_startPlateauComputation = true;
     }
 
@@ -456,7 +455,7 @@ void PressureController::updatePhase(uint16_t p_tick) {
 #if VALVE_TYPE == VT_FAULHABER
         /* -5 mmH2O is added to prevent plateau not detected in case the pressure is almost reached.
          This is mandatory to help the blower regulation to converge */
-        uint16_t pressureToTest = m_maxPlateauPressureCommand-5;
+        uint16_t pressureToTest = m_maxPlateauPressureCommand - 5u;
 #else
         uint16_t pressureToTest = m_maxPeakPressureCommand;
 #endif
@@ -525,32 +524,30 @@ void PressureController::updateOnlyBlower() {
     int16_t peakDelta = m_peakPressure - m_plateauPressure;
 
     // Number of tick for the half ramp (120ms)
-    int32_t halfRampNumberfTick = 1000 * 120 / PCONTROLLER_COMPUTE_PERIOD_US;
+    int32_t halfRampNumberfTick = 1000 * 120 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
 
-     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
-          // Only case for decreasing the blower : ramping is too fast or overshooting is too high
-          if (m_plateauStartTime < halfRampNumberfTick || peakDelta > 25) {
+    if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
+        // Only case for decreasing the blower : ramping is too fast or overshooting is too high
+        if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
+            || (peakDelta > 25)) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
-          } else {
+        } else {
             m_blower_increment = 0;
             DBG_DO(Serial.println("BLOWER 0");)
-          }
+        }
     } else if (m_plateauStartTime < ((m_tickPerInhalation * 40u) / 100u)) {
         DBG_DO(Serial.println("BLOWER +0");)
         m_blower_increment = 0;
-    } else if (m_plateauStartTime < ((m_tickPerInhalation * 50u) / 100u) ) {
+    } else if (m_plateauStartTime < ((m_tickPerInhalation * 50u) / 100u)) {
         m_blower_increment = +25;
         DBG_DO(Serial.println("BLOWER +25"));
-    } else if (m_plateauStartTime < ((m_tickPerInhalation * 60u) / 100u) ) {
+    } else if (m_plateauStartTime < ((m_tickPerInhalation * 60u) / 100u)) {
         m_blower_increment = +50;
         DBG_DO(Serial.println("BLOWER +50"));
-    } else if (m_plateauStartTime >= ((m_tickPerInhalation * 60u) / 100u) ) {
+    } else {
         m_blower_increment = +100;
         DBG_DO(Serial.println("BLOWER +100"));
-    } else {
-        m_blower_increment = 0;
-        DBG_DO(Serial.println("BLOWER +0");)
     }
 
     DBG_DO(Serial.print("Plateau Start time:");)
@@ -664,7 +661,7 @@ void PressureController::updatePeakPressure() {
 }
 
 void PressureController::computeTickParameters() {
-    m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US)/ m_cyclesPerMinute;
+    m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinute;
     // Inhalation = 1/3 of the cycle duration,
     // Exhalation = 2/3 of the cycle duration
     m_tickPerInhalation = m_ticksPerCycle / 3u;
@@ -733,13 +730,12 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;
-    int32_t integralWeight = 0;
-    int32_t proportionnalWeight = 0;
-    int32_t derivativeWeight = 0;
+    int32_t proportionnalWeight;
+    int32_t derivativeWeight;
 
-    int32_t coefficientP = PID_BLOWER_KP;
-    int32_t coefficientI = PID_BLOWER_KI;
-    int32_t coefficientD = PID_BLOWER_KD;
+    int32_t coefficientP;
+    int32_t coefficientI;
+    int32_t coefficientD;
 
     int32_t temporaryBlowerIntegral = 0;
 
@@ -747,14 +743,14 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     int32_t error = targetPressure - currentPressure;
 
     // Windowing. It overides the parameter.h coefficients
-    if (error<0){
-      coefficientI = 200;
-      coefficientP = 2500;
-      coefficientD = 0;
+    if (error < 0) {
+        coefficientI = 200;
+        coefficientP = 2500;
+        coefficientD = 0;
     } else {
-      coefficientI = 50;
-      coefficientP = 2500;
-      coefficientD = 0;
+        coefficientI = 50;
+        coefficientP = 2500;
+        coefficientD = 0;
     }
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
@@ -770,46 +766,51 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     smoothError =
         totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
 
-    // Fast mode ends at 20mmH20 from target. When changing from fast-mode to PID, Set the integral to the previous value
+    // Fast mode ends at 20mmH20 from target. When changing from fast-mode to PID, Set the integral
+    // to the previous value
     if (error < 20) {
-      if (blowerPIDFastMode){
-        proportionnalWeight = (coefficientP * error) / 1000;
-        derivativeWeight = (coefficientD*derivative/1000);
-        blowerIntegral = 1000*((int32_t)lastBlowerAperture - maxAperture)/(minAperture - maxAperture) - (proportionnalWeight + derivativeWeight);
-      }
-      blowerPIDFastMode = false;
+        if (blowerPIDFastMode) {
+            proportionnalWeight = (coefficientP * error) / 1000;
+            derivativeWeight = (coefficientD * derivative / 1000);
+            blowerIntegral =
+                1000 * ((int32_t)lastBlowerAperture - maxAperture) / (minAperture - maxAperture)
+                - (proportionnalWeight + derivativeWeight);
+        }
+        blowerPIDFastMode = false;
     }
 
     // In fast mode : everything is openned (Open loop)
-    if (blowerPIDFastMode){
-      // Ramp from 125 to 0 angle during 250ms. 
-      int32_t increment =  5 * ((int32_t) PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
-      if (lastBlowerAperture >= increment){
-        blowerAperture = max(minAperture,min(maxAperture,(int32_t)(lastBlowerAperture - increment)));
-      } else {
-        blowerAperture = 0;
-      }
-    }
-    // Then use the PID to finish slowly
-    else {
-      derivative = ((dt == 0)) ? 0 : ((1000000 * (blowerLastError - smoothError)) / dt);
+    if (blowerPIDFastMode) {
+        // Ramp from 125 to 0 angle during 250ms.
+        int32_t increment = 5 * ((int32_t)PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
+        if (lastBlowerAperture >= static_cast<uint32_t>(abs(increment))) {
+            blowerAperture =
+                max(minAperture,
+                    min(maxAperture, (static_cast<int32_t>(lastBlowerAperture) - increment)));
+        } else {
+            blowerAperture = 0;
+        }
+    } else {  // Then use the PID to finish slowly
+        derivative = ((dt == 0)) ? 0 : ((1000000 * (blowerLastError - smoothError)) / dt);
 
-      temporaryBlowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
-      temporaryBlowerIntegral = max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, temporaryBlowerIntegral));
+        temporaryBlowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
+        temporaryBlowerIntegral =
+            max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, temporaryBlowerIntegral));
 
-      proportionnalWeight =  ((coefficientP * error) / 1000);
-      integralWeight = temporaryBlowerIntegral;
-      derivativeWeight = coefficientD*derivative/1000;
+        proportionnalWeight = ((coefficientP * error) / 1000);
+        int32_t integralWeight = temporaryBlowerIntegral;
+        derivativeWeight = coefficientD * derivative / 1000;
 
-      int32_t blowerCommand = proportionnalWeight + integralWeight + derivativeWeight;
-      blowerAperture =
-          max(minAperture,
-              min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
+        int32_t blowerCommand = proportionnalWeight + integralWeight + derivativeWeight;
+        blowerAperture =
+            max(minAperture,
+                min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
     }
 
     // If the valve is completly open or completly closed, dont update Integral
-    if (blowerAperture !=  minAperture && blowerAperture != maxAperture){
-      blowerIntegral = temporaryBlowerIntegral;
+    if ((blowerAperture != static_cast<uint32_t>(minAperture))
+        && (blowerAperture != static_cast<uint32_t>(maxAperture))) {
+        blowerIntegral = temporaryBlowerIntegral;
     }
 
     lastBlowerAperture = blowerAperture;
@@ -855,17 +856,14 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t smoothError = 0;
     int32_t totalValues = 0;
     int32_t temporaryPatientIntegral = 0;
-    int32_t integralWeight = 0;
-    int32_t proportionnalWeight = 0;
-    int32_t derivativeWeight = 0;
+    int32_t proportionnalWeight;
+    int32_t derivativeWeight;
 
-    int32_t coefficientP = PID_PATIENT_KP;
-    int32_t coefficientI = PID_PATIENT_KI;
-    int32_t coefficientD = PID_PATIENT_KD;
+    int32_t coefficientP;
+    int32_t coefficientI;
+    int32_t coefficientD;
 
-
-
-    //Calculate derivative part
+    // Calculate derivative part
     m_lastPatientPIDError[m_lastPatientPIDErrorIndex] = error;
     m_lastPatientPIDErrorIndex++;
     if (m_lastPatientPIDErrorIndex
@@ -880,57 +878,62 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     derivative = (dt == 0) ? 0 : (1000000 * (smoothError - patientLastError)) / dt;
 
     //  Windowing. It overides the parameter.h coefficients
-    if (error<0){
-      coefficientI = 50;
-      coefficientP = 2500;
-      coefficientD = 0;
+    if (error < 0) {
+        coefficientI = 50;
+        coefficientP = 2500;
+        coefficientD = 0;
     } else {
-      // For a high peep, a lower KI is requiered. For Peep = 100mmH2O, KI = 120. For Peep = 50mmH2O, KI = 250.
-      coefficientI = -130 * ((int32_t) m_minPeepCommand)/50 + 380;
-      coefficientP = 2500 ;
-      coefficientD = 0;
+        // For a high peep, a lower KI is requiered. For Peep = 100mmH2O, KI = 120. For Peep =
+        // 50mmH2O, KI = 250.
+        coefficientI = ((-130 * ((int32_t)m_minPeepCommand)) / 50) + 380;
+        coefficientP = 2500;
+        coefficientD = 0;
     }
 
-    // Fast mode ends at 30mmH20 from target. Fast mode or not. When changing from fast-mode to PID, Set the integral to the previous value
+    // Fast mode ends at 30mmH20 from target. Fast mode or not. When changing from fast-mode to PID,
+    // Set the integral to the previous value
     if (error > -30) {
-      if (patientPIDFastMode){
-        proportionnalWeight = (coefficientP * error) / 1000;
-        derivativeWeight = (coefficientD*derivative/1000);
-        patientIntegral = 1000*((int32_t)lastPatientAperture - maxAperture)/(maxAperture - minAperture) - (proportionnalWeight + derivativeWeight);
-      }
-      patientPIDFastMode = false;
+        if (patientPIDFastMode) {
+            proportionnalWeight = (coefficientP * error) / 1000;
+            derivativeWeight = (coefficientD * derivative / 1000);
+            patientIntegral =
+                1000 * ((int32_t)lastPatientAperture - maxAperture) / (maxAperture - minAperture)
+                - (proportionnalWeight + derivativeWeight);
+        }
+        patientPIDFastMode = false;
     }
 
     // Fast mode : open loop with ramp
     if (patientPIDFastMode) {
-      // Ramp from 125 to 0 angle during 250ms. 
-      int32_t increment =  5 * ((int32_t) PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
-      if (lastPatientAperture >= increment){
-        patientAperture =  patientAperture = max(minAperture,min(maxAperture,(int32_t)(lastPatientAperture - increment)));
-      } else {
-        patientAperture = 0;
-      }
-    }
-    // Then smooth PID
-    else {
-      temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
-      temporaryPatientIntegral =
-        max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
+        // Ramp from 125 to 0 angle during 250ms.
+        int32_t increment = 5 * ((int32_t)PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
+        if (lastPatientAperture >= static_cast<uint32_t>(abs(increment))) {
+            patientAperture =
+                max(minAperture,
+                    min(maxAperture, (static_cast<int32_t>(lastPatientAperture) - increment)));
+        } else {
+            patientAperture = 0;
+        }
+    } else {  // Then smooth PID
+        temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
+        temporaryPatientIntegral =
+            max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
 
-      proportionnalWeight =  ((coefficientP * error) / 1000);
-      integralWeight = temporaryPatientIntegral;
-      derivativeWeight = coefficientD*derivative/1000;
+        proportionnalWeight = ((coefficientP * error) / 1000);
+        int32_t integralWeight = temporaryPatientIntegral;
+        derivativeWeight = coefficientD * derivative / 1000;
 
-      int32_t patientCommand = proportionnalWeight + integralWeight + derivativeWeight;
+        int32_t patientCommand = proportionnalWeight + integralWeight + derivativeWeight;
 
-      patientAperture = max(
-        minAperture,
-        min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
+        patientAperture = max(
+            minAperture,
+            min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
     }
 
     // If the valve is completly open or completly closed, dont update Integral
-    if (patientAperture !=  minAperture && patientAperture != maxAperture){
-      patientIntegral = temporaryPatientIntegral;
+    if ((patientAperture != static_cast<uint32_t>(minAperture))
+        && (patientAperture != static_cast<uint32_t>(maxAperture))) {
+        patientIntegral = temporaryPatientIntegral;
     }
 
     patientLastError = smoothError;
@@ -964,9 +967,9 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     return patientAperture;
 }
 
-void PressureController::reachSafetyPosition(){
-  m_blower_valve.open();
-  m_blower_valve.execute();
-  m_patient_valve.open();
-  m_patient_valve.execute();
+void PressureController::reachSafetyPosition() {
+    m_blower_valve.open();
+    m_blower_valve.execute();
+    m_patient_valve.open();
+    m_patient_valve.execute();
 }

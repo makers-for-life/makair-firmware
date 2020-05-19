@@ -194,7 +194,8 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 /// Number of characters per line
 #define SCREEN_LINE_LENGTH 20
 
-/// Period between screen updates in microsecond. Should be a multiple of PCONTROLLER_COMPUTE_PERIOD_US
+/// Period between screen updates in microsecond. Should be a multiple of
+/// PCONTROLLER_COMPUTE_PERIOD_US
 #define LCD_UPDATE_PERIOD_US 300000u
 
 /// Period between screen resets in minutes
