@@ -2,7 +2,9 @@
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
  * @file qualification.cpp
- * @brief Entry point of electrical wiring qualification program
+ * @brief Program to cycle faulhaber valves endlessly and display the cycle count.
+ * The cycle period can be adjusted with start and stop buttons.
+ * Alarm OFF button allow to cycle between auto, opened, closed, manual pwm mode.
  *****************************************************************************/
 
 #pragma once
@@ -45,7 +47,6 @@ enum statemachine state = CYCLING;
 
 void setPwmDuty(int duty);
 
-
 void Test_Timer_Callback(HardwareTimer*) {
     buttonAlarmOff.tick();
     buttonStart.tick();
@@ -79,7 +80,7 @@ void Test_Timer_Callback(HardwareTimer*) {
 
 void onStopClick() {
     if (state == CYCLING) {
-        if (periodValve > 0) {
+        if (periodValve < 5000) {
             periodValve += 50;
         }
     }
@@ -92,7 +93,7 @@ void onStopClick() {
 }
 void onStartClick() {
     if (state == CYCLING) {
-        if (periodValve < 5000) {
+        if (periodValve > 50) {
             periodValve -= 50;
         }
     }
@@ -117,14 +118,12 @@ void onAlarmOffClick() {
 }
 
 void setPwmDuty(int duty) {
-
     timer3->setCaptureCompare(TIM_CHANNEL_SERVO_VALVE_BLOWER, duty, PERCENT_COMPARE_FORMAT);
     timer3->setCaptureCompare(TIM_CHANNEL_SERVO_VALVE_PATIENT, duty, PERCENT_COMPARE_FORMAT);
     timer1->setCaptureCompare(TIM_CHANNEL_ESC_BLOWER, duty, PERCENT_COMPARE_FORMAT);
 }
 
 void setup(void) {
-
     Serial.begin(115200);
 
     pinMode(PIN_SERIAL_TX, OUTPUT);
@@ -181,7 +180,6 @@ void setup(void) {
 }
 
 void loop(void) {
-
     delay(300);
 
     char buffer[30];
