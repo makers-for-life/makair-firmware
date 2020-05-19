@@ -114,6 +114,7 @@ boolean eolFail = false;
 #define EOLSCREENSIZE 100
 char eolScreenBuffer[EOLSCREENSIZE + 1];
 #define EOL_TOTALBUTTONS 11
+int16_t eolMatrixCurrentColumn = 1;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void millisecondTimerEOL(HardwareTimer*) {
@@ -204,6 +205,7 @@ void millisecondTimerEOL(HardwareTimer*) {
             buttonsPushed[0] = 1;
         }
 #if HARDWARE_VERSION == 2
+        // discrete buttons
         if (digitalRead(PIN_BTN_CYCLE_DECREASE) == HIGH) {
             buttonsPushed[1] = 1;
         }
@@ -231,9 +233,45 @@ void millisecondTimerEOL(HardwareTimer*) {
 #endif
 
 #if HARDWARE_VERSION == 3
-        // this switches are in a matrix.
-        // TODO
-
+        // this buttons are in a matrix.
+        if (1 == eolMatrixCurrentColumn) {
+            // Increase counter for each column and row
+            if (HIGH == digitalRead(PIN_IN_ROW1)) {
+                buttonsPushed[1] = 1;
+            }
+            if (HIGH == digitalRead(PIN_IN_ROW2)) {
+                buttonsPushed[2] = 1;
+            }
+            if (HIGH == digitalRead(PIN_IN_ROW3)) {
+                buttonsPushed[3] = 1;
+            }
+        } else if (2 == eolMatrixCurrentColumn) {
+            if (HIGH == digitalRead(PIN_IN_ROW1)) {
+                buttonsPushed[4] = 1;
+            }
+            if (HIGH == digitalRead(PIN_IN_ROW2)) {
+                buttonsPushed[5] = 1;
+            }
+            if (HIGH == digitalRead(PIN_IN_ROW3)) {
+                buttonsPushed[6] = 1;
+            }
+        } else if (3 == eolMatrixCurrentColumn) {
+            if (HIGH == digitalRead(PIN_IN_ROW1)) {
+                buttonsPushed[7] = 1;
+            }
+            if (HIGH == digitalRead(PIN_IN_ROW2)) {
+                buttonsPushed[8] = 1;
+            }
+            // there is no button on col3 x row3
+        }
+        // next column
+        eolMatrixCurrentColumn++;
+        if (4 == eolMatrixCurrentColumn) {
+            eolMatrixCurrentColumn = 1;
+        }
+        digitalWrite(PIN_OUT_COL1, 1 == eolMatrixCurrentColumn ? HIGH : LOW);
+        digitalWrite(PIN_OUT_COL2, 2 == eolMatrixCurrentColumn ? HIGH : LOW);
+        digitalWrite(PIN_OUT_COL3, 3 == eolMatrixCurrentColumn ? HIGH : LOW);
 #endif
 
         if (digitalRead(PIN_BTN_START) == HIGH) {
