@@ -537,13 +537,13 @@ void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 void PressureController::updateOnlyBlower() {
     int16_t peakDelta = m_peakPressure - m_maxPeakPressureCommand;
 
-    // Number of tick for the half ramp (200ms)
-    int32_t halfRampNumberfTick = 1000 * 200 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
+    // Number of tick for the half ramp (120ms)
+    int32_t halfRampNumberfTick = 1000 * 120 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
 
     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
         // Only case for decreasing the blower : ramping is too fast or overshooting is too high
         if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
-            || (peakDelta > 15)) {
+            || (peakDelta > 15 && m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
         } else {
