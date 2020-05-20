@@ -463,7 +463,7 @@ void PressureController::updatePhase(uint16_t p_tick) {
 #if VALVE_TYPE == VT_FAULHABER
         /* -5 mmH2O is added to prevent plateau not detected in case the pressure is almost reached.
          This is mandatory to help the blower regulation to converge */
-        uint16_t pressureToTest = m_maxPlateauPressureCommand - 5u;
+        uint16_t pressureToTest = m_maxPeakPressureCommand - 5u;
 #else
         uint16_t pressureToTest = m_maxPeakPressureCommand;
 #endif
@@ -503,15 +503,21 @@ void PressureController::plateau() {
     m_blower_valve.open(pidBlower(m_pressureCommand, m_pressure, m_dt));
     m_squarePlateauSum += m_pressure;
     m_squarePlateauCount += 1u;
+    if (m_pressure > m_peakPressure){
+      m_peakPressure = m_pressure;
+      m_squarePlateauCount = 0;
+      m_squarePlateauSum = 0;
+    }
 #else
     m_blower_valve.close();
+    // Update the peak pressure
+    m_peakPressure = max(m_pressure, m_peakPressure);
 #endif
 
     // Close the air stream towards the patient's lungs
     m_patient_valve.close();
 
-    // Update the peak pressure
-    m_peakPressure = max(m_pressure, m_peakPressure);
+    
 }
 
 void PressureController::exhale() {
@@ -529,15 +535,15 @@ void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 
 #if VALVE_TYPE == VT_FAULHABER
 void PressureController::updateOnlyBlower() {
-    int16_t peakDelta = m_peakPressure - m_plateauPressure;
+    int16_t peakDelta = m_peakPressure - m_maxPeakPressureCommand;
 
-    // Number of tick for the half ramp (120ms)
-    int32_t halfRampNumberfTick = 1000 * 120 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
+    // Number of tick for the half ramp (200ms)
+    int32_t halfRampNumberfTick = 1000 * 200 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
 
     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
         // Only case for decreasing the blower : ramping is too fast or overshooting is too high
         if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
-            || (peakDelta > 25)) {
+            || (peakDelta > 15)) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
         } else {
