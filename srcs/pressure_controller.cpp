@@ -427,6 +427,10 @@ void PressureController::onPlateauPressureIncrease() {
 
     m_maxPlateauPressureCommand =
         min(m_maxPlateauPressureCommand, static_cast<uint16_t>(CONST_MAX_PLATEAU_PRESSURE));
+
+    if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand){
+      m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
+    }
 }
 
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
@@ -436,6 +440,10 @@ void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
 
     m_maxPeakPressureCommand =
         max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
+
+    if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand){
+      m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
+    }
 }
 
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
