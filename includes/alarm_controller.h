@@ -67,12 +67,12 @@ class AlarmController {
     /**
      * Run effects (buzzer, LCD message, LED) according to the currently triggered alarms
      *
-     * @param p_centiSec Centile in the respiratory cycle
+     * @param p_tick Centile in the respiratory cycle
      */
-    void runAlarmEffects(uint16_t p_centiSec);
+    void runAlarmEffects(uint32_t p_tick);
 
     /// Update internal state of alarm controller with data from pressure controller
-    void updateCoreData(uint16_t p_centile,
+    void updateCoreData(uint32_t p_tick,
                         uint16_t p_pressure,
                         CyclePhases p_phase,
                         CycleSubPhases p_subphase,
@@ -98,7 +98,7 @@ class AlarmController {
     uint8_t m_triggeredAlarms[ALARMS_SIZE];
 
     /// Current pressure
-    uint16_t m_centile;
+    uint16_t m_tick;
 
     /// Current pressure
     uint16_t m_pressure;

@@ -114,7 +114,7 @@ AlarmController::AlarmController()
            * disconnected to alert the user (vOut < 26,5V).
            */
           Alarm(AlarmPriority::ALARM_LOW, RCM_SW_16, 1u)}),
-      m_centile(0u),
+      m_tick(0u),
       m_pressure(0u),
       m_phase(CyclePhases::INHALATION),
       m_subphase(CycleSubPhases::INSPIRATION),
@@ -171,7 +171,7 @@ void AlarmController::detectedAlarm(uint8_t p_alarmCode,
 
 #if HARDWARE_VERSION == 2
                 if (!wasTriggered) {
-                    sendAlarmTrap(m_centile, m_pressure, m_phase, m_subphase, m_cycle_number,
+                    sendAlarmTrap(m_tick, m_pressure, m_phase, m_subphase, m_cycle_number,
                                   current->getCode(), current->getPriority(), true, p_expected,
                                   p_measured, current->getCyclesSinceTrigger());
                 }
@@ -218,7 +218,7 @@ void AlarmController::notDetectedAlarm(uint8_t p_alarmCode) {
 
 #if HARDWARE_VERSION == 2
                 if (wasTriggered) {
-                    sendAlarmTrap(m_centile, m_pressure, m_phase, m_subphase, m_cycle_number,
+                    sendAlarmTrap(m_tick, m_pressure, m_phase, m_subphase, m_cycle_number,
                                   current->getCode(), current->getPriority(), false, 0u, 0u,
                                   current->getCyclesSinceTrigger());
                 }
@@ -229,7 +229,7 @@ void AlarmController::notDetectedAlarm(uint8_t p_alarmCode) {
     }
 }
 
-void AlarmController::runAlarmEffects(uint16_t p_centiSec) {
+void AlarmController::runAlarmEffects(uint32_t p_tick) {
     AlarmPriority highestPriority = AlarmPriority::ALARM_NONE;
     uint8_t triggeredAlarmCodes[ALARMS_SIZE];
     uint8_t numberOfTriggeredAlarms = 0;
@@ -256,7 +256,7 @@ void AlarmController::runAlarmEffects(uint16_t p_centiSec) {
         unsnooze = true;
     }
 
-    if ((p_centiSec % LCD_UPDATE_PERIOD) == 0u) {
+    if ((p_tick % (LCD_UPDATE_PERIOD_US/PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
         displayAlarmInformation(triggeredAlarmCodes, numberOfTriggeredAlarms);
     }
 
@@ -265,9 +265,9 @@ void AlarmController::runAlarmEffects(uint16_t p_centiSec) {
             Buzzer_High_Prio_Start();
         }
 
-        if ((p_centiSec % 100u) == 50u) {
+        if ((p_tick % 100u) == 50u) {
             digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
-        } else if ((p_centiSec % 100u) == 0u) {
+        } else if ((p_tick % 100u) == 0u) {
             digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
         } else {
         }
@@ -277,9 +277,9 @@ void AlarmController::runAlarmEffects(uint16_t p_centiSec) {
             Buzzer_Medium_Prio_Start();
         }
         digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
-        if ((p_centiSec % 100u) == 50u) {
+        if ((p_tick % 100u) == 50u) {
             digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
-        } else if ((p_centiSec % 100u) == 0u) {
+        } else if ((p_tick % 100u) == 0u) {
             digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
         } else {
         }
@@ -308,12 +308,12 @@ void AlarmController::runAlarmEffects(uint16_t p_centiSec) {
 }
 
 // cppcheck-suppress unusedFunction
-void AlarmController::updateCoreData(uint16_t p_centile,
+void AlarmController::updateCoreData(uint32_t p_tick,
                                      uint16_t p_pressure,
                                      CyclePhases p_phase,
                                      CycleSubPhases p_subphase,
                                      uint32_t p_cycle_number) {
-    m_centile = p_centile;
+    m_tick = p_tick;
     m_pressure = p_pressure;
     m_phase = p_phase;
     m_subphase = p_subphase;

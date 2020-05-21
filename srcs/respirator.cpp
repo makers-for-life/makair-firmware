@@ -174,6 +174,7 @@ void setup(void) {
                                DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
                                servoBlower, servoPatient, &alarmController, blower_pointer);
         pController.setup();
+        pController.reachSafetyPosition();
         initKeyboard();
     }
 
@@ -274,7 +275,7 @@ void setup(void) {
     screen.print(message);
     waitForInMs(1000);
 
-    lastpControllerComputeDate = millis();
+    lastpControllerComputeDate = micros();
 
     // Catch potential Watchdog reset
     // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
@@ -322,16 +323,16 @@ void loop(void) {
         /********************************************/
         // START THE RESPIRATORY CYCLE
         /********************************************/
-        uint16_t centiSec = 0;
+        uint32_t tick = 0;
 
-        while (centiSec < pController.centiSecPerCycle()) {
-            uint32_t pressure = readPressureSensor(centiSec, pressureOffset);
+        while (tick < pController.tickPerCycle()) {
+            uint32_t pressure = readPressureSensor(tick, pressureOffset);
 
-            uint32_t currentDate = millis();
+            uint32_t currentDate = micros();
 
             uint32_t diff = (currentDate - lastpControllerComputeDate);
 
-            if (diff >= PCONTROLLER_COMPUTE_PERIOD) {
+            if (diff >= PCONTROLLER_COMPUTE_PERIOD_US) {
                 lastpControllerComputeDate = currentDate;
 
                 if (shouldRun) {
@@ -343,11 +344,15 @@ void loop(void) {
                     lastMicro = currentMicro;
 
                     // Perform the pressure control
-                    pController.compute(centiSec);
+                    pController.compute(tick);
                 } else {
                     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
                     blower.stop();
-
+                    // When stopped, open the valves
+                    servoBlower.open();
+                    servoBlower.execute();
+                    servoPatient.open();
+                    servoPatient.execute();
                     // Stop alarms related to breathing cycle
                     alarmController.notDetectedAlarm(RCM_SW_1);
                     alarmController.notDetectedAlarm(RCM_SW_2);
@@ -358,7 +363,7 @@ void loop(void) {
                     alarmController.notDetectedAlarm(RCM_SW_19);
 
 #if HARDWARE_VERSION == 2
-                    if ((centiSec % 10u) == 0u) {
+                    if ((tick % 10u) == 0u) {
                         sendStoppedMessage();
                     }
 #endif
@@ -371,7 +376,7 @@ void loop(void) {
                 batteryLoop(pController.cycleNumber());
 
                 // Display relevant information during the cycle
-                if ((centiSec % LCD_UPDATE_PERIOD) == 0u) {
+                if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
                     displayCurrentPressure(pController.pressure(),
                                            pController.cyclesPerMinuteCommand());
 
@@ -380,10 +385,10 @@ void loop(void) {
                                            pController.minPeepCommand());
                 }
 
-                alarmController.runAlarmEffects(centiSec);
+                alarmController.runAlarmEffects(tick);
 
                 // next tick
-                centiSec++;
+                tick++;
                 IWatchdog.reload();
             }
         }
@@ -396,8 +401,10 @@ void loop(void) {
         // END OF THE RESPIRATORY CYCLE
         /********************************************/
 
-        // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or so
+        // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
+        // so
         cyclesBeforeScreenReset--;
+        DBG_DO(Serial.println(cyclesBeforeScreenReset);)
         if (cyclesBeforeScreenReset <= 0) {
             DBG_DO(Serial.println("resetting LCD screen");)
             resetScreen();

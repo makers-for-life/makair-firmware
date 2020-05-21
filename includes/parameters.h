@@ -24,8 +24,8 @@
  */
 ///@{
 
-// Période de traitement en millisecondes
-#define PCONTROLLER_COMPUTE_PERIOD 10u
+// Période de traitement en microseconds
+#define PCONTROLLER_COMPUTE_PERIOD_US 10000u
 
 // Minimum & maximum execution parameters
 #define CONST_MAX_PEAK_PRESSURE 700u     // arbitrary [mmH2O]
@@ -37,8 +37,8 @@
 #define CONST_INITIAL_ZERO_PRESSURE 0    // [mmH2O]
 
 #define DEFAULT_MIN_PEEP_COMMAND 100
-#define DEFAULT_MAX_PLATEAU_COMMAND 250
-#define DEFAULT_MAX_PEAK_PRESSURE_COMMAND 270
+#define DEFAULT_MAX_PLATEAU_COMMAND 200
+#define DEFAULT_MAX_PEAK_PRESSURE_COMMAND 220
 
 #define INITIAL_CYCLE_NUMBER 20
 #define CONST_MAX_CYCLE 35u
@@ -93,16 +93,17 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 #elif PNEUMATIC_HARDWARE_VERSION == PHW_FAULHABER
 
-static const int32_t PID_BLOWER_KP = 2400;
-static const int32_t PID_BLOWER_KI = 34;
-static const int32_t PID_BLOWER_KD = 50;
-static const int32_t PID_BLOWER_INTEGRAL_MAX = 10000;
-static const int32_t PID_BLOWER_INTEGRAL_MIN = -10000;
+static const int32_t PID_BLOWER_KP = 2000;
+static const int32_t PID_BLOWER_KI = 50;
+static const int32_t PID_BLOWER_KD = 0;
+static const int32_t PID_BLOWER_INTEGRAL_MAX = 1000;
+static const int32_t PID_BLOWER_INTEGRAL_MIN = -1000;
 
-static const int32_t PID_PATIENT_KP = 4000;
-static const int32_t PID_PATIENT_KI = 50;
-static const int32_t PID_PATIENT_INTEGRAL_MAX = 400;
-static const int32_t PID_PATIENT_INTEGRAL_MIN = -400;
+static const int32_t PID_PATIENT_KP = 15000;
+static const int32_t PID_PATIENT_KI = 200;
+static const int32_t PID_PATIENT_KD = 110;
+static const int32_t PID_PATIENT_INTEGRAL_MAX = 1000;
+static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
 
 /// Increase target pressure by an offset (in mmH2O) for safety, to avoid going below the target
 /// pressure
@@ -159,9 +160,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
  * @name Blower
  */
 ///@{
-#define MIN_BLOWER_SPEED 950u
+#define MIN_BLOWER_SPEED 300u
 #define MAX_BLOWER_SPEED 1800u
-#define DEFAULT_BLOWER_SPEED 1300u
+#define DEFAULT_BLOWER_SPEED 900u
 ///@}
 
 /**
@@ -193,8 +194,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 /// Number of characters per line
 #define SCREEN_LINE_LENGTH 20
 
-/// Period between screen updates in hundredth of second
-#define LCD_UPDATE_PERIOD 30u
+/// Period between screen updates in microsecond. Should be a multiple of
+/// PCONTROLLER_COMPUTE_PERIOD_US
+#define LCD_UPDATE_PERIOD_US 300000u
 
 /// Period between screen resets in minutes
 #define LCD_RESET_PERIOD 5
