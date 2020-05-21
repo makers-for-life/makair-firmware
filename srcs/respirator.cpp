@@ -55,6 +55,7 @@ int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
+uint32_t tick;
 
 #if HARDWARE_VERSION == 2
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
@@ -88,7 +89,7 @@ void waitForInMs(uint16_t ms) {
 uint32_t lastpControllerComputeDate;
 
 void setup(void) {
-    DBG_DO(Serial.begin(115200);)
+    Serial.begin(115200);
     DBG_DO(Serial.println("Booting the system...");)
 
 #if HARDWARE_VERSION == 2
@@ -317,15 +318,65 @@ void loop(void) {
         bool shouldRun = activationController.isRunning();
 
         if (shouldRun) {
+            displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
+                                      pController.peep());
             pController.initRespiratoryCycle();
+            tick = 0;
+        } else {
+            uint32_t currentDate = micros();
+            uint32_t diff = (currentDate - lastpControllerComputeDate);  
+            if (diff >= PCONTROLLER_COMPUTE_PERIOD_US) {
+                lastpControllerComputeDate = currentDate;
+
+                digitalWrite(PIN_LED_START, LED_START_INACTIVE);
+                blower.stop();
+                // When stopped, open the valves
+                pController.reachSafetyPosition();
+                // Stop alarms related to breathing cycle
+                alarmController.notDetectedAlarm(RCM_SW_1);
+                alarmController.notDetectedAlarm(RCM_SW_2);
+                alarmController.notDetectedAlarm(RCM_SW_3);
+                alarmController.notDetectedAlarm(RCM_SW_14);
+                alarmController.notDetectedAlarm(RCM_SW_15);
+                alarmController.notDetectedAlarm(RCM_SW_18);
+                alarmController.notDetectedAlarm(RCM_SW_19);
+
+                //Run alarms
+                alarmController.runAlarmEffects(tick);
+
+                // Check if some buttons have been pushed
+                keyboardLoop();
+
+                // Check if battery state has changed
+                batteryLoop(pController.cycleNumber());
+
+                // Display relevant information
+                
+                displayCurrentPressure(pController.pressure(),
+                                       pController.cyclesPerMinuteCommand());
+
+                displayCurrentSettings(pController.maxPeakPressureCommand(),
+                                       pController.maxPlateauPressureCommand(),
+                                       pController.minPeepCommand());
+                displayMachineStopped();
+            
+
+#if HARDWARE_VERSION == 2
+                //TODO TICK
+                if ((tick % 10u) == 0u) {
+                    sendStoppedMessage();
+                }
+#endif
+            tick++;
+            }
         }
+
+        IWatchdog.reload();
 
         /********************************************/
         // START THE RESPIRATORY CYCLE
         /********************************************/
-        uint32_t tick = 0;
-
-        while (tick < pController.tickPerCycle()) {
+        while (shouldRun && tick < pController.tickPerCycle()  && (!pController.trigger() || !ENABLE_PRESSURE_TRIGGER) ) {
             uint32_t pressure = readPressureSensor(tick, pressureOffset);
 
             uint32_t currentDate = micros();
@@ -345,29 +396,10 @@ void loop(void) {
 
                     // Perform the pressure control
                     pController.compute(tick);
-                } else {
-                    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-                    blower.stop();
-                    // When stopped, open the valves
-                    servoBlower.open();
-                    servoBlower.execute();
-                    servoPatient.open();
-                    servoPatient.execute();
-                    // Stop alarms related to breathing cycle
-                    alarmController.notDetectedAlarm(RCM_SW_1);
-                    alarmController.notDetectedAlarm(RCM_SW_2);
-                    alarmController.notDetectedAlarm(RCM_SW_3);
-                    alarmController.notDetectedAlarm(RCM_SW_14);
-                    alarmController.notDetectedAlarm(RCM_SW_15);
-                    alarmController.notDetectedAlarm(RCM_SW_18);
-                    alarmController.notDetectedAlarm(RCM_SW_19);
+                } 
 
-#if HARDWARE_VERSION == 2
-                    if ((tick % 10u) == 0u) {
-                        sendStoppedMessage();
-                    }
-#endif
-                }
+                activationController.refreshState();
+                shouldRun = activationController.isRunning();
 
                 // Check if some buttons have been pushed
                 keyboardLoop();
@@ -385,6 +417,7 @@ void loop(void) {
                                            pController.minPeepCommand());
                 }
 
+                // Buzz alarm if needed
                 alarmController.runAlarmEffects(tick);
 
                 // next tick
@@ -407,16 +440,9 @@ void loop(void) {
         DBG_DO(Serial.println(cyclesBeforeScreenReset);)
         if (cyclesBeforeScreenReset <= 0) {
             DBG_DO(Serial.println("resetting LCD screen");)
-            resetScreen();
-            clearAlarmDisplayCache();
+            //resetScreen(); TODO
+            //clearAlarmDisplayCache();TODO
             cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
-        }
-
-        if (shouldRun) {
-            displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                      pController.peep());
-        } else {
-            displayMachineStopped();
         }
     }
 }

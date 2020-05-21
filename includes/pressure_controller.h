@@ -154,6 +154,11 @@ class PressureController {
     /// Get the patient's Pressure Valve instance
     inline const PressureValve& patient_valve() const { return m_patient_valve; }
 
+    /// Get the boolean : inspiratory triggered or not?
+    inline const bool trigger() const { return m_trigger; } 
+
+    /// Get the value of the inspiratory pressure triggered
+    inline const int16_t pressureTrigger() const { return m_pressureTrigger; }
     /**
      * Input the real duration since the last pressure controller computation
      *
@@ -272,6 +277,10 @@ class PressureController {
 
     /// Measured pressure
     uint16_t m_pressure;
+
+    // Pressure trigger value
+    int16_t m_pressureTrigger;
+
 
     /// Inhalation last Pressre
     uint16_t m_inhalationLastPressure;
@@ -411,6 +420,9 @@ class PressureController {
 
     // Tick index, given by the main loop
     uint16_t m_tick;
+
+    /// Is inspiratory triggered or not
+    bool m_trigger;
 };
 
 // INITIALISATION =============================================================
