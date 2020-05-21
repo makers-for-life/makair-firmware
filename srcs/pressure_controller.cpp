@@ -428,8 +428,8 @@ void PressureController::onPlateauPressureIncrease() {
     m_maxPlateauPressureCommand =
         min(m_maxPlateauPressureCommand, static_cast<uint16_t>(CONST_MAX_PLATEAU_PRESSURE));
 
-    if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand){
-      m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
+    if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand) {
+        m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
     }
 }
 
@@ -441,8 +441,8 @@ void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     m_maxPeakPressureCommand =
         max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
 
-    if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand){
-      m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
+    if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
+        m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
     }
 }
 
@@ -503,10 +503,10 @@ void PressureController::plateau() {
     m_blower_valve.open(pidBlower(m_pressureCommand, m_pressure, m_dt));
     m_squarePlateauSum += m_pressure;
     m_squarePlateauCount += 1u;
-    if (m_pressure > m_peakPressure){
-      m_peakPressure = m_pressure;
-      m_squarePlateauCount = 0;
-      m_squarePlateauSum = 0;
+    if (m_pressure > m_peakPressure) {
+        m_peakPressure = m_pressure;
+        m_squarePlateauCount = 0;
+        m_squarePlateauSum = 0;
     }
 #else
     m_blower_valve.close();
@@ -516,8 +516,6 @@ void PressureController::plateau() {
 
     // Close the air stream towards the patient's lungs
     m_patient_valve.close();
-
-    
 }
 
 void PressureController::exhale() {
