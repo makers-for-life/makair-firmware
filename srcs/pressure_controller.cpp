@@ -76,7 +76,8 @@ PressureController::PressureController()
       m_tick(0),
       lastPatientAperture(0),
       m_trigger(false),
-      m_pressureTrigger(-20),
+      m_pressureTrigger(0),
+      m_isPeepDetected(false),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -141,7 +142,8 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_tick(0),
       lastPatientAperture(0),
       m_trigger(false),
-      m_pressureTrigger(-20),
+      m_pressureTrigger(0),
+      m_isPeepDetected(false),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -199,6 +201,8 @@ void PressureController::initRespiratoryCycle() {
     computeTickParameters();
 
     m_trigger = false;
+
+    m_isPeepDetected = false;
 
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
 
@@ -539,11 +543,27 @@ void PressureController::exhale() {
     // Open the valve so the patient can exhale outside
     m_patient_valve.open(pidPatient(m_pressureCommand, m_pressure, m_dt));
 
-    // Update the PEEP
-    m_peep = m_pressure;
+    // Compute the PEEP pressure
+    uint16_t minValue = m_lastPressureValues[0u];
+    uint16_t maxValue = m_lastPressureValues[0u];
+    uint16_t totalValues = m_lastPressureValues[0u];
+    for (uint8_t index = 1u; index < MAX_PRESSURE_SAMPLES; index++) {
+        minValue = min(minValue, m_lastPressureValues[index]);
+        maxValue = max(maxValue, m_lastPressureValues[index]);
+        totalValues += m_lastPressureValues[index];
+    }
+
+    if ((maxValue - minValue < 5) && abs(m_pressure- m_minPeepCommand)<30){
+      m_isPeepDetected = true;
+      m_peep = totalValues / MAX_PRESSURE_SAMPLES;
+    }
+
+    if (!m_isPeepDetected) {
+      m_peep = m_pressure;
+    }
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    if (ENABLE_PRESSURE_TRIGGER){
+    if (ENABLE_PRESSURE_TRIGGER && m_isPeepDetected){
       if (m_pressure < m_pressureCommand + m_pressureTrigger && m_peakPressure >100){
         m_trigger = true;
       } 

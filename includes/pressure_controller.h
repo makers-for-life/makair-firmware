@@ -423,6 +423,9 @@ class PressureController {
 
     /// Is inspiratory triggered or not
     bool m_trigger;
+
+    /// Is peep pressure detected in the cycle
+    bool m_isPeepDetected;
 };
 
 // INITIALISATION =============================================================
