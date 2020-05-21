@@ -461,8 +461,8 @@ void PressureController::updatePhase(uint16_t p_tick) {
         m_phase = CyclePhases::INHALATION;
 
 #if VALVE_TYPE == VT_FAULHABER
-        /* -5 mmH2O is added to prevent plateau not detected in case the pressure is almost reached.
-         This is mandatory to help the blower regulation to converge */
+        // -5 mmH2O is added to prevent peak pressure not reached in case the pressure is almost
+        // reached. This is mandatory to help the blower regulation to converge
         uint16_t pressureToTest = m_maxPeakPressureCommand - 5u;
 #else
         uint16_t pressureToTest = m_maxPeakPressureCommand;
