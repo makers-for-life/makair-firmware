@@ -34,6 +34,11 @@ static byte deviceId[12];  // 3 * 32 bits = 96 bits
 
 #define FIRST_BYTE (uint8_t)0xFF
 
+#define HEADER_SIZE 2
+static const uint8_t header[HEADER_SIZE] = {0x03, 0x0C};
+#define FOOTER_SIZE 2
+static const uint8_t footer[FOOTER_SIZE] = {0x30, 0xC0};
+
 /**
  * Convert a u16 so that it can be sent through serial
  *
@@ -126,6 +131,7 @@ void sendBootMessage() {
 #if HARDWARE_VERSION == 2
     uint8_t value128 = 128u;
 
+    Serial6.write(header, HEADER_SIZE);
     Serial6.write("B:");
     Serial6.write((uint8_t)1u);
 
@@ -145,12 +151,14 @@ void sendBootMessage() {
     Serial6.write(value128);
 
     Serial6.print("\n");
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
 void sendStoppedMessage() {
 #if HARDWARE_VERSION == 2
+    Serial6.write(header, HEADER_SIZE);
     Serial6.write("O:");
     Serial6.write((uint8_t)1u);
 
@@ -165,6 +173,7 @@ void sendStoppedMessage() {
     Serial6.write(systick, 8);
 
     Serial6.print("\n");
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
@@ -199,6 +208,7 @@ void sendDataSnapshot(uint16_t centileValue,
         phaseValue = 0u;
     }
 
+    Serial6.write(header, HEADER_SIZE);
     Serial6.write("D:");
     Serial6.write((uint8_t)1u);
 
@@ -235,6 +245,7 @@ void sendDataSnapshot(uint16_t centileValue,
     Serial6.print("\t");
     Serial6.write(batteryLevel);
     Serial6.print("\n");
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
@@ -270,6 +281,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
         }
     }
 
+    Serial6.write(header, HEADER_SIZE);
     Serial6.write("S:");
     Serial6.write((uint8_t)1u);
 
@@ -327,6 +339,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(volume, 2);
 
     Serial6.print("\n");
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
@@ -385,6 +398,7 @@ void sendAlarmTrap(uint16_t centileValue,
         alarmPriorityValue = 0u;  // 00000000
     }
 
+    Serial6.write(header, HEADER_SIZE);
     Serial6.write("T:");
     Serial6.write((uint8_t)1u);
 
@@ -446,6 +460,7 @@ void sendAlarmTrap(uint16_t centileValue,
     Serial6.write(cyclesSinceTrigger, 4);
 
     Serial6.print("\n");
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
