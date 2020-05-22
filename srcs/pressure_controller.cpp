@@ -267,7 +267,7 @@ void PressureController::endRespiratoryCycle() {
     uint16_t telemetryVolume =
         ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
 #else
-    uint16_t telemetryVolume = 0u;
+    uint16_t telemetryVolume = UINT16_MAX;
 #endif
 
     sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_maxPeakPressureCommand),
