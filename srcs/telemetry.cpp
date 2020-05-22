@@ -18,6 +18,7 @@
 #if HARDWARE_VERSION == 2
 #include "Arduino.h"
 #include "LL/stm32yyxx_ll_utils.h"
+#include "CRC32.h"
 #endif
 
 /// Internals
@@ -159,20 +160,33 @@ void sendBootMessage() {
 void sendStoppedMessage() {
 #if HARDWARE_VERSION == 2
     Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
     Serial6.write("O:");
+    crc32.update("O:", 2);
     Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
     Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
     Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
     Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
