@@ -23,6 +23,7 @@
 #include "../includes/pressure_valve.h"
 #if HARDWARE_VERSION == 2
 #include "../includes/battery.h"
+#include "../includes/mass_flow_meter.h"
 #include "../includes/telemetry.h"
 #endif
 
@@ -121,6 +122,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_pressureCommand(0),
       blowerIntegral(0),
       blowerLastError(0),
+      // cppcheck-suppress misra-c2012-12.3
       patientIntegral(0),
       lastBlowerAperture(0),
       patientLastError(0),
@@ -260,11 +262,19 @@ void PressureController::endRespiratoryCycle() {
         plateauPressureToDisplay = 0;
     }
 
+#ifdef MASS_FLOW_METER
+    int32_t volume = MFM_read_milliliters(true);
+    uint16_t telemetryVolume =
+        ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
+#else
+    uint16_t telemetryVolume = UINT16_MAX;
+#endif
+
     sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_maxPeakPressureCommand),
                              mmH2OtoCmH2O(m_maxPlateauPressureCommand),
                              mmH2OtoCmH2O(m_minPeepCommand), m_cyclesPerMinuteCommand,
                              m_peakPressure, plateauPressureToDisplay, m_peep,
-                             m_alarmController->triggeredAlarms());
+                             m_alarmController->triggeredAlarms(), telemetryVolume);
 #endif
 }
 
@@ -300,6 +310,9 @@ void PressureController::compute(uint16_t p_tick) {
     case CycleSubPhases::HOLD_INSPIRATION: {
         plateau();
         m_inhalationLastPressure = m_pressure;
+#ifdef MASS_FLOW_METER
+        MFM_reset();
+#endif
         break;
     }
     case CycleSubPhases::EXHALE:

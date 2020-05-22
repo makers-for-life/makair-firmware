@@ -247,7 +247,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPeakPressureValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
-                              uint8_t currentAlarmCodes[ALARMS_SIZE]) {
+                              uint8_t currentAlarmCodes[ALARMS_SIZE],
+                              uint16_t volumeValue) {
 #if HARDWARE_VERSION == 1
     (void)cycleValue;
     (void)peakCommand;
@@ -258,6 +259,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     (void)previousPlateauPressureValue;
     (void)previousPeepPressureValue;
     (void)currentAlarmCodes;
+    (void)volumeValue;
 #elif HARDWARE_VERSION == 2
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
@@ -317,6 +319,12 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
 
     Serial6.write(currentAlarmSize);
     Serial6.write(currentAlarmCodes, currentAlarmSize);
+
+    Serial6.print("\t");
+
+    byte volume[2];  // 16 bits
+    toBytes16(volume, volumeValue);
+    Serial6.write(volume, 2);
 
     Serial6.print("\n");
 #endif

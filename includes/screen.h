@@ -44,6 +44,14 @@ void resetScreen();
 void displayCurrentPressure(uint16_t pressure, uint16_t cyclesPerMinute);
 
 /**
+ * Display the current injected air volume
+ *
+ * @param volumeMassFlow      The number of liter breathed in this cycle
+ * @param cyclesPerMinute     Next desired number of cycles per minute
+ */
+void displayCurrentVolume(int32_t volumeMassFlow, uint16_t cyclesPerMinute);
+
+/**
  * Display the current settings
  *
  * @param peakPressureMax      PeakPressureMax [mmH2O]
