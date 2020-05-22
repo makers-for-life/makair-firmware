@@ -320,29 +320,40 @@ $(document).ready(function(){initNavTree('parameters_8h_source.html',''); initRe
 <div class="line"><a name="l00290"></a><span class="lineno"><a class="line" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">  290</a></span>&#160;<span class="preprocessor">#define PIN_ESC_BLOWER D5  // PB4 / TIM3_CH1</span></div>
 <div class="line"><a name="l00291"></a><span class="lineno"><a class="line" href="parameters_8h.html#aa78cdbbd159fcb3df64764fd5cbfc232">  291</a></span>&#160;<span class="preprocessor">#define TIM_CHANNEL_ESC_BLOWER 1</span></div>
 <div class="line"><a name="l00292"></a><span class="lineno"><a class="line" href="parameters_8h.html#a57aecd78099a5a92e57cf20db38002d4">  292</a></span>&#160;<span class="preprocessor">#define PIN_BATTERY A2</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno"><a class="line" href="parameters_8h.html#adb925a5f9d18b6b2bc2b80357d94e5a1">  293</a></span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#define PIN_PRESSURE_SENSOR A1</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">#define PIN_BUZZER D13     // PA5</span></div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#define PIN_ESC_BLOWER D2  // PA10 / TIM1_CH3</span></div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">#define TIM_CHANNEL_ESC_BLOWER 3</span></div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="preprocessor">#define PIN_TEMP_BLOWER A4  // PC1</span></div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="preprocessor">#define PIN_BATTERY A2</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="preprocessor">#define PIN_TELEMETRY_SERIAL_RX PA12</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="preprocessor">#define PIN_TELEMETRY_SERIAL_TX PA11</span></div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno"><a class="line" href="parameters_8h.html#adb925a5f9d18b6b2bc2b80357d94e5a1">  293</a></span>&#160;<span class="preprocessor">#ifdef MASS_FLOW_METER</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#error &quot;Hardware v1 cannot support any kind of mass flow meter sensor&quot;</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">#define PIN_PRESSURE_SENSOR A1</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="preprocessor">#define PIN_BUZZER D13     // PA5</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="preprocessor">#define PIN_ESC_BLOWER D2  // PA10 / TIM1_CH3</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="preprocessor">#define TIM_CHANNEL_ESC_BLOWER 3</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="preprocessor">#define PIN_TEMP_BLOWER A4  // PC1</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="preprocessor">#define PIN_BATTERY A2</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="preprocessor">#define PIN_TELEMETRY_SERIAL_RX PA12</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">#define PIN_TELEMETRY_SERIAL_TX PA11</span></div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_MIN_PRESSURE 20u         // RCM-SW-2 + RCM-SW-19</span></div>
-<div class="line"><a name="l00312"></a><span class="lineno"><a class="line" href="parameters_8h.html#a52ce94bf17c8c2f3595ffe623247d89a">  312</a></span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_MAX_PRESSURE 800u        // RCM-SW-18</span></div>
-<div class="line"><a name="l00313"></a><span class="lineno"><a class="line" href="parameters_8h.html#a896208fffdc13aef1b9fed9e2e769407">  313</a></span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_DIFFERENCE_PERCENT 20u   // RCM-SW-1 + RCM-SW-14</span></div>
-<div class="line"><a name="l00314"></a><span class="lineno"><a class="line" href="parameters_8h.html#a17b278faa2d18f90512d448cb1005a73">  314</a></span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_DIFFERENCE_PRESSURE 20u  // RCM-SW-3 + RCM-SW-15</span></div>
-<div class="line"><a name="l00315"></a><span class="lineno"><a class="line" href="parameters_8h.html#a3a48f441e0d36ed09913e312d33b2168">  315</a></span>&#160; </div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment">// Preprocessor checks</span></div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="preprocessor">#if VALVE_TYPE == VT_FAULHABER &amp;&amp; HARDWARE_VERSION == 1</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="preprocessor">#error &quot;Faulhaber can only be driven with hardware v2&quot;</span></div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="preprocessor">#ifdef MASS_FLOW_METER</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="preprocessor">#define MASS_FLOW_TIMER TIM10</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="preprocessor">#define MASS_FLOW_CHANNEL 1</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="preprocessor">#define PIN_I2C_SDA PB9</span></div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="preprocessor">#define PIN_I2C_SCL PB8</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="preprocessor">#define MFM_ANALOG_INPUT A3</span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_MIN_PRESSURE 20u         // RCM-SW-2 + RCM-SW-19</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno"><a class="line" href="parameters_8h.html#a52ce94bf17c8c2f3595ffe623247d89a">  325</a></span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_MAX_PRESSURE 800u        // RCM-SW-18</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno"><a class="line" href="parameters_8h.html#a896208fffdc13aef1b9fed9e2e769407">  326</a></span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_DIFFERENCE_PERCENT 20u   // RCM-SW-1 + RCM-SW-14</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno"><a class="line" href="parameters_8h.html#a17b278faa2d18f90512d448cb1005a73">  327</a></span>&#160;<span class="preprocessor">#define ALARM_THRESHOLD_DIFFERENCE_PRESSURE 20u  // RCM-SW-3 + RCM-SW-15</span></div>
+<div class="line"><a name="l00328"></a><span class="lineno"><a class="line" href="parameters_8h.html#a3a48f441e0d36ed09913e312d33b2168">  328</a></span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="comment">// Preprocessor checks</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="preprocessor">#if VALVE_TYPE == VT_FAULHABER &amp;&amp; HARDWARE_VERSION == 1</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="preprocessor">#error &quot;Faulhaber can only be driven with hardware v2&quot;</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aparameters_8h_html_ad08aea28cd34e73f975c734a43b20bdc"><div class="ttname"><a href="parameters_8h.html#ad08aea28cd34e73f975c734a43b20bdc">PID_PATIENT_KD</a></div><div class="ttdeci">static const int32_t PID_PATIENT_KD</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00086">parameters.h:86</a></div></div>
