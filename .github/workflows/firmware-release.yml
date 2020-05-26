@@ -157,7 +157,7 @@ jobs:
           arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
           mkdir -p dist/
           VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-production.bin "dist/respirator-production-HW3-FAULHABER-$VERSION-$GITHUB_SHA.bin"
+          cp output/respirator-production.bin "dist/respirator-production-HW3-FAULHABER-MASSFLOWMETER-$VERSION-$GITHUB_SHA.bin"
 
       - name: Archive binaries
         uses: actions/upload-artifact@v1
