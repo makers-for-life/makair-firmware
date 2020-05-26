@@ -179,7 +179,7 @@ void PressureController::setup() {
 
     m_pressureTrigger = -30;
 
-    m_triggerModeEnabled = true;  // TODO REMOVE
+    m_triggerModeEnabled = true;
 
     m_plateauDurationMs = DEFAULT_PLATEAU_DURATION_MS;
 }
