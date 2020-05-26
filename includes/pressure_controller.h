@@ -155,7 +155,7 @@ class PressureController {
     inline const PressureValve& patient_valve() const { return m_patient_valve; }
 
     /// Get the boolean : inspiratory triggered or not?
-    inline const bool triggered() const { return m_triggered; } 
+    inline const bool triggered() const { return m_triggered; }
 
     /// Get the value of the inspiratory pressure triggered
     inline const int16_t pressureTrigger() const { return m_pressureTrigger; }
