@@ -62,4 +62,5 @@ uint16_t Blower::getSpeed() const { return m_speed; }
 void Blower::stop() {
     actuator->setCaptureCompare(timerChannel, BlowerSpeed2MicroSeconds(0), MICROSEC_COMPARE_FORMAT);
     m_stopped = true;
+    m_speed = DEFAULT_BLOWER_SPEED;
 }

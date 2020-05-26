@@ -25,23 +25,23 @@
 #if SIMULATION == 1
 
 // Dummy function to read pressure during simulation
-int16_t readPressureSensor(uint16_t centiSec, int16_t pressureOffset) {
+int16_t readPressureSensor(uint16_t tick, int16_t pressureOffset) {
     (void)pressureOffset;
-    if (centiSec < uint16_t(10)) {
+    if (tick < uint16_t(10)) {
         return 350;
-    } else if (centiSec < uint16_t(15)) {
+    } else if (tick < uint16_t(15)) {
         return 400;
-    } else if (centiSec < uint16_t(30)) {
+    } else if (tick < uint16_t(30)) {
         return 600;
-    } else if (centiSec < uint16_t(45)) {
+    } else if (tick < uint16_t(45)) {
         return 700;
-    } else if (centiSec < uint16_t(60)) {
+    } else if (tick < uint16_t(60)) {
         return 500;
-    } else if (centiSec < uint16_t(100)) {
+    } else if (tick < uint16_t(100)) {
         return 300;
-    } else if (centiSec < 200) {
+    } else if (tick < 200) {
         return 110;
-    } else if (centiSec < 250) {
+    } else if (tick < 250) {
         return 90;
     } else {
         return 70;
@@ -49,8 +49,8 @@ int16_t readPressureSensor(uint16_t centiSec, int16_t pressureOffset) {
 }
 #else
 
-int16_t readPressureSensor(uint16_t centiSec, int16_t pressureOffset) {
-    (void)centiSec;
+int16_t readPressureSensor(uint16_t tick, int16_t pressureOffset) {
+    (void)tick;
     int16_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - pressureOffset;
     return max(int16_t(0), withOffset);
 }

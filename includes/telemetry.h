@@ -40,7 +40,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPeakPressureValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
-                              uint8_t currentAlarmCodes[ALARMS_SIZE]);
+                              uint8_t currentAlarmCodes[ALARMS_SIZE],
+                              uint16_t volumeValue);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
