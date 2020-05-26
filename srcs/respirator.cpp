@@ -148,6 +148,12 @@ void setup(void) {
     blower.setup();
     blower_pointer = &blower;
 
+// Turn on the raspberry power
+#if HARDWARE_VERSION == 3
+    pinMode(PIN_ENABLE_PWR_RASP, OUTPUT);
+    digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
+#endif
+
 // Activate test mode if a service button is pressed. The end of line test mode cannot be
 // activated later on.
 #if HARDWARE_VERSION == 2
