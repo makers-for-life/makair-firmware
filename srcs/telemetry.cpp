@@ -17,6 +17,7 @@
 // Externals
 #if HARDWARE_VERSION == 2
 #include "Arduino.h"
+#include "CRC32.h"
 #include "LL/stm32yyxx_ll_utils.h"
 #endif
 
@@ -33,6 +34,11 @@ static byte deviceId[12];  // 3 * 32 bits = 96 bits
 // FUNCTIONS ==================================================================
 
 #define FIRST_BYTE (uint8_t)0xFF
+
+#define HEADER_SIZE 2
+static const uint8_t header[HEADER_SIZE] = {0x03, 0x0C};
+#define FOOTER_SIZE 2
+static const uint8_t footer[FOOTER_SIZE] = {0x30, 0xC0};
 
 /**
  * Convert a u16 so that it can be sent through serial
@@ -126,45 +132,82 @@ void sendBootMessage() {
 #if HARDWARE_VERSION == 2
     uint8_t value128 = 128u;
 
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
     Serial6.write("B:");
+    crc32.update("B:", 2);
     Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
     Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
     Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(MODE);
+    crc32.update(static_cast<uint8_t>(MODE));
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(value128);
+    crc32.update(value128);
 
     Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
 void sendStoppedMessage() {
 #if HARDWARE_VERSION == 2
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
     Serial6.write("O:");
+    crc32.update("O:", 2);
     Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
     Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
     Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
     Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
@@ -199,42 +242,81 @@ void sendDataSnapshot(uint16_t centileValue,
         phaseValue = 0u;
     }
 
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
     Serial6.write("D:");
+    crc32.update("D:", 2);
     Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
     Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
     Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte centile[2];  // 16 bits
     toBytes16(centile, centileValue);
     Serial6.write(centile, 2);
+    crc32.update(centile, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte pressure[2];  // 16 bits
     toBytes16(pressure, pressureValue);
     Serial6.write(pressure, 2);
+    crc32.update(pressure, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(phaseValue);
+    crc32.update(phaseValue);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(blowerValvePosition);
+    crc32.update(blowerValvePosition);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(patientValvePosition);
+    crc32.update(patientValvePosition);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(blowerRpm);
+    crc32.update(blowerRpm);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(batteryLevel);
+    crc32.update(batteryLevel);
+
     Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
@@ -270,63 +352,107 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
         }
     }
 
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
     Serial6.write("S:");
+    crc32.update("S:", 2);
     Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
     Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
     Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte cycle[4];  // 32 bits
     toBytes32(cycle, cycleValue);
     Serial6.write(cycle, 4);
+    crc32.update(cycle, 4);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(peakCommand);
+    crc32.update(peakCommand);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(plateauCommand);
+    crc32.update(plateauCommand);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(peepCommand);
+    crc32.update(peepCommand);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(cpmCommand);
+    crc32.update(cpmCommand);
+
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte previousPeakPressure[2];  // 16 bits
     toBytes16(previousPeakPressure, previousPeakPressureValue);
     Serial6.write(previousPeakPressure, 2);
+    crc32.update(previousPeakPressure, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte previousPlateauPressure[2];  // 16 bits
     toBytes16(previousPlateauPressure, previousPlateauPressureValue);
     Serial6.write(previousPlateauPressure, 2);
+    crc32.update(previousPlateauPressure, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte previousPeepPressure[2];  // 16 bits
     toBytes16(previousPeepPressure, previousPeepPressureValue);
     Serial6.write(previousPeepPressure, 2);
+    crc32.update(previousPeepPressure, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     Serial6.write(currentAlarmSize);
+    crc32.update(currentAlarmSize);
     Serial6.write(currentAlarmCodes, currentAlarmSize);
+    crc32.update(currentAlarmCodes, currentAlarmSize);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte volume[2];  // 16 bits
     toBytes16(volume, volumeValue);
     Serial6.write(volume, 2);
+    crc32.update(volume, 2);
 
     Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
@@ -385,67 +511,107 @@ void sendAlarmTrap(uint16_t centileValue,
         alarmPriorityValue = 0u;  // 00000000
     }
 
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
     Serial6.write("T:");
+    crc32.update("T:", 2);
     Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
     Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
     Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte centile[2];  // 16 bits
     toBytes16(centile, centileValue);
     Serial6.write(centile, 2);
+    crc32.update(centile, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte pressure[2];  // 16 bits
     toBytes16(pressure, pressureValue);
     Serial6.write(pressure, 2);
+    crc32.update(pressure, 2);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     Serial6.write(phaseValue);
+    crc32.update(phaseValue);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte cycle[4];  // 32 bits
     toBytes32(cycle, cycleValue);
     Serial6.write(cycle, 4);
+    crc32.update(cycle, 4);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(alarmCode);
-    Serial6.print("\t");
-    Serial6.write(alarmPriorityValue);
-    Serial6.print("\t");
-    Serial6.write(triggeredValue);
+    crc32.update(alarmCode);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmPriorityValue);
+    crc32.update(alarmPriorityValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggeredValue);
+    crc32.update(triggeredValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte expected[4];  // 32 bits
     toBytes32(expected, expectedValue);
     Serial6.write(expected, 4);
+    crc32.update(expected, 4);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte measured[4];  // 32 bits
     toBytes32(measured, measuredValue);
     Serial6.write(measured, 4);
+    crc32.update(measured, 4);
 
     Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte cyclesSinceTrigger[4];  // 32 bits
     toBytes32(cyclesSinceTrigger, cyclesSinceTriggerValue);
     Serial6.write(cyclesSinceTrigger, 4);
+    crc32.update(cyclesSinceTrigger, 4);
 
     Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
 #endif
 }
 
