@@ -44,6 +44,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t volumeValue);
 
 /// Send a "alarm trap" message
+// cppcheck-suppress misra-c2012-2.7
 void sendAlarmTrap(uint16_t centileValue,
                    uint16_t pressureValue,
                    CyclePhases phase,

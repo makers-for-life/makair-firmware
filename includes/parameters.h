@@ -356,7 +356,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_BATTERY PA4
 #define PIN_TELEMETRY_SERIAL_RX PB3  // UART1
 #define PIN_TELEMETRY_SERIAL_TX PA9  // UART1
-#define PIN_ENABLE_PWR_RASP PD2 //Raspberry Power Supply. High is OFF.
+#define PIN_ENABLE_PWR_RASP PD2      // Raspberry Power Supply. High is OFF.
+#define PWR_RASP_ACTIVE LOW
+#define PWR_RASP_INACTIVE HIGH
 /**
  * Define the flow meter parameters for Hardware v3
  */
