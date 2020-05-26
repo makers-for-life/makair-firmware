@@ -48,6 +48,8 @@
 
 #define MAX_PRESSURE_OFFSET 40
 
+#define DEFAULT_PLATEAU_DURATION_MS 1000u
+
 ///@}
 
 /**

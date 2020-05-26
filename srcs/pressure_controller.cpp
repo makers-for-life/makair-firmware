@@ -76,6 +76,11 @@ PressureController::PressureController()
       blowerPIDFastMode(true),
       m_tick(0),
       lastPatientAperture(0),
+      m_triggered(false),
+      m_pressureTrigger(0),
+      m_isPeepDetected(false),
+      m_triggerModeEnabled(false),
+      m_plateauDurationMs(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -140,6 +145,11 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       blowerPIDFastMode(true),
       m_tick(0),
       lastPatientAperture(0),
+      m_triggered(false),
+      m_pressureTrigger(0),
+      m_isPeepDetected(false),
+      m_triggerModeEnabled(false),
+      m_plateauDurationMs(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -166,6 +176,12 @@ void PressureController::setup() {
     m_peep = 0;
 
     m_cycleNb = 0;
+
+    m_pressureTrigger = -30;
+
+    m_triggerModeEnabled = true;  // TODO REMOVE
+
+    m_plateauDurationMs = DEFAULT_PLATEAU_DURATION_MS;
 }
 
 void PressureController::initRespiratoryCycle() {
@@ -182,7 +198,7 @@ void PressureController::initRespiratoryCycle() {
     blowerLastError = m_maxPeakPressureCommand - m_minPeepCommand;
 #endif
 
-    // Reset PID integrals
+    // Reset PID values
     blowerIntegral = 0;
     patientIntegral = 0;
     patientLastError = m_minPeepCommand - m_maxPlateauPressureCommand;
@@ -193,6 +209,10 @@ void PressureController::initRespiratoryCycle() {
 
     m_peakPressure = 0;
     computeTickParameters();
+
+    m_triggered = false;
+
+    m_isPeepDetected = false;
 
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
 
@@ -431,6 +451,7 @@ void PressureController::onPlateauPressureDecrease() {
     if (m_maxPlateauPressureCommand < CONST_MIN_PLATEAU_PRESSURE) {
         m_maxPlateauPressureCommand = CONST_MIN_PLATEAU_PRESSURE;
     }
+    m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
 }
 
 void PressureController::onPlateauPressureIncrease() {
@@ -444,29 +465,32 @@ void PressureController::onPlateauPressureIncrease() {
     if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand) {
         m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
     }
+    m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
 }
 
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     DBG_DO(Serial.println("Peak Pressure --");)
 
-    m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
+    /*m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
 
     m_maxPeakPressureCommand =
         max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
 
     if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
         m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
-    }
+    }*/
+    m_pressureTrigger--;  // TODO REMOVE
 }
 
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     DBG_DO(Serial.println("Peak Pressure ++");)
 
-    m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
+    /*m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
 
     if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
         m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
-    }
+    }*/
+    m_pressureTrigger++;  // TODO REMOVE
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
@@ -538,8 +562,37 @@ void PressureController::exhale() {
     // Open the valve so the patient can exhale outside
     m_patient_valve.open(pidPatient(m_pressureCommand, m_pressure, m_dt));
 
-    // Update the PEEP
+    // Compute the PEEP pressure
     m_peep = m_pressure;
+    uint16_t minValue = m_lastPressureValues[0u];
+    uint16_t maxValue = m_lastPressureValues[0u];
+    uint16_t totalValues = m_lastPressureValues[0u];
+    for (uint8_t index = 1u; index < MAX_PRESSURE_SAMPLES; index++) {
+        minValue = min(minValue, m_lastPressureValues[index]);
+        maxValue = max(maxValue, m_lastPressureValues[index]);
+        totalValues += m_lastPressureValues[index];
+    }
+
+    // Update peep value, when pressure is stable and close to target pressure.
+    if ((maxValue - minValue < 5) && abs(m_pressure - m_minPeepCommand) < 30) {
+        m_isPeepDetected = true;
+        m_peep = totalValues / MAX_PRESSURE_SAMPLES;
+    }
+
+    // This case is usefull when peep is never detected during the cycle
+    if (!m_isPeepDetected) {
+        m_peep = m_pressure;
+    }
+
+    // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
+    if (m_triggerModeEnabled && m_isPeepDetected) {
+        // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
+        // machine.
+        if (m_pressure < m_pressureCommand + m_pressureTrigger
+            && m_peakPressure > CONST_MIN_PEAK_PRESSURE) {
+            m_triggered = true;
+        }
+    }
 }
 
 void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
@@ -554,7 +607,8 @@ void PressureController::updateOnlyBlower() {
     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
         // Only case for decreasing the blower : ramping is too fast or overshooting is too high
         if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
-            || (peakDelta > 15 && m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))) {
+            || (peakDelta > 15 && m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))
+            || peakDelta > 25) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
         } else {
@@ -687,9 +741,15 @@ void PressureController::updatePeakPressure() {
 
 void PressureController::computeTickParameters() {
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinute;
-    // Inhalation = 1/3 of the cycle duration,
-    // Exhalation = 2/3 of the cycle duration
-    m_tickPerInhalation = m_ticksPerCycle / 3u;
+    if (!m_triggerModeEnabled) {
+        // Inhalation = 1/3 of the cycle duration,
+        // Exhalation = 2/3 of the cycle duration
+        m_tickPerInhalation = m_ticksPerCycle / 3u;
+    } else {
+        // In trigger mode, the plateau duration is set by the user
+        m_tickPerInhalation =
+            (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
+    }
 }
 
 void PressureController::executeCommands() {
