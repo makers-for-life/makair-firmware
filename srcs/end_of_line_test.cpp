@@ -26,7 +26,7 @@ HardwareTimer* eolTimer;
 
 EolTest::EolTest() {
     testActive = 0;
-    ::eolTimer = new HardwareTimer(TIM10);
+    ::eolTimer = new HardwareTimer(TIM9);
 }
 
 // cppcheck-suppress unusedFunction
