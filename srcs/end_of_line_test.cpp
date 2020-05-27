@@ -368,7 +368,7 @@ void millisecondTimerEOL(HardwareTimer*) {
             }
         }
 
-        if (eolMSCount > 900000u) {
+        if (eolMSCount > 300000u) {
             if ((MaxPressureValue - MinPressureValue) < 25) {
                 eolstep = END_SUCCESS;
                 eolMSCount = 0;
