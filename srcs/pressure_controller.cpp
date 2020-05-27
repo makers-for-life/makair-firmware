@@ -49,6 +49,7 @@ PressureController::PressureController()
       m_peakPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_plateauPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_peep(CONST_INITIAL_ZERO_PRESSURE),
+      m_measuredCyclesPerMinute(INITIAL_CYCLE_NUMBER),
       m_phase(CyclePhases::INHALATION),
       m_subPhase(CycleSubPhases::INSPIRATION),
       m_blower(nullptr),
@@ -81,6 +82,8 @@ PressureController::PressureController()
       m_isPeepDetected(false),
       m_triggerModeEnabled(false),
       m_plateauDurationMs(0),
+      m_lastBreathPeriodsMsIndex(0),
+      m_lastEndOfRespirationDateMs(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -89,6 +92,9 @@ PressureController::PressureController()
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
         m_lastBlowerPIDError[i] = 0u;
         m_lastPatientPIDError[i] = 0u;
+    }
+    for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
+        m_lastBreathPeriodsMs[i] = 1000 * 60 / m_cyclesPerMinute;
     }
 }
 
@@ -114,6 +120,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_peakPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_plateauPressure(CONST_INITIAL_ZERO_PRESSURE),
       m_peep(CONST_INITIAL_ZERO_PRESSURE),
+      m_measuredCyclesPerMinute(INITIAL_CYCLE_NUMBER),
       m_phase(CyclePhases::INHALATION),
       m_subPhase(CycleSubPhases::INSPIRATION),
       // cppcheck-suppress misra-c2012-12.3
@@ -150,6 +157,8 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_isPeepDetected(false),
       m_triggerModeEnabled(false),
       m_plateauDurationMs(0),
+      m_lastBreathPeriodsMsIndex(0),
+      m_lastEndOfRespirationDateMs(0),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -158,6 +167,9 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
         m_lastBlowerPIDError[i] = 0u;
         m_lastPatientPIDError[i] = 0u;
+    }
+    for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
+        m_lastBreathPeriodsMs[i] = 1000 * 60 / m_cyclesPerMinute;
     }
 }
 
@@ -182,6 +194,8 @@ void PressureController::setup() {
     m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
 
     m_plateauDurationMs = DEFAULT_PLATEAU_DURATION_MS;
+
+    m_lastEndOfRespirationDateMs = 0;
 }
 
 void PressureController::initRespiratoryCycle() {
@@ -257,6 +271,23 @@ void PressureController::initRespiratoryCycle() {
 }
 
 void PressureController::endRespiratoryCycle() {
+    // Caculate the respiratory rate. Average on NUMBER_OF_BREATH_PERIOD breaths
+    // Don't calculate the first one at starting of the machine
+    if (m_lastEndOfRespirationDateMs != 0) {
+        m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] = millis() - m_lastEndOfRespirationDateMs;
+        m_lastBreathPeriodsMsIndex++;
+        if (m_lastBreathPeriodsMsIndex >= NUMBER_OF_BREATH_PERIOD) {
+            m_lastBreathPeriodsMsIndex = 0;
+        }
+        uint32_t sum = 0;
+        for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
+            sum += m_lastBreathPeriodsMs[i];
+        }
+        // add +(sum-1) to round instead of truncate
+        m_measuredCyclesPerMinute = (NUMBER_OF_BREATH_PERIOD * 60 * 1000 + (sum - 1)) / sum;
+    }
+    m_lastEndOfRespirationDateMs = millis();
+
 #if VALVE_TYPE == VT_FAULHABER
     // In square plateau mode, plateau pressure is the mean pressure during plateau
     m_plateauPressure = m_squarePlateauSum / m_squarePlateauCount;

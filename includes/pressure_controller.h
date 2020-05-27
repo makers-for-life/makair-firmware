@@ -124,10 +124,10 @@ class PressureController {
     /// Get the number of past cycles since the beginning
     inline uint32_t cycleNumber() const { return m_cycleNb; }
 
-    /// Get the duration of a cycle in hundredth of second
+    /// Get the duration of a cycle in ticks
     inline uint16_t tickPerCycle() const { return m_ticksPerCycle; }
 
-    /// Get the duration of an inhalation in hundredth of second
+    /// Get the duration of an inhalation in ticks
     inline uint32_t tickPerInhalation() const { return m_tickPerInhalation; }
 
     /// Get the current measured pressure
@@ -141,6 +141,9 @@ class PressureController {
 
     /// Get the PEEP
     inline int16_t peep() const { return m_peep; }
+
+    /// Get the measured cpm
+    inline uint32_t measuredCyclesPerMinute() const { return m_measuredCyclesPerMinute; }
 
     /// Get the current cycle phase
     inline CyclePhases phase() const { return m_phase; }
@@ -432,6 +435,18 @@ class PressureController {
 
     /// Duration of the plateau. Use this setting in trigger mode
     uint32_t m_plateauDurationMs;
+
+    /// The lasts cycle periods in ms. Used to compute m_measuredCyclesPerMinute
+    uint32_t m_lastBreathPeriodsMs[NUMBER_OF_BREATH_PERIOD];
+
+    /// Index for the lastBreathPeriodsMs array
+    uint32_t m_lastBreathPeriodsMsIndex;
+
+    /// Measured number of cycle per minute.
+    uint32_t m_measuredCyclesPerMinute;
+
+    /// Date of the last end of a respiration
+    uint32_t m_lastEndOfRespirationDateMs;
 };
 
 // INITIALISATION =============================================================
