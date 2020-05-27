@@ -179,7 +179,7 @@ void PressureController::setup() {
 
     m_pressureTrigger = -30;
 
-    m_triggerModeEnabled = true;
+    m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
 
     m_plateauDurationMs = DEFAULT_PLATEAU_DURATION_MS;
 }
@@ -448,7 +448,10 @@ void PressureController::onPlateauPressureDecrease() {
     if (m_maxPlateauPressureCommand < CONST_MIN_PLATEAU_PRESSURE) {
         m_maxPlateauPressureCommand = CONST_MIN_PLATEAU_PRESSURE;
     }
-    m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
+    if (m_triggerModeEnabled) {
+        m_maxPeakPressureCommand =
+            m_maxPlateauPressureCommand;  // TODO REMOVE when trigger is in UI
+    }
 }
 
 void PressureController::onPlateauPressureIncrease() {
@@ -462,32 +465,41 @@ void PressureController::onPlateauPressureIncrease() {
     if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand) {
         m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
     }
-    m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
+    if (m_triggerModeEnabled) {
+        m_maxPeakPressureCommand =
+            m_maxPlateauPressureCommand;  // TODO REMOVE when trigger is in UI
+    }
 }
 
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     DBG_DO(Serial.println("Peak Pressure --");)
 
-    /*m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
+    if (!m_triggerModeEnabled) {  // TODO REMOVE when trigger is in UI
+        m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
 
-    m_maxPeakPressureCommand =
-        max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
+        m_maxPeakPressureCommand =
+            max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
 
-    if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
-        m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
-    }*/
-    m_pressureTrigger--;  // TODO REMOVE
+        if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
+            m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
+        }
+    } else {
+        m_pressureTrigger--;  // TODO REMOVE when trigger is in UI
+    }
 }
 
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     DBG_DO(Serial.println("Peak Pressure ++");)
 
-    /*m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
+    if (!m_triggerModeEnabled) {  // TODO REMOVE when trigger is in UI
+        m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
 
-    if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
-        m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
-    }*/
-    m_pressureTrigger++;  // TODO REMOVE
+        if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
+            m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
+        }
+    } else {
+        m_pressureTrigger++;  // TODO REMOVE
+    }
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
