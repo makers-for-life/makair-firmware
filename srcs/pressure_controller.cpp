@@ -560,7 +560,6 @@ void PressureController::exhale() {
     m_patient_valve.open(pidPatient(m_pressureCommand, m_pressure, m_dt));
 
     // Compute the PEEP pressure
-    m_peep = m_pressure;
     uint16_t minValue = m_lastPressureValues[0u];
     uint16_t maxValue = m_lastPressureValues[0u];
     uint16_t totalValues = m_lastPressureValues[0u];
