@@ -50,6 +50,8 @@
 
 #define DEFAULT_PLATEAU_DURATION_MS 1000u
 
+#define TRIGGER_MODE_ENABLED_BY_DEFAULT false
+
 ///@}
 
 /**
