@@ -154,10 +154,10 @@ class PressureController {
     /// Get the patient's Pressure Valve instance
     inline const PressureValve& patient_valve() const { return m_patient_valve; }
 
-    /// Get the boolean : inspiratory triggered or not?
+    /// Get the state of the inspiratory trigger
     inline const bool triggered() const { return m_triggered; }
 
-    /// Get the value of the inspiratory pressure triggered
+    /// Get the value of the inspiratory trigger pressure
     inline const int16_t pressureTrigger() const { return m_pressureTrigger; }
 
     /**
@@ -427,10 +427,10 @@ class PressureController {
     /// Is inspiratory triggered or not
     bool m_triggered;
 
-    /// Is peep pressure detected in the cycle
+    /// Is PEEP pressure detected in the cycle
     bool m_isPeepDetected;
 
-    /// Duration of the plateau. Use this setting in triger mode
+    /// Duration of the plateau. Use this setting in trigger mode
     uint32_t m_plateauDurationMs;
 };
 

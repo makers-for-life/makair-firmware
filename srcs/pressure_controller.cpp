@@ -450,7 +450,7 @@ void PressureController::onPlateauPressureDecrease() {
     }
     if (m_triggerModeEnabled) {
         m_maxPeakPressureCommand =
-            m_maxPlateauPressureCommand;  // TODO REMOVE when trigger is in UI
+            m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
     }
 }
 
@@ -467,14 +467,14 @@ void PressureController::onPlateauPressureIncrease() {
     }
     if (m_triggerModeEnabled) {
         m_maxPeakPressureCommand =
-            m_maxPlateauPressureCommand;  // TODO REMOVE when trigger is in UI
+            m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
     }
 }
 
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     DBG_DO(Serial.println("Peak Pressure --");)
 
-    if (!m_triggerModeEnabled) {  // TODO REMOVE when trigger is in UI
+    if (!m_triggerModeEnabled) {  // TODO: remove when trigger is in UI
         m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
 
         m_maxPeakPressureCommand =
@@ -484,21 +484,21 @@ void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
             m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
         }
     } else {
-        m_pressureTrigger--;  // TODO REMOVE when trigger is in UI
+        m_pressureTrigger--;  // TODO: remove when trigger is in UI
     }
 }
 
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     DBG_DO(Serial.println("Peak Pressure ++");)
 
-    if (!m_triggerModeEnabled) {  // TODO REMOVE when trigger is in UI
+    if (!m_triggerModeEnabled) {  // TODO: remove when trigger is in UI
         m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
 
         if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
             m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
         }
     } else {
-        m_pressureTrigger++;  // TODO REMOVE
+        m_pressureTrigger++;  // TODO: remove
     }
 }
 
@@ -581,13 +581,13 @@ void PressureController::exhale() {
         totalValues += m_lastPressureValues[index];
     }
 
-    // Update peep value, when pressure is stable and close to target pressure.
+    // Update PEEP value, when pressure is stable and close to target pressure
     if (((maxValue - minValue) < 5u) && (abs(m_pressure - m_minPeepCommand) < 30)) {
         m_isPeepDetected = true;
         m_peep = totalValues / MAX_PRESSURE_SAMPLES;
     }
 
-    // This case is usefull when peep is never detected during the cycle
+    // This case is usefull when PEEP is never detected during the cycle
     if (!m_isPeepDetected) {
         m_peep = m_pressure;
     }
