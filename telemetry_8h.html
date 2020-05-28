@@ -148,7 +148,7 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="telemetry_8cpp_source.html#l00123">123</a> of file <a class="el" href="telemetry_8cpp_source.html">telemetry.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                         {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    Serial6.begin(115200);</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    computeDeviceId();</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif</span></div>
@@ -293,7 +293,7 @@ Functions</h2></td></tr>
 <div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    (void)expectedValue;</div>
 <div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    (void)measuredValue;</div>
 <div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    (void)cyclesSinceTriggerValue;</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    uint8_t phaseValue;</div>
 <div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    <span class="keywordflow">if</span> ((phase == <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">CyclePhases::INHALATION</a>) &amp;&amp; (subPhase == <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31">CycleSubPhases::INSPIRATION</a>)) {</div>
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        phaseValue = 17u;  <span class="comment">// 00010001</span></div>
@@ -450,7 +450,7 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="telemetry_8cpp_source.html#l00131">131</a> of file <a class="el" href="telemetry_8cpp_source.html">telemetry.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                       {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    uint8_t value128 = 128u;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    Serial6.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
@@ -574,7 +574,7 @@ Functions</h2></td></tr>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    (void)patientValvePosition;</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    (void)blowerRpm;</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    (void)batteryLevel;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    uint8_t phaseValue;</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keywordflow">if</span> ((phase == <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">CyclePhases::INHALATION</a>) &amp;&amp; (subPhase == <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31">CycleSubPhases::INSPIRATION</a>)) {</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        phaseValue = 17u;  <span class="comment">// 00010001</span></div>
@@ -756,7 +756,7 @@ Functions</h2></td></tr>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    (void)previousPeepPressureValue;</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    (void)currentAlarmCodes;</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    (void)volumeValue;</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    uint8_t currentAlarmSize = 0;</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; <a class="code" href="alarm__controller_8h.html#ac4707f9e5fae63a64a4fe478080ee79a">ALARMS_SIZE</a>; i++) {</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        <span class="keywordflow">if</span> (currentAlarmCodes[i] != 0u) {</div>
@@ -892,7 +892,7 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="telemetry_8cpp_source.html#l00180">180</a> of file <a class="el" href="telemetry_8cpp_source.html">telemetry.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                          {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    Serial6.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    CRC32 crc32;</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    Serial6.write(<span class="stringliteral">&quot;O:&quot;</span>);</div>

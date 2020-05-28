@@ -29,6 +29,7 @@ var end__of__line__test_8cpp =
     [ "millisecondTimerEOL", "end__of__line__test_8cpp.html#afb1e26d3cf34b14ea036ff101538a380", null ],
     [ "clockEOLTimer", "end__of__line__test_8cpp.html#a6c6e5dbf03b41a3d62470655b4e52db8", null ],
     [ "eolFail", "end__of__line__test_8cpp.html#a51a119fd37edb6e709401caa859ea2a4", null ],
+    [ "eolMatrixCurrentColumn", "end__of__line__test_8cpp.html#a913a3ffc0ca0e51922c529cc51b32686", null ],
     [ "eolMSCount", "end__of__line__test_8cpp.html#a8b570916cf53445bc0e780588f6eaac3", null ],
     [ "eolScreenBuffer", "end__of__line__test_8cpp.html#a0007cdfffe75894c53c6e9c96f3a2a03", null ],
     [ "eolstep", "end__of__line__test_8cpp.html#a49ed43fa5547dd90fd4555d62d3b3b2c", null ],

@@ -183,7 +183,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                              {</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 1</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a>, OUTPUT);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    TIM_TypeDef* Buzzer_Timer_Number = <span class="keyword">reinterpret_cast&lt;</span>TIM_TypeDef*<span class="keyword">&gt;</span>(</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        pinmap_peripheral(digitalPinToPinName(<a class="code" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a>), PinMap_PWM));</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    Buzzer_Timer_Channel =</div>
@@ -224,7 +224,7 @@ Functions</h2></td></tr>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 1</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Hardware 1: the buzzer has an internal oscillator. Just switch on the output.</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a>, LOW);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    Buzzer_Hw_Timer-&gt;pause();</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
@@ -254,7 +254,7 @@ Functions</h2></td></tr>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#if HARDWARE_VERSION == 1</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// Hardware 1: the buzzer has an internal oscillator. Just switch on the output.</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a>, HIGH);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    Buzzer_Hw_Timer-&gt;resume();</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
@@ -263,7 +263,7 @@ Functions</h2></td></tr>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aparameters_8h_html_a192ea8eaba652d29bfc08675edebb6a2"><div class="ttname"><a href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a></div><div class="ttdeci">#define PIN_BUZZER</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00290">parameters.h:289</a></div></div>
+<div class="ttc" id="aparameters_8h_html_a192ea8eaba652d29bfc08675edebb6a2"><div class="ttname"><a href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a></div><div class="ttdeci">#define PIN_BUZZER</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00325">parameters.h:324</a></div></div>
 <div class="ttc" id="abuzzer__control_8cpp_html_a94700ae2369cfd1bea1b654d9cb6f71f"><div class="ttname"><a href="buzzer__control_8cpp.html#a94700ae2369cfd1bea1b654d9cb6f71f">PERIOD_BUZZER_US</a></div><div class="ttdeci">#define PERIOD_BUZZER_US</div><div class="ttdef"><b>Definition:</b> <a href="buzzer__control_8cpp_source.html#l00017">buzzer_control.cpp:16</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

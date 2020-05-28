@@ -109,30 +109,31 @@ $(document).ready(function(){initNavTree('telemetry_8h_source.html',''); initRes
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                      uint8_t blowerRpm,</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                      uint8_t batteryLevel);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8h.html#af6e7f2062bbaf43927d1aac19271658c">sendMachineStateSnapshot</a>(uint32_t cycleValue,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                              uint8_t peakCommand,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                              uint8_t plateauCommand,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                              uint8_t peepCommand,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                              uint8_t cpmCommand,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                              uint16_t previousPeakPressureValue,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                              uint16_t previousPlateauPressureValue,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                              uint16_t previousPeepPressureValue,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                              uint8_t currentAlarmCodes[<a class="code" href="alarm__controller_8h.html#ac4707f9e5fae63a64a4fe478080ee79a">ALARMS_SIZE</a>],</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                              uint16_t volumeValue);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8h.html#a8a52623e1220d2f1941f75525a3cbe16">sendAlarmTrap</a>(uint16_t centileValue,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                   uint16_t <a class="code" href="end__of__line__test_8cpp.html#a51ebb0a43f32a3a424b25f92ef66a740">pressureValue</a>,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                   <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88">CyclePhases</a> phase,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                   <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94">CycleSubPhases</a> subPhase,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                   uint32_t cycleValue,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                   uint8_t alarmCode,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                   <a class="code" href="alarm_8h.html#a5a708c1a1540361a33a030066a7c321b">AlarmPriority</a> alarmPriority,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                   <span class="keywordtype">bool</span> triggered,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                   uint32_t expectedValue,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                   uint32_t measuredValue,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                   uint32_t cyclesSinceTriggerValue);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;uint8_t <a class="code" href="telemetry_8h.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a>(uint16_t pressure);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// cppcheck-suppress misra-c2012-2.7</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8h.html#af6e7f2062bbaf43927d1aac19271658c">sendMachineStateSnapshot</a>(uint32_t cycleValue,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                              uint8_t peakCommand,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                              uint8_t plateauCommand,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                              uint8_t peepCommand,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                              uint8_t cpmCommand,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                              uint16_t previousPeakPressureValue,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                              uint16_t previousPlateauPressureValue,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                              uint16_t previousPeepPressureValue,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                              uint8_t currentAlarmCodes[<a class="code" href="alarm__controller_8h.html#ac4707f9e5fae63a64a4fe478080ee79a">ALARMS_SIZE</a>],</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                              uint16_t volumeValue);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8h.html#a8a52623e1220d2f1941f75525a3cbe16">sendAlarmTrap</a>(uint16_t centileValue,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                   uint16_t <a class="code" href="end__of__line__test_8cpp.html#a51ebb0a43f32a3a424b25f92ef66a740">pressureValue</a>,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                   <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88">CyclePhases</a> phase,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                   <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94">CycleSubPhases</a> subPhase,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                   uint32_t cycleValue,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                   uint8_t alarmCode,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                   <a class="code" href="alarm_8h.html#a5a708c1a1540361a33a030066a7c321b">AlarmPriority</a> alarmPriority,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                   <span class="keywordtype">bool</span> triggered,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                   uint32_t expectedValue,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                   uint32_t measuredValue,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                   uint32_t cyclesSinceTriggerValue);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;uint8_t <a class="code" href="telemetry_8h.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a>(uint16_t pressure);</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aend__of__line__test_8cpp_html_a51ebb0a43f32a3a424b25f92ef66a740"><div class="ttname"><a href="end__of__line__test_8cpp.html#a51ebb0a43f32a3a424b25f92ef66a740">pressureValue</a></div><div class="ttdeci">int32_t pressureValue</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00022">end_of_line_test.cpp:22</a></div></div>
