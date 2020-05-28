@@ -48,7 +48,7 @@ uint32_t clock10ms = 0;
 volatile uint32_t clock1s = 0;
 
 // define a normal 20 cycle per minute breathing rate with a 1:2 ratio, for tests.
-#define CYCLEPERMINUTE 20
+#define CYCLEPERMINUTE 27
 #define CYCLEPERIOD (6000 / CYCLEPERMINUTE)
 #define INHALATION (CYCLEPERIOD / 3)
 uint32_t cycleClock = 0;
@@ -68,6 +68,7 @@ void Test_Timer_Callback(HardwareTimer*) {
     cycleClock++;
     if (cycleClock == CYCLEPERIOD) {
         cycleClock = 0;
+        cycleCount++;
     }
     if (cycleClock < INHALATION) {
         // inhalation phase, valves opened
@@ -196,8 +197,11 @@ void loop(void) {
     snprintf(buffer, sizeof(buffer), "%d days %02d:%02d:%02d", days, hours, minute, second);
     screen.print(buffer);
     screen.setCursor(0, 2);
-    screen.print("cycle per minute=");
+    screen.print("cpm=");
     screen.print(CYCLEPERMINUTE);
+    screen.print(" ");
+    screen.print(cycleCount);
+    screen.print("cycles");
     screen.setCursor(0, 3);
     screen.print("blower power=");
     screen.print(blowerPowerPercent);
