@@ -338,7 +338,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_TELEMETRY_SERIAL_RX PA12
 #define PIN_TELEMETRY_SERIAL_TX PA11
 /**
- * Define the flow meter parameters for Hardware v2 
+ * Define the flow meter parameters for Hardware v2
  */
 #ifdef MASS_FLOW_METER
 #define MASS_FLOW_TIMER TIM10
@@ -387,5 +387,5 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 // Preprocessor checks
 #if VALVE_TYPE == VT_FAULHABER && HARDWARE_VERSION == 1
-#error "Faulhaber can only be driven with hardware v2"
+#error "Faulhaber can only be driven with hardware v2+"
 #endif

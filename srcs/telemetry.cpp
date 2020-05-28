@@ -341,8 +341,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     (void)previousPlateauPressureValue;
     (void)previousPeepPressureValue;
     (void)currentAlarmCodes;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     (void)volumeValue;
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {

@@ -141,7 +141,7 @@ void initKeyboard() {
 }
 
 #if HARDWARE_VERSION == 3
-// current powered column of the matrix keyboard.
+// current powered column of the matrix keyboard
 uint16_t scanMatrixCurrentColumn = 1;
 uint16_t scanMatrixCounterC1R1 = 0;
 uint16_t scanMatrixCounterC1R2 = 0;

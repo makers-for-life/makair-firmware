@@ -233,7 +233,7 @@ void millisecondTimerEOL(HardwareTimer*) {
 #endif
 
 #if HARDWARE_VERSION == 3
-        // this buttons are in a matrix.
+        // this buttons are in a matrix
         if (1 == eolMatrixCurrentColumn) {
             // Increase counter for each column and row
             if (HIGH == digitalRead(PIN_IN_ROW1)) {
