@@ -136,6 +136,29 @@ jobs:
           VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
           cp output/respirator-integration-test.bin "dist/respirator-integration-test-HW1-$VERSION-$GITHUB_SHA.bin"
 
+      - name: Build production HW3
+        run: |
+          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 3/' includes/config.h
+          sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
+          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
+          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
+          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
+          mkdir -p dist/
+          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
+          cp output/respirator-production.bin "dist/respirator-production-HW3-FAULHABER-$VERSION-$GITHUB_SHA.bin"
+
+      - name: Build production HW3 with mass flow meter
+        run: |
+          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 3/' includes/config.h
+          sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
+          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
+          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
+          sed -Ei 's/\/\/ #define MASS_FLOW_METER/#define MASS_FLOW_METER/' includes/config.h
+          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
+          mkdir -p dist/
+          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
+          cp output/respirator-production.bin "dist/respirator-production-HW3-FAULHABER-MASSFLOWMETER-$VERSION-$GITHUB_SHA.bin"
+
       - name: Archive binaries
         uses: actions/upload-artifact@v1
         with:

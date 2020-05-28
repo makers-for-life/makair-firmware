@@ -32,6 +32,7 @@ void sendDataSnapshot(uint16_t centileValue,
                       uint8_t batteryLevel);
 
 /// Send a "machine state snapshot" message
+// cppcheck-suppress misra-c2012-2.7
 void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t peakCommand,
                               uint8_t plateauCommand,

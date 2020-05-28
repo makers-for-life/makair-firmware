@@ -15,7 +15,7 @@
 #include "../includes/telemetry.h"
 
 // Externals
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "Arduino.h"
 #include "CRC32.h"
 #include "LL/stm32yyxx_ll_utils.h"
@@ -26,7 +26,7 @@
 
 // GLOBAL ITEMS ==============================================================
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 /// The device ID to be joined with telemetry messages
 static byte deviceId[12];  // 3 * 32 bits = 96 bits
 #endif
@@ -85,7 +85,7 @@ void toBytes64(byte bytes[], uint64_t data) {
     bytes[7] = data & FIRST_BYTE;
 }
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 /**
  * Compute device ID
  *
@@ -121,7 +121,7 @@ uint64_t computeSystick(void) {
 
 // cppcheck-suppress unusedFunction
 void initTelemetry(void) {
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.begin(115200);
     computeDeviceId();
 #endif
@@ -129,7 +129,7 @@ void initTelemetry(void) {
 
 // cppcheck-suppress unusedFunction
 void sendBootMessage() {
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t value128 = 128u;
 
     Serial6.write(header, HEADER_SIZE);
@@ -178,7 +178,7 @@ void sendBootMessage() {
 
 // cppcheck-suppress unusedFunction
 void sendStoppedMessage() {
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
@@ -229,7 +229,7 @@ void sendDataSnapshot(uint16_t centileValue,
     (void)patientValvePosition;
     (void)blowerRpm;
     (void)batteryLevel;
-#elif HARDWARE_VERSION == 2
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t phaseValue;
     if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
         phaseValue = 17u;  // 00010001
@@ -342,7 +342,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     (void)previousPeepPressureValue;
     (void)currentAlarmCodes;
     (void)volumeValue;
-#elif HARDWARE_VERSION == 2
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -480,7 +480,7 @@ void sendAlarmTrap(uint16_t centileValue,
     (void)expectedValue;
     (void)measuredValue;
     (void)cyclesSinceTriggerValue;
-#elif HARDWARE_VERSION == 2
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t phaseValue;
     if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
         phaseValue = 17u;  // 00010001

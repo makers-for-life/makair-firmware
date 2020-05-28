@@ -19,7 +19,7 @@
 #include "Arduino.h"
 #include <IWatchdog.h>
 #include <LiquidCrystal.h>
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include <HardwareSerial.h>
 #endif
 
@@ -38,7 +38,7 @@
 #include "../includes/pressure_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "../includes/telemetry.h"
 #endif
 
@@ -57,7 +57,7 @@ uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 #endif
 
@@ -92,7 +92,7 @@ void setup(void) {
     DBG_DO(Serial.begin(115200);)
     DBG_DO(Serial.println("Booting the system...");)
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     initTelemetry();
     sendBootMessage();
 #endif
@@ -125,7 +125,7 @@ void setup(void) {
     blower = Blower(hardwareTimer3, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
     blower_pointer = &blower;
-#elif HARDWARE_VERSION == 2
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     // Timer for servos
     hardwareTimer3 = new HardwareTimer(TIM3);
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
@@ -148,13 +148,19 @@ void setup(void) {
     blower.setup();
     blower_pointer = &blower;
 
+// Turn on the raspberry power
+#if HARDWARE_VERSION == 3
+    pinMode(PIN_ENABLE_PWR_RASP, OUTPUT);
+    digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
+#endif
+
+// Activate test mode if a service button is pressed. The end of line test mode cannot be
+// activated later on.
+#if HARDWARE_VERSION == 2
     // Autotest inputs: one of the rear button should be pressed while booting, either the right
     // one or the left one
     pinMode(PA15, INPUT);
     pinMode(PB12, INPUT);
-
-    // Activate test mode if one of these buttons is pressed. The end of line test mode cannot be
-    // activated later on.
     if ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
         eolTest.activate();
         screen.clear();
@@ -163,6 +169,19 @@ void setup(void) {
             continue;
         }
     }
+#endif
+#if HARDWARE_VERSION == 3
+    // Autotest inputs: the service button on PB12, top right of the board's rear side
+    pinMode(PB12, INPUT);
+    if (HIGH == digitalRead(PB12)) {
+        eolTest.activate();
+        screen.clear();
+        screen.print("EOL Test Mode");
+        while (HIGH == digitalRead(PB12)) {
+            continue;
+        }
+    }
+#endif
 
 #endif
 
@@ -369,7 +388,7 @@ void loop(void) {
                     alarmController.notDetectedAlarm(RCM_SW_18);
                     alarmController.notDetectedAlarm(RCM_SW_19);
 
-#if HARDWARE_VERSION == 2
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
                     if ((tick % 10u) == 0u) {
                         sendStoppedMessage();
                     }
