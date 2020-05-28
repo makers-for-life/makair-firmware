@@ -69,6 +69,8 @@ int32_t mfmLastValue = 0;
 // Time to reset the sensor after I2C restart, in periods => 5 ms
 #define MFM_WAIT_RESET_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+#define MFM_RECOVERY_CLOCK_TOGGLES 64
+int32_t mfmResetRecoveryClockCounter = 0;
 
 // cppcheck-suppress misra-c2012-19.2 ; union correctly used
 union {
@@ -190,8 +192,28 @@ void MFM_Timer_Callback(HardwareTimer*) {
             Wire.write(0x02);
             Wire.endTransmission();*/
 #endif
+            mfmResetStateMachine--;
+            mfmResetRecoveryClockCounter = MFM_RECOVERY_CLOCK_TOGGLES;
         }
-        mfmResetStateMachine--;
+        // I2C sensor recovery procedure : If the sensor is stuck (SDA pulled low), toggle manually
+        // the clock MFM_RECOVERY_CLOCK_TOGGLES times, and then until SDA recovers.
+        if (mfmResetStateMachine < MFM_WAIT_RESET_PERIODS) {
+#if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
+    || MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
+            mfmResetRecoveryClockCounter--;
+            pinMode(PIN_I2C_SDA, INPUT);
+            pinMode(PIN_I2C_SCL, OUTPUT);
+            if (mfmResetRecoveryClockCounter > 0 || digitalRead(PIN_I2C_SDA) == LOW) {
+                digitalWrite(PIN_I2C_SCL, !digitalRead(PIN_I2C_SCL));
+            } else {
+                // set clock output high again, and exit this intermediate recovery state
+                digitalWrite(PIN_I2C_SCL, HIGH);
+                mfmResetStateMachine--;
+            }
+#else
+            mfmResetStateMachine--;
+#endif
+        }
 
         if (mfmResetStateMachine == 0) {
 // MFM_WAIT_RESET_PERIODS cycles later, try again to init the sensor
