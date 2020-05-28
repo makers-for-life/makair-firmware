@@ -26,7 +26,7 @@ HardwareTimer* eolTimer;
 
 EolTest::EolTest() {
     testActive = 0;
-    ::eolTimer = new HardwareTimer(TIM10);
+    ::eolTimer = new HardwareTimer(TIM9);
 }
 
 // cppcheck-suppress unusedFunction
@@ -415,7 +415,7 @@ void millisecondTimerEOL(HardwareTimer*) {
             }
         }
 
-        if (eolMSCount > 900000u) {
+        if (eolMSCount > 300000u) {
             if ((MaxPressureValue - MinPressureValue) < 25) {
                 eolstep = END_SUCCESS;
                 eolMSCount = 0;

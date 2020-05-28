@@ -351,7 +351,7 @@ void loop(void) {
         /********************************************/
         uint32_t tick = 0;
 
-        while (tick < pController.tickPerCycle()) {
+        while (tick < pController.tickPerCycle() && !pController.triggered()) {
             uint32_t pressure = readPressureSensor(tick, pressureOffset);
 
             uint32_t currentDate = micros();
