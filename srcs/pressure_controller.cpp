@@ -582,7 +582,7 @@ void PressureController::exhale() {
     }
 
     // Update peep value, when pressure is stable and close to target pressure.
-    if ((maxValue - minValue < 5) && abs(m_pressure - m_minPeepCommand) < 30) {
+    if (((maxValue - minValue) < 5u) && (abs(m_pressure - m_minPeepCommand) < 30)) {
         m_isPeepDetected = true;
         m_peep = totalValues / MAX_PRESSURE_SAMPLES;
     }
@@ -596,8 +596,8 @@ void PressureController::exhale() {
     if (m_triggerModeEnabled && m_isPeepDetected) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
-        if (m_pressure < m_pressureCommand + m_pressureTrigger
-            && m_peakPressure > CONST_MIN_PEAK_PRESSURE) {
+        if (static_cast<int32_t>(m_pressure) < (m_pressureCommand + m_pressureTrigger)
+            && (m_peakPressure > CONST_MIN_PEAK_PRESSURE)) {
             m_triggered = true;
         }
     }
