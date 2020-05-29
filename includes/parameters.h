@@ -117,6 +117,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 #define NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN 10u
 
+/// Number of periods used for calculating the respiratory rate
+#define NUMBER_OF_BREATH_PERIOD 3u
+
 ///@}
 
 /**
