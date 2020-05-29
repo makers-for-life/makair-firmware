@@ -94,7 +94,7 @@ PressureController::PressureController()
         m_lastPatientPIDError[i] = 0u;
     }
     for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
-        m_lastBreathPeriodsMs[i] = 1000 * 60 / m_cyclesPerMinute;
+        m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinute;
     }
 }
 
@@ -169,7 +169,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
         m_lastPatientPIDError[i] = 0u;
     }
     for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
-        m_lastBreathPeriodsMs[i] = 1000 * 60 / m_cyclesPerMinute;
+        m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinute;
     }
 }
 
@@ -271,9 +271,9 @@ void PressureController::initRespiratoryCycle() {
 }
 
 void PressureController::endRespiratoryCycle() {
-    // Caculate the respiratory rate. Average on NUMBER_OF_BREATH_PERIOD breaths
-    // Don't calculate the first one at starting of the machine
-    if (m_lastEndOfRespirationDateMs != 0) {
+    // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
+    // Don't calculate the first one (when starting up the machine)
+    if (m_lastEndOfRespirationDateMs != 0u) {
         m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] = millis() - m_lastEndOfRespirationDateMs;
         m_lastBreathPeriodsMsIndex++;
         if (m_lastBreathPeriodsMsIndex >= NUMBER_OF_BREATH_PERIOD) {
@@ -283,8 +283,8 @@ void PressureController::endRespiratoryCycle() {
         for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
             sum += m_lastBreathPeriodsMs[i];
         }
-        // add +(sum-1) to round instead of truncate
-        m_measuredCyclesPerMinute = (NUMBER_OF_BREATH_PERIOD * 60 * 1000 + (sum - 1)) / sum;
+        // Add "+(sum-1u)" to round instead of truncate
+        m_measuredCyclesPerMinute = (((NUMBER_OF_BREATH_PERIOD * 60u) * 1000u) + (sum - 1u)) / sum;
     }
     m_lastEndOfRespirationDateMs = millis();
 
