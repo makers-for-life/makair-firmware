@@ -37,6 +37,18 @@
  */
 #define RAW_VOLTAGE_ON_BATTERY_LOW 809u
 
+/**
+ * Below this value, the machine wont start
+ * Calculated by analogRead(PIN) * 0,0296484375 = 22 => 22 / 0,0296484375 = 742
+ */
+#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 742u
+
+/**
+ * Below this value, the machine will stop immediately
+ * Calculated by analogRead(PIN) * 0,0296484375 = 20 => 20 / 0,0296484375 = 675
+ */
+#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 675u
+
 /// Number of samples of the moving average
 #define BATTERY_MAX_SAMPLES 20u
 
@@ -78,3 +90,7 @@ uint32_t getBatteryLevel();
  * @return Battery level in volts x10
  */
 uint32_t getBatteryLevelX10();
+
+uint32_t isBatteryVeryLow();
+
+uint32_t isBatteryDeepDischarged();

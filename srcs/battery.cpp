@@ -35,7 +35,7 @@ void initBattery() {
 
     // Running this in setup avoids triggering alarms at startup
     for (uint8_t i = 0; i < BATTERY_MAX_SAMPLES; i++) {
-        batteryLoop(0);
+        updateBatterySample();
     }
 }
 
@@ -107,3 +107,11 @@ uint32_t getBatteryLevel() { return rawBatteryMeanVoltage * 0.0296484375; }
 
 // cppcheck-suppress unusedFunction
 uint32_t getBatteryLevelX10() { return rawBatteryMeanVoltage * (10.0 * 0.0296484375); }
+
+uint32_t isBatteryVeryLow() {
+    return rawBatteryMeanVoltage < RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD;
+}
+
+uint32_t isBatteryDeepDischarged() {
+    return rawBatteryMeanVoltage < RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD;
+}
