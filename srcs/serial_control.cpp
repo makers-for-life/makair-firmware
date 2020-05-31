@@ -58,6 +58,7 @@ uint32_t toU32(byte bytes[]) {
     return num;
 }
 
+// cppcheck-suppress unusedFunction
 void serialControlLoop() {
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     // We need to ensure we received the whole message
@@ -92,7 +93,8 @@ void serialControlLoop() {
                 if ((Serial6.read() != footer[0]) || (Serial6.read() != footer[1])) {
                     DBG_DO(Serial.println(
                         "Invalid footer for control message; discarding whole message"));
-                    // cppcheck-suppress misra-c2012-15.5; this is way more readable with early return
+                    // cppcheck-suppress misra-c2012-15.5; this is way more readable with early
+                    // return
                     return;
                 }
 
@@ -100,7 +102,8 @@ void serialControlLoop() {
                 if (expectedCRC != computedCRC.finalize()) {
                     DBG_DO(Serial.println(
                         "Invalid CRC for control message; discarding whole message"));
-                    // cppcheck-suppress misra-c2012-15.5; this is way more readable with early return
+                    // cppcheck-suppress misra-c2012-15.5; this is way more readable with early
+                    // return
                     return;
                 }
 
