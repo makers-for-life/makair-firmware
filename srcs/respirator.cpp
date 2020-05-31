@@ -39,6 +39,7 @@
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+#include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
 #endif
 
@@ -400,6 +401,11 @@ void loop(void) {
 
                 // Check if battery state has changed
                 batteryLoop(pController.cycleNumber());
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+                // Check serial input
+                serialControlLoop();
+#endif
 
                 // Display relevant information during the cycle
                 if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
