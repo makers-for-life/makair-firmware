@@ -31,14 +31,14 @@
 static byte deviceId[12];  // 3 * 32 bits = 96 bits
 #endif
 
-// FUNCTIONS ==================================================================
-
 #define FIRST_BYTE (uint8_t)0xFF
 
 #define HEADER_SIZE 2
 static const uint8_t header[HEADER_SIZE] = {0x03, 0x0C};
 #define FOOTER_SIZE 2
 static const uint8_t footer[FOOTER_SIZE] = {0x30, 0xC0};
+
+// FUNCTIONS ==================================================================
 
 /**
  * Convert a u16 so that it can be sent through serial
