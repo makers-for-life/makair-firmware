@@ -25,8 +25,6 @@
 
 // GLOBAL ITEMS ==============================================================
 
-// #define FIRST_BYTE (uint8_t)0xFF
-
 #define CONTROL_HEADER_SIZE 2
 static const uint8_t header[CONTROL_HEADER_SIZE] = {0x05, 0x0A};
 #define CONTROL_FOOTER_SIZE 2

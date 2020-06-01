@@ -451,6 +451,7 @@ void PressureController::onCycleIncrease() {
 #endif
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onCycleSet(uint16_t cpm) {
     if (cpm < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteCommand = CONST_MIN_CYCLE;
@@ -485,6 +486,7 @@ void PressureController::onPeepPressureIncrease() {
     }
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onPeepSet(uint16_t peep) {
     if (peep > CONST_MAX_PEEP_PRESSURE) {
         m_minPeepCommand = CONST_MAX_PEEP_PRESSURE;
@@ -530,6 +532,7 @@ void PressureController::onPlateauPressureIncrease() {
     }
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onPlateauPressureSet(uint16_t plateauPressure) {
     if (plateauPressure > CONST_MAX_PLATEAU_PRESSURE) {
         m_maxPlateauPressureCommand = CONST_MAX_PLATEAU_PRESSURE;
@@ -575,6 +578,7 @@ void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     }
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onPeakPressureSet(uint16_t peakPressure) {
     if (peakPressure > CONST_MAX_PEAK_PRESSURE) {
         m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
