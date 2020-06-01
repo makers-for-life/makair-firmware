@@ -80,17 +80,38 @@ class PressureController {
     /// Increase the desired number of cycles per minute
     void onCycleIncrease();
 
+    /**
+     * Set the desired number of cycles per minute
+     *
+     * @param cpm Desired number of cycle per minute
+     */
+    void onCycleSet(uint16_t cpm);
+
     /// Decrease the minimal PEEP desired
     void onPeepPressureDecrease();
 
     /// Increase the minimal PEEP desired
     void onPeepPressureIncrease();
 
+    /**
+     * Set the desired PEEP
+     *
+     * @param peep Desired PEEP in mmH2O
+     */
+    void onPeepSet(uint16_t peep);
+
     /// Decrease the desired plateau pressure
     void onPlateauPressureDecrease();
 
     /// Increase the desired plateau pressure
     void onPlateauPressureIncrease();
+
+    /**
+     * Set the desired plateau pressure
+     *
+     * @param plateauPressure Desired plateau pressure in mmH2O
+     */
+    void onPlateauPressureSet(uint16_t plateauPressure);
 
     /**
      * Decrease the desired peak pressure
@@ -105,6 +126,13 @@ class PressureController {
      * @param p_increment Positive value of increment
      */
     void onPeakPressureIncrease(uint8_t p_increment);
+
+    /**
+     * Set the desired peak pressure
+     *
+     * @param peakPressure Desired peak pressure in mmH2O
+     */
+    void onPeakPressureSet(uint16_t peakPressure);
 
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteCommand; }

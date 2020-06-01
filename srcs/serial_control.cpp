@@ -61,9 +61,11 @@ uint32_t toU32(byte bytes[]) {
 // cppcheck-suppress unusedFunction
 void serialControlLoop() {
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    // Let's note this current time to avoid blocking too long here
+    int time = millis();
+
     // We need to ensure we received the whole message
-    int availableBytes = Serial6.available();
-    if (availableBytes >= 11) {
+    while (((time + 2) >= millis()) && (Serial6.available() >= 11)) {
         // Let's check the first header byte
         if (Serial6.peek() == header[0]) {
             // If it is correct, we discard it and continue
@@ -93,18 +95,14 @@ void serialControlLoop() {
                 if ((Serial6.read() != footer[0]) || (Serial6.read() != footer[1])) {
                     DBG_DO(Serial.println(
                         "Invalid footer for control message; discarding whole message"));
-                    // cppcheck-suppress misra-c2012-15.5; this is way more readable with early
-                    // return
-                    return;
+                    continue;
                 }
 
                 // The computed CRC must be the same as the one included with the message
                 if (expectedCRC != computedCRC.finalize()) {
                     DBG_DO(Serial.println(
                         "Invalid CRC for control message; discarding whole message"));
-                    // cppcheck-suppress misra-c2012-15.5; this is way more readable with early
-                    // return
-                    return;
+                    continue;
                 }
 
                 DBG_DO({
@@ -114,6 +112,32 @@ void serialControlLoop() {
                     Serial.print(value);
                     Serial.println();
                 });
+
+                switch (setting) {
+                case 1:  // PeakPressure
+                    pController.onPeakPressureSet(value);
+                    break;
+
+                case 2:  // PlateauPressure
+                    pController.onPlateauPressureSet(value);
+                    break;
+
+                case 3:  // PEEP
+                    pController.onPeepSet(value);
+                    break;
+
+                case 4:  // CyclesPerMinute
+                    pController.onCycleSet(value);
+                    break;
+
+                default:
+                    DBG_DO({
+                        Serial.print("Unknown control setting: ");
+                        Serial.print(setting);
+                        Serial.println();
+                    });
+                    break;
+                }
             } else {
                 // This is not the begining of a message, let's discard it
                 (void)Serial6.read();

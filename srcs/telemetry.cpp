@@ -616,6 +616,58 @@ void sendAlarmTrap(uint16_t centileValue,
 }
 
 // cppcheck-suppress unusedFunction
+void sendControlAck(uint8_t setting, uint16_t valueValue) {
+#if HARDWARE_VERSION == 1
+    (void)setting;
+    (void)valueValue;
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("A:");
+    crc32.update("A:", 2);
+    Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(setting);
+    crc32.update(setting);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte value[2];  // 16 bits
+    toBytes16(value, valueValue);
+    Serial6.write(value, 2);
+    crc32.update(value, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
 uint8_t mmH2OtoCmH2O(uint16_t pressure) {
     uint8_t result;
     uint16_t lastDigit = pressure % 10u;

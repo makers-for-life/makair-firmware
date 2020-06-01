@@ -451,6 +451,20 @@ void PressureController::onCycleIncrease() {
 #endif
 }
 
+void PressureController::onCycleSet(uint16_t cpm) {
+    if (cpm < CONST_MIN_CYCLE) {
+        m_cyclesPerMinuteCommand = CONST_MIN_CYCLE;
+    } else if (cpm > CONST_MAX_CYCLE) {
+        m_cyclesPerMinuteCommand = CONST_MAX_CYCLE;
+    } else {
+        m_cyclesPerMinuteCommand = cpm;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(4, m_cyclesPerMinuteCommand);
+#endif
+}
+
 void PressureController::onPeepPressureDecrease() {
     DBG_DO(Serial.println("Peep Pressure --");)
 
@@ -469,6 +483,20 @@ void PressureController::onPeepPressureIncrease() {
     if (m_minPeepCommand > CONST_MAX_PEEP_PRESSURE) {
         m_minPeepCommand = CONST_MAX_PEEP_PRESSURE;
     }
+}
+
+void PressureController::onPeepSet(uint16_t peep) {
+    if (peep > CONST_MAX_PEEP_PRESSURE) {
+        m_minPeepCommand = CONST_MAX_PEEP_PRESSURE;
+    } else if (peep < CONST_MIN_PEEP_PRESSURE) {
+        m_minPeepCommand = CONST_MIN_PEEP_PRESSURE;
+    } else {
+        m_minPeepCommand = peep;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(3, m_minPeepCommand);
+#endif
 }
 
 void PressureController::onPlateauPressureDecrease() {
@@ -502,6 +530,20 @@ void PressureController::onPlateauPressureIncrease() {
     }
 }
 
+void PressureController::onPlateauPressureSet(uint16_t plateauPressure) {
+    if (plateauPressure > CONST_MAX_PLATEAU_PRESSURE) {
+        m_maxPlateauPressureCommand = CONST_MAX_PLATEAU_PRESSURE;
+    } else if (plateauPressure < CONST_MIN_PLATEAU_PRESSURE) {
+        m_maxPlateauPressureCommand = CONST_MIN_PLATEAU_PRESSURE;
+    } else {
+        m_maxPlateauPressureCommand = plateauPressure;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(2, m_maxPlateauPressureCommand);
+#endif
+}
+
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     DBG_DO(Serial.println("Peak Pressure --");)
 
@@ -531,6 +573,20 @@ void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     } else {
         m_pressureTrigger++;  // TODO: remove
     }
+}
+
+void PressureController::onPeakPressureSet(uint16_t peakPressure) {
+    if (peakPressure > CONST_MAX_PEAK_PRESSURE) {
+        m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
+    } else if (peakPressure < CONST_MIN_PEAK_PRESSURE) {
+        m_maxPeakPressureCommand = CONST_MIN_PEAK_PRESSURE;
+    } else {
+        m_maxPeakPressureCommand = peakPressure;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(1, m_maxPeakPressureCommand);
+#endif
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
