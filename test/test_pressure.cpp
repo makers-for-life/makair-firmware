@@ -5,11 +5,11 @@
  * @brief Unit tests for pressure.cpp
  *****************************************************************************/
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-
 #include <iostream>
 #include <vector>
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "../includes/pressure_utl.h"
 
