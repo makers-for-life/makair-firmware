@@ -325,7 +325,8 @@ void PressureController::endRespiratoryCycle() {
                              mmH2OtoCmH2O(m_maxPlateauPressureCommand),
                              mmH2OtoCmH2O(m_minPeepCommand), m_cyclesPerMinuteCommand,
                              m_peakPressure, plateauPressureToDisplay, m_peep,
-                             m_alarmController->triggeredAlarms(), telemetryVolume);
+                             m_alarmController->triggeredAlarms(), telemetryVolume, 20,
+                             m_triggerModeEnabled, m_pressureTrigger);
 #endif
 }
 

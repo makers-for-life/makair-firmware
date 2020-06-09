@@ -330,7 +330,10 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
                               uint8_t currentAlarmCodes[ALARMS_SIZE],
-                              uint16_t volumeValue) {
+                              uint16_t volumeValue,
+                              uint8_t expiratoryTerm,
+                              bool triggerEnabled,
+                              uint8_t triggerOffset) {
 #if HARDWARE_VERSION == 1
     (void)cycleValue;
     (void)peakCommand;
@@ -342,6 +345,9 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     (void)previousPeepPressureValue;
     (void)currentAlarmCodes;
     (void)volumeValue;
+    (void)expiratoryTerm;
+    (void)triggerEnabled;
+    (void)triggerOffset;
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
@@ -445,6 +451,24 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     toBytes16(volume, volumeValue);
     Serial6.write(volume, 2);
     crc32.update(volume, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTerm);
+    crc32.update(expiratoryTerm);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggerEnabled);
+    crc32.update(triggerEnabled);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggerOffset);
+    crc32.update(triggerOffset);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

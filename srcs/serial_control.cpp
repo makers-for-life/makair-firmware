@@ -128,6 +128,18 @@ void serialControlLoop() {
                     pController.onCycleSet(value);
                     break;
 
+                case 5:  // ExpiratoryTerm
+                    // TODO
+                    break;
+
+                case 6:  // TriggerEnabled
+                    // TODO
+                    break;
+
+                case 7:  // TriggerOffset
+                    // TODO
+                    break;
+
                 default:
                     DBG_DO({
                         Serial.print("Unknown control setting: ");
