@@ -436,6 +436,10 @@ void PressureController::onCycleDecrease() {
     if (m_cyclesPerMinuteCommand < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteCommand = CONST_MIN_CYCLE;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(4, m_cyclesPerMinuteCommand);
+#endif
 }
 
 void PressureController::onCycleIncrease() {
@@ -450,6 +454,9 @@ void PressureController::onCycleIncrease() {
         m_cyclesPerMinuteCommand = CONST_MAX_CYCLE;
     }
 
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(4, m_cyclesPerMinuteCommand);
+#endif
 #endif
 }
 
@@ -476,6 +483,10 @@ void PressureController::onPeepPressureDecrease() {
     if (m_minPeepCommand < CONST_MIN_PEEP_PRESSURE) {
         m_minPeepCommand = CONST_MIN_PEEP_PRESSURE;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(3, m_minPeepCommand);
+#endif
 }
 
 void PressureController::onPeepPressureIncrease() {
@@ -486,6 +497,10 @@ void PressureController::onPeepPressureIncrease() {
     if (m_minPeepCommand > CONST_MAX_PEEP_PRESSURE) {
         m_minPeepCommand = CONST_MAX_PEEP_PRESSURE;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(3, m_minPeepCommand);
+#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -515,6 +530,10 @@ void PressureController::onPlateauPressureDecrease() {
         m_maxPeakPressureCommand =
             m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(2, m_maxPlateauPressureCommand);
+#endif
 }
 
 void PressureController::onPlateauPressureIncrease() {
@@ -532,6 +551,10 @@ void PressureController::onPlateauPressureIncrease() {
         m_maxPeakPressureCommand =
             m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(2, m_maxPlateauPressureCommand);
+#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -564,6 +587,10 @@ void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     } else {
         m_pressureTrigger--;  // TODO: remove when trigger is in UI
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(1, m_maxPeakPressureCommand);
+#endif
 }
 
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
@@ -578,6 +605,10 @@ void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     } else {
         m_pressureTrigger++;  // TODO: remove
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(1, m_maxPeakPressureCommand);
+#endif
 }
 
 // cppcheck-suppress unusedFunction
