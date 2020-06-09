@@ -209,6 +209,7 @@ class PressureController {
     void updatePhase(uint16_t p_tick);
 
     /// Update peak pressure and blower ramp up
+    // cppcheck-suppress unusedPrivateFunction
     void updatePeakPressure();
 
     /// Perform the pressure control and compute the transistors commands during the inhalation
@@ -237,6 +238,7 @@ class PressureController {
      *
      * @param p_tick  Duration from the begining of the cycle in hundredth of second
      */
+    // cppcheck-suppress unusedPrivateFunction
     void computePlateau(uint16_t p_tick);
 
     /// Give the computed commands to actuators

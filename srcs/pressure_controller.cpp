@@ -395,6 +395,7 @@ void PressureController::compute(uint16_t p_tick) {
     executeCommands();
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::computePlateau(uint16_t p_tick) {
     uint16_t minValue = m_lastPressureValues[0u];
     uint16_t maxValue = m_lastPressureValues[0u];
@@ -707,8 +708,8 @@ void PressureController::updateOnlyBlower() {
     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
         // Only case for decreasing the blower : ramping is too fast or overshooting is too high
         if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
-            || (peakDelta > 15 && m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))
-            || peakDelta > 25) {
+            || ((peakDelta > 15) && (m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u)))
+            || (peakDelta > 25)) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
         } else {
@@ -734,6 +735,7 @@ void PressureController::updateOnlyBlower() {
 }
 #endif
 
+// cppcheck-suppress unusedFunction
 void PressureController::updatePeakPressure() {
     int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
     int16_t peakDelta = m_maxPeakPressureCommand - m_peakPressure;
