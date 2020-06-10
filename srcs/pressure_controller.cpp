@@ -191,7 +191,7 @@ void PressureController::setup() {
 
     m_cycleNb = 0;
 
-    m_pressureTrigger = -30;
+    m_pressureTrigger = DEFAULT_TRIGGER_OFFSET;
 
     m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
 
@@ -534,10 +534,6 @@ void PressureController::onPlateauPressureDecrease() {
     if (m_maxPlateauPressureCommand < CONST_MIN_PLATEAU_PRESSURE) {
         m_maxPlateauPressureCommand = CONST_MIN_PLATEAU_PRESSURE;
     }
-    if (m_triggerModeEnabled) {
-        m_maxPeakPressureCommand =
-            m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
-    }
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     sendControlAck(2, m_maxPlateauPressureCommand);
@@ -554,10 +550,6 @@ void PressureController::onPlateauPressureIncrease() {
 
     if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand) {
         m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
-    }
-    if (m_triggerModeEnabled) {
-        m_maxPeakPressureCommand =
-            m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
     }
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
@@ -583,17 +575,13 @@ void PressureController::onPlateauPressureSet(uint16_t plateauPressure) {
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     DBG_DO(Serial.println("Peak Pressure --");)
 
-    if (!m_triggerModeEnabled) {  // TODO: remove when trigger is in UI
-        m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
+    m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
 
-        m_maxPeakPressureCommand =
-            max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
+    m_maxPeakPressureCommand =
+        max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
 
-        if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
-            m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
-        }
-    } else {
-        m_pressureTrigger--;  // TODO: remove when trigger is in UI
+    if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
+        m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
     }
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
@@ -604,14 +592,10 @@ void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     DBG_DO(Serial.println("Peak Pressure ++");)
 
-    if (!m_triggerModeEnabled) {  // TODO: remove when trigger is in UI
-        m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
+    m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
 
-        if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
-            m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
-        }
-    } else {
-        m_pressureTrigger++;  // TODO: remove
+    if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
+        m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
     }
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
@@ -772,7 +756,7 @@ void PressureController::exhale() {
     if (m_triggerModeEnabled && m_isPeepDetected) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
-        if (static_cast<int32_t>(m_pressure) < (m_pressureCommand + m_pressureTrigger)
+        if (static_cast<int32_t>(m_pressure) < (m_pressureCommand - m_pressureTrigger)
             && (m_peakPressure > CONST_MIN_PEAK_PRESSURE)) {
             m_triggered = true;
         }
