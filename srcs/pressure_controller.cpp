@@ -921,8 +921,8 @@ void PressureController::updatePeakPressure() {
 }
 
 void PressureController::computeTickParameters() {
-    // equivalent of  1000 * (10 / m_ExpiratoryTerm) * (60 / m_cyclesPerMinute)
-    m_plateauDurationMs = ((10000 / m_ExpiratoryTerm) * 60) / m_cyclesPerMinute;
+    // equivalent of  1000 * (10 / (10 + m_ExpiratoryTerm) * (60 / m_cyclesPerMinute)
+    m_plateauDurationMs = ((10000 / (10 + m_ExpiratoryTerm)) * 60) / m_cyclesPerMinute;
 
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinute;
     m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
