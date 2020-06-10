@@ -756,7 +756,8 @@ void PressureController::exhale() {
     if (m_triggerModeEnabled && m_isPeepDetected) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
-        if (static_cast<int32_t>(m_pressure) < (m_pressureCommand - m_pressureTrigger)
+        if (static_cast<int32_t>(m_pressure)
+                < (m_pressureCommand - static_cast<int32_t>(m_pressureTrigger))
             && (m_peakPressure > CONST_MIN_PEAK_PRESSURE)) {
             m_triggered = true;
         }
