@@ -40,7 +40,7 @@
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
-#define CONST_MAX_EXPIRATORY_TERM 60u  
+#define CONST_MAX_EXPIRATORY_TERM 60u
 
 #define DEFAULT_MIN_PEEP_COMMAND 100
 #define DEFAULT_MAX_PLATEAU_COMMAND 200
