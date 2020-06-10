@@ -651,7 +651,7 @@ void PressureController::onExpiratoryTermSet(uint16_t ExpiratoryTerm) {
 }
 
 void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
-    if (TriggerEnabled == 0 || TriggerEnabled == 1) {
+    if ((TriggerEnabled == 0u) || (TriggerEnabled == 1u)) {
         m_triggerModeEnabled = TriggerEnabled;
     }
 
@@ -663,6 +663,7 @@ void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
 void PressureController::onTriggerOffsetSet(uint16_t TriggerOffset) {
     if (TriggerOffset > CONST_MAX_TRIGGER_OFFSET) {
         m_pressureTrigger = CONST_MAX_TRIGGER_OFFSET;
+        // cppcheck-suppress unsignedLessThanZero
     } else if (TriggerOffset < CONST_MIN_TRIGGER_OFFSET) {
         m_pressureTrigger = CONST_MIN_TRIGGER_OFFSET;
     } else {
@@ -922,7 +923,7 @@ void PressureController::updatePeakPressure() {
 
 void PressureController::computeTickParameters() {
     // equivalent of  1000 * (10 / (10 + m_ExpiratoryTerm) * (60 / m_cyclesPerMinute)
-    m_plateauDurationMs = ((10000 / (10 + m_ExpiratoryTerm)) * 60) / m_cyclesPerMinute;
+    m_plateauDurationMs = ((10000u / (10u + m_ExpiratoryTerm)) * 60u) / m_cyclesPerMinute;
 
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinute;
     m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
