@@ -634,6 +634,7 @@ void PressureController::onPeakPressureSet(uint16_t peakPressure) {
 #endif
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onExpiratoryTermSet(uint16_t ExpiratoryTerm) {
     if (ExpiratoryTerm > CONST_MAX_EXPIRATORY_TERM) {
         m_ExpiratoryTerm = CONST_MAX_EXPIRATORY_TERM;
@@ -650,6 +651,7 @@ void PressureController::onExpiratoryTermSet(uint16_t ExpiratoryTerm) {
 #endif
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
     if ((TriggerEnabled == 0u) || (TriggerEnabled == 1u)) {
         m_triggerModeEnabled = TriggerEnabled;
@@ -660,6 +662,7 @@ void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
 #endif
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::onTriggerOffsetSet(uint16_t TriggerOffset) {
     if (TriggerOffset > CONST_MAX_TRIGGER_OFFSET) {
         m_pressureTrigger = CONST_MAX_TRIGGER_OFFSET;
