@@ -84,6 +84,7 @@ PressureController::PressureController()
       m_plateauDurationMs(0),
       m_lastBreathPeriodsMsIndex(0),
       m_lastEndOfRespirationDateMs(0),
+      m_ExpiratoryTerm(DEFAULT_EXPIRATORY_TERM_COMMAND),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -159,6 +160,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_plateauDurationMs(0),
       m_lastBreathPeriodsMsIndex(0),
       m_lastEndOfRespirationDateMs(0),
+      m_ExpiratoryTerm(DEFAULT_EXPIRATORY_TERM_COMMAND),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -193,7 +195,7 @@ void PressureController::setup() {
 
     m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
 
-    m_plateauDurationMs = DEFAULT_PLATEAU_DURATION_MS;
+    computeTickParameters();
 
     m_lastEndOfRespirationDateMs = 0;
 }
@@ -436,6 +438,8 @@ void PressureController::onCycleDecrease() {
     if (m_cyclesPerMinuteCommand < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteCommand = CONST_MIN_CYCLE;
     }
+    // Update values depending on cpm
+    computeTickParameters();
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     sendControlAck(4, m_cyclesPerMinuteCommand);
@@ -453,6 +457,8 @@ void PressureController::onCycleIncrease() {
     if (m_cyclesPerMinuteCommand > CONST_MAX_CYCLE) {
         m_cyclesPerMinuteCommand = CONST_MAX_CYCLE;
     }
+    // Update values depending on cpm
+    computeTickParameters();
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     sendControlAck(4, m_cyclesPerMinuteCommand);
@@ -469,6 +475,8 @@ void PressureController::onCycleSet(uint16_t cpm) {
     } else {
         m_cyclesPerMinuteCommand = cpm;
     }
+    // Update values depending on cpm
+    computeTickParameters();
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     sendControlAck(4, m_cyclesPerMinuteCommand);
@@ -623,6 +631,46 @@ void PressureController::onPeakPressureSet(uint16_t peakPressure) {
 
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     sendControlAck(1, m_maxPeakPressureCommand);
+#endif
+}
+
+void PressureController::onExpiratoryTermSet(uint16_t ExpiratoryTerm) {
+    if (ExpiratoryTerm > CONST_MAX_EXPIRATORY_TERM) {
+        m_ExpiratoryTerm = CONST_MAX_EXPIRATORY_TERM;
+    } else if (ExpiratoryTerm < CONST_MIN_EXPIRATORY_TERM) {
+        m_ExpiratoryTerm = CONST_MIN_EXPIRATORY_TERM;
+    } else {
+        m_ExpiratoryTerm = ExpiratoryTerm;
+    }
+    // Update values depending on ExpiratoryTerm
+    computeTickParameters();
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(5, m_ExpiratoryTerm);
+#endif
+}
+
+void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
+    if (TriggerEnabled == 0 || TriggerEnabled == 1) {
+        m_triggerModeEnabled = TriggerEnabled;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(6, m_triggerModeEnabled);
+#endif
+}
+
+void PressureController::onTriggerOffsetSet(uint16_t TriggerOffset) {
+    if (TriggerOffset > CONST_MAX_TRIGGER_OFFSET) {
+        m_pressureTrigger = CONST_MAX_TRIGGER_OFFSET;
+    } else if (TriggerOffset < CONST_MIN_TRIGGER_OFFSET) {
+        m_pressureTrigger = CONST_MIN_TRIGGER_OFFSET;
+    } else {
+        m_pressureTrigger = TriggerOffset;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(7, m_pressureTrigger);
 #endif
 }
 
@@ -873,16 +921,11 @@ void PressureController::updatePeakPressure() {
 }
 
 void PressureController::computeTickParameters() {
+    // equivalent of  1000 * (10 / m_ExpiratoryTerm) * (60 / m_cyclesPerMinute)
+    m_plateauDurationMs = ((10000 / m_ExpiratoryTerm) * 60) / m_cyclesPerMinute;
+
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinute;
-    if (!m_triggerModeEnabled) {
-        // Inhalation = 1/3 of the cycle duration,
-        // Exhalation = 2/3 of the cycle duration
-        m_tickPerInhalation = m_ticksPerCycle / 3u;
-    } else {
-        // In trigger mode, the plateau duration is set by the user
-        m_tickPerInhalation =
-            (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
-    }
+    m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
 }
 
 void PressureController::executeCommands() {

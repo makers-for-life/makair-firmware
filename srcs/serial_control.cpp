@@ -129,15 +129,15 @@ void serialControlLoop() {
                     break;
 
                 case 5:  // ExpiratoryTerm
-                    // TODO
+                    pController.onExpiratoryTermSet(value);
                     break;
 
                 case 6:  // TriggerEnabled
-                    // TODO
+                    pController.onTriggerEnabledSet(value);
                     break;
 
                 case 7:  // TriggerOffset
-                    // TODO
+                    pController.onTriggerOffsetSet(value);
                     break;
 
                 default:

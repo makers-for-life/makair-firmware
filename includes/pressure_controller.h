@@ -134,6 +134,28 @@ class PressureController {
      */
     void onPeakPressureSet(uint16_t peakPressure);
 
+    /**
+     * Set the desired Expiratory term
+     *
+     * @param ExpiratoryTerm : Expiration term in the "Inspiration/Expiration" ratio given that
+     * Inspiration = 10
+     */
+    void onExpiratoryTermSet(uint16_t ExpiratoryTerm);
+
+    /**
+     * 0: trigger mode disable, 1: trigger mode enable
+     *
+     * @param TriggerEnabled
+     */
+    void onTriggerEnabledSet(uint16_t TriggerEnabled);
+
+    /**
+     * Set the desired Trigger Offset
+     *
+     * @param TriggerOffset Desired trigger offset in mmH2O
+     */
+    void onTriggerOffsetSet(uint16_t TriggerOffset);
+
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteCommand; }
 
@@ -481,6 +503,8 @@ class PressureController {
 
     /// Date of the last end of a respiration
     uint32_t m_lastEndOfRespirationDateMs;
+
+    uint16_t m_ExpiratoryTerm;
 };
 
 // INITIALISATION =============================================================
