@@ -31,14 +31,14 @@
 static byte deviceId[12];  // 3 * 32 bits = 96 bits
 #endif
 
-// FUNCTIONS ==================================================================
-
 #define FIRST_BYTE (uint8_t)0xFF
 
 #define HEADER_SIZE 2
 static const uint8_t header[HEADER_SIZE] = {0x03, 0x0C};
 #define FOOTER_SIZE 2
 static const uint8_t footer[FOOTER_SIZE] = {0x30, 0xC0};
+
+// FUNCTIONS ==================================================================
 
 /**
  * Convert a u16 so that it can be sent through serial
@@ -330,7 +330,10 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
                               uint8_t currentAlarmCodes[ALARMS_SIZE],
-                              uint16_t volumeValue) {
+                              uint16_t volumeValue,
+                              uint8_t expiratoryTerm,
+                              bool triggerEnabled,
+                              uint8_t triggerOffset) {
 #if HARDWARE_VERSION == 1
     (void)cycleValue;
     (void)peakCommand;
@@ -342,6 +345,9 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     (void)previousPeepPressureValue;
     (void)currentAlarmCodes;
     (void)volumeValue;
+    (void)expiratoryTerm;
+    (void)triggerEnabled;
+    (void)triggerOffset;
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
@@ -445,6 +451,24 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     toBytes16(volume, volumeValue);
     Serial6.write(volume, 2);
     crc32.update(volume, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTerm);
+    crc32.update(expiratoryTerm);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggerEnabled);
+    crc32.update(triggerEnabled);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggerOffset);
+    crc32.update(triggerOffset);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
@@ -604,6 +628,58 @@ void sendAlarmTrap(uint16_t centileValue,
     toBytes32(cyclesSinceTrigger, cyclesSinceTriggerValue);
     Serial6.write(cyclesSinceTrigger, 4);
     crc32.update(cyclesSinceTrigger, 4);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void sendControlAck(uint8_t setting, uint16_t valueValue) {
+#if HARDWARE_VERSION == 1
+    (void)setting;
+    (void)valueValue;
+#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("A:");
+    crc32.update("A:", 2);
+    Serial6.write((uint8_t)1u);
+    crc32.update((uint8_t)1u);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(setting);
+    crc32.update(setting);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte value[2];  // 16 bits
+    toBytes16(value, valueValue);
+    Serial6.write(value, 2);
+    crc32.update(value, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

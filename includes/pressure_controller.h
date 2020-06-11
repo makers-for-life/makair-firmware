@@ -80,17 +80,38 @@ class PressureController {
     /// Increase the desired number of cycles per minute
     void onCycleIncrease();
 
+    /**
+     * Set the desired number of cycles per minute
+     *
+     * @param cpm Desired number of cycle per minute
+     */
+    void onCycleSet(uint16_t cpm);
+
     /// Decrease the minimal PEEP desired
     void onPeepPressureDecrease();
 
     /// Increase the minimal PEEP desired
     void onPeepPressureIncrease();
 
+    /**
+     * Set the desired PEEP
+     *
+     * @param peep Desired PEEP in mmH2O
+     */
+    void onPeepSet(uint16_t peep);
+
     /// Decrease the desired plateau pressure
     void onPlateauPressureDecrease();
 
     /// Increase the desired plateau pressure
     void onPlateauPressureIncrease();
+
+    /**
+     * Set the desired plateau pressure
+     *
+     * @param plateauPressure Desired plateau pressure in mmH2O
+     */
+    void onPlateauPressureSet(uint16_t plateauPressure);
 
     /**
      * Decrease the desired peak pressure
@@ -105,6 +126,35 @@ class PressureController {
      * @param p_increment Positive value of increment
      */
     void onPeakPressureIncrease(uint8_t p_increment);
+
+    /**
+     * Set the desired peak pressure
+     *
+     * @param peakPressure Desired peak pressure in mmH2O
+     */
+    void onPeakPressureSet(uint16_t peakPressure);
+
+    /**
+     * Set the desired Expiratory term
+     *
+     * @param ExpiratoryTerm : Expiration term in the "Inspiration/Expiration" ratio given that
+     * Inspiration = 10
+     */
+    void onExpiratoryTermSet(uint16_t ExpiratoryTerm);
+
+    /**
+     * 0: trigger mode disable, 1: trigger mode enable
+     *
+     * @param TriggerEnabled
+     */
+    void onTriggerEnabledSet(uint16_t TriggerEnabled);
+
+    /**
+     * Set the desired Trigger Offset
+     *
+     * @param TriggerOffset Desired trigger offset in mmH2O
+     */
+    void onTriggerOffsetSet(uint16_t TriggerOffset);
 
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteCommand; }
@@ -161,7 +211,7 @@ class PressureController {
     inline const bool triggered() const { return m_triggered; }
 
     /// Get the value of the inspiratory trigger pressure
-    inline const int16_t pressureTrigger() const { return m_pressureTrigger; }
+    inline const uint16_t pressureTrigger() const { return m_pressureTrigger; }
 
     /**
      * Input the real duration since the last pressure controller computation
@@ -181,6 +231,7 @@ class PressureController {
     void updatePhase(uint16_t p_tick);
 
     /// Update peak pressure and blower ramp up
+    // cppcheck-suppress unusedPrivateFunction
     void updatePeakPressure();
 
     /// Perform the pressure control and compute the transistors commands during the inhalation
@@ -209,6 +260,7 @@ class PressureController {
      *
      * @param p_tick  Duration from the begining of the cycle in hundredth of second
      */
+    // cppcheck-suppress unusedPrivateFunction
     void computePlateau(uint16_t p_tick);
 
     /// Give the computed commands to actuators
@@ -422,7 +474,7 @@ class PressureController {
     uint16_t m_tick;
 
     // Pressure trigger value
-    int16_t m_pressureTrigger;
+    uint16_t m_pressureTrigger;
 
     /// Is trigger mode enabled
     bool m_triggerModeEnabled;
@@ -451,6 +503,8 @@ class PressureController {
 
     /// Date of the last end of a respiration
     uint32_t m_lastEndOfRespirationDateMs;
+
+    uint16_t m_ExpiratoryTerm;
 };
 
 // INITIALISATION =============================================================

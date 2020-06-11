@@ -84,6 +84,7 @@ PressureController::PressureController()
       m_plateauDurationMs(0),
       m_lastBreathPeriodsMsIndex(0),
       m_lastEndOfRespirationDateMs(0),
+      m_ExpiratoryTerm(DEFAULT_EXPIRATORY_TERM_COMMAND),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -159,6 +160,7 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_plateauDurationMs(0),
       m_lastBreathPeriodsMsIndex(0),
       m_lastEndOfRespirationDateMs(0),
+      m_ExpiratoryTerm(DEFAULT_EXPIRATORY_TERM_COMMAND),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -189,11 +191,11 @@ void PressureController::setup() {
 
     m_cycleNb = 0;
 
-    m_pressureTrigger = -30;
+    m_pressureTrigger = DEFAULT_TRIGGER_OFFSET;
 
     m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
 
-    m_plateauDurationMs = DEFAULT_PLATEAU_DURATION_MS;
+    computeTickParameters();
 
     m_lastEndOfRespirationDateMs = 0;
 }
@@ -325,7 +327,8 @@ void PressureController::endRespiratoryCycle() {
                              mmH2OtoCmH2O(m_maxPlateauPressureCommand),
                              mmH2OtoCmH2O(m_minPeepCommand), m_cyclesPerMinuteCommand,
                              m_peakPressure, plateauPressureToDisplay, m_peep,
-                             m_alarmController->triggeredAlarms(), telemetryVolume);
+                             m_alarmController->triggeredAlarms(), telemetryVolume,
+                             m_ExpiratoryTerm, m_triggerModeEnabled, m_pressureTrigger);
 #endif
 }
 
@@ -394,6 +397,7 @@ void PressureController::compute(uint16_t p_tick) {
     executeCommands();
 }
 
+// cppcheck-suppress unusedFunction
 void PressureController::computePlateau(uint16_t p_tick) {
     uint16_t minValue = m_lastPressureValues[0u];
     uint16_t maxValue = m_lastPressureValues[0u];
@@ -434,6 +438,12 @@ void PressureController::onCycleDecrease() {
     if (m_cyclesPerMinuteCommand < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteCommand = CONST_MIN_CYCLE;
     }
+    // Update values depending on cpm
+    computeTickParameters();
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(4, m_cyclesPerMinuteCommand);
+#endif
 }
 
 void PressureController::onCycleIncrease() {
@@ -447,7 +457,29 @@ void PressureController::onCycleIncrease() {
     if (m_cyclesPerMinuteCommand > CONST_MAX_CYCLE) {
         m_cyclesPerMinuteCommand = CONST_MAX_CYCLE;
     }
+    // Update values depending on cpm
+    computeTickParameters();
 
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(4, m_cyclesPerMinuteCommand);
+#endif
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onCycleSet(uint16_t cpm) {
+    if (cpm < CONST_MIN_CYCLE) {
+        m_cyclesPerMinuteCommand = CONST_MIN_CYCLE;
+    } else if (cpm > CONST_MAX_CYCLE) {
+        m_cyclesPerMinuteCommand = CONST_MAX_CYCLE;
+    } else {
+        m_cyclesPerMinuteCommand = cpm;
+    }
+    // Update values depending on cpm
+    computeTickParameters();
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(4, m_cyclesPerMinuteCommand);
 #endif
 }
 
@@ -459,6 +491,10 @@ void PressureController::onPeepPressureDecrease() {
     if (m_minPeepCommand < CONST_MIN_PEEP_PRESSURE) {
         m_minPeepCommand = CONST_MIN_PEEP_PRESSURE;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(3, m_minPeepCommand);
+#endif
 }
 
 void PressureController::onPeepPressureIncrease() {
@@ -469,6 +505,25 @@ void PressureController::onPeepPressureIncrease() {
     if (m_minPeepCommand > CONST_MAX_PEEP_PRESSURE) {
         m_minPeepCommand = CONST_MAX_PEEP_PRESSURE;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(3, m_minPeepCommand);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onPeepSet(uint16_t peep) {
+    if (peep > CONST_MAX_PEEP_PRESSURE) {
+        m_minPeepCommand = CONST_MAX_PEEP_PRESSURE;
+    } else if (peep < CONST_MIN_PEEP_PRESSURE) {
+        m_minPeepCommand = CONST_MIN_PEEP_PRESSURE;
+    } else {
+        m_minPeepCommand = peep;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(3, m_minPeepCommand);
+#endif
 }
 
 void PressureController::onPlateauPressureDecrease() {
@@ -479,10 +534,10 @@ void PressureController::onPlateauPressureDecrease() {
     if (m_maxPlateauPressureCommand < CONST_MIN_PLATEAU_PRESSURE) {
         m_maxPlateauPressureCommand = CONST_MIN_PLATEAU_PRESSURE;
     }
-    if (m_triggerModeEnabled) {
-        m_maxPeakPressureCommand =
-            m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
-    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(2, m_maxPlateauPressureCommand);
+#endif
 }
 
 void PressureController::onPlateauPressureIncrease() {
@@ -496,41 +551,115 @@ void PressureController::onPlateauPressureIncrease() {
     if (m_maxPlateauPressureCommand > m_maxPeakPressureCommand) {
         m_maxPeakPressureCommand = m_maxPlateauPressureCommand;
     }
-    if (m_triggerModeEnabled) {
-        m_maxPeakPressureCommand =
-            m_maxPlateauPressureCommand;  // TODO: remove when trigger is in UI
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(2, m_maxPlateauPressureCommand);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onPlateauPressureSet(uint16_t plateauPressure) {
+    if (plateauPressure > CONST_MAX_PLATEAU_PRESSURE) {
+        m_maxPlateauPressureCommand = CONST_MAX_PLATEAU_PRESSURE;
+    } else if (plateauPressure < CONST_MIN_PLATEAU_PRESSURE) {
+        m_maxPlateauPressureCommand = CONST_MIN_PLATEAU_PRESSURE;
+    } else {
+        m_maxPlateauPressureCommand = plateauPressure;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(2, m_maxPlateauPressureCommand);
+#endif
 }
 
 void PressureController::onPeakPressureDecrease(uint8_t p_decrement) {
     DBG_DO(Serial.println("Peak Pressure --");)
 
-    if (!m_triggerModeEnabled) {  // TODO: remove when trigger is in UI
-        m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
+    m_maxPeakPressureCommand = m_maxPeakPressureCommand - p_decrement;
 
-        m_maxPeakPressureCommand =
-            max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
+    m_maxPeakPressureCommand =
+        max(m_maxPeakPressureCommand, static_cast<uint16_t>(CONST_MIN_PEAK_PRESSURE));
 
-        if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
-            m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
-        }
-    } else {
-        m_pressureTrigger--;  // TODO: remove when trigger is in UI
+    if (m_maxPeakPressureCommand < m_maxPlateauPressureCommand) {
+        m_maxPlateauPressureCommand = m_maxPeakPressureCommand;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(1, m_maxPeakPressureCommand);
+#endif
 }
 
 void PressureController::onPeakPressureIncrease(uint8_t p_increment) {
     DBG_DO(Serial.println("Peak Pressure ++");)
 
-    if (!m_triggerModeEnabled) {  // TODO: remove when trigger is in UI
-        m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
+    m_maxPeakPressureCommand = m_maxPeakPressureCommand + p_increment;
 
-        if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
-            m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
-        }
-    } else {
-        m_pressureTrigger++;  // TODO: remove
+    if (m_maxPeakPressureCommand > CONST_MAX_PEAK_PRESSURE) {
+        m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
     }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(1, m_maxPeakPressureCommand);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onPeakPressureSet(uint16_t peakPressure) {
+    if (peakPressure > CONST_MAX_PEAK_PRESSURE) {
+        m_maxPeakPressureCommand = CONST_MAX_PEAK_PRESSURE;
+    } else if (peakPressure < CONST_MIN_PEAK_PRESSURE) {
+        m_maxPeakPressureCommand = CONST_MIN_PEAK_PRESSURE;
+    } else {
+        m_maxPeakPressureCommand = peakPressure;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(1, m_maxPeakPressureCommand);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onExpiratoryTermSet(uint16_t ExpiratoryTerm) {
+    if (ExpiratoryTerm > CONST_MAX_EXPIRATORY_TERM) {
+        m_ExpiratoryTerm = CONST_MAX_EXPIRATORY_TERM;
+    } else if (ExpiratoryTerm < CONST_MIN_EXPIRATORY_TERM) {
+        m_ExpiratoryTerm = CONST_MIN_EXPIRATORY_TERM;
+    } else {
+        m_ExpiratoryTerm = ExpiratoryTerm;
+    }
+    // Update values depending on ExpiratoryTerm
+    computeTickParameters();
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(5, m_ExpiratoryTerm);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
+    if ((TriggerEnabled == 0u) || (TriggerEnabled == 1u)) {
+        m_triggerModeEnabled = TriggerEnabled;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(6, m_triggerModeEnabled);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void PressureController::onTriggerOffsetSet(uint16_t TriggerOffset) {
+    if (TriggerOffset > CONST_MAX_TRIGGER_OFFSET) {
+        m_pressureTrigger = CONST_MAX_TRIGGER_OFFSET;
+        // cppcheck-suppress unsignedLessThanZero
+    } else if (TriggerOffset < CONST_MIN_TRIGGER_OFFSET) {
+        m_pressureTrigger = CONST_MIN_TRIGGER_OFFSET;
+    } else {
+        m_pressureTrigger = TriggerOffset;
+    }
+
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    sendControlAck(7, m_pressureTrigger);
+#endif
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
@@ -627,7 +756,8 @@ void PressureController::exhale() {
     if (m_triggerModeEnabled && m_isPeepDetected) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
-        if (static_cast<int32_t>(m_pressure) < (m_pressureCommand + m_pressureTrigger)
+        if (static_cast<int32_t>(m_pressure)
+                < (m_pressureCommand - static_cast<int32_t>(m_pressureTrigger))
             && (m_peakPressure > CONST_MIN_PEAK_PRESSURE)) {
             m_triggered = true;
         }
@@ -646,8 +776,8 @@ void PressureController::updateOnlyBlower() {
     if (m_plateauStartTime < ((m_tickPerInhalation * 30u) / 100u)) {
         // Only case for decreasing the blower : ramping is too fast or overshooting is too high
         if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
-            || (peakDelta > 15 && m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u))
-            || peakDelta > 25) {
+            || ((peakDelta > 15) && (m_plateauStartTime < ((m_tickPerInhalation * 20u) / 100u)))
+            || (peakDelta > 25)) {
             m_blower_increment = -100;
             DBG_DO(Serial.println("BLOWER -100");)
         } else {
@@ -673,6 +803,7 @@ void PressureController::updateOnlyBlower() {
 }
 #endif
 
+// cppcheck-suppress unusedFunction
 void PressureController::updatePeakPressure() {
     int16_t plateauDelta = m_maxPlateauPressureCommand - m_plateauPressure;
     int16_t peakDelta = m_maxPeakPressureCommand - m_peakPressure;
@@ -779,16 +910,11 @@ void PressureController::updatePeakPressure() {
 }
 
 void PressureController::computeTickParameters() {
+    // equivalent of  1000 * (10 / (10 + m_ExpiratoryTerm) * (60 / m_cyclesPerMinute)
+    m_plateauDurationMs = ((10000u / (10u + m_ExpiratoryTerm)) * 60u) / m_cyclesPerMinute;
+
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinute;
-    if (!m_triggerModeEnabled) {
-        // Inhalation = 1/3 of the cycle duration,
-        // Exhalation = 2/3 of the cycle duration
-        m_tickPerInhalation = m_ticksPerCycle / 3u;
-    } else {
-        // In trigger mode, the plateau duration is set by the user
-        m_tickPerInhalation =
-            (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
-    }
+    m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
 }
 
 void PressureController::executeCommands() {
