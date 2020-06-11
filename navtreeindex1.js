@@ -219,8 +219,8 @@ var NAVTREEINDEX1 =
 "globals_vars.html":[3,1,2],
 "globals_w.html":[3,1,0,20],
 "hierarchy.html":[2,2],
-"index.html":[0],
 "index.html":[],
+"index.html":[0],
 "index.html#autotoc_md10":[0,2],
 "index.html#autotoc_md11":[0,3],
 "index.html#autotoc_md12":[0,4],
@@ -232,6 +232,7 @@ var NAVTREEINDEX1 =
 "index.html#autotoc_md18":[0,10],
 "index.html#autotoc_md19":[0,11],
 "index.html#autotoc_md20":[0,12],
+"index.html#autotoc_md21":[0,13],
 "index.html#autotoc_md8":[0,0],
 "index.html#autotoc_md9":[0,1],
 "integration__test_8cpp.html":[3,0,1,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "keyboard_8cpp.html#a487109f6a24dea50af1c693b67874870":[3,0,1,10,8],
 "keyboard_8cpp.html#a4b5e2bc9a166bafaeff01afa7aec3120":[3,0,1,10,22],
 "keyboard_8cpp.html#a6e101a2b57f253e108dd99475e37db29":[3,0,1,10,21],
-"keyboard_8cpp.html#a8050700d797399aa3248c71f95d4b073":[3,0,1,10,9],
-"keyboard_8cpp.html#a810cee6767d1f533d605662bc773b785":[3,0,1,10,4]
+"keyboard_8cpp.html#a8050700d797399aa3248c71f95d4b073":[3,0,1,10,9]
 };

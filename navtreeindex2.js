@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"keyboard_8cpp.html#a810cee6767d1f533d605662bc773b785":[3,0,1,10,4],
 "keyboard_8cpp.html#a82e296e6f54af7e14f91cd4aec64d101":[3,0,1,10,6],
 "keyboard_8cpp.html#a88c1367f7277a9a7d16a2b8f5a7805ce":[3,0,1,10,12],
 "keyboard_8cpp.html#a8adf492668c6ce5e6b167d073909d074":[3,0,1,10,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e":[3,0,1,21,4],
 "telemetry_8cpp.html#a88aec787f92afb6d95b6f9abeadb890a":[3,0,1,21,3],
 "telemetry_8cpp.html#a8a52623e1220d2f1941f75525a3cbe16":[3,0,1,21,5],
-"telemetry_8cpp.html#a98bf45d9b6065dd4000ad613ca44e196":[3,0,1,21,8],
-"telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234":[3,0,1,21,12]
+"telemetry_8cpp.html#a98bf45d9b6065dd4000ad613ca44e196":[3,0,1,21,8]
 };
