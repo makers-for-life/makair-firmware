@@ -19,5 +19,6 @@ var dir_09e761304027c904456130627fd4dcf5 =
     [ "pressure_utl.h", "pressure__utl_8h.html", "pressure__utl_8h" ],
     [ "pressure_valve.h", "pressure__valve_8h.html", "pressure__valve_8h" ],
     [ "screen.h", "screen_8h.html", "screen_8h" ],
+    [ "serial_control.h", "serial__control_8h.html", "serial__control_8h" ],
     [ "telemetry.h", "telemetry_8h.html", "telemetry_8h" ]
 ];

@@ -19,6 +19,7 @@ var dir_b73b02d482d1c4a3db20c3d9ad52d395 =
     [ "qualification.cpp", "qualification_8cpp.html", null ],
     [ "respirator.cpp", "respirator_8cpp.html", "respirator_8cpp" ],
     [ "screen.cpp", "screen_8cpp.html", "screen_8cpp" ],
+    [ "serial_control.cpp", "serial__control_8cpp.html", "serial__control_8cpp" ],
     [ "sysclock.cpp", "sysclock_8cpp.html", null ],
     [ "telemetry.cpp", "telemetry_8cpp.html", "telemetry_8cpp" ]
 ];
