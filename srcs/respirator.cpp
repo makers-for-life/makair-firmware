@@ -93,12 +93,25 @@ void setup(void) {
     DBG_DO(Serial.begin(115200);)
     DBG_DO(Serial.println("Booting the system...");)
 
+    startScreen();
+
+    initBattery();
+    if (isBatteryDeepDischarged()) {
+        screen.clear();
+        screen.setCursor(0, 0);
+        screen.print("Battery very low");
+        screen.setCursor(0, 2);
+        screen.print("Please charge");
+        screen.setCursor(0, 3);
+        screen.print("before running.");
+        while (true) {
+        }
+    }
+
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     initTelemetry();
     sendBootMessage();
 #endif
-
-    startScreen();
 
     pinMode(PIN_PRESSURE_SENSOR, INPUT);
     pinMode(PIN_BATTERY, INPUT);
@@ -204,9 +217,6 @@ void setup(void) {
     pinMode(PIN_LED_RED, OUTPUT);
     pinMode(PIN_LED_YELLOW, OUTPUT);
     pinMode(PIN_LED_GREEN, OUTPUT);
-
-    // Initialize battery level estimation
-    initBattery();
 
     BuzzerControl_Init();
     Buzzer_Init();
@@ -406,6 +416,12 @@ void loop(void) {
                 // Check serial input
                 serialControlLoop();
 #endif
+
+                if (isBatteryDeepDischarged()) {
+                    // Delay will trigger the watchdog and the machine will restart with a message
+                    // on screen
+                    delay(10000);
+                }
 
                 // Display relevant information during the cycle
                 if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
