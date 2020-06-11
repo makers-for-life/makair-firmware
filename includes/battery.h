@@ -91,6 +91,6 @@ uint32_t getBatteryLevel();
  */
 uint32_t getBatteryLevelX10();
 
-uint32_t isBatteryVeryLow();
+bool isBatteryVeryLow();
 
-uint32_t isBatteryDeepDischarged();
+bool isBatteryDeepDischarged();

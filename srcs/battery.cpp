@@ -108,10 +108,11 @@ uint32_t getBatteryLevel() { return rawBatteryMeanVoltage * 0.0296484375; }
 // cppcheck-suppress unusedFunction
 uint32_t getBatteryLevelX10() { return rawBatteryMeanVoltage * (10.0 * 0.0296484375); }
 
-uint32_t isBatteryVeryLow() {
+// cppcheck-suppress unusedFunction
+bool isBatteryVeryLow() {
     return rawBatteryMeanVoltage < RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD;
 }
 
-uint32_t isBatteryDeepDischarged() {
+bool isBatteryDeepDischarged() {
     return rawBatteryMeanVoltage < RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD;
 }
