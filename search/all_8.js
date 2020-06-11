@@ -11,7 +11,9 @@ var searchData=
   ['inspiration_211',['INSPIRATION',['../cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31',1,'cycle.h']]],
   ['integration_5ftest_2ecpp_212',['integration_test.cpp',['../integration__test_8cpp.html',1,'']]],
   ['invalid_5ferror_5fmarker_213',['INVALID_ERROR_MARKER',['../pressure__controller_8cpp.html#a602fa4a2a92de0da954dcab814e946f0',1,'pressure_controller.cpp']]],
-  ['isrunning_214',['isRunning',['../class_activation_controller.html#a6150ca0b4b114c9ea416cb9ac7461415',1,'ActivationController::isRunning()'],['../class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6',1,'EolTest::isRunning()']]],
-  ['isrunningonbattery_215',['isRunningOnBattery',['../battery_8cpp.html#a59059e9ff84265ce4c9c088250fc13fd',1,'battery.cpp']]],
-  ['istriggered_216',['isTriggered',['../class_alarm.html#a1a1bf095ca11d9fa35b48cb08b72a03d',1,'Alarm']]]
+  ['isbatterydeepdischarged_214',['isBatteryDeepDischarged',['../battery_8cpp.html#a61ffb38eac6c3cf6564c38fe4de592de',1,'isBatteryDeepDischarged():&#160;battery.cpp'],['../battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de',1,'isBatteryDeepDischarged():&#160;battery.cpp']]],
+  ['isbatteryverylow_215',['isBatteryVeryLow',['../battery_8cpp.html#ac6ae9ca27f164634892964bbbfc77ccb',1,'isBatteryVeryLow():&#160;battery.cpp'],['../battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb',1,'isBatteryVeryLow():&#160;battery.cpp']]],
+  ['isrunning_216',['isRunning',['../class_activation_controller.html#a6150ca0b4b114c9ea416cb9ac7461415',1,'ActivationController::isRunning()'],['../class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6',1,'EolTest::isRunning()']]],
+  ['isrunningonbattery_217',['isRunningOnBattery',['../battery_8cpp.html#a59059e9ff84265ce4c9c088250fc13fd',1,'battery.cpp']]],
+  ['istriggered_218',['isTriggered',['../class_alarm.html#a1a1bf095ca11d9fa35b48cb08b72a03d',1,'Alarm']]]
 ];

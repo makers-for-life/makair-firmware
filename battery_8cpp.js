@@ -4,6 +4,8 @@ var battery_8cpp =
     [ "getBatteryLevel", "battery_8cpp.html#a6bcb1af204a68c17e23c0c0262cb1fab", null ],
     [ "getBatteryLevelX10", "battery_8cpp.html#a29614bbbfb2b660c087260efed859c00", null ],
     [ "initBattery", "battery_8cpp.html#af1cb6090825d3e387191264c221e898a", null ],
+    [ "isBatteryDeepDischarged", "battery_8cpp.html#a61ffb38eac6c3cf6564c38fe4de592de", null ],
+    [ "isBatteryVeryLow", "battery_8cpp.html#ac6ae9ca27f164634892964bbbfc77ccb", null ],
     [ "updateBatterySample", "battery_8cpp.html#a9ffac32955710f7a3aefe1fb7120b263", null ],
     [ "updateBatteryState", "battery_8cpp.html#a55106fffceca7b7e552f55c0a1efb471", null ],
     [ "batteryCurrentSample", "battery_8cpp.html#a668d7b50d9e8ddd49096d3a35f8fdc2d", null ],

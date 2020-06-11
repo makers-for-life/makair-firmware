@@ -1,5 +1,11 @@
 var NAVTREEINDEX2 =
 {
+"keyboard_8cpp.html#a82e296e6f54af7e14f91cd4aec64d101":[3,0,1,10,6],
+"keyboard_8cpp.html#a88c1367f7277a9a7d16a2b8f5a7805ce":[3,0,1,10,12],
+"keyboard_8cpp.html#a8adf492668c6ce5e6b167d073909d074":[3,0,1,10,10],
+"keyboard_8cpp.html#a8fe94765c59a035ac0ab3c5b5b83c17a":[3,0,1,10,11],
+"keyboard_8cpp.html#aa6c4642b42eb06e9390fe7b5e8e6ba69":[3,0,1,10,5],
+"keyboard_8cpp.html#ab66670e05d5beec9e35842763920a1c6":[3,0,1,10,13],
 "keyboard_8cpp.html#abfcc75c4be0ab2a709ab17cf79b62906":[3,0,1,10,16],
 "keyboard_8cpp.html#ac4d23108332c5104a44e853e6717665e":[3,0,1,10,2],
 "keyboard_8cpp.html#ac7727574c69ba8800efdb16bcaf49f78":[3,0,1,10,20],
@@ -243,11 +249,5 @@ var NAVTREEINDEX2 =
 "telemetry_8cpp.html#a88aec787f92afb6d95b6f9abeadb890a":[3,0,1,21,3],
 "telemetry_8cpp.html#a8a52623e1220d2f1941f75525a3cbe16":[3,0,1,21,5],
 "telemetry_8cpp.html#a98bf45d9b6065dd4000ad613ca44e196":[3,0,1,21,8],
-"telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234":[3,0,1,21,12],
-"telemetry_8cpp.html#abbec88ba0d819eb7bdb54385047ee885":[3,0,1,21,9],
-"telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2":[3,0,1,21,1],
-"telemetry_8cpp.html#af8835013b2542f5155d6647b7b618570":[3,0,1,21,13],
-"telemetry_8cpp_source.html":[3,0,1,21],
-"telemetry_8h.html":[3,0,0,20],
-"telemetry_8h.html#a01726234aab12dd67acb9dd72db0f59c":[3,0,0,20,7]
+"telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234":[3,0,1,21,12]
 };
