@@ -1,5 +1,28 @@
 # Changelog
 
+## v3.0.0
+
+- implement a respiratory trigger
+  (_this helps the MakAir to respect the patient respiratory reflexes when he/she starts to wake up; disabled by default_)
+- add an "end of production line" test program
+  (_it is included in the production software and runs when booting while pressing a maintainance button; electronic hardware v2+ required_)
+- support Faulhaber motors for valves
+  (_they are better, faster, stronger; electronic hardware v2+ required_)
+- support an optional mass flow meter
+  (_this allows to estimate the volume of inspired air; electronic hardware v2+ required_)
+- implement a control protocol to update settings through serial communication
+  (_UI on Raspberry Pi can now send new settings values; few more settings are supported compared to physical buttons; electronic hardware v2+ required_)
+- support electronic hardware v3
+- improve pressure control
+- improve blower speed regulation
+- fix systick overflow in telemetry protocol
+- update telemetry protocol to send more information
+- include CRC in telemetry messages
+- add a safety to shutdown system if battery is very low
+  (_in this situation, everything might get damaged if not shutdown_)
+- change some default settings
+  (_now, Ppeak starts at 250 mmH2O and Pplateau at 220 mmH2O_)
+
 ## v1.5.4
 
 - improve dynamic update of the peak pressure command according to the measured plateau pressure
