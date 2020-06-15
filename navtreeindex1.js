@@ -233,6 +233,7 @@ var NAVTREEINDEX1 =
 "index.html#autotoc_md19":[0,11],
 "index.html#autotoc_md20":[0,12],
 "index.html#autotoc_md21":[0,13],
+"index.html#autotoc_md22":[0,14],
 "index.html#autotoc_md8":[0,0],
 "index.html#autotoc_md9":[0,1],
 "integration__test_8cpp.html":[3,0,1,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "keyboard_8cpp.html#a458397229d0b2076a739955b1cb8be35":[3,0,1,10,25],
 "keyboard_8cpp.html#a487109f6a24dea50af1c693b67874870":[3,0,1,10,8],
 "keyboard_8cpp.html#a4b5e2bc9a166bafaeff01afa7aec3120":[3,0,1,10,22],
-"keyboard_8cpp.html#a6e101a2b57f253e108dd99475e37db29":[3,0,1,10,21],
-"keyboard_8cpp.html#a8050700d797399aa3248c71f95d4b073":[3,0,1,10,9]
+"keyboard_8cpp.html#a6e101a2b57f253e108dd99475e37db29":[3,0,1,10,21]
 };
