@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.1
+
+- fix an issue with the optional mass flow meter
+
 ## v3.0.0
 
 - implement a respiratory trigger
