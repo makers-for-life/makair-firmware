@@ -41,6 +41,9 @@
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
+#include <Servo.h>
+
+
 #endif
 
 // PROGRAM =====================================================================
@@ -92,6 +95,11 @@ uint32_t lastpControllerComputeDate;
 void setup(void) {
     DBG_DO(Serial.begin(115200);)
     DBG_DO(Serial.println("Booting the system...");)
+    Servo myservo;
+
+    /*myservo.attach(PA10);
+    myservo.write(15);
+    delay(100000);*/
 
     startScreen();
 
