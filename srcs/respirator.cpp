@@ -355,6 +355,9 @@ void loop(void) {
 
         if (shouldRun) {
             pController.initRespiratoryCycle();
+        } else {
+            // Reset the trigger to still enter the mainloop in case of inspiratory trigger raised
+            pController.reset_trigger();
         }
 
         /********************************************/

@@ -210,6 +210,9 @@ class PressureController {
     /// Get the state of the inspiratory trigger
     inline const bool triggered() const { return m_triggered; }
 
+    /// Reset the trigger to false
+    inline const void reset_trigger() const { m_triggered = false; }
+
     /// Get the value of the inspiratory trigger pressure
     inline const uint16_t pressureTrigger() const { return m_pressureTrigger; }
 
