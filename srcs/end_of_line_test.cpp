@@ -320,7 +320,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // Ask the operator to plug the lung system on the machine
+    // Ask the operator to plug the lung system on the machine, and wait the operator to press start
     else if (eolstep == PLUG_AIR_TEST_SYTEM) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Brancher les tuyaux\nde test et appuyer\nsur START");
@@ -425,7 +425,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Vidage valves\nimpossible ! ");
     }
 
-    // Ask the user to open the oxygen entrance, and wait for confirmation
+    // Ask the operator to open the oxygen entrance, and wait for confirmation
     else if (eolstep == USER_CONFIRMATION_BEFORE_O2_TEST) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Ouvrir oxygene\npuis appuyer sur\nle bouton START");
