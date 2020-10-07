@@ -14,6 +14,8 @@
 
 // Associated header
 #include "../includes/screen.h"
+#include "../includes/buzzer_control.h"
+
 
 // Internal
 #include "../includes/parameters.h"
@@ -81,9 +83,9 @@ void displayCurrentSettings(uint16_t peakPressureMax,
 
     char message[SCREEN_LINE_LENGTH + 1];
 
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u    %2u    %2u  set ",
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u    %2u  %2u %4uHz",
                    convertAndRound(peakPressureMax), convertAndRound(plateauPressureMax),
-                   convertAndRound(peepMin));
+                   convertAndRound(peepMin),buzzerCurrentFreq);
 
     screen.print(message);
 }

@@ -39,6 +39,30 @@ void BuzzerControl_Init(void) {
 #endif
 }
 
+uint32_t buzzerCurrentFreq = BUZZER_FREQ;
+
+void BuzzerChangeFreq(uint32_t freq) {
+#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    Buzzer_Hw_Timer->setOverflow(1000000 / freq, MICROSEC_FORMAT);
+#endif
+}
+void BuzzerIncrementFreq(void) {
+    buzzerCurrentFreq += 250;
+    if (buzzerCurrentFreq > 8000) {
+        buzzerCurrentFreq = 8000;
+    }
+    BuzzerChangeFreq(buzzerCurrentFreq);
+}
+
+void BuzzerDecrementFreq(void) {
+    buzzerCurrentFreq -= 250;
+    if (buzzerCurrentFreq < 250) {
+        buzzerCurrentFreq = 250;
+    }
+    BuzzerChangeFreq(buzzerCurrentFreq);
+}
+
+
 void BuzzerControl_On(void) {
 #if HARDWARE_VERSION == 1
     // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.

@@ -27,6 +27,8 @@
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure_controller.h"
+#include "../includes/buzzer_control.h"
+
 
 // INITIALISATION =============================================================
 
@@ -71,10 +73,10 @@ void onPeepPressureIncrease() { pController.onPeepPressureIncrease(); }
 void onPeepPressureDecrease() { pController.onPeepPressureDecrease(); }
 
 /// Handler of the button to increase the number of breathing cycles
-void onCycleIncrease() { pController.onCycleIncrease(); }
+void onCycleIncrease() { pController.onCycleIncrease(); BuzzerIncrementFreq();}
 
 /// Handler of the button to decrease the number of breathing cycles
-void onCycleDecrease() { pController.onCycleDecrease(); }
+void onCycleDecrease() { pController.onCycleDecrease(); BuzzerDecrementFreq();}
 
 /// Handler of the button to stop alarm
 void onAlarmOff() { alarmController.snooze(); }
