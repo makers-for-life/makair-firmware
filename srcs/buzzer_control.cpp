@@ -43,6 +43,7 @@ uint32_t buzzerCurrentFreq = BUZZER_FREQ;
 
 void BuzzerChangeFreq(uint32_t freq) {
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+    Buzzer_Hw_Timer->setCount(0);
     Buzzer_Hw_Timer->setOverflow(1000000 / freq, MICROSEC_FORMAT);
 #endif
 }
