@@ -176,15 +176,13 @@ void MFM_Timer_Callback(HardwareTimer*) {
             Wire.flush();
             Wire.end();
 #endif
-#if HARDWARE_VERSION == 3
-            // Set power off
+            // Set power off (available since hw3)
             digitalWrite(MFM_POWER_CONTROL, MFM_POWER_OFF);
             // also set SDA and SCL to 0 to avoid sensor to be powered by I2C bus.
             pinMode(PIN_I2C_SDA, OUTPUT);
             pinMode(PIN_I2C_SCL, OUTPUT);
             digitalWrite(PIN_I2C_SDA, LOW);
             digitalWrite(PIN_I2C_SCL, LOW);
-#endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
             Wire.begin();
@@ -204,13 +202,11 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
         // five period before new attempt (50 ms sensor warmup time in the datasheet)
         if (mfmResetStateMachine == MFM_WAIT_WARMUP_PERIODS) {
-#if HARDWARE_VERSION == 3
-            // Set power on
+            // Set power on (available since hw v3)
             digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
             // release the I2C bus
             pinMode(PIN_I2C_SDA, INPUT);
             pinMode(PIN_I2C_SCL, INPUT);
-#endif
         }
 
         // new attempt
@@ -264,17 +260,9 @@ void MFM_Timer_Callback(HardwareTimer*) {
 bool MFM_init(void) {
     mfmAirVolumeSumMilliliters = 0;
 
-#if HARDWARE_VERSION == 3
-    // Set power on
+    // Set power on (hardware v3)
     pinMode(MFM_POWER_CONTROL, OUTPUT);
     digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
-#endif
-
-#if HARDWARE_VERSION == 3
-    // Set power on
-    pinMode(MFM_POWER_CONTROL, OUTPUT);
-    digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
-#endif
 
     // Set the timer
     massFlowTimer = new HardwareTimer(MASS_FLOW_TIMER);

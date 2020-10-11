@@ -64,12 +64,10 @@ void updateBatterySample() {
 }
 
 void updateBatteryState(uint32_t p_cycleNumber) {
-#if HARDWARE_VERSION == 3
+
+    // hardware v3 expander is connected to AC ON relay. that remains an optionnal wiring.
     pinMode(PIN_IN_MAINS_CONNECTED, INPUT_PULLUP);
     mainsConnected = (LOW == digitalRead(PIN_IN_MAINS_CONNECTED));
-#else
-    mainsConnected = false;
-#endif
 
     if (!mainsConnected
         && (rawBatteryMeanVoltage < (RAW_VOLTAGE_ON_BATTERY_HIGH - RAW_VOLTAGE_HYSTERESIS))) {
