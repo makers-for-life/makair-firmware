@@ -266,6 +266,8 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_IN_ROW1 PC9
 #define PIN_IN_ROW2 PC10
 #define PIN_IN_ROW3 PC11
+// expander used to read AC status
+#define PIN_IN_MAINS_CONNECTED PB1
 #endif
 
 ///@}

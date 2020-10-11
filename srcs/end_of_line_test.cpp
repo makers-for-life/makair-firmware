@@ -122,7 +122,7 @@ void millisecondTimerEOL(HardwareTimer*) {
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
-    static int minbatlevel = 500;
+    static int minbatlevel = 5000;
     static int maxbatlevel = 0;
     static int buttonsPushed[EOL_TOTALBUTTONS];
     if ((clockEOLTimer % 100u) == 0u) {
@@ -130,20 +130,21 @@ void millisecondTimerEOL(HardwareTimer*) {
         eolScreenMessage(eolScreenBuffer, eolFail);
     }
 
+    batteryLoop(0);
+
     if (eolstep == START) {
         blower.runSpeed(1799);  // More current
         eolstep = TEST_BAT_DEAD;
         eolMSCount = 0;
     } else if (eolstep == TEST_BAT_DEAD) {
-        updateBatterySample();
-        batlevel = getBatteryLevelX10();
+        batlevel = getBatteryLevelX100();
         if (eolMSCount < 2000u) {
-            (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\n  V=%02d.%d", batlevel / 10,
-                           batlevel % 10);
+            (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\n  V=%02d.%02d",
+                           batlevel / 100, batlevel % 100);
         } else {
-            if (batlevel > 255) {
+            if (isMainsConnected()) {
                 eolstep = DISCONNECT_MAINS;
-            } else if (batlevel < 220) {
+            } else if (batlevel < 2200) {
                 eolstep = BATTERY_DEEP_DISCHARGE;
             } else {
                 eolTestNumber++;
@@ -154,26 +155,26 @@ void millisecondTimerEOL(HardwareTimer*) {
     } else if (eolstep == BATTERY_DEEP_DISCHARGE) {
         eolFail = true;
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Test Vbat ECHEC\nBATTERIE TROP FAIBLE\n  V=%02d.%d", batlevel / 10,
-                       batlevel % 10);
+                       "Test Vbat ECHEC\nBATTERIE TROP FAIBLE\n  V=%02d.%d", batlevel / 100,
+                       batlevel % 100);
     } else if (eolstep == DISCONNECT_MAINS) {
-        updateBatterySample();
-        batlevel = getBatteryLevelX10();
+        batlevel = getBatteryLevelX100();
 
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nDebrancher 220V...\n  V=%02d.%d",
-                       batlevel / 10, batlevel % 10);
-        if (batlevel < 255) {
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                       "Test Vbat\nDebrancher 220V...\n  V=%02d.%02d", batlevel / 100,
+                       batlevel % 100);
+        if (batlevel < 2550) {
             eolstep = START;
         }
     } else if (eolstep == CONNECT_MAINS) {
-        updateBatterySample();
-        batlevel = getBatteryLevelX10();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nConnecter 220V...\n  V=%02d.%d",
-                       batlevel / 10, batlevel % 10);
+        batlevel = getBatteryLevelX100();
+
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nConnecter 220V...\nV=%02d.%02d",
+                       batlevel / 100, batlevel % 100);
         minbatlevel = min(minbatlevel, batlevel);
         maxbatlevel = max(maxbatlevel, batlevel);
-        // Wait for 400 mV raise
-        if ((maxbatlevel - minbatlevel) > 3) {
+        // Wait for 400 mV raise, or mains connected signal
+        if ((maxbatlevel - minbatlevel) > 30 || isMainsConnected()) {
             BuzzerControl_On();
             eolTestNumber++;
             blower.stop();
