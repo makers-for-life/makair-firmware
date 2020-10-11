@@ -134,7 +134,6 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_LCD_D5 PB10  // PB6
 #define PIN_LCD_D6 PA7   // PA7
 #define PIN_LCD_D7 PA6   // PA6
-#
 
 /// Number of lines
 #define SCREEN_LINE_NUMBER 4
@@ -166,6 +165,8 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_IN_ROW1 PC9
 #define PIN_IN_ROW2 PC10
 #define PIN_IN_ROW3 PC11
+// expander used to read AC status
+#define PIN_IN_MAINS_CONNECTED PB1
 
 ///@}
 
