@@ -78,8 +78,14 @@ union {
     // cppcheck-suppress misra-c2012-19.2 ; union correctly used
 } mfmLastData;
 
+// API update since version 1.9.0 of Arduino_Core_STM32
+#if (STM32_CORE_VERSION < 0x01090000)
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
-void MFM_Timer_Callback(HardwareTimer*) {
+void MFM_Timer_Callback(HardwareTimer*)  // NOLINT(readability/casting)
+#else
+void MFM_Timer_Callback(void)
+#endif
+{
     if (!mfmFaultCondition) {
 #if MODE == MODE_MFM_TESTS
         // cppcheck-suppress misra-c2012-12.3

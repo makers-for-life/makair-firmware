@@ -116,8 +116,14 @@ char eolScreenBuffer[EOLSCREENSIZE + 1];
 #define EOL_TOTALBUTTONS 11
 int16_t eolMatrixCurrentColumn = 1;
 
+// API update since version 1.9.0 of Arduino_Core_STM32
+#if (STM32_CORE_VERSION < 0x01090000)
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
-void millisecondTimerEOL(HardwareTimer*) {
+void millisecondTimerEOL(HardwareTimer*)  // NOLINT(readability/casting)
+#else
+void millisecondTimerEOL(void)
+#endif
+{
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     clockEOLTimer++;
     eolMSCount++;
