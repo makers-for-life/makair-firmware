@@ -25,8 +25,6 @@ jobs:
           arduino-cli lib install "Analog Buttons"@1.2.0
           arduino-cli lib install OneButton@1.5.0
           arduino-cli lib install CRC32@2.0.0
-          sed -i '/recipe.output.tmp_file={build.project_name}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/$STM32DUINO_VERSION/platform.txt"
-          sed -i '/recipe.output.save_file={build.project_name}.{build.variant}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/$STM32DUINO_VERSION/platform.txt"
 
       - name: Get the version
         id: version
