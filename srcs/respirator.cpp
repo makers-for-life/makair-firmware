@@ -207,7 +207,6 @@ void setup(void) {
     // Catch potential Watchdog reset
     // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
     if (IWatchdog.isReset(true)) {
-
         // Run a high priority alarm
         BuzzerControl_Init();
         Buzzer_Init();
