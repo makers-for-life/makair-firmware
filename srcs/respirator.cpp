@@ -196,8 +196,35 @@ void setup(void) {
         }
     }
 #endif
-
 #endif
+
+    // Open both valves at startup
+    servoBlower.open();
+    servoBlower.execute();
+    servoPatient.open();
+    servoPatient.execute();
+
+    // Catch potential Watchdog reset
+    // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
+    if (IWatchdog.isReset(true)) {
+        // Run a high priority alarm
+        BuzzerControl_Init();
+        Buzzer_Init();
+        Buzzer_High_Prio_Start();
+
+        // Print message on the screen
+        screen.clear();
+        screen.setCursor(0, 0);
+        screen.print("An error has occured");
+        screen.setCursor(0, 2);
+        screen.print("Check the machine");
+        screen.setCursor(0, 3);
+        screen.print("before re-using");
+
+        // Wait infinitely
+        while (1) {
+        }
+    }
 
     // Do not initialize pressure controller and keyboard in test mode
     if (!eolTest.isRunning()) {
@@ -313,19 +340,6 @@ void setup(void) {
     waitForInMs(1000);
 
     lastpControllerComputeDate = micros();
-
-    // Catch potential Watchdog reset
-    // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
-    if (IWatchdog.isReset(true)) {
-        // TODO holdExhale
-        // Display something ?
-        // Alarm code ?
-
-        Buzzer_Init();
-        Buzzer_High_Prio_Start();
-        while (1) {
-        }
-    }
 
     // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
