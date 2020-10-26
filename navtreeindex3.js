@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"telemetry_8cpp.html#a8a52623e1220d2f1941f75525a3cbe16":[3,0,1,21,5],
 "telemetry_8cpp.html#a98bf45d9b6065dd4000ad613ca44e196":[3,0,1,21,8],
 "telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234":[3,0,1,21,12],
 "telemetry_8cpp.html#abbec88ba0d819eb7bdb54385047ee885":[3,0,1,21,9],

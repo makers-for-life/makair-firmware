@@ -26,21 +26,22 @@ var NAVTREE =
 [
   [ "software:firmware", "index.html", [
     [ "Changelog", "index.html", [
-      [ "v3.0.1", "index.html#autotoc_md8", null ],
-      [ "v3.0.0", "index.html#autotoc_md9", null ],
-      [ "v1.5.4", "index.html#autotoc_md10", null ],
-      [ "v1.5.3", "index.html#autotoc_md11", null ],
-      [ "v1.5.2", "index.html#autotoc_md12", null ],
-      [ "v1.5.1", "index.html#autotoc_md13", null ],
-      [ "v1.5.0", "index.html#autotoc_md14", null ],
-      [ "v1.4.0", "index.html#autotoc_md15", null ],
-      [ "v1.3.2", "index.html#autotoc_md16", null ],
-      [ "v1.3.1", "index.html#autotoc_md17", null ],
-      [ "v1.3.0", "index.html#autotoc_md18", null ],
-      [ "v1.2.3", "index.html#autotoc_md19", null ],
-      [ "v1.2.2", "index.html#autotoc_md20", null ],
-      [ "v1.2.1", "index.html#autotoc_md21", null ],
-      [ "v1.2.0", "index.html#autotoc_md22", null ]
+      [ "unreleased", "index.html#autotoc_md8", null ],
+      [ "v3.0.1", "index.html#autotoc_md9", null ],
+      [ "v3.0.0", "index.html#autotoc_md10", null ],
+      [ "v1.5.4", "index.html#autotoc_md11", null ],
+      [ "v1.5.3", "index.html#autotoc_md12", null ],
+      [ "v1.5.2", "index.html#autotoc_md13", null ],
+      [ "v1.5.1", "index.html#autotoc_md14", null ],
+      [ "v1.5.0", "index.html#autotoc_md15", null ],
+      [ "v1.4.0", "index.html#autotoc_md16", null ],
+      [ "v1.3.2", "index.html#autotoc_md17", null ],
+      [ "v1.3.1", "index.html#autotoc_md18", null ],
+      [ "v1.3.0", "index.html#autotoc_md19", null ],
+      [ "v1.2.3", "index.html#autotoc_md20", null ],
+      [ "v1.2.2", "index.html#autotoc_md21", null ],
+      [ "v1.2.1", "index.html#autotoc_md22", null ],
+      [ "v1.2.0", "index.html#autotoc_md23", null ]
     ] ],
     [ "How to build and run the tests", "md_test__r_e_a_d_m_e.html", [
       [ "Install Google Test", "md_test__r_e_a_d_m_e.html#autotoc_md1", null ],
@@ -81,8 +82,8 @@ var NAVTREEINDEX =
 [
 "activation_8cpp.html",
 "class_pressure_controller.html#a5c7d475c92b3c3d4683ac7aa0a469e42",
-"keyboard_8cpp.html#a8050700d797399aa3248c71f95d4b073",
-"telemetry_8cpp.html#a98bf45d9b6065dd4000ad613ca44e196"
+"keyboard_8cpp.html#a6e101a2b57f253e108dd99475e37db29",
+"telemetry_8cpp.html#a8a52623e1220d2f1941f75525a3cbe16"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
