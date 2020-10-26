@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+
+- turn the green LED on when alarms are snoozed
+- display a special message on LCD screen when watchdog reset was triggered
+
 ## v3.0.1
 
 - fix an issue with the optional mass flow meter
