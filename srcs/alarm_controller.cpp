@@ -129,6 +129,7 @@ AlarmController::AlarmController()
 
 void AlarmController::snooze() {
     if (m_snoozeTime == 0u) {
+        digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
         m_snoozeTime = millis();
         for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
             Alarm* current = &m_alarms[i];
@@ -256,7 +257,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         unsnooze = true;
     }
 
-    if ((p_tick % (LCD_UPDATE_PERIOD_US/PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
+    if ((p_tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
         displayAlarmInformation(triggeredAlarmCodes, numberOfTriggeredAlarms);
     }
 
@@ -298,6 +299,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
     }
 
     if (unsnooze) {
+        digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
         m_snoozeTime = 0u;
         for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
             m_snoozedAlarms[i] = false;
