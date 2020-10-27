@@ -13,6 +13,7 @@
 #include "../includes/battery.h"
 #include "../includes/buzzer_control.h"
 #include "../includes/end_of_line_test.h"
+#include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
 #include "../includes/screen.h"
 
@@ -20,6 +21,8 @@ uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
 uint32_t eolTestNumber = 1;
 int32_t pressureValue = 0;
+int32_t flowValue = 0;
+int32_t lastVolumeValue = 0;
 int32_t MinPressureValue = INT32_MAX;
 int32_t MaxPressureValue = 0;
 HardwareTimer* eolTimer;
@@ -101,6 +104,10 @@ enum TestStep {
     START_O2_TEST,
     // cppcheck-suppress misra-c2012-12.3
     O2_PRESSURE_NOT_REACH,
+    // cppcheck-suppress misra-c2012-12.3
+    CHECK_MASS_FLOW_METER,
+    // cppcheck-suppress misra-c2012-12.3
+    MASS_FLOW_METER_FAIL,
     // cppcheck-suppress misra-c2012-12.3
     START_LONG_RUN_BLOWER,
     // cppcheck-suppress misra-c2012-12.3
@@ -383,7 +390,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O",
                        pressureValue);
         if (pressureValue > 100) {
-            eolstep = START_LONG_RUN_BLOWER;
+            eolstep = CHECK_MASS_FLOW_METER;
             eolTestNumber++;
             eolMSCount = 0;
         } else if (eolMSCount > 20000u) {
@@ -396,6 +403,42 @@ void millisecondTimerEOL(HardwareTimer*) {
     } else if (eolstep == O2_PRESSURE_NOT_REACH) {
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Tuyau O2\nBouche ! ");
+
+    } else if (eolstep == CHECK_MASS_FLOW_METER) {
+        blower.runSpeed(1790);
+        servoBlower.open();
+        servoBlower.execute();
+        servoPatient.open();
+        servoPatient.execute();
+
+        // Read the flow-meter every 100ms, using the same function as the main program.
+        if (eolMSCount % READ_MASS_FLOW_METER_PERIOD_MS == 0) {
+            int32_t volumeValue = MFM_read_milliliters(false);
+            flowValue = (1000 * (volumeValue - lastVolumeValue)) / READ_MASS_FLOW_METER_PERIOD_MS;
+            lastVolumeValue = volumeValue;
+        }
+
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test debitmetre\n  \nD = %d mL/s",
+                       flowValue);
+        // After 2s of stabilisation, check if flow rate is in range [800-1500]mL/s
+        if (eolMSCount > 2000 && flowValue > 800 && flowValue < 1500) {
+            eolstep = START_LONG_RUN_BLOWER;
+            eolTestNumber++;
+            eolMSCount = 0;
+        }
+        // Fail if value is not reached in 20s
+        else if (eolMSCount > 20000) {
+            eolMSCount = 0;
+            eolFail = true;
+            eolstep = MASS_FLOW_METER_FAIL;
+        } else {
+            // Do nothing
+        }
+    } else if (eolstep == MASS_FLOW_METER_FAIL) {
+        blower.stop();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Erreur\nDebitmetre !\n \nD = %d mL/s",
+                       flowValue);
+
     } else if (eolstep == START_LONG_RUN_BLOWER) {
         blower.runSpeed(1790);
         servoBlower.open();

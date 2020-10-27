@@ -11,7 +11,7 @@
 #include "../includes/pressure_valve.h"
 
 #define EOL_TEST_ACTIVE 0xa240183a
-
+#define READ_MASS_FLOW_METER_PERIOD_MS 100
 /// Controls the running of the embedded auto tests
 class EolTest {
  public:
