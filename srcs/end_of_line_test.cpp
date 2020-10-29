@@ -15,6 +15,9 @@
 #include "../includes/end_of_line_test.h"
 #include "../includes/pressure.h"
 #include "../includes/screen.h"
+#include "../includes/serial_control.h"
+#include "../includes/telemetry.h"
+#include "../includes/pressure_controller.h"
 
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
@@ -24,9 +27,11 @@ int32_t MinPressureValue = INT32_MAX;
 int32_t MaxPressureValue = 0;
 HardwareTimer* eolTimer;
 
+
 EolTest::EolTest() {
     testActive = 0;
     ::eolTimer = new HardwareTimer(TIM9);
+    pController = PressureController();
 }
 
 // cppcheck-suppress unusedFunction
@@ -82,6 +87,8 @@ enum TestStep {
     // cppcheck-suppress misra-c2012-12.3
     CHECK_ALL_BUTTONS,
     // cppcheck-suppress misra-c2012-12.3
+    CHECK_UI_SCREEN,
+    // cppcheck-suppress misra-c2012-12.3
     PLUG_AIR_TEST_SYTEM,
     // cppcheck-suppress misra-c2012-12.3
     REACH_MAX_PRESSURE,
@@ -110,7 +117,7 @@ enum TestStep {
     END_SUCCESS
 };
 
-TestStep eolstep = START;
+TestStep eolstep = CHECK_UI_SCREEN;
 TestStep previousEolStep = START;
 boolean eolFail = false;
 #define EOLSCREENSIZE 100
@@ -316,8 +323,24 @@ void millisecondTimerEOL(HardwareTimer*) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;  // Wait release if still pressed in previous test
             }
-            eolstep = PLUG_AIR_TEST_SYTEM;
+            eolstep = CHECK_UI_SCREEN;
         }
+    }
+
+    // Ask the operator to activate the trigger on the UI screen. It allows to test
+    // communication with the UI, and tactile function of the UI.
+    else if (eolstep == CHECK_UI_SCREEN) {
+        sendStoppedMessage();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Enable the trigger\nOn the UI screen");
+
+        // Check serial from the UI
+        serialControlLoop();
+
+        if (pController.isTriggerModeEnabled()) {
+            eolstep = PLUG_AIR_TEST_SYTEM;
+            eolMSCount = 0;
+        }
+
     }
 
     // Ask the operator to plug the lung system on the machine, and wait the operator to press start

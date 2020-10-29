@@ -216,6 +216,9 @@ class PressureController {
     /// Get the value of the inspiratory trigger pressure
     inline const uint16_t pressureTrigger() const { return m_pressureTrigger; }
 
+    /// Get the enable state of the trigger mode
+    inline const uint16_t isTriggerModeEnabled() const { return m_triggerModeEnabled; }
+
     /**
      * Input the real duration since the last pressure controller computation
      *
