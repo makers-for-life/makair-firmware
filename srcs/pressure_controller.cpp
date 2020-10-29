@@ -56,11 +56,11 @@ PressureController::PressureController()
       m_cycleNb(0),
       m_dt(0),
       m_pressureCommand(0),
-      blowerIntegral(0),
-      blowerLastError(0),
-      patientIntegral(0),
-      lastBlowerAperture(0),
-      patientLastError(0),
+      PC_inspiratory_PID_integral(0),
+      PC_inspiratory_PID_LastError(0),
+      PC_expiratory_PID_integral(0),
+      inspiratoryValveLastAperture(0),
+      PC_expiratory_PID_LastError(0),
       m_startPlateauComputation(false),
       m_plateauComputed(false),
       m_lastPressureValuesIndex(0),
@@ -69,14 +69,14 @@ PressureController::PressureController()
       m_plateauStartTime(0u),
       m_squarePlateauSum(0),
       m_squarePlateauCount(0),
-      m_lastBlowerPIDErrorIndex(0),
-      m_lastPatientPIDErrorIndex(0),
-      patientPIDFastMode(true),
-      blowerPIDFastMode(true),
+      PC_inspiratory_PID_last_errorsIndex(0),
+      PC_expiratory_PID_last_errorsIndex(0),
+      PC_expiratory_PID_fast_mode(true),
+      PC_inspiratory_PID_fast_mode(true),
       m_tick(0),
-      lastPatientAperture(0),
+      expiratoryValveLastAperture(0),
       m_triggered(false),
-      m_pressureTrigger(0),
+      m_pressureTriggerOffset(0),
       m_isPeepDetected(false),
       m_triggerModeEnabled(false),
       m_plateauDurationMs(0),
@@ -88,9 +88,9 @@ PressureController::PressureController()
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0u;
     }
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
-        m_lastBlowerPIDError[i] = 0u;
-        m_lastPatientPIDError[i] = 0u;
+    for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
+        PC_inspiratory_PID_last_errors[i] = 0u;
+        PC_expiratory_PID_last_errors[i] = 0u;
     }
     for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
         m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinute;
@@ -123,20 +123,20 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_phase(CyclePhases::INHALATION),
       m_subPhase(CycleSubPhases::INSPIRATION),
       // cppcheck-suppress misra-c2012-12.3
-      m_blower_valve(p_blower_valve),
-      m_patient_valve(p_patient_valve),
+      m_inspiratoryValve(p_blower_valve),
+      m_expiratoryValve(p_patient_valve),
       m_blower(p_blower),
       m_alarmController(p_alarmController),
       m_blower_increment(0),
       m_cycleNb(0),
       m_dt(0),
       m_pressureCommand(0),
-      blowerIntegral(0),
-      blowerLastError(0),
+      PC_inspiratory_PID_integral(0),
+      PC_inspiratory_PID_LastError(0),
       // cppcheck-suppress misra-c2012-12.3
-      patientIntegral(0),
-      lastBlowerAperture(0),
-      patientLastError(0),
+      PC_expiratory_PID_integral(0),
+      inspiratoryValveLastAperture(0),
+      PC_expiratory_PID_LastError(0),
       m_startPlateauComputation(false),
       m_plateauComputed(false),
       m_lastPressureValuesIndex(0),
@@ -145,14 +145,14 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_plateauStartTime(0u),
       m_squarePlateauSum(0),
       m_squarePlateauCount(0),
-      m_lastBlowerPIDErrorIndex(0),
-      m_lastPatientPIDErrorIndex(0),
-      patientPIDFastMode(true),
-      blowerPIDFastMode(true),
+      PC_inspiratory_PID_last_errorsIndex(0),
+      PC_expiratory_PID_last_errorsIndex(0),
+      PC_expiratory_PID_fast_mode(true),
+      PC_inspiratory_PID_fast_mode(true),
       m_tick(0),
-      lastPatientAperture(0),
+      expiratoryValveLastAperture(0),
       m_triggered(false),
-      m_pressureTrigger(0),
+      m_pressureTriggerOffset(0),
       m_isPeepDetected(false),
       m_triggerModeEnabled(false),
       m_plateauDurationMs(0),
@@ -161,12 +161,13 @@ PressureController::PressureController(int16_t p_cyclesPerMinute,
       m_ExpiratoryTerm(DEFAULT_EXPIRATORY_TERM_COMMAND),
       m_peakBlowerValveAngle(VALVE_CLOSED_STATE) {
     computeTickParameters();
+    
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0u;
     }
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
-        m_lastBlowerPIDError[i] = 0u;
-        m_lastPatientPIDError[i] = 0u;
+    for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
+        PC_inspiratory_PID_last_errors[i] = 0u;
+        PC_expiratory_PID_last_errors[i] = 0u;
     }
     for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
         m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinute;
@@ -177,11 +178,11 @@ void PressureController::setup() {
     DBG_DO(Serial.println(VERSION);)
     DBG_DO(Serial.println("mise en secu initiale");)
 
-    m_blower_valve.close();
-    m_patient_valve.close();
+    m_inspiratoryValve.close();
+    m_expiratoryValve.close();
 
-    m_blower_valve.execute();
-    m_patient_valve.execute();
+    m_inspiratoryValve.execute();
+    m_expiratoryValve.execute();
 
     m_peakPressure = 0;
     m_plateauPressure = 0;
@@ -189,7 +190,7 @@ void PressureController::setup() {
 
     m_cycleNb = 0;
 
-    m_pressureTrigger = DEFAULT_TRIGGER_OFFSET;
+    m_pressureTriggerOffset = DEFAULT_TRIGGER_OFFSET;
 
     m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
 
@@ -204,28 +205,32 @@ void PressureController::initRespiratoryCycle() {
     m_cycleNb++;
     m_plateauPressure = 0;
 
-    // Blowererror is initialised as command - peep. With Faulhaber valves, peak command is plateau
-    // command
-    blowerLastError = m_maxPlateauPressureCommand - m_minPeepCommand;
-
     // Reset PID values
-    blowerIntegral = 0;
-    patientIntegral = 0;
-    patientLastError = m_minPeepCommand - m_maxPlateauPressureCommand;
-    lastBlowerAperture = m_blower_valve.maxAperture();
-    lastPatientAperture = m_patient_valve.maxAperture();
-    blowerPIDFastMode = true;
-    patientPIDFastMode = true;
+    PC_inspiratory_PID_integral = 0;
+    PC_expiratory_PID_integral = 0;
+    PC_inspiratory_PID_LastError = m_maxPlateauPressureCommand - m_minPeepCommand;
+    PC_expiratory_PID_LastError = m_minPeepCommand - m_maxPlateauPressureCommand;
+    PC_inspiratory_PID_fast_mode = true;
+    PC_expiratory_PID_fast_mode = true;
+    for (uint8_t i = 0; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
+        PC_inspiratory_PID_last_errors[i] = 0;
+        PC_expiratory_PID_last_errors[i] = m_minPeepCommand - m_maxPlateauPressureCommand;
+    }
 
-    m_peakPressure = 0;
+    inspiratoryValveLastAperture = m_inspiratoryValve.maxAperture();
+    expiratoryValveLastAperture = m_expiratoryValve.maxAperture();
+
+    
     computeTickParameters();
 
+    m_peakPressure = 0;
     m_triggered = false;
-
     m_isPeepDetected = false;
 
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
 
+
+    // Update new settings at the beginning of the respiratory cycle
     m_cyclesPerMinute = m_cyclesPerMinuteCommand;
     m_minPeep = m_minPeepCommand;
     m_maxPlateauPressure = m_maxPlateauPressureCommand;
@@ -245,6 +250,7 @@ void PressureController::initRespiratoryCycle() {
     }
     m_blower_increment = 0;
 
+
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0;
     }
@@ -260,10 +266,7 @@ void PressureController::initRespiratoryCycle() {
     m_squarePlateauSum = 0u;
     m_squarePlateauCount = 0u;
 
-    for (uint8_t i = 0; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
-        m_lastBlowerPIDError[i] = 0;
-        m_lastPatientPIDError[i] = m_minPeepCommand - m_maxPlateauPressureCommand;
-    }
+    
 }
 
 void PressureController::endRespiratoryCycle() {
@@ -318,7 +321,7 @@ void PressureController::endRespiratoryCycle() {
                              mmH2OtoCmH2O(m_minPeepCommand), m_cyclesPerMinuteCommand,
                              m_peakPressure, plateauPressureToDisplay, m_peep,
                              m_alarmController->triggeredAlarms(), telemetryVolume,
-                             m_ExpiratoryTerm, m_triggerModeEnabled, m_pressureTrigger);
+                             m_ExpiratoryTerm, m_triggerModeEnabled, m_pressureTriggerOffset);
 }
 
 void PressureController::updatePressure(int16_t p_currentPressure) {
@@ -371,12 +374,12 @@ void PressureController::compute(uint16_t p_tick) {
     }
 
     DBG_PHASE_PRESSION(m_cycleNb, p_tick, 1u, m_phase, m_subPhase, m_pressure,
-                       m_blower_valve.command, m_blower_valve.position, m_patient_valve.command,
-                       m_patient_valve.position)
+                       m_inspiratoryValve.command, m_inspiratoryValve.position,
+                       m_expiratoryValve.command, m_expiratoryValve.position)
 
     m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, m_blower_valve.position,
-                     m_patient_valve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
+    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, m_inspiratoryValve.position,
+                     m_expiratoryValve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
 
     executeCommands();
 }
@@ -615,16 +618,16 @@ void PressureController::onTriggerEnabledSet(uint16_t TriggerEnabled) {
 // cppcheck-suppress unusedFunction
 void PressureController::onTriggerOffsetSet(uint16_t TriggerOffset) {
     if (TriggerOffset > CONST_MAX_TRIGGER_OFFSET) {
-        m_pressureTrigger = CONST_MAX_TRIGGER_OFFSET;
+        m_pressureTriggerOffset = CONST_MAX_TRIGGER_OFFSET;
         // cppcheck-suppress unsignedLessThanZero
     } else if (TriggerOffset < CONST_MIN_TRIGGER_OFFSET) {
-        m_pressureTrigger = CONST_MIN_TRIGGER_OFFSET;
+        m_pressureTriggerOffset = CONST_MIN_TRIGGER_OFFSET;
     } else {
-        m_pressureTrigger = TriggerOffset;
+        m_pressureTriggerOffset = TriggerOffset;
     }
 
     // Send acknoledgment to the UI
-    sendControlAck(7, m_pressureTrigger);
+    sendControlAck(7, m_pressureTriggerOffset);
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
@@ -655,10 +658,10 @@ void PressureController::updatePhase(uint16_t p_tick) {
 void PressureController::inhale() {
     // Open the inspiratory valve using a PID
     m_peakBlowerValveAngle = pidBlower(m_pressureCommand, m_pressure, m_dt);
-    m_blower_valve.open(m_peakBlowerValveAngle);
+    m_inspiratoryValve.open(m_peakBlowerValveAngle);
 
     // Close the expiratory valve
-    m_patient_valve.close();
+    m_expiratoryValve.close();
 
     // Update the peak pressure
     m_peakPressure = max(m_pressure, m_peakPressure);
@@ -667,7 +670,7 @@ void PressureController::inhale() {
 void PressureController::plateau() {
     // Keep the inspiratory valve open using a PID. The openning of the valve will be very small
     // during this phase.
-    m_blower_valve.open(pidBlower(m_pressureCommand, m_pressure, m_dt));
+    m_inspiratoryValve.open(pidBlower(m_pressureCommand, m_pressure, m_dt));
 
     // Compute mean plateau pressure only after the peak.
     if (m_pressure > m_peakPressure) {
@@ -680,15 +683,15 @@ void PressureController::plateau() {
     }
 
     // Close the inspiratory valve
-    m_patient_valve.close();
+    m_expiratoryValve.close();
 }
 
 void PressureController::exhale() {
     // Close the inspiratory valve
-    m_blower_valve.close();
+    m_inspiratoryValve.close();
 
     // Open the valve expiratory so the patient can exhale outside
-    m_patient_valve.open(pidPatient(m_pressureCommand, m_pressure, m_dt));
+    m_expiratoryValve.open(pidPatient(m_pressureCommand, m_pressure, m_dt));
 
     // Compute the PEEP pressure
     uint16_t minValue = m_lastPressureValues[0u];
@@ -716,7 +719,7 @@ void PressureController::exhale() {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
         if (static_cast<int32_t>(m_pressure)
-                < (m_pressureCommand - static_cast<int32_t>(m_pressureTrigger))
+                < (m_pressureCommand - static_cast<int32_t>(m_pressureTriggerOffset))
             && (m_peakPressure > CONST_MIN_PEAK_PRESSURE)) {
             m_triggered = true;
         }
@@ -771,8 +774,8 @@ void PressureController::computeTickParameters() {
 }
 
 void PressureController::executeCommands() {
-    m_blower_valve.execute();
-    m_patient_valve.execute();
+    m_inspiratoryValve.execute();
+    m_expiratoryValve.execute();
 }
 
 void PressureController::checkCycleAlarm() {
@@ -826,8 +829,8 @@ void PressureController::setSubPhase(CycleSubPhases p_subPhase, uint16_t p_tick)
 
 int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 
-    int32_t minAperture = m_blower_valve.minAperture();
-    int32_t maxAperture = m_blower_valve.maxAperture();
+    int32_t minAperture = m_inspiratoryValve.minAperture();
+    int32_t maxAperture = m_inspiratoryValve.maxAperture();
     uint32_t blowerAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
@@ -839,7 +842,7 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     int32_t coefficientI;
     int32_t coefficientD;
 
-    int32_t temporaryBlowerIntegral = 0;
+    int32_t temporaryPC_inspiratory_PID_integral = 0;
 
     // Compute error
     int32_t error = targetPressure - currentPressure;
@@ -856,39 +859,40 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     }
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
-    m_lastBlowerPIDError[m_lastBlowerPIDErrorIndex] = error;
-    m_lastBlowerPIDErrorIndex++;
-    if (m_lastBlowerPIDErrorIndex
-        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN)) {
-        m_lastBlowerPIDErrorIndex = 0;
+    PC_inspiratory_PID_last_errors[PC_inspiratory_PID_last_errorsIndex] = error;
+    PC_inspiratory_PID_last_errorsIndex++;
+    if (PC_inspiratory_PID_last_errorsIndex
+        >= static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN)) {
+        PC_inspiratory_PID_last_errorsIndex = 0;
     }
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
-        totalValues += m_lastBlowerPIDError[i];
+    for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
+        totalValues += PC_inspiratory_PID_last_errors[i];
     }
     smoothError =
-        totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
+        totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
 
     // Fast mode ends at 20mmH20 from target. When changing from fast-mode to PID, Set the
     // integral to the previous value
     if (error < 20) {
-        if (blowerPIDFastMode) {
+        if (PC_inspiratory_PID_fast_mode) {
             proportionnalWeight = (coefficientP * error) / 1000;
             derivativeWeight = (coefficientD * derivative / 1000);
-            blowerIntegral =
-                1000 * ((int32_t)lastBlowerAperture - maxAperture) / (minAperture - maxAperture)
+            PC_inspiratory_PID_integral =
+                1000 * ((int32_t)inspiratoryValveLastAperture - maxAperture)
+                    / (minAperture - maxAperture)
                 - (proportionnalWeight + derivativeWeight);
         }
-        blowerPIDFastMode = false;
+        PC_inspiratory_PID_fast_mode = false;
     }
 
     // In fast mode : everything is openned (Open loop)
-    if (blowerPIDFastMode) {
+    if (PC_inspiratory_PID_fast_mode) {
         // Ramp from 125 to 0 angle during 250ms.
         int32_t increment = 5 * ((int32_t)PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
-        if (lastBlowerAperture >= static_cast<uint32_t>(abs(increment))) {
-            blowerAperture =
-                max(minAperture,
-                    min(maxAperture, (static_cast<int32_t>(lastBlowerAperture) - increment)));
+        if (inspiratoryValveLastAperture >= static_cast<uint32_t>(abs(increment))) {
+            blowerAperture = max(
+                minAperture,
+                min(maxAperture, (static_cast<int32_t>(inspiratoryValveLastAperture) - increment)));
         } else {
             blowerAperture = 0;
         }
@@ -896,14 +900,17 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
 
     // In not fast mode the PID is used
     else {
-        derivative = ((dt == 0)) ? 0 : ((1000000 * (blowerLastError - smoothError)) / dt);
+        derivative =
+            ((dt == 0)) ? 0 : ((1000000 * (PC_inspiratory_PID_LastError - smoothError)) / dt);
 
-        temporaryBlowerIntegral = blowerIntegral + ((coefficientI * error * dt) / 1000000);
-        temporaryBlowerIntegral =
-            max(PID_BLOWER_INTEGRAL_MIN, min(PID_BLOWER_INTEGRAL_MAX, temporaryBlowerIntegral));
+        temporaryPC_inspiratory_PID_integral =
+            PC_inspiratory_PID_integral + ((coefficientI * error * dt) / 1000000);
+        temporaryPC_inspiratory_PID_integral =
+            max(PID_BLOWER_INTEGRAL_MIN,
+                min(PID_BLOWER_INTEGRAL_MAX, temporaryPC_inspiratory_PID_integral));
 
         proportionnalWeight = ((coefficientP * error) / 1000);
-        int32_t integralWeight = temporaryBlowerIntegral;
+        int32_t integralWeight = temporaryPC_inspiratory_PID_integral;
         derivativeWeight = coefficientD * derivative / 1000;
 
         int32_t blowerCommand = proportionnalWeight + integralWeight + derivativeWeight;
@@ -915,25 +922,25 @@ int32_t PressureController::pidBlower(int32_t targetPressure, int32_t currentPre
     // If the valve is completly open or completly closed, dont update Integral
     if ((blowerAperture != static_cast<uint32_t>(minAperture))
         && (blowerAperture != static_cast<uint32_t>(maxAperture))) {
-        blowerIntegral = temporaryBlowerIntegral;
+        PC_inspiratory_PID_integral = temporaryPC_inspiratory_PID_integral;
     }
 
-    lastBlowerAperture = blowerAperture;
-    blowerLastError = smoothError;
+    inspiratoryValveLastAperture = blowerAperture;
+    PC_inspiratory_PID_LastError = smoothError;
 
     return blowerAperture;
 }
 
 int32_t
 PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
-    
-    int32_t minAperture = m_patient_valve.minAperture();
-    int32_t maxAperture = m_patient_valve.maxAperture();
+
+    int32_t minAperture = m_expiratoryValve.minAperture();
+    int32_t maxAperture = m_expiratoryValve.maxAperture();
     uint32_t patientAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;
-    int32_t temporaryPatientIntegral = 0;
+    int32_t temporaryPC_expiratory_PID_integral = 0;
     int32_t proportionnalWeight;
     int32_t derivativeWeight;
 
@@ -945,18 +952,18 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
-    m_lastPatientPIDError[m_lastPatientPIDErrorIndex] = error;
-    m_lastPatientPIDErrorIndex++;
-    if (m_lastPatientPIDErrorIndex
-        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN)) {
-        m_lastPatientPIDErrorIndex = 0;
+    PC_expiratory_PID_last_errors[PC_expiratory_PID_last_errorsIndex] = error;
+    PC_expiratory_PID_last_errorsIndex++;
+    if (PC_expiratory_PID_last_errorsIndex
+        >= static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN)) {
+        PC_expiratory_PID_last_errorsIndex = 0;
     }
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN; i++) {
-        totalValues += m_lastPatientPIDError[i];
+    for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
+        totalValues += PC_expiratory_PID_last_errors[i];
     }
     smoothError =
-        totalValues / static_cast<int32_t>(NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN);
-    derivative = (dt == 0) ? 0 : (1000000 * (smoothError - patientLastError)) / dt;
+        totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
+    derivative = (dt == 0) ? 0 : (1000000 * (smoothError - PC_expiratory_PID_LastError)) / dt;
 
     //  Windowing. It overides the parameter.h coefficients
     if (error < 0) {
@@ -974,37 +981,39 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     // Fast mode ends at 30mmH20 from target. When changing from fast-mode to
     // PID, Set the integral to the previous value
     if (error > -30) {
-        if (patientPIDFastMode) {
+        if (PC_expiratory_PID_fast_mode) {
             proportionnalWeight = (coefficientP * error) / 1000;
             derivativeWeight = (coefficientD * derivative / 1000);
-            patientIntegral =
-                1000 * ((int32_t)lastPatientAperture - maxAperture) / (maxAperture - minAperture)
-                - (proportionnalWeight + derivativeWeight);
+            PC_expiratory_PID_integral = 1000 * ((int32_t)expiratoryValveLastAperture - maxAperture)
+                                             / (maxAperture - minAperture)
+                                         - (proportionnalWeight + derivativeWeight);
         }
-        patientPIDFastMode = false;
+        PC_expiratory_PID_fast_mode = false;
     }
 
     // Fast mode : open loop with ramp
-    if (patientPIDFastMode) {
+    if (PC_expiratory_PID_fast_mode) {
         // Ramp from 125 to 0 angle during 250ms.
         int32_t increment = 5 * ((int32_t)PCONTROLLER_COMPUTE_PERIOD_US) / 10000;
-        if (lastPatientAperture >= static_cast<uint32_t>(abs(increment))) {
-            patientAperture =
-                max(minAperture,
-                    min(maxAperture, (static_cast<int32_t>(lastPatientAperture) - increment)));
+        if (expiratoryValveLastAperture >= static_cast<uint32_t>(abs(increment))) {
+            patientAperture = max(
+                minAperture,
+                min(maxAperture, (static_cast<int32_t>(expiratoryValveLastAperture) - increment)));
         } else {
             patientAperture = 0;
         }
-    } 
+    }
 
     // In not fast mode the PID is used
-    else {  
-        temporaryPatientIntegral = patientIntegral + ((coefficientI * error * dt) / 1000000);
-        temporaryPatientIntegral =
-            max(PID_PATIENT_INTEGRAL_MIN, min(PID_PATIENT_INTEGRAL_MAX, temporaryPatientIntegral));
+    else {
+        temporaryPC_expiratory_PID_integral =
+            PC_expiratory_PID_integral + ((coefficientI * error * dt) / 1000000);
+        temporaryPC_expiratory_PID_integral =
+            max(PID_PATIENT_INTEGRAL_MIN,
+                min(PID_PATIENT_INTEGRAL_MAX, temporaryPC_expiratory_PID_integral));
 
         proportionnalWeight = ((coefficientP * error) / 1000);
-        int32_t integralWeight = temporaryPatientIntegral;
+        int32_t integralWeight = temporaryPC_expiratory_PID_integral;
         derivativeWeight = coefficientD * derivative / 1000;
 
         int32_t patientCommand = proportionnalWeight + integralWeight + derivativeWeight;
@@ -1017,19 +1026,18 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
     // If the valve is completly open or completly closed, dont update Integral
     if ((patientAperture != static_cast<uint32_t>(minAperture))
         && (patientAperture != static_cast<uint32_t>(maxAperture))) {
-        patientIntegral = temporaryPatientIntegral;
+        PC_expiratory_PID_integral = temporaryPC_expiratory_PID_integral;
     }
 
-    patientLastError = smoothError;
-    lastPatientAperture = patientAperture;
-
+    PC_expiratory_PID_LastError = smoothError;
+    expiratoryValveLastAperture = patientAperture;
 
     return patientAperture;
 }
 
 void PressureController::reachSafetyPosition() {
-    m_blower_valve.open();
-    m_blower_valve.execute();
-    m_patient_valve.open();
-    m_patient_valve.execute();
+    m_inspiratoryValve.open();
+    m_inspiratoryValve.execute();
+    m_expiratoryValve.open();
+    m_expiratoryValve.execute();
 }
