@@ -10,8 +10,6 @@
 #include "../includes/config.h"
 #include "Arduino.h"
 
-#if HARDWARE_VERSION == 3
-
 /**
  * @brief  System Clock Configuration, for hardware v3 and later on. 
  * @note   SYSCLK = 100000000 Hz for STM32F411xE
@@ -51,5 +49,3 @@ extern "C" void SystemClock_Config(void) {
         Error_Handler();
     }
 }
-
-#endif

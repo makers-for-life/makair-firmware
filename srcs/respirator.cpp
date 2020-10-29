@@ -13,15 +13,10 @@
 // INCLUDES ==================================================================
 
 // External
-#if HARDWARE_VERSION == 1
-#include <AnalogButtons.h>
-#endif
 #include "Arduino.h"
+#include <HardwareSerial.h>
 #include <IWatchdog.h>
 #include <LiquidCrystal.h>
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
-#include <HardwareSerial.h>
-#endif
 
 // Internal
 #include "../includes/activation.h"
@@ -38,10 +33,8 @@
 #include "../includes/pressure_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
-#endif
 
 // PROGRAM =====================================================================
 
@@ -58,9 +51,7 @@ uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
-#endif
 
 /**
  * Block execution for a given duration
@@ -108,38 +99,12 @@ void setup(void) {
         }
     }
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     initTelemetry();
     sendBootMessage();
-#endif
 
     pinMode(PIN_PRESSURE_SENSOR, INPUT);
     pinMode(PIN_BATTERY, INPUT);
 
-#if HARDWARE_VERSION == 1
-    // Timer for servoBlower
-    hardwareTimer1 = new HardwareTimer(TIM1);
-    hardwareTimer1->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
-
-    // Timer for servoPatient and escBlower
-    hardwareTimer3 = new HardwareTimer(TIM3);
-    hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
-
-    // Servo blower setup
-    servoBlower = PressureValve(hardwareTimer1, TIM_CHANNEL_SERVO_VALVE_BLOWER, PIN_SERVO_BLOWER,
-                                VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
-    servoBlower.setup();
-    hardwareTimer1->resume();
-
-    // Servo patient setup
-    servoPatient = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT, PIN_SERVO_PATIENT,
-                                 VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
-    servoPatient.setup();
-
-    blower = Blower(hardwareTimer3, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
-    blower.setup();
-    blower_pointer = &blower;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     // Timer for servos
     hardwareTimer3 = new HardwareTimer(TIM3);
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
@@ -162,29 +127,12 @@ void setup(void) {
     blower.setup();
     blower_pointer = &blower;
 
-// Turn on the raspberry power
-#if HARDWARE_VERSION == 3
+    // Turn on the raspberry power
     pinMode(PIN_ENABLE_PWR_RASP, OUTPUT);
     digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
-#endif
 
-// Activate test mode if a service button is pressed. The end of line test mode cannot be
-// activated later on.
-#if HARDWARE_VERSION == 2
-    // Autotest inputs: one of the rear button should be pressed while booting, either the right
-    // one or the left one
-    pinMode(PA15, INPUT);
-    pinMode(PB12, INPUT);
-    if ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
-        eolTest.activate();
-        screen.clear();
-        screen.print("EOL Test Mode");
-        while ((HIGH == digitalRead(PA15)) || (HIGH == digitalRead(PB12))) {
-            continue;
-        }
-    }
-#endif
-#if HARDWARE_VERSION == 3
+    // Activate test mode if a service button is pressed. The end of line test mode cannot be
+    // activated later on.
     // Autotest inputs: the service button on PB12, top right of the board's rear side
     pinMode(PB12, INPUT);
     if (HIGH == digitalRead(PB12)) {
@@ -195,8 +143,6 @@ void setup(void) {
             continue;
         }
     }
-#endif
-#endif
 
     // Open both valves at startup
     servoBlower.open();
@@ -413,11 +359,9 @@ void loop(void) {
                     alarmController.notDetectedAlarm(RCM_SW_18);
                     alarmController.notDetectedAlarm(RCM_SW_19);
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
                     if ((tick % 10u) == 0u) {
                         sendStoppedMessage();
                     }
-#endif
                 }
 
                 // Check if some buttons have been pushed
@@ -426,10 +370,8 @@ void loop(void) {
                 // Check if battery state has changed
                 batteryLoop(pController.cycleNumber());
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
                 // Check serial input
                 serialControlLoop();
-#endif
 
                 if (isBatteryDeepDischarged()) {
                     // Delay will trigger the watchdog and the machine will restart with a message

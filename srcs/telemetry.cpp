@@ -15,21 +15,17 @@
 #include "../includes/telemetry.h"
 
 // Externals
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "Arduino.h"
 #include "CRC32.h"
 #include "LL/stm32yyxx_ll_utils.h"
-#endif
 
 /// Internals
 #include "../includes/pressure_controller.h"
 
 // GLOBAL ITEMS ==============================================================
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 /// The device ID to be joined with telemetry messages
 static byte deviceId[12];  // 3 * 32 bits = 96 bits
-#endif
 
 #define FIRST_BYTE (uint8_t)0xFF
 
@@ -85,7 +81,6 @@ void toBytes64(byte bytes[], uint64_t data) {
     bytes[7] = data & FIRST_BYTE;
 }
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 /**
  * Compute device ID
  *
@@ -117,19 +112,15 @@ void computeDeviceId(void) {
 uint64_t computeSystick(void) {
     return (static_cast<uint64_t>(millis()) * 1000u) + (micros() % 1000u);
 }
-#endif
 
 // cppcheck-suppress unusedFunction
 void initTelemetry(void) {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.begin(115200);
     computeDeviceId();
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void sendBootMessage() {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t value128 = 128u;
 
     Serial6.write(header, HEADER_SIZE);
@@ -173,12 +164,10 @@ void sendBootMessage() {
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void sendStoppedMessage() {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
@@ -208,7 +197,6 @@ void sendStoppedMessage() {
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -220,16 +208,7 @@ void sendDataSnapshot(uint16_t centileValue,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
                       uint8_t batteryLevel) {
-#if HARDWARE_VERSION == 1
-    (void)centileValue;
-    (void)pressureValue;
-    (void)phase;
-    (void)subPhase;
-    (void)blowerValvePosition;
-    (void)patientValvePosition;
-    (void)blowerRpm;
-    (void)batteryLevel;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+
     uint8_t phaseValue;
     if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
         phaseValue = 17u;  // 00010001
@@ -317,7 +296,6 @@ void sendDataSnapshot(uint16_t centileValue,
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -334,21 +312,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
                               uint8_t triggerOffset) {
-#if HARDWARE_VERSION == 1
-    (void)cycleValue;
-    (void)peakCommand;
-    (void)plateauCommand;
-    (void)peepCommand;
-    (void)cpmCommand;
-    (void)previousPeakPressureValue;
-    (void)previousPlateauPressureValue;
-    (void)previousPeepPressureValue;
-    (void)currentAlarmCodes;
-    (void)volumeValue;
-    (void)expiratoryTerm;
-    (void)triggerEnabled;
-    (void)triggerOffset;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -477,7 +441,6 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -492,19 +455,7 @@ void sendAlarmTrap(uint16_t centileValue,
                    uint32_t expectedValue,
                    uint32_t measuredValue,
                    uint32_t cyclesSinceTriggerValue) {
-#if HARDWARE_VERSION == 1
-    (void)centileValue;
-    (void)pressureValue;
-    (void)phase;
-    (void)subPhase;
-    (void)cycleValue;
-    (void)alarmCode;
-    (void)alarmPriority;
-    (void)triggered;
-    (void)expectedValue;
-    (void)measuredValue;
-    (void)cyclesSinceTriggerValue;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+
     uint8_t phaseValue;
     if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
         phaseValue = 17u;  // 00010001
@@ -636,15 +587,10 @@ void sendAlarmTrap(uint16_t centileValue,
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void sendControlAck(uint8_t setting, uint16_t valueValue) {
-#if HARDWARE_VERSION == 1
-    (void)setting;
-    (void)valueValue;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("A:");
@@ -688,7 +634,6 @@ void sendControlAck(uint8_t setting, uint16_t valueValue) {
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
 // cppcheck-suppress unusedFunction

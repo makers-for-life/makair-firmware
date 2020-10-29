@@ -118,7 +118,6 @@ int16_t eolMatrixCurrentColumn = 1;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void millisecondTimerEOL(HardwareTimer*) {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
@@ -204,35 +203,6 @@ void millisecondTimerEOL(HardwareTimer*) {
         if (digitalRead(PIN_BTN_ALARM_OFF) == HIGH) {
             buttonsPushed[0] = 1;
         }
-#if HARDWARE_VERSION == 2
-        // discrete buttons
-        if (digitalRead(PIN_BTN_CYCLE_DECREASE) == HIGH) {
-            buttonsPushed[1] = 1;
-        }
-        if (digitalRead(PIN_BTN_CYCLE_INCREASE) == HIGH) {
-            buttonsPushed[2] = 1;
-        }
-        if (digitalRead(PIN_BTN_PEAK_PRESSURE_DECREASE) == HIGH) {
-            buttonsPushed[3] = 1;
-        }
-        if (digitalRead(PIN_BTN_PEAK_PRESSURE_INCREASE) == HIGH) {
-            buttonsPushed[4] = 1;
-        }
-        if (digitalRead(PIN_BTN_PEEP_PRESSURE_DECREASE) == HIGH) {
-            buttonsPushed[5] = 1;
-        }
-        if (digitalRead(PIN_BTN_PEEP_PRESSURE_INCREASE) == HIGH) {
-            buttonsPushed[6] = 1;
-        }
-        if (digitalRead(PIN_BTN_PLATEAU_PRESSURE_DECREASE) == HIGH) {
-            buttonsPushed[7] = 1;
-        }
-        if (digitalRead(PIN_BTN_PLATEAU_PRESSURE_INCREASE) == HIGH) {
-            buttonsPushed[8] = 1;
-        }
-#endif
-
-#if HARDWARE_VERSION == 3
         // this buttons are in a matrix
         if (1 == eolMatrixCurrentColumn) {
             // Increase counter for each column and row
@@ -272,7 +242,6 @@ void millisecondTimerEOL(HardwareTimer*) {
         digitalWrite(PIN_OUT_COL1, 1 == eolMatrixCurrentColumn ? HIGH : LOW);
         digitalWrite(PIN_OUT_COL2, 2 == eolMatrixCurrentColumn ? HIGH : LOW);
         digitalWrite(PIN_OUT_COL3, 3 == eolMatrixCurrentColumn ? HIGH : LOW);
-#endif
 
         if (digitalRead(PIN_BTN_START) == HIGH) {
             buttonsPushed[9] = 1;
@@ -438,7 +407,6 @@ void millisecondTimerEOL(HardwareTimer*) {
     }
 
     previousEolStep = eolstep;
-#endif
 }
 
 void EolTest::setupAndStart() {
@@ -456,7 +424,6 @@ void EolTest::setupAndStart() {
     servoBlower.close();
     servoBlower.execute();
 
-#if HARDWARE_VERSION == 3
     // define the 3x3 matrix keyboard input and output
     pinMode(PIN_OUT_COL1, OUTPUT);
     pinMode(PIN_OUT_COL2, OUTPUT);
@@ -467,7 +434,6 @@ void EolTest::setupAndStart() {
     pinMode(PIN_IN_ROW1, INPUT);
     pinMode(PIN_IN_ROW2, INPUT);
     pinMode(PIN_IN_ROW3, INPUT);
-#endif
 }
 
 EolTest eolTest = EolTest();

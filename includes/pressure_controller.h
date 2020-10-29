@@ -295,10 +295,7 @@ class PressureController {
     /// At the end of a respiratory cycle, check if some alarms are triggered
     void checkCycleAlarm();
 
-#if VALVE_TYPE == VT_FAULHABER
-    /// Update only blower speed
     void updateOnlyBlower();
-#endif
 
  private:
     /// Number of cycles per minute desired by the operator

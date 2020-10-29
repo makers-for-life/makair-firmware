@@ -15,10 +15,8 @@
 #include "../includes/serial_control.h"
 
 // Externals
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "Arduino.h"
 #include "CRC32.h"
-#endif
 
 /// Internals
 #include "../includes/pressure_controller.h"
@@ -58,7 +56,6 @@ uint32_t toU32(byte bytes[]) {
 
 // cppcheck-suppress unusedFunction
 void serialControlLoop() {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     // Let's note this current time to avoid blocking too long here
     int time = millis();
 
@@ -159,5 +156,4 @@ void serialControlLoop() {
             DBG_DO(Serial.println("Invalid header for control message; discarding a byte"));
         }
     }
-#endif
 }
