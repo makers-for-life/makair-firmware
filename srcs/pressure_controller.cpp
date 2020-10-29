@@ -1134,8 +1134,8 @@ PressureController::pidPatient(int32_t targetPressure, int32_t currentPressure, 
         coefficientD = 0;
     } else {
         // For a high peep, a lower KI is requiered. For Peep = 100mmH2O, KI = 120. For Peep =
-        // 50mmH2O, KI = 250.
-        coefficientI = ((-130 * ((int32_t)m_minPeepCommand)) / 50) + 380;
+        // 50mmH2O, KI = 250. Min value of this coefficient is 0.
+        coefficientI = max(0, ((-130 * ((int32_t)m_minPeepCommand)) / 50) + 380);
         coefficientP = 2500;
         coefficientD = 0;
     }
