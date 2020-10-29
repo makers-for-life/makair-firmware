@@ -38,8 +38,8 @@
 
 // PROGRAM =====================================================================
 
-PressureValve servoBlower;
-PressureValve servoPatient;
+PressureValve inspiratoryValve;
+PressureValve expiratoryValve;
 HardwareTimer* hardwareTimer1;
 HardwareTimer* hardwareTimer3;
 Blower* blower_pointer;
@@ -110,15 +110,15 @@ void setup(void) {
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
 
     // Servo blower setup
-    servoBlower = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER, PIN_SERVO_BLOWER,
+    inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER, PIN_SERVO_BLOWER,
                                 VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
-    servoBlower.setup();
+    inspiratoryValve.setup();
     hardwareTimer3->resume();
 
     // Servo patient setup
-    servoPatient = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT, PIN_SERVO_PATIENT,
+    expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT, PIN_SERVO_PATIENT,
                                  VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
-    servoPatient.setup();
+    expiratoryValve.setup();
     hardwareTimer3->resume();
 
     hardwareTimer1 = new HardwareTimer(TIM1);
@@ -145,10 +145,10 @@ void setup(void) {
     }
 
     // Open both valves at startup
-    servoBlower.open();
-    servoBlower.execute();
-    servoPatient.open();
-    servoPatient.execute();
+    inspiratoryValve.open();
+    inspiratoryValve.execute();
+    expiratoryValve.open();
+    expiratoryValve.execute();
 
     // Catch potential Watchdog reset
     // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
@@ -179,7 +179,7 @@ void setup(void) {
         pController =
             PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
                                DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
-                               servoBlower, servoPatient, &alarmController, blower_pointer);
+                               inspiratoryValve, expiratoryValve, &alarmController, blower_pointer);
         pController.setup();
         pController.reachSafetyPosition();
         initKeyboard();
@@ -346,10 +346,10 @@ void loop(void) {
                     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
                     blower.stop();
                     // When stopped, open the valves
-                    servoBlower.open();
-                    servoBlower.execute();
-                    servoPatient.open();
-                    servoPatient.execute();
+                    inspiratoryValve.open();
+                    inspiratoryValve.execute();
+                    expiratoryValve.open();
+                    expiratoryValve.execute();
                     // Stop alarms related to breathing cycle
                     alarmController.notDetectedAlarm(RCM_SW_1);
                     alarmController.notDetectedAlarm(RCM_SW_2);

@@ -270,10 +270,10 @@ void millisecondTimerEOL(HardwareTimer*) {
             eolstep = REACH_MAX_PRESSURE;
         }
     } else if (eolstep == REACH_MAX_PRESSURE) {
-        servoPatient.close();
-        servoPatient.execute();
-        servoBlower.open();
-        servoBlower.execute();
+        expiratoryValve.close();
+        expiratoryValve.execute();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
         blower.runSpeed(1790);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Mise sous pression\n  \nP = %d mmH2O",
@@ -291,10 +291,10 @@ void millisecondTimerEOL(HardwareTimer*) {
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Mise sous pression\nimpossible ! ");
     } else if (eolstep == MAX_PRESSURE_REACHED_OK) {
-        servoBlower.close();
-        servoBlower.execute();
-        servoPatient.close();
-        servoPatient.execute();
+        inspiratoryValve.close();
+        inspiratoryValve.execute();
+        expiratoryValve.close();
+        expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fermeture valves...");
         if (eolMSCount > 1000u) {
             eolMSCount = 0;
@@ -302,10 +302,10 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     } else if (eolstep == START_LEAK_MESURE) {
         blower.stop();
-        servoBlower.close();
-        servoBlower.execute();
-        servoPatient.close();
-        servoPatient.execute();
+        inspiratoryValve.close();
+        inspiratoryValve.execute();
+        expiratoryValve.close();
+        expiratoryValve.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Fuite...\n  \nP = %d mmH2O",
                        pressureValue);
@@ -323,10 +323,10 @@ void millisecondTimerEOL(HardwareTimer*) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fuite importante\nPfinale = %d mmH2O",
                        pressureValue);
     } else if (eolstep == REACH_NULL_PRESSURE) {
-        servoPatient.open();
-        servoPatient.execute();
-        servoBlower.close();
-        servoBlower.execute();
+        expiratoryValve.open();
+        expiratoryValve.execute();
+        inspiratoryValve.close();
+        inspiratoryValve.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Ouverture valves...\n  \nP = %d mmH2O",
                        pressureValue);
@@ -344,10 +344,10 @@ void millisecondTimerEOL(HardwareTimer*) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Vidage valves\nimpossible ! ");
     } else if (eolstep == START_O2_TEST) {
         blower.runSpeed(1790);
-        servoBlower.close();
-        servoBlower.execute();
-        servoPatient.close();
-        servoPatient.execute();
+        inspiratoryValve.close();
+        inspiratoryValve.execute();
+        expiratoryValve.close();
+        expiratoryValve.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O",
                        pressureValue);
@@ -367,10 +367,10 @@ void millisecondTimerEOL(HardwareTimer*) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Tuyau O2\nBouche ! ");
     } else if (eolstep == START_LONG_RUN_BLOWER) {
         blower.runSpeed(1790);
-        servoBlower.open();
-        servoBlower.execute();
-        servoPatient.open((servoPatient.minAperture() + servoPatient.maxAperture()) / 2u);
-        servoPatient.execute();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
+        expiratoryValve.open((expiratoryValve.minAperture() + expiratoryValve.maxAperture()) / 2u);
+        expiratoryValve.execute();
         pressureValue = readPressureSensor(0, pressureOffset);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
                        pressureValue);
@@ -419,10 +419,10 @@ void EolTest::setupAndStart() {
     ::eolTimer->attachInterrupt(millisecondTimerEOL);
     ::eolTimer->resume();
 
-    servoPatient.close();
-    servoPatient.execute();
-    servoBlower.close();
-    servoBlower.execute();
+    expiratoryValve.close();
+    expiratoryValve.execute();
+    inspiratoryValve.close();
+    inspiratoryValve.execute();
 
     // define the 3x3 matrix keyboard input and output
     pinMode(PIN_OUT_COL1, OUTPUT);

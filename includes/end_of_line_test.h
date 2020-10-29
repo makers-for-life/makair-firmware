@@ -40,7 +40,7 @@ extern HardwareTimer* eolTimer;
 extern EolTest eolTest;
 
 // These are defined and initialized in the main program
-extern PressureValve servoBlower;
-extern PressureValve servoPatient;
+extern PressureValve inspiratoryValve;
+extern PressureValve expiratoryValve;
 extern Blower blower;
 extern int16_t pressureOffset;
