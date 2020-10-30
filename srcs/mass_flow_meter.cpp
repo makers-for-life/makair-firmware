@@ -43,9 +43,6 @@
 #define MASS_FLOW_PERIOD 100
 #endif
 
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-#define MASS_FLOW_PERIOD 100
-#endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 #define MASS_FLOW_PERIOD 100
@@ -118,13 +115,6 @@ void MFM_Timer_Callback(HardwareTimer*) {
         }
 
         mfmSampleCount++;
-#endif
-
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-        mfmLastValue = analogRead(MFM_ANALOG_INPUT);
-        if (mfmLastValue > mfmCalibrationOffset + 10) {
-            mfmAirVolumeSum += analogRead(MFM_ANALOG_INPUT);
-        }
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
@@ -263,15 +253,6 @@ bool MFM_init(void) {
     // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
     massFlowTimer->setInterruptPriority(2, 0);
 
-    /* Mass flow needs to be corrected with pressure?
-     * flow (kg/s) = rho (kg/m3) x section (m²) x speed (m/s)
-     * Rho = (Pressure * M) / (R * Temperature)
-     * Sea level pressure: P0 = 101,325 Pa = 1,013.25 mbar = 1,013.25 hPa = 1032 cmH2O
-     * Respirator reaches 50 cmH2O which means 5% error
-     */
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-    pinMode(MFM_ANALOG_INPUT, INPUT);
-#endif
 
 // I2C sensors
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
@@ -367,15 +348,12 @@ void MFM_reset(void) {
     mfmSampleCount = 0;
 }
 
+/**
+ *  If the massflow meter needs to be calibrated, this function will be usefull. 
+ */
+// cppcheck-suppress misra-c2012-2.2
 void MFM_calibrateZero(void) {
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-    int32_t sum = 0;
-    for (int i = 0; i < 10; i++) {
-        sum += analogRead(MFM_ANALOG_INPUT);
-        delayMicroseconds(5000);
-    }
-    mfmCalibrationOffset = sum / 10;
-#endif
+
 }
 
 int32_t MFM_read_milliliters(bool reset_after_read) {
@@ -392,10 +370,6 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
     // This should be an atomic operation (32 bits aligned data)
     result = mfmFaultCondition ? 999999 : (mfmAirVolumeSum / 6.5);
-#endif
-
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-    result = mfmFaultCondition ? 999999 : (mfmAirVolumeSum / 130);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
@@ -437,7 +411,6 @@ void setup(void) {
 
     btn_stop.attachClick(onStartClick);
     btn_stop.setDebounceTicks(0);
-    MFM_calibrateZero();
     mfmAirVolumeSum = 0;
     Serial.println("init done");
 }

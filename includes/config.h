@@ -30,7 +30,6 @@
 // Available Mass Flow Meters
 #define MFM_SFM_3300D 1
 #define MFM_SDP703_02 2
-#define MFM_OMRON_D6F 3
 #define MFM_HONEYWELL_HAF 4
 
 // Defines the type and the range of the mass flow meter
