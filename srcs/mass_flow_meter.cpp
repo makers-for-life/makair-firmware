@@ -15,6 +15,7 @@
 
 // External
 #include <Arduino.h>
+#include <HardwareSerial.h>
 #include <IWatchdog.h>
 #include <OneButton.h>
 #include <Wire.h>
@@ -43,10 +44,6 @@
 #define MASS_FLOW_PERIOD 100
 #endif
 
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-#define MASS_FLOW_PERIOD 100
-#endif
-
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 #define MASS_FLOW_PERIOD 100
 #endif
@@ -55,19 +52,20 @@ HardwareTimer* massFlowTimer;
 
 int32_t mfmCalibrationOffset = 0;
 
-volatile int32_t mfmAirVolumeSum = 0;
+volatile int32_t mfmAirVolumeSumMilliliters = 0;
 volatile int32_t mfmSensorDetected = 0;
-
-volatile int32_t mfmSampleCount = 0;
+volatile int32_t mfmInstantAirFlow = 0;
 
 bool mfmFaultCondition = false;
 
-volatile int failureCount = 0;
-
 int32_t mfmLastValue = 0;
+volatile int32_t mfmLastValueFixedFloat = 0;
 
-// Time to reset the sensor after I2C restart, in periods => 5 ms
-#define MFM_WAIT_RESET_PERIODS 5
+// Time to reset the sensor after I2C restart, in periods => 100 ms
+// the restart time is 50 ms (warm up time in the datasheet)
+// the power off time is 50 ms. enough to discharge capacitors.
+#define MFM_WAIT_RESET_PERIODS 10
+#define MFM_WAIT_WARMUP_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
 
 // cppcheck-suppress misra-c2012-19.2 ; union correctly used
@@ -84,6 +82,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
 #if MODE == MODE_MFM_TESTS
         // cppcheck-suppress misra-c2012-12.3
         digitalWrite(PIN_LED_START, HIGH);
+        // it takes typically 350 µs to read the value.
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -117,48 +116,49 @@ void MFM_Timer_Callback(HardwareTimer*) {
             mfmAirVolumeSum += sqrt(mfmLastValue);
         }
 
-        mfmSampleCount++;
-#endif
-
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-        mfmLastValue = analogRead(MFM_ANALOG_INPUT);
-        if (mfmLastValue > mfmCalibrationOffset + 10) {
-            mfmAirVolumeSum += analogRead(MFM_ANALOG_INPUT);
-        }
+        // mfmSampleCount++;
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
-        Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
 
-        Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
-
+        // begin() and end() everytime you read... the lib never free buffers if you don't do this.
+        Wire.begin();
+        uint8_t readCount = Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
         mfmLastData.c[0] = Wire.read();
         mfmLastData.c[1] = Wire.read();
+        // Wire.endTransmission() send a new write order followed by a stop. Useless and the sensor
+        // often nack it.
+        Wire.end();
 
-        if (Wire.endTransmission() != 0) {
-            // The sensor tends to NACK the address quite often. So let's say there is actually
-            // something wrong when the sensor does that five times in a row, don't care otherwise.
-            failureCount++;
-
-            if (failureCount == 5) {
-                mfmFaultCondition = true;
-                mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
-            }
-        } else {
-            failureCount = 0;
+        // Hardware reset if not able to read two bytes.
+        if (readCount != 2) {
+            mfmFaultCondition = true;
+            mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+            mfmAirVolumeSumMilliliters = 1000000000;  // 1e9
         }
 
         mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
         mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
-        mfmLastValue =
-            MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
+        // Theorical formula : Flow(slpm) = 200*((rawvalue/16384)-0.1)/0.8
+        // float implementation, 1 liter per minute unit
+        // mfmLastValueFloat =
+        //    MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
+
+        // fixed float implementation, 1 milliliter per minute unit
+        mfmLastValueFixedFloat = (((10 * mfmLastValue) - 16384) * 1526) / 1000;
+
+        // 100 value per second, 100 slpm during 10 minutes : sum will be 1.2e9. it fits in a int32
+        // int32 max with milliliters = 2e6 liters.
 
         // The sensor (100SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
-        if (mfmLastValue < (MFM_RANGE * 1.1)) {
-            mfmAirVolumeSum += mfmLastValue;
+        if (mfmLastValueFixedFloat < (MFM_RANGE * 1100)) {
+            mfmInstantAirFlow = mfmLastValueFixedFloat;
+            if (mfmLastValueFixedFloat > 500) {  // less than 0.5SLPM is noise
+                mfmAirVolumeSumMilliliters += mfmLastValueFixedFloat;
+            }
         }
 
 #endif
@@ -175,6 +175,15 @@ void MFM_Timer_Callback(HardwareTimer*) {
     || MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
             Wire.flush();
             Wire.end();
+#endif
+#if HARDWARE_VERSION == 3
+            // Set power off
+            digitalWrite(MFM_POWER_CONTROL, MFM_POWER_OFF);
+            // also set SDA and SCL to 0 to avoid sensor to be powered by I2C bus.
+            pinMode(PIN_I2C_SDA, OUTPUT);
+            pinMode(PIN_I2C_SCL, OUTPUT);
+            digitalWrite(PIN_I2C_SDA, LOW);
+            digitalWrite(PIN_I2C_SCL, LOW);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
@@ -193,6 +202,18 @@ void MFM_Timer_Callback(HardwareTimer*) {
         }
         mfmResetStateMachine--;
 
+        // five period before new attempt (50 ms sensor warmup time in the datasheet)
+        if (mfmResetStateMachine == MFM_WAIT_WARMUP_PERIODS) {
+#if HARDWARE_VERSION == 3
+            // Set power on
+            digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
+            // release the I2C bus
+            pinMode(PIN_I2C_SDA, INPUT);
+            pinMode(PIN_I2C_SCL, INPUT);
+#endif
+        }
+
+        // new attempt
         if (mfmResetStateMachine == 0) {
 // MFM_WAIT_RESET_PERIODS cycles later, try again to init the sensor
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -226,16 +247,11 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
             Wire.begin();
             Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-            Wire.write(0x02);  // Force reset
-            Wire.endTransmission();
+            Wire.write(0x02);                         // Force reset
+            uint8_t status = Wire.endTransmission();  // actually send the data
+            Wire.end();
 
-            Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-
-            Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
-            mfmLastData.c[1] = Wire.read();
-            mfmLastData.c[0] = Wire.read();
-
-            mfmFaultCondition = (Wire.endTransmission() != 0);
+            mfmFaultCondition = (status != 0);
 #endif
 
             if (mfmFaultCondition) {
@@ -246,7 +262,13 @@ void MFM_Timer_Callback(HardwareTimer*) {
 }
 
 bool MFM_init(void) {
-    mfmAirVolumeSum = 0;
+    mfmAirVolumeSumMilliliters = 0;
+
+#if HARDWARE_VERSION == 3
+    // Set power on
+    pinMode(MFM_POWER_CONTROL, OUTPUT);
+    digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
+#endif
 
     // Set the timer
     massFlowTimer = new HardwareTimer(MASS_FLOW_TIMER);
@@ -262,16 +284,6 @@ bool MFM_init(void) {
     // Interrupt priority is documented here:
     // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
     massFlowTimer->setInterruptPriority(2, 0);
-
-    /* Mass flow needs to be corrected with pressure?
-     * flow (kg/s) = rho (kg/m3) x section (m²) x speed (m/s)
-     * Rho = (Pressure * M) / (R * Temperature)
-     * Sea level pressure: P0 = 101,325 Pa = 1,013.25 mbar = 1,013.25 hPa = 1032 cmH2O
-     * Respirator reaches 50 cmH2O which means 5% error
-     */
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-    pinMode(MFM_ANALOG_INPUT, INPUT);
-#endif
 
 // I2C sensors
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
@@ -362,28 +374,22 @@ bool MFM_init(void) {
     return !mfmFaultCondition;
 }
 
-void MFM_reset(void) {
-    mfmAirVolumeSum = 0;
-    mfmSampleCount = 0;
-}
+int32_t MFM_read_airflow(void) { return mfmInstantAirFlow; }
 
-void MFM_calibrateZero(void) {
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-    int32_t sum = 0;
-    for (int i = 0; i < 10; i++) {
-        sum += analogRead(MFM_ANALOG_INPUT);
-        delayMicroseconds(5000);
-    }
-    mfmCalibrationOffset = sum / 10;
-#endif
-}
+void MFM_reset(void) { mfmAirVolumeSumMilliliters = 0; }
+
+/**
+ *  If the massflow meter needs to be calibrated, this function will be usefull.
+ */
+// cppcheck-suppress misra-c2012-2.2
+void MFM_calibrateZero(void) {}
 
 int32_t MFM_read_milliliters(bool reset_after_read) {
     int32_t result;
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
     // This should be an atomic operation (32 bits aligned data)
-    result = mfmFaultCondition ? 999999 : mfmAirVolumeSum / (60 * 120);
+    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmAirVolumeSum / (60 * 120);
 
     // Correction factor is 120. Divide by 60 to convert ml.min-1 to ml.ms-1, hence the 7200 =
     // 120 * 60
@@ -391,15 +397,13 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
     // This should be an atomic operation (32 bits aligned data)
-    result = mfmFaultCondition ? 999999 : (mfmAirVolumeSum / 6.5);
-#endif
-
-#if MASS_FLOW_METER_SENSOR == MFM_OMRON_D6F
-    result = mfmFaultCondition ? 999999 : (mfmAirVolumeSum / 130);
+    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : (mfmAirVolumeSum / 6.5);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
-    result = mfmFaultCondition ? 999999 : ((mfmAirVolumeSum * MASS_FLOW_PERIOD) / (60 * 10));
+    // period is MASS_FLOW_PERIOD / 10000  (100 µs prescaler)
+    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE
+                               : ((mfmAirVolumeSumMilliliters * MASS_FLOW_PERIOD) / (60 * 10000));
 #endif
 
     if (reset_after_read) {
@@ -416,11 +420,10 @@ void onStartClick() { MFM_reset(); }
 OneButton btn_stop(PIN_BTN_ALARM_OFF, false, false);
 
 void setup(void) {
+
     Serial.begin(115200);
     Serial.println("init mass flow meter");
     boolean ok = MFM_init();
-
-    pinMode(PIN_SERIAL_TX, OUTPUT);
 
     pinMode(PIN_LED_START, OUTPUT);
 
@@ -437,8 +440,7 @@ void setup(void) {
 
     btn_stop.attachClick(onStartClick);
     btn_stop.setDebounceTicks(0);
-    MFM_calibrateZero();
-    mfmAirVolumeSum = 0;
+    mfmAirVolumeSumMilliliters = 0;
     Serial.println("init done");
 }
 
@@ -467,9 +469,13 @@ void loop(void) {
             screen.print("sensor OK");
             // screen.print(mfmLastValue);
             screen.setCursor(0, 3);
-            (void)snprintf(buffer, "volume=%dmL", volume);
+            (void)snprintf(buffer, sizeof(buffer), "vol=%dmL %dmLpm ", volume, MFM_read_airflow());
             screen.print(buffer);
         }
+
+        // Serial.print(mfmLastValueFloat*1000);
+        // Serial.print(",");
+        Serial.println(MFM_read_airflow());
 
         // Serial.print("volume = ");
         // Serial.print(volume);

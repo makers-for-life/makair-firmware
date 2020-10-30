@@ -381,6 +381,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define PIN_I2C_SDA PB9
 #define PIN_I2C_SCL PB8
 #define MFM_ANALOG_INPUT A3
+#define MFM_POWER_CONTROL PC0
+#define MFM_POWER_OFF LOW
+#define MFM_POWER_ON HIGH
 #endif
 #endif
 
