@@ -35,6 +35,11 @@ void MFM_reset(void);
  */
 void MFM_calibrateZero(void);
 
+/**
+ * Read instant air flow
+ */
+int32_t MFM_read_airflow(void);
+
 extern int32_t mfmLastValue;
 
 #define MASS_FLOW_ERROR_VALUE 999999

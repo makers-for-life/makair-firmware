@@ -15,6 +15,7 @@
 
 // External
 #include <Arduino.h>
+#include <HardwareSerial.h>
 #include <IWatchdog.h>
 #include <OneButton.h>
 #include <Wire.h>
@@ -51,18 +52,18 @@ HardwareTimer* massFlowTimer;
 
 int32_t mfmCalibrationOffset = 0;
 
-volatile int32_t mfmAirVolumeSum = 0;
+volatile int32_t mfmAirVolumeSumMilliliters = 0;
 volatile int32_t mfmSensorDetected = 0;
-
-volatile int32_t mfmSampleCount = 0;
+volatile int32_t mfmInstantAirFlow = 0;
 
 bool mfmFaultCondition = false;
 
 int32_t mfmLastValue = 0;
+volatile int32_t mfmLastValueFixedFloat = 0;
 
 // Time to reset the sensor after I2C restart, in periods => 100 ms
-// the restart time is 50ms (warm up time in the datasheet)
-// the power off time is 50ms. enough to discharge capacitors.
+// the restart time is 50 ms (warm up time in the datasheet)
+// the power off time is 50 ms. enough to discharge capacitors.
 #define MFM_WAIT_RESET_PERIODS 10
 #define MFM_WAIT_WARMUP_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
@@ -81,7 +82,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
 #if MODE == MODE_MFM_TESTS
         // cppcheck-suppress misra-c2012-12.3
         digitalWrite(PIN_LED_START, HIGH);
-        // it takes typically 350us to read the value.
+        // it takes typically 350 µs to read the value.
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -115,7 +116,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
             mfmAirVolumeSum += sqrt(mfmLastValue);
         }
 
-        mfmSampleCount++;
+        // mfmSampleCount++;
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
@@ -133,20 +134,31 @@ void MFM_Timer_Callback(HardwareTimer*) {
         if (readCount != 2) {
             mfmFaultCondition = true;
             mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
-            mfmAirVolumeSum = 6000000;  // final result is greater than MASS_FLOW_ERROR_VALUE
+            mfmAirVolumeSumMilliliters = 1000000000;  // 1e9
         }
 
         mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
         mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
-        mfmLastValue =
-            MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
+        // Theorical formula : Flow(slpm) = 200*((rawvalue/16384)-0.1)/0.8
+        // float implementation, 1 liter per minute unit
+        // mfmLastValueFloat =
+        //    MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
+
+        // fixed float implementation, 1 milliliter per minute unit
+        mfmLastValueFixedFloat = (((10 * mfmLastValue) - 16384) * 1526) / 1000;
+
+        // 100 value per second, 100 slpm during 10 minutes : sum will be 1.2e9. it fits in a int32
+        // int32 max with milliliters = 2e6 liters.
 
         // The sensor (100SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
-        if (mfmLastValue < (MFM_RANGE * 1.1)) {
-            mfmAirVolumeSum += mfmLastValue;
+        if (mfmLastValueFixedFloat < (MFM_RANGE * 1100)) {
+            mfmInstantAirFlow = mfmLastValueFixedFloat;
+            if (mfmLastValueFixedFloat > 500) {  // less than 0.5SLPM is noise
+                mfmAirVolumeSumMilliliters += mfmLastValueFixedFloat;
+            }
         }
 
 #endif
@@ -190,7 +202,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
         }
         mfmResetStateMachine--;
 
-        // five period before new attempt (50ms sensor warmup time in the datasheet)
+        // five period before new attempt (50 ms sensor warmup time in the datasheet)
         if (mfmResetStateMachine == MFM_WAIT_WARMUP_PERIODS) {
 #if HARDWARE_VERSION == 3
             // Set power on
@@ -250,7 +262,13 @@ void MFM_Timer_Callback(HardwareTimer*) {
 }
 
 bool MFM_init(void) {
-    mfmAirVolumeSum = 0;
+    mfmAirVolumeSumMilliliters = 0;
+
+#if HARDWARE_VERSION == 3
+    // Set power on
+    pinMode(MFM_POWER_CONTROL, OUTPUT);
+    digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
+#endif
 
 #if HARDWARE_VERSION == 3
     // Set power on
@@ -362,10 +380,9 @@ bool MFM_init(void) {
     return !mfmFaultCondition;
 }
 
-void MFM_reset(void) {
-    mfmAirVolumeSum = 0;
-    mfmSampleCount = 0;
-}
+int32_t MFM_read_airflow(void) { return mfmInstantAirFlow; }
+
+void MFM_reset(void) { mfmAirVolumeSumMilliliters = 0; }
 
 /**
  *  If the massflow meter needs to be calibrated, this function will be usefull.
@@ -390,8 +407,9 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
+    // period is MASS_FLOW_PERIOD / 10000  (100 µs prescaler)
     result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE
-                               : ((mfmAirVolumeSum * MASS_FLOW_PERIOD) / (60 * 10));
+                               : ((mfmAirVolumeSumMilliliters * MASS_FLOW_PERIOD) / (60 * 10000));
 #endif
 
     if (reset_after_read) {
@@ -408,11 +426,10 @@ void onStartClick() { MFM_reset(); }
 OneButton btn_stop(PIN_BTN_ALARM_OFF, false, false);
 
 void setup(void) {
+
     Serial.begin(115200);
     Serial.println("init mass flow meter");
     boolean ok = MFM_init();
-
-    pinMode(PIN_SERIAL_TX, OUTPUT);
 
     pinMode(PIN_LED_START, OUTPUT);
 
@@ -429,7 +446,7 @@ void setup(void) {
 
     btn_stop.attachClick(onStartClick);
     btn_stop.setDebounceTicks(0);
-    mfmAirVolumeSum = 0;
+    mfmAirVolumeSumMilliliters = 0;
     Serial.println("init done");
 }
 
@@ -458,9 +475,13 @@ void loop(void) {
             screen.print("sensor OK");
             // screen.print(mfmLastValue);
             screen.setCursor(0, 3);
-            (void)snprintf(buffer, sizeof(buffer), "volume=%dmL", volume);
+            (void)snprintf(buffer, sizeof(buffer), "vol=%dmL %dmLpm ", volume, MFM_read_airflow());
             screen.print(buffer);
         }
+
+        // Serial.print(mfmLastValueFloat*1000);
+        // Serial.print(",");
+        Serial.println(MFM_read_airflow());
 
         // Serial.print("volume = ");
         // Serial.print(volume);
