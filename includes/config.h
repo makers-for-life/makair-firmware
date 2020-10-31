@@ -35,5 +35,5 @@
 
 // Defines the type and the range of the mass flow meter
 #define MASS_FLOW_METER_SENSOR MFM_HONEYWELL_HAF
-#define MFM_RANGE 100  // in SLM (standard liter per minute)
+#define MFM_RANGE 200  // in SLM (standard liter per minute)
 

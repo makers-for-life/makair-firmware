@@ -19,7 +19,6 @@
 #include <LiquidCrystal.h>
 
 // Internal
-#include "../includes/activation.h"
 #include "../includes/battery.h"
 #include "../includes/blower.h"
 #include "../includes/buzzer.h"
@@ -27,6 +26,7 @@
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
 #include "../includes/keyboard.h"
+#include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure.h"
@@ -50,6 +50,9 @@ int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
+
+PressureController pController;
+AlarmController alarmController;
 
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 
@@ -110,14 +113,14 @@ void setup(void) {
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
 
     // Servo blower setup
-    inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER, PIN_SERVO_BLOWER,
-                                VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
+    inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER,
+                                     PIN_SERVO_BLOWER, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     inspiratoryValve.setup();
     hardwareTimer3->resume();
 
     // Servo patient setup
-    expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT, PIN_SERVO_PATIENT,
-                                 VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
+    expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT,
+                                    PIN_SERVO_PATIENT, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     expiratoryValve.setup();
     hardwareTimer3->resume();
 
@@ -174,14 +177,12 @@ void setup(void) {
 
     // Do not initialize pressure controller and keyboard in test mode
     if (!eolTest.isRunning()) {
-        alarmController = AlarmController();
-
+        AlarmController alarmController = AlarmController();
+        DBG_DO(Serial.print("adress of pController in respirator.cpp 180:");)
+    DBG_DO(Serial.println((unsigned int)&pController);)
         pController =
-            PressureController(INITIAL_CYCLE_NUMBER, DEFAULT_MIN_PEEP_COMMAND,
-                               DEFAULT_MAX_PLATEAU_COMMAND, DEFAULT_MAX_PEAK_PRESSURE_COMMAND,
-                               inspiratoryValve, expiratoryValve, &alarmController, blower_pointer);
-        pController.setup();
-        pController.reachSafetyPosition();
+            PressureController(inspiratoryValve, expiratoryValve, &alarmController, blower_pointer);
+
         initKeyboard();
     }
 
@@ -289,145 +290,20 @@ void setup(void) {
 
     // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
+        DBG_DO(Serial.println("beforeMsms");)
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
-        IWatchdog.begin(WATCHDOG_TIMEOUT);
-        IWatchdog.reload();
+        mainStateMachine.activate();
+        mainStateMachine.setupAndStart(&alarmController, &pController);
+        DBG_DO(Serial.println("beforeMsms");)
+        // TODO enable again
+        // IWatchdog.begin(WATCHDOG_TIMEOUT);
+        // IWatchdog.reload();
     } else {
         eolTest.setupAndStart();
     }
 }
 
-// Time of the previous loop iteration
-int32_t lastMicro = 0;
-
-// Number of cycles before LCD screen reset
-// (because this kind of screen is not reliable, we need to reset it every 5 min or so)
-int8_t cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
-
 // cppcheck-suppress unusedFunction
-void loop(void) {
-    if (!eolTest.isRunning()) {
-        /********************************************/
-        // INITIALIZE THE RESPIRATORY CYCLE
-        /********************************************/
-        activationController.refreshState();
-        bool shouldRun = activationController.isRunning();
-
-        if (shouldRun) {
-            pController.initRespiratoryCycle();
-        }
-
-        /********************************************/
-        // START THE RESPIRATORY CYCLE
-        /********************************************/
-        uint32_t tick = 0;
-
-        while (tick < pController.tickPerCycle() && !pController.triggered()) {
-            uint32_t pressure = readPressureSensor(tick, pressureOffset);
-
-            uint32_t currentDate = micros();
-
-            uint32_t diff = (currentDate - lastpControllerComputeDate);
-
-            if (diff >= PCONTROLLER_COMPUTE_PERIOD_US) {
-                lastpControllerComputeDate = currentDate;
-
-                if (shouldRun) {
-                    digitalWrite(PIN_LED_START, LED_START_ACTIVE);
-                    pController.updatePressure(pressure);
-                    int32_t currentMicro = micros();
-
-                    pController.updateDt(currentMicro - lastMicro);
-                    lastMicro = currentMicro;
-
-                    // Perform the pressure control
-                    pController.compute(tick);
-                } else {
-                    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-                    blower.stop();
-                    // When stopped, open the valves
-                    inspiratoryValve.open();
-                    inspiratoryValve.execute();
-                    expiratoryValve.open();
-                    expiratoryValve.execute();
-                    // Stop alarms related to breathing cycle
-                    alarmController.notDetectedAlarm(RCM_SW_1);
-                    alarmController.notDetectedAlarm(RCM_SW_2);
-                    alarmController.notDetectedAlarm(RCM_SW_3);
-                    alarmController.notDetectedAlarm(RCM_SW_14);
-                    alarmController.notDetectedAlarm(RCM_SW_15);
-                    alarmController.notDetectedAlarm(RCM_SW_18);
-                    alarmController.notDetectedAlarm(RCM_SW_19);
-
-                    if ((tick % 10u) == 0u) {
-                        sendStoppedMessage();
-                    }
-                }
-
-                // Check if some buttons have been pushed
-                keyboardLoop();
-
-                // Check if battery state has changed
-                batteryLoop(pController.cycleNumber());
-
-                // Check serial input
-                serialControlLoop();
-
-                if (isBatteryDeepDischarged()) {
-                    // Delay will trigger the watchdog and the machine will restart with a message
-                    // on screen
-                    delay(10000);
-                }
-
-                // Display relevant information during the cycle
-                if ((tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
-#ifdef MASS_FLOW_METER
-                    displayCurrentVolume(MFM_read_milliliters(false),
-                                         pController.cyclesPerMinuteCommand());
-#else
-                    displayCurrentPressure(pController.pressure(),
-                                           pController.cyclesPerMinuteCommand());
-#endif
-
-                    displayCurrentSettings(pController.maxPeakPressureCommand(),
-                                           pController.maxPlateauPressureCommand(),
-                                           pController.minPeepCommand());
-                }
-
-                alarmController.runAlarmEffects(tick);
-
-                // next tick
-                tick++;
-                IWatchdog.reload();
-            }
-        }
-
-        if (shouldRun) {
-            pController.endRespiratoryCycle();
-        }
-
-        /********************************************/
-        // END OF THE RESPIRATORY CYCLE
-        /********************************************/
-
-        // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
-        // so
-        cyclesBeforeScreenReset--;
-        DBG_DO(Serial.println(cyclesBeforeScreenReset);)
-        if (cyclesBeforeScreenReset <= 0) {
-            DBG_DO(Serial.println("resetting LCD screen");)
-            resetScreen();
-            clearAlarmDisplayCache();
-            cyclesBeforeScreenReset = LCD_RESET_PERIOD * (int8_t)CONST_MIN_CYCLE;
-        }
-
-        if (shouldRun) {
-            displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                      pController.peep());
-        } else {
-            displayMachineStopped();
-        }
-    }
-}
+void loop(void) {}
 
 #endif
