@@ -43,8 +43,6 @@ bool MainStateMachine::isRunning() { return isMsmActive; }
 
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
-    DBG_DO(Serial.print("adress of pController in screenUpdate:");)
-    DBG_DO(Serial.println((unsigned int)pController);)
     // Todo flow should be stored in pressure controller
     displayCurrentVolume(MFM_read_milliliters(false), pController->cyclesPerMinuteCommand());
     displayCurrentSettings(pController->PeakPressureCommand(),
@@ -72,7 +70,7 @@ void millisecondTimerMSM(HardwareTimer*) {
 
     clockMsmTimer++;
     // TODO reactivate the watchdog  IWatchdog.reload();
-    uint32_t pressure = readPressureSensor(tick, 100);  // TODO change 100 to pressure offset
+    uint32_t pressure = readPressureSensor(tick, 12);  // TODO change 100 to pressure offset
     pController.updatePressure(pressure);
 
     if (clockMsmTimer % 10 == 0) {
@@ -120,6 +118,10 @@ void millisecondTimerMSM(HardwareTimer*) {
 
         if ((clockMsmTimer % 100u) == 0u) {
             pController.stop();
+            displayCurrentSettings(pController.PeakPressureCommand(),
+                                           pController.PlateauPressureCommand(),
+                                           pController.PeepCommand());
+            displayMachineStopped();
         }
 
         activationController.refreshState();

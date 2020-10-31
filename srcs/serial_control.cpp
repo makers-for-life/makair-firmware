@@ -110,7 +110,7 @@ void serialControlLoop() {
 
                 switch (setting) {
                 case 1:  // PeakPressure
-                    pController.onPeakPressureSet(value);
+                    //TODO remove this  pController.onPeakPressureSet(value);
                     break;
 
                 case 2:  // PlateauPressure

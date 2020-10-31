@@ -210,12 +210,9 @@ void sendDataSnapshot(uint16_t centileValue,
                       uint8_t batteryLevel) {
 
     uint8_t phaseValue;
-    if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
+    if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001
-    } else if ((phase == CyclePhases::INHALATION)
-               && (subPhase == CycleSubPhases::HOLD_INSPIRATION)) {
-        phaseValue = 18u;  // 00010010
-    } else if ((phase == CyclePhases::EXHALATION) && (subPhase == CycleSubPhases::EXHALE)) {
+    } else if (phase == CyclePhases::EXHALATION) {
         phaseValue = 68u;  // 01000100
     } else {
         phaseValue = 0u;
@@ -457,12 +454,9 @@ void sendAlarmTrap(uint16_t centileValue,
                    uint32_t cyclesSinceTriggerValue) {
 
     uint8_t phaseValue;
-    if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
+    if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001
-    } else if ((phase == CyclePhases::INHALATION)
-               && (subPhase == CycleSubPhases::HOLD_INSPIRATION)) {
-        phaseValue = 18u;  // 00010010
-    } else if ((phase == CyclePhases::EXHALATION) && (subPhase == CycleSubPhases::EXHALE)) {
+    } else if (phase == CyclePhases::EXHALATION) {
         phaseValue = 68u;  // 01000100
     } else {
         phaseValue = 0u;

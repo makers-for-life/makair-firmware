@@ -177,9 +177,8 @@ void setup(void) {
 
     // Do not initialize pressure controller and keyboard in test mode
     if (!eolTest.isRunning()) {
-        AlarmController alarmController = AlarmController();
-        DBG_DO(Serial.print("adress of pController in respirator.cpp 180:");)
-    DBG_DO(Serial.println((unsigned int)&pController);)
+        alarmController = AlarmController();
+        
         pController =
             PressureController(inspiratoryValve, expiratoryValve, &alarmController, blower_pointer);
 

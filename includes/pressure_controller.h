@@ -107,23 +107,16 @@ class PressureController {
     /**
      * Decrease the desired peak pressure
      *
-     * @param p_decrement Positive value of decrement
+     * DEPRECATED
      */
-    void onPeakPressureDecrease(uint8_t p_decrement);
+    void onPeakPressureDecrease();
 
     /**
      * Increase the desired peak pressure
      *
-     * @param p_increment Positive value of increment
+     * DEPRECATED
      */
-    void onPeakPressureIncrease(uint8_t p_increment);
-
-    /**
-     * Set the desired peak pressure
-     *
-     * @param peakPressure Desired peak pressure in mmH2O
-     */
-    void onPeakPressureSet(uint16_t peakPressure);
+    void onPeakPressureIncrease();
 
     /**
      * Set the desired Expiratory term
@@ -234,10 +227,7 @@ class PressureController {
 
     /// Perform the pressure control and compute the transistors commands during the inhalation
     /// phase
-    void inhale();
-
-    /// Perform the pressure control and compute the transistors commands during the plateau phase
-    void plateau();
+    void inhale(uint16_t p_tick);
 
     /// Perform the pressure control and compute the transistors commands during the exhalation
     /// phase
@@ -338,6 +328,8 @@ class PressureController {
     uint16_t m_plateauStartTime;
     /// Duration of the plateau. Use this setting in trigger mode
     uint32_t m_plateauDurationMs;
+    /// true if plateau pressure has been reached (but not necessarily converged.)
+    bool m_plateauPressureReached;
     
 
     /// Actual desired PEEP
@@ -467,7 +459,7 @@ class PressureController {
     int32_t PC_expiratory_PID_LastError;
 
     /// Alarm controller
-    AlarmController m_alarmController;
+    AlarmController *m_alarmController;
 
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
