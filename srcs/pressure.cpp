@@ -18,13 +18,15 @@
 // Internal
 #include "../includes/parameters.h"
 
-// PROGRAM =====================================================================
 
-// Get the measured or simulated pressure for the feedback control (in mmH2O)
-int16_t inspiratoryPressureSensorOffset = 0;
+PressureSensor inspiratoryPressureSensor;
 
-int16_t readPressureSensor(uint16_t tick) {
-    (void)tick;
-    int16_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - inspiratoryPressureSensorOffset;
+PressureSensor::PressureSensor(){
+	m_PressureSensorOffset = 0;
+}
+
+// Get the measured for the feedback control (in mmH2O)
+int16_t PressureSensor::read() {
+    int16_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - m_PressureSensorOffset;
     return max(int16_t(0), withOffset);
 }

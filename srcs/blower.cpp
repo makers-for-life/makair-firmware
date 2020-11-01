@@ -15,6 +15,8 @@
 // Internal libraries
 #include "../includes/parameters.h"
 
+Blower blower;
+
 // FUNCTIONS ==================================================================
 
 Blower::Blower() {}

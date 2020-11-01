@@ -18,6 +18,7 @@
 #include "../includes/screen.h"
 #include "../includes/telemetry.h"
 
+AlarmController alarmController;
 
 // FUNCTIONS ==================================================================
 

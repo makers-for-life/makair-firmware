@@ -27,21 +27,8 @@ static const uint16_t MAX_PEAK_INCREMENT = 30u;
 /// Controls breathing cycle
 class PressureController {
  public:
-    /// Default constructor
-    PressureController();
-
-    /**
-     * Parameterized constructor
-     * @param p_inspiratory_valve        Pressure Valve between blower and patient
-     * @param p_expiratory_valve       Pressure Valve between patient and atmosphere
-     * @param p_alarmController     Alarm controller
-     * @param p_blower              Blower
-     */
     // cppcheck-suppress misra-c2012-2.7
-    PressureController(const PressureValve& p_inspiratory_valve,
-                       const PressureValve& p_expiratory_valve,
-                       AlarmController* p_alarmController,
-                       Blower* p_blower);
+    PressureController();
 
     /// Initialize actuators
     void setup();
@@ -188,6 +175,9 @@ class PressureController {
     /// Get the measured PEEP
     inline int16_t peep() const { return m_peepMeasure; }
 
+    /// Get the measured tidal Volume
+    inline int16_t tidalVolume() const { return m_tidalVolumeMeasure; }
+
     /// Get the measured number of cycles per minute
     inline uint32_t measuredCyclesPerMinute() const { return m_CyclesPerMinuteMeasure; }
 
@@ -196,12 +186,6 @@ class PressureController {
 
     /// Get the current cycle subphase
     inline CycleSubPhases subPhase() const { return m_subPhase; }
-
-    /// Get the blower's Pressure Valve instance
-    inline const PressureValve& inspiratory_valve() const { return m_inspiratoryValve; }
-
-    /// Get the patient's Pressure Valve instance
-    inline const PressureValve& expiratory_valve() const { return m_expiratoryValve; }
 
     /// Get the state of the inspiratory trigger
     inline const bool triggered() const { return m_triggered; }
@@ -399,15 +383,6 @@ class PressureController {
     /// Current respiratory cycle phase
     CycleSubPhases m_subPhase;
 
-    /// Inspiratory valve
-    PressureValve m_inspiratoryValve;
-
-    /// Expiratory valve
-    PressureValve m_expiratoryValve;
-
-    /// Blower
-    Blower* m_blower;
-
     /// Blower increment
     int32_t m_blower_increment;
 
@@ -476,9 +451,6 @@ class PressureController {
      */
     int32_t PC_expiratory_PID_LastError;
 
-    /// Alarm controller
-    AlarmController* m_alarmController;
-
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
     uint16_t m_lastPressureValuesIndex;
@@ -500,7 +472,4 @@ class PressureController {
     uint16_t m_tick;
 };
 
-// INITIALISATION =============================================================
-
-/// Instance of the pressure controller
 extern PressureController pController;

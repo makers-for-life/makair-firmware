@@ -18,6 +18,9 @@
 // Internal libraries
 #include "../includes/parameters.h"
 
+PressureValve expiratoryValve;
+PressureValve inspiratoryValve;
+
 // FUNCTIONS ==================================================================
 PressureValve::PressureValve() {}
 

@@ -12,6 +12,8 @@
 #include "../includes/alarm_controller.h"
 #include "../includes/cycle.h"
 
+#define PROTOCOL_VERSION 1u
+
 /// Prepare Serial6 to send telemetry data
 void initTelemetry(void);
 

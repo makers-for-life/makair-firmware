@@ -127,8 +127,8 @@ void sendBootMessage() {
     CRC32 crc32;
     Serial6.write("B:");
     crc32.update("B:", 2);
-    Serial6.write((uint8_t)1u); // Communication protocol version
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION); // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -172,8 +172,8 @@ void sendStoppedMessage() {
     CRC32 crc32;
     Serial6.write("O:");
     crc32.update("O:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION); // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -224,8 +224,8 @@ void sendDataSnapshot(uint16_t centileValue,
     CRC32 crc32;
     Serial6.write("D:");
     crc32.update("D:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION); // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -343,8 +343,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     CRC32 crc32;
     Serial6.write("S:");
     crc32.update("S:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION); // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -504,8 +504,8 @@ void sendAlarmTrap(uint16_t centileValue,
     CRC32 crc32;
     Serial6.write("T:");
     crc32.update("T:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION); // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -609,8 +609,8 @@ void sendControlAck(uint8_t setting, uint16_t valueValue) {
     CRC32 crc32;
     Serial6.write("A:");
     crc32.update("A:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION); // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));

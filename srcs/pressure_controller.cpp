@@ -18,28 +18,22 @@
 // Internal
 #include "../includes/alarm_controller.h"
 #include "../includes/battery.h"
+#include "../includes/blower.h"
 #include "../includes/config.h"
 #include "../includes/debug.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/parameters.h"
+#include "../includes/pressure.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/telemetry.h"
-#include "../includes/pressure.h"
+
+PressureController pController;
 
 static const int32_t INVALID_ERROR_MARKER = INT32_MIN;
 
 // FUNCTIONS ==================================================================
 
 PressureController::PressureController() {}
-
-PressureController::PressureController(const PressureValve& p_inspiratory_valve,
-                                       const PressureValve& p_expiratory_valve,
-                                       AlarmController* p_alarmController,
-                                       Blower* p_blower)
-    : m_inspiratoryValve(p_inspiratory_valve),
-      m_expiratoryValve(p_expiratory_valve),
-      m_blower(p_blower),
-      m_alarmController(p_alarmController) {}
 
 void PressureController::setup() {
     DBG_DO(Serial.println(VERSION);)
@@ -140,8 +134,8 @@ void PressureController::initRespiratoryCycle() {
         PC_expiratory_PID_last_errors[i] = m_peepCommand - m_plateauPressureCommand;
     }
 
-    inspiratoryValveLastAperture = m_inspiratoryValve.maxAperture();
-    expiratoryValveLastAperture = m_expiratoryValve.maxAperture();
+    inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
+    expiratoryValveLastAperture = expiratoryValve.maxAperture();
 
     m_peakPressureMeasure = 0;
     m_triggered = false;
@@ -162,15 +156,14 @@ void PressureController::initRespiratoryCycle() {
 
     // Apply blower ramp-up
     if (m_blower_increment >= 0) {
-        m_blower->runSpeed(m_blower->getSpeed() + static_cast<uint16_t>(abs(m_blower_increment)));
+        blower.runSpeed(blower.getSpeed() + static_cast<uint16_t>(abs(m_blower_increment)));
     } else {
         // When blower increment is negative, we need to check that it is less than current speed
         // If not, it would result in an overflow
-        if (static_cast<uint16_t>(abs(m_blower_increment)) < m_blower->getSpeed()) {
-            m_blower->runSpeed(m_blower->getSpeed()
-                               - static_cast<uint16_t>(abs(m_blower_increment)));
+        if (static_cast<uint16_t>(abs(m_blower_increment)) < blower.getSpeed()) {
+            blower.runSpeed(blower.getSpeed() - static_cast<uint16_t>(abs(m_blower_increment)));
         } else {
-            m_blower->runSpeed(MIN_BLOWER_SPEED);
+            blower.runSpeed(MIN_BLOWER_SPEED);
         }
     }
     m_blower_increment = 0;
@@ -204,6 +197,8 @@ void PressureController::endRespiratoryCycle() {
         }
         // Add "+(sum-1u)" to round instead of truncate
         m_CyclesPerMinuteMeasure = (((NUMBER_OF_BREATH_PERIOD * 60u) * 1000u) + (sum - 1u)) / sum;
+        //Serial.print("CPMmeasure:");
+        //Serial.println(((((float)NUMBER_OF_BREATH_PERIOD * 60.0) * 1000.0) + ((float)sum - 1.0)) / (float)sum);
     }
     m_lastEndOfRespirationDateMs = millis();
 
@@ -219,9 +214,6 @@ void PressureController::endRespiratoryCycle() {
     }
 
     // RCM-SW-18 // TODO check why this code is here ??
-    if (m_pressure <= ALARM_THRESHOLD_MAX_PRESSURE) {
-        m_alarmController->notDetectedAlarm(RCM_SW_18);
-    }
 
     m_plateauPressureToDisplay = m_plateauPressureMeasure;
     if (m_plateauPressureToDisplay == UINT16_MAX) {
@@ -286,20 +278,14 @@ void PressureController::compute(uint16_t p_tick) {
         break;
     }
 
-    // RCM-SW-18
-    if (m_pressure > ALARM_THRESHOLD_MAX_PRESSURE) {
-        m_alarmController->detectedAlarm(RCM_SW_18, m_cycleNb, ALARM_THRESHOLD_MAX_PRESSURE,
-                                         m_pressure);
-    }
-
     DBG_PHASE_PRESSION(m_cycleNb, p_tick, 1u, m_phase, m_subPhase, m_pressure,
-                       m_inspiratoryValve.command, m_inspiratoryValve.position,
-                       m_expiratoryValve.command, m_expiratoryValve.position)
+                       inspiratoryValve.command, inspiratoryValve.position, expiratoryValve.command,
+                       expiratoryValve.position)
 
-    m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
+    alarmController.updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
     sendDataSnapshot(p_tick, m_pressure, m_inspiratoryFlow, m_expiratoryFlow, m_phase, m_subPhase,
-                     m_inspiratoryValve.position, m_expiratoryValve.position,
-                     m_blower->getSpeed() / 10u, getBatteryLevel());
+                     inspiratoryValve.position, expiratoryValve.position, blower.getSpeed() / 10u,
+                     getBatteryLevel());
 
     executeCommands();
 }
@@ -351,7 +337,7 @@ void PressureController::updatePhase(uint16_t p_tick) {
 void PressureController::inhale(uint16_t p_tick) {
     // Keep the inspiratory valve open using a PID. The openning of the valve will be very small
     // during this phase.
-    m_inspiratoryValve.open(PCinspiratoryPID(m_pressureCommand, m_pressure, m_dt));
+    inspiratoryValve.open(PCinspiratoryPID(m_pressureCommand, m_pressure, m_dt));
 
     // -5 is added to help blower convergence
     if (m_pressure > m_plateauPressureCommand - 5 && !m_plateauPressureReached) {
@@ -369,15 +355,15 @@ void PressureController::inhale(uint16_t p_tick) {
     }
 
     // Close the inspiratory valve
-    m_expiratoryValve.close();
+    expiratoryValve.close();
 }
 
 void PressureController::exhale() {
     // Close the inspiratory valve
-    m_inspiratoryValve.close();
+    inspiratoryValve.close();
 
     // Open the valve expiratory so the patient can exhale outside
-    m_expiratoryValve.open(PCexpiratoryPID(m_pressureCommand, m_pressure, m_dt));
+    expiratoryValve.open(PCexpiratoryPID(m_pressureCommand, m_pressure, m_dt));
 
     // Compute the PEEP pressure
     uint16_t minValue = m_lastPressureValues[0u];
@@ -463,8 +449,16 @@ void PressureController::computeTickParameters() {
 }
 
 void PressureController::executeCommands() {
-    m_inspiratoryValve.execute();
-    m_expiratoryValve.execute();
+    if (m_pressure > ALARM_THRESHOLD_MAX_PRESSURE) {
+        inspiratoryValve.close();
+        expiratoryValve.open();
+        alarmController.detectedAlarm(RCM_SW_18, m_cycleNb, ALARM_THRESHOLD_MAX_PRESSURE,
+                                      m_pressure);
+    } else {
+        alarmController.notDetectedAlarm(RCM_SW_18);
+    }
+    inspiratoryValve.execute();
+    expiratoryValve.execute();
 }
 
 void PressureController::checkCycleAlarm() {
@@ -475,43 +469,42 @@ void PressureController::checkCycleAlarm() {
         (m_plateauPressureCommand * (100u + ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100u;
     if ((m_plateauPressureMeasure < minPlateauBeforeAlarm)
         || (m_plateauPressureMeasure > maxPlateauBeforeAlarm)) {
-        m_alarmController->detectedAlarm(RCM_SW_1, m_cycleNb, m_plateauPressureCommand, m_pressure);
-        m_alarmController->detectedAlarm(RCM_SW_14, m_cycleNb, m_plateauPressureCommand,
-                                         m_pressure);
+        alarmController.detectedAlarm(RCM_SW_1, m_cycleNb, m_plateauPressureCommand, m_pressure);
+        alarmController.detectedAlarm(RCM_SW_14, m_cycleNb, m_plateauPressureCommand, m_pressure);
     } else {
-        m_alarmController->notDetectedAlarm(RCM_SW_1);
-        m_alarmController->notDetectedAlarm(RCM_SW_14);
+        alarmController.notDetectedAlarm(RCM_SW_1);
+        alarmController.notDetectedAlarm(RCM_SW_14);
     }
 
     // RCM-SW-2 + RCM-SW-19 : Check is mean pressure was < 2 cmH2O
     uint16_t meanPressure = m_sumOfPressures / m_numberOfPressures;
     if (meanPressure <= ALARM_THRESHOLD_MIN_PRESSURE) {
-        m_alarmController->detectedAlarm(RCM_SW_2, m_cycleNb, ALARM_THRESHOLD_MIN_PRESSURE,
-                                         m_pressure);
-        m_alarmController->detectedAlarm(RCM_SW_19, m_cycleNb, ALARM_THRESHOLD_MIN_PRESSURE,
-                                         m_pressure);
+        alarmController.detectedAlarm(RCM_SW_2, m_cycleNb, ALARM_THRESHOLD_MIN_PRESSURE,
+                                      m_pressure);
+        alarmController.detectedAlarm(RCM_SW_19, m_cycleNb, ALARM_THRESHOLD_MIN_PRESSURE,
+                                      m_pressure);
     } else {
-        m_alarmController->notDetectedAlarm(RCM_SW_2);
-        m_alarmController->notDetectedAlarm(RCM_SW_19);
+        alarmController.notDetectedAlarm(RCM_SW_2);
+        alarmController.notDetectedAlarm(RCM_SW_19);
     }
 
     // RCM-SW-3 + RCM-SW-15
     uint16_t PeepBeforeAlarm = m_peepCommand - ALARM_THRESHOLD_DIFFERENCE_PRESSURE;
     uint16_t maxPeepBeforeAlarm = m_peepCommand + ALARM_THRESHOLD_DIFFERENCE_PRESSURE;
     if ((m_peepMeasure < PeepBeforeAlarm) || (m_peepMeasure > maxPeepBeforeAlarm)) {
-        m_alarmController->detectedAlarm(RCM_SW_3, m_cycleNb, m_peepCommand, m_pressure);
-        m_alarmController->detectedAlarm(RCM_SW_15, m_cycleNb, m_peepCommand, m_pressure);
+        alarmController.detectedAlarm(RCM_SW_3, m_cycleNb, m_peepCommand, m_pressure);
+        alarmController.detectedAlarm(RCM_SW_15, m_cycleNb, m_peepCommand, m_pressure);
     } else {
-        m_alarmController->notDetectedAlarm(RCM_SW_3);
-        m_alarmController->notDetectedAlarm(RCM_SW_15);
+        alarmController.notDetectedAlarm(RCM_SW_3);
+        alarmController.notDetectedAlarm(RCM_SW_15);
     }
 }
 
 int32_t
 PressureController::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 
-    int32_t minAperture = m_inspiratoryValve.minAperture();
-    int32_t maxAperture = m_inspiratoryValve.maxAperture();
+    int32_t minAperture = inspiratoryValve.minAperture();
+    int32_t maxAperture = inspiratoryValve.maxAperture();
     uint32_t inspiratoryValveAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
@@ -614,8 +607,8 @@ PressureController::PCinspiratoryPID(int32_t targetPressure, int32_t currentPres
 int32_t
 PressureController::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 
-    int32_t minAperture = m_expiratoryValve.minAperture();
-    int32_t maxAperture = m_expiratoryValve.maxAperture();
+    int32_t minAperture = expiratoryValve.minAperture();
+    int32_t maxAperture = expiratoryValve.maxAperture();
     uint32_t expiratoryValveAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
@@ -720,39 +713,37 @@ PressureController::PCexpiratoryPID(int32_t targetPressure, int32_t currentPress
 }
 
 void PressureController::reachSafetyPosition() {
-    m_inspiratoryValve.open();
-    m_inspiratoryValve.execute();
-    m_expiratoryValve.open();
-    m_expiratoryValve.execute();
+    inspiratoryValve.open();
+    expiratoryValve.open();
+    executeCommands();
 }
 
 void PressureController::stop() {
     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-    m_blower->stop();
+    blower.stop();
     sendStoppedMessage();
     // When stopped, open the valves
     reachSafetyPosition();
     // Stop alarms related to breathing cycle
-    m_alarmController->notDetectedAlarm(RCM_SW_1);
-    m_alarmController->notDetectedAlarm(RCM_SW_2);
-    m_alarmController->notDetectedAlarm(RCM_SW_3);
-    m_alarmController->notDetectedAlarm(RCM_SW_14);
-    m_alarmController->notDetectedAlarm(RCM_SW_15);
-    m_alarmController->notDetectedAlarm(RCM_SW_18);
-    m_alarmController->notDetectedAlarm(RCM_SW_19);
+    alarmController.notDetectedAlarm(RCM_SW_1);
+    alarmController.notDetectedAlarm(RCM_SW_2);
+    alarmController.notDetectedAlarm(RCM_SW_3);
+    alarmController.notDetectedAlarm(RCM_SW_14);
+    alarmController.notDetectedAlarm(RCM_SW_15);
+    alarmController.notDetectedAlarm(RCM_SW_18);
+    alarmController.notDetectedAlarm(RCM_SW_19);
 }
 
 void PressureController::sendSnapshot(bool isRunning) {
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)
-    sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
-                             mmH2OtoCmH2O(m_plateauPressureNextCommand),
-                             mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand,
-                             m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
-                             m_CyclesPerMinuteMeasure, m_alarmController->triggeredAlarms(), m_tidalVolumeMeasure,
-                             m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
-                             m_pressureTriggerOffsetNextCommand, isRunning);
-    // TODO : store volume
+    sendMachineStateSnapshot(
+        m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
+        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
+        m_cyclesPerMinuteNextCommand, m_peakPressureMeasure, m_plateauPressureToDisplay,
+        m_peepMeasure, m_CyclesPerMinuteMeasure, alarmController.triggeredAlarms(),
+        m_tidalVolumeMeasure, m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
+        m_pressureTriggerOffsetNextCommand, isRunning);
 }
 
 void PressureController::onCycleDecrease() {

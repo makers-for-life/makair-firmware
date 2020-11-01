@@ -55,3 +55,5 @@ class Blower {
     uint16_t m_speed;
     bool m_stopped;
 };
+
+extern Blower blower;

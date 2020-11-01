@@ -9,6 +9,7 @@
 
 #include "../includes/parameters.h"
 #include "Arduino.h"
+#include <IWatchdog.h>
 
 #include "../includes/activation.h"
 #include "../includes/battery.h"
@@ -18,15 +19,34 @@
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
+#include "../includes/pressure_controller.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
 
 uint32_t clockMsmTimer = 0;
-uint32_t tick = 0;
+uint32_t lastMillis = 0;
 uint32_t MainStateMachineNumber = 1;
 HardwareTimer* msmTimer;
-int32_t lastMicro = 0;
+uint32_t lastMicro = 0;
+uint32_t tick= 0;
+
+
+enum TestStep {
+    START,
+    WAIT_FOR_START,
+    START_BREATHING,
+    INIT_CYCLE,
+    INHALE_RISE,
+    INHALE_HOLD,
+    EXHALE_FALL,
+    EXHALE_HOLD,
+    TRIGGER_RAISED,
+    END_CYCLE
+};
+
+TestStep msmstep = START;
+TestStep previousmsmstep = START;
 
 MainStateMachine::MainStateMachine() {
     isMsmActive = false;
@@ -43,36 +63,22 @@ bool MainStateMachine::isRunning() { return isMsmActive; }
 
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
-    // Todo flow should be stored in pressure controller
-    displayCurrentVolume(MFM_read_milliliters(false), pController->cyclesPerMinuteCommand());
-    displayCurrentSettings(pController->PeakPressureCommand(),
-                           pController->PlateauPressureCommand(), pController->PeepCommand());
+    displayCurrentVolume(pController.tidalVolume(), pController.cyclesPerMinuteCommand());
+    displayCurrentSettings(pController.PeakPressureCommand(), pController.PlateauPressureCommand(),
+                           pController.PeepCommand());
+    if (msmstep == WAIT_FOR_START) {
+        displayMachineStopped();
+    }
 }
 
-enum TestStep {
-    START,
-    WAIT_FOR_START,
-    START_BREATHING,
-    INIT_CYCLE,
-    INHALE_RISE,
-    INHALE_HOLD,
-    EXHALE_FALL,
-    EXHALE_HOLD,
-    TRIGGER_RAISED,
-    END_CYCLE
 
-};
-
-TestStep msmstep = START;
-TestStep previousmsmstep = START;
 
 void millisecondTimerMSM(HardwareTimer*) {
 
     clockMsmTimer++;
-    // TODO reactivate the watchdog  IWatchdog.reload();
-    uint32_t pressure = readPressureSensor(tick, inspiratoryPressureSensorOffset); 
+    uint32_t pressure = inspiratoryPressureSensor.read();
     pController.updatePressure(pressure);
-    uint32_t inspiratoryflow =0;
+    uint32_t inspiratoryflow = 0;
     pController.updateInspiratoryFlow(inspiratoryflow);
 
     if (clockMsmTimer % 10 == 0) {
@@ -112,17 +118,12 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
     // Executed juste after booting, until the first start.
     else if (msmstep == WAIT_FOR_START) {
-        // TODO send boot message to UI.
-
         if ((clockMsmTimer % 1000u) == 0u) {
             pController.sendSnapshot(false);
         }
 
         if ((clockMsmTimer % 100u) == 0u) {
             pController.stop();
-            displayCurrentSettings(pController.PeakPressureCommand(),
-                                           pController.PlateauPressureCommand(),
-                                           pController.PeepCommand());
             displayMachineStopped();
         }
 
@@ -140,6 +141,7 @@ void millisecondTimerMSM(HardwareTimer*) {
 
     else if (msmstep == INIT_CYCLE) {
         pController.initRespiratoryCycle();
+        lastMillis = millis();
         tick = 0;
         msmstep = INHALE_RISE;
 
@@ -150,12 +152,13 @@ void millisecondTimerMSM(HardwareTimer*) {
              || msmstep == EXHALE_HOLD) {
 
         if (clockMsmTimer % 10 == 0) {
-            int32_t currentMicro = micros();
+            uint32_t currentMicro = micros();
             pController.updateDt(currentMicro - lastMicro);
-            pController.compute(tick);
-            tick++;
-
             lastMicro = currentMicro;
+
+            uint32_t currentMillis = millis();
+            tick = (currentMillis - lastMillis) / 10u;
+            pController.compute(tick);
 
             if (tick > pController.tickPerCycle()) {
                 msmstep = END_CYCLE;
@@ -188,17 +191,18 @@ void millisecondTimerMSM(HardwareTimer*) {
         pController.endRespiratoryCycle();
         displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
                                   pController.peep());
-        msmstep = WAIT_FOR_START;
+        if (activationController.isRunning()){
+            msmstep = START_BREATHING;
+        } else {
+            msmstep = WAIT_FOR_START;
+        }
+        
     }
 
     previousmsmstep = msmstep;
 }
 
-void MainStateMachine::setupAndStart(AlarmController* p_alarmController,
-                                     PressureController* p_pressureController) {
-
-    alarmController = p_alarmController;
-    pController = p_pressureController;
+void MainStateMachine::setupAndStart() {
 
     // Set a 1 ms timer for the event loop
     // Prescaler at 10 kHz; stm32f411 clock is 100 mHz

@@ -10,11 +10,14 @@
 #include "../includes/parameters.h"
 #include "Arduino.h"
 
+
 #include "../includes/battery.h"
 #include "../includes/buzzer_control.h"
 #include "../includes/end_of_line_test.h"
 #include "../includes/pressure.h"
 #include "../includes/screen.h"
+
+
 
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
@@ -274,7 +277,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         expiratoryValve.execute();
         inspiratoryValve.open();
         inspiratoryValve.execute();
-        pressureValue = readPressureSensor(0, pressureOffset);
+        pressureValue = inspiratoryPressureSensor.read();
         blower.runSpeed(1790);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Mise sous pression\n  \nP = %d mmH2O",
                        pressureValue);
@@ -306,7 +309,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         inspiratoryValve.execute();
         expiratoryValve.close();
         expiratoryValve.execute();
-        pressureValue = readPressureSensor(0, pressureOffset);
+        pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Fuite...\n  \nP = %d mmH2O",
                        pressureValue);
         if (eolMSCount > 10000u) {
@@ -327,7 +330,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         expiratoryValve.execute();
         inspiratoryValve.close();
         inspiratoryValve.execute();
-        pressureValue = readPressureSensor(0, pressureOffset);
+        pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Ouverture valves...\n  \nP = %d mmH2O",
                        pressureValue);
         if (pressureValue < 20) {
@@ -348,7 +351,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         inspiratoryValve.execute();
         expiratoryValve.close();
         expiratoryValve.execute();
-        pressureValue = readPressureSensor(0, pressureOffset);
+        pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O",
                        pressureValue);
         if (pressureValue > 100) {
@@ -371,7 +374,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         inspiratoryValve.execute();
         expiratoryValve.open((expiratoryValve.minAperture() + expiratoryValve.maxAperture()) / 2u);
         expiratoryValve.execute();
-        pressureValue = readPressureSensor(0, pressureOffset);
+        pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
                        pressureValue);
 

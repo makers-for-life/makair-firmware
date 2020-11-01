@@ -116,3 +116,6 @@ class PressureValve {
     /// Data pin for this servomotor
     uint16_t servoPin;
 };
+
+extern PressureValve expiratoryValve;
+extern PressureValve inspiratoryValve;

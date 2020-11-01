@@ -33,14 +33,11 @@ class MainStateMachine {
     //void millisecondTimerMSM();
 
     /// Run test mode
-    void setupAndStart(AlarmController *p_alarmController,
-                       PressureController *p_pressureController);
+    void setupAndStart();
 
  private:
     /// Test mode activation state
     bool isMsmActive;
-    PressureController *pController;
-    AlarmController *alarmController;
     uint32_t testActive;
 };
 

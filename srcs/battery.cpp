@@ -20,6 +20,7 @@
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
 
+
 // PROGRAM =====================================================================
 
 static uint32_t rawBatterySample[20];      // Array to store battery voltage samples

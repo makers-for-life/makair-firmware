@@ -25,6 +25,7 @@
 #include "../includes/buzzer_control.h"
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
+
 #include "../includes/keyboard.h"
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
@@ -38,20 +39,20 @@
 
 // PROGRAM =====================================================================
 
-PressureValve inspiratoryValve;
-PressureValve expiratoryValve;
 HardwareTimer* hardwareTimer1;
 HardwareTimer* hardwareTimer3;
-Blower* blower_pointer;
-Blower blower;
 
 int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
 
+/*PressureValve inspiratoryValve;
+PressureValve expiratoryValve;
 PressureController pController;
 AlarmController alarmController;
+PressureSensor inspiratoryPressureSensor;*/
+// Blower blower;
 
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 
@@ -62,15 +63,15 @@ HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
  */
 void waitForInMs(uint16_t ms) {
     uint16_t start = millis();
-    minOffsetValue = readPressureSensor(0, 0);
-    maxOffsetValue = readPressureSensor(0, 0);
+    minOffsetValue = inspiratoryPressureSensor.read();
+    maxOffsetValue = inspiratoryPressureSensor.read();
     pressureOffsetSum = 0;
     pressureOffsetCount = 0;
 
     while ((millis() - start) < ms) {
         // Measure 1 pressure per ms we wait
         if ((millis() - start) > pressureOffsetCount) {
-            int16_t pressureValue = readPressureSensor(0, 0);
+            int16_t pressureValue = inspiratoryPressureSensor.read();
             pressureOffsetSum += pressureValue;
             minOffsetValue = min(pressureValue, minOffsetValue);
             maxOffsetValue = max(pressureValue, maxOffsetValue);
@@ -107,27 +108,27 @@ void setup(void) {
     pinMode(PIN_PRESSURE_SENSOR, INPUT);
     pinMode(PIN_BATTERY, INPUT);
 
-    // Timer for servos
+    // Timer for valves
     hardwareTimer3 = new HardwareTimer(TIM3);
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
 
-    // Servo blower setup
+    // Inspiratory valve setup
     inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER,
                                      PIN_SERVO_BLOWER, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     inspiratoryValve.setup();
     hardwareTimer3->resume();
 
-    // Servo patient setup
+    // Expiratory valve setup
     expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT,
                                     PIN_SERVO_PATIENT, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     expiratoryValve.setup();
     hardwareTimer3->resume();
 
+    // Blower setup
     hardwareTimer1 = new HardwareTimer(TIM1);
     hardwareTimer1->setOverflow(ESC_PPM_PERIOD, MICROSEC_FORMAT);
     blower = Blower(hardwareTimer1, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
-    blower_pointer = &blower;
 
     // Turn on the raspberry power
     pinMode(PIN_ENABLE_PWR_RASP, OUTPUT);
@@ -177,9 +178,9 @@ void setup(void) {
     // Do not initialize pressure controller and keyboard in test mode
     if (!eolTest.isRunning()) {
         alarmController = AlarmController();
-        
-        pController =
-            PressureController(inspiratoryValve, expiratoryValve, &alarmController, blower_pointer);
+        inspiratoryPressureSensor = PressureSensor();
+
+        pController = PressureController();
 
         initKeyboard();
     }
@@ -221,10 +222,11 @@ void setup(void) {
     (void)MFM_init();
     MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter
 #endif
-
+    int16_t inspiratoryPressureSensorOffset = 0;
     resetScreen();
     if (pressureOffsetCount != 0u) {
-        inspiratoryPressureSensorOffset = pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
+        inspiratoryPressureSensorOffset =
+            pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
     } else {
         inspiratoryPressureSensorOffset = 0;
     }
@@ -263,7 +265,8 @@ void setup(void) {
         resetScreen();
         screen.setCursor(0, 0);
         char line1[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O", inspiratoryPressureSensorOffset);
+        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O",
+                       inspiratoryPressureSensorOffset);
         screen.print(line1);
         screen.setCursor(0, 1);
         char line2[SCREEN_LINE_LENGTH + 1];
@@ -280,7 +283,8 @@ void setup(void) {
 
     screen.setCursor(0, 3);
     char message[SCREEN_LINE_LENGTH + 1];
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O", inspiratoryPressureSensorOffset);
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O",
+                   inspiratoryPressureSensorOffset);
     screen.print(message);
     waitForInMs(1000);
 
@@ -291,17 +295,18 @@ void setup(void) {
         DBG_DO(Serial.println("beforeMsms");)
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
         mainStateMachine.activate();
-        mainStateMachine.setupAndStart(&alarmController, &pController);
+        mainStateMachine.setupAndStart();
         DBG_DO(Serial.println("beforeMsms");)
-        // TODO enable again
-        // IWatchdog.begin(WATCHDOG_TIMEOUT);
-        // IWatchdog.reload();
+        IWatchdog.begin(WATCHDOG_TIMEOUT);
+        IWatchdog.reload();
     } else {
         eolTest.setupAndStart();
     }
 }
 
 // cppcheck-suppress unusedFunction
-void loop(void) {}
+void loop(void) {
+    IWatchdog.reload();
+}
 
 #endif
