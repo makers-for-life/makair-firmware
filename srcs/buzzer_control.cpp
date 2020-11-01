@@ -21,7 +21,7 @@ uint32_t Buzzer_Timer_Channel;
 #endif
 
 void BuzzerControl_Init(void) {
-#if HARDWARE_VERSION == 1
+#if HARDWARE_VERSION == 1 || defined(FORCEMALLORY)
     pinMode(PIN_BUZZER, OUTPUT);
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     TIM_TypeDef* Buzzer_Timer_Number = reinterpret_cast<TIM_TypeDef*>(
@@ -40,7 +40,15 @@ void BuzzerControl_Init(void) {
 }
 
 uint32_t buzzerCurrentFreq = BUZZER_FREQ;
+#if  defined(FORCEMALLORY)
+void BuzzerIncrementFreq(void) { 
+    BuzzerControl_On();
+}
 
+void BuzzerDecrementFreq(void) { 
+    BuzzerControl_Off();
+}
+#else
 void BuzzerChangeFreq(uint32_t freq) {
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Buzzer_Hw_Timer->setCount(0);
@@ -62,10 +70,10 @@ void BuzzerDecrementFreq(void) {
     }
     BuzzerChangeFreq(buzzerCurrentFreq);
 }
-
+#endif
 
 void BuzzerControl_On(void) {
-#if HARDWARE_VERSION == 1
+#if HARDWARE_VERSION == 1 || defined(FORCEMALLORY)
     // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.
     digitalWrite(PIN_BUZZER, HIGH);
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
@@ -74,7 +82,7 @@ void BuzzerControl_On(void) {
 }
 
 void BuzzerControl_Off(void) {
-#if HARDWARE_VERSION == 1
+#if HARDWARE_VERSION == 1 || defined(FORCEMALLORY)
     // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.
     digitalWrite(PIN_BUZZER, LOW);
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
