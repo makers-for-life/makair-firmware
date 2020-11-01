@@ -43,7 +43,6 @@
 #define MASS_FLOW_PERIOD 100
 #endif
 
-
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 #define MASS_FLOW_PERIOD 100
 #endif
@@ -59,12 +58,13 @@ volatile int32_t mfmSampleCount = 0;
 
 bool mfmFaultCondition = false;
 
-volatile int failureCount = 0;
-
 int32_t mfmLastValue = 0;
 
-// Time to reset the sensor after I2C restart, in periods => 5 ms
-#define MFM_WAIT_RESET_PERIODS 5
+// Time to reset the sensor after I2C restart, in periods => 100 ms
+// the restart time is 50ms (warm up time in the datasheet)
+// the power off time is 50ms. enough to discharge capacitors.
+#define MFM_WAIT_RESET_PERIODS 10
+#define MFM_WAIT_WARMUP_PERIODS 5
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
 
 // cppcheck-suppress misra-c2012-19.2 ; union correctly used
@@ -81,6 +81,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
 #if MODE == MODE_MFM_TESTS
         // cppcheck-suppress misra-c2012-12.3
         digitalWrite(PIN_LED_START, HIGH);
+        // it takes typically 350us to read the value.
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -118,24 +119,21 @@ void MFM_Timer_Callback(HardwareTimer*) {
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
-        Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
 
-        Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
-
+        // begin() and end() everytime you read... the lib never free buffers if you don't do this.
+        Wire.begin();
+        uint8_t readCount = Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
         mfmLastData.c[0] = Wire.read();
         mfmLastData.c[1] = Wire.read();
+        // Wire.endTransmission() send a new write order followed by a stop. Useless and the sensor
+        // often nack it.
+        Wire.end();
 
-        if (Wire.endTransmission() != 0) {
-            // The sensor tends to NACK the address quite often. So let's say there is actually
-            // something wrong when the sensor does that five times in a row, don't care otherwise.
-            failureCount++;
-
-            if (failureCount == 5) {
-                mfmFaultCondition = true;
-                mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
-            }
-        } else {
-            failureCount = 0;
+        // Hardware reset if not able to read two bytes.
+        if (readCount != 2) {
+            mfmFaultCondition = true;
+            mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+            mfmAirVolumeSum = 6000000;  // final result is greater than MASS_FLOW_ERROR_VALUE
         }
 
         mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
@@ -166,6 +164,15 @@ void MFM_Timer_Callback(HardwareTimer*) {
             Wire.flush();
             Wire.end();
 #endif
+#if HARDWARE_VERSION == 3
+            // Set power off
+            digitalWrite(MFM_POWER_CONTROL, MFM_POWER_OFF);
+            // also set SDA and SCL to 0 to avoid sensor to be powered by I2C bus.
+            pinMode(PIN_I2C_SDA, OUTPUT);
+            pinMode(PIN_I2C_SCL, OUTPUT);
+            digitalWrite(PIN_I2C_SDA, LOW);
+            digitalWrite(PIN_I2C_SCL, LOW);
+#endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
             Wire.begin();
@@ -183,6 +190,18 @@ void MFM_Timer_Callback(HardwareTimer*) {
         }
         mfmResetStateMachine--;
 
+        // five period before new attempt (50ms sensor warmup time in the datasheet)
+        if (mfmResetStateMachine == MFM_WAIT_WARMUP_PERIODS) {
+#if HARDWARE_VERSION == 3
+            // Set power on
+            digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
+            // release the I2C bus
+            pinMode(PIN_I2C_SDA, INPUT);
+            pinMode(PIN_I2C_SCL, INPUT);
+#endif
+        }
+
+        // new attempt
         if (mfmResetStateMachine == 0) {
 // MFM_WAIT_RESET_PERIODS cycles later, try again to init the sensor
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
@@ -216,16 +235,11 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
             Wire.begin();
             Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-            Wire.write(0x02);  // Force reset
-            Wire.endTransmission();
+            Wire.write(0x02);                         // Force reset
+            uint8_t status = Wire.endTransmission();  // actually send the data
+            Wire.end();
 
-            Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-
-            Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
-            mfmLastData.c[1] = Wire.read();
-            mfmLastData.c[0] = Wire.read();
-
-            mfmFaultCondition = (Wire.endTransmission() != 0);
+            mfmFaultCondition = (status != 0);
 #endif
 
             if (mfmFaultCondition) {
@@ -237,6 +251,12 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
 bool MFM_init(void) {
     mfmAirVolumeSum = 0;
+
+#if HARDWARE_VERSION == 3
+    // Set power on
+    pinMode(MFM_POWER_CONTROL, OUTPUT);
+    digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
+#endif
 
     // Set the timer
     massFlowTimer = new HardwareTimer(MASS_FLOW_TIMER);
@@ -252,7 +272,6 @@ bool MFM_init(void) {
     // Interrupt priority is documented here:
     // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
     massFlowTimer->setInterruptPriority(2, 0);
-
 
 // I2C sensors
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
@@ -349,19 +368,17 @@ void MFM_reset(void) {
 }
 
 /**
- *  If the massflow meter needs to be calibrated, this function will be usefull. 
+ *  If the massflow meter needs to be calibrated, this function will be usefull.
  */
 // cppcheck-suppress misra-c2012-2.2
-void MFM_calibrateZero(void) {
-
-}
+void MFM_calibrateZero(void) {}
 
 int32_t MFM_read_milliliters(bool reset_after_read) {
     int32_t result;
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
     // This should be an atomic operation (32 bits aligned data)
-    result = mfmFaultCondition ? 999999 : mfmAirVolumeSum / (60 * 120);
+    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmAirVolumeSum / (60 * 120);
 
     // Correction factor is 120. Divide by 60 to convert ml.min-1 to ml.ms-1, hence the 7200 =
     // 120 * 60
@@ -369,11 +386,12 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
     // This should be an atomic operation (32 bits aligned data)
-    result = mfmFaultCondition ? 999999 : (mfmAirVolumeSum / 6.5);
+    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : (mfmAirVolumeSum / 6.5);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
-    result = mfmFaultCondition ? 999999 : ((mfmAirVolumeSum * MASS_FLOW_PERIOD) / (60 * 10));
+    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE
+                               : ((mfmAirVolumeSum * MASS_FLOW_PERIOD) / (60 * 10));
 #endif
 
     if (reset_after_read) {
@@ -440,7 +458,7 @@ void loop(void) {
             screen.print("sensor OK");
             // screen.print(mfmLastValue);
             screen.setCursor(0, 3);
-            (void)snprintf(buffer, "volume=%dmL", volume);
+            (void)snprintf(buffer, 30, "volume=%dmL", volume);
             screen.print(buffer);
         }
 
