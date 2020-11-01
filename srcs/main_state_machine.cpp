@@ -26,11 +26,11 @@
 
 uint32_t clockMsmTimer = 0;
 uint32_t lastMillis = 0;
+uint32_t lastMillisInTheLoop = 0;  // TODO better naming for this variable
 uint32_t MainStateMachineNumber = 1;
 HardwareTimer* msmTimer;
 uint32_t lastMicro = 0;
-uint32_t tick= 0;
-
+uint32_t tick = 0;
 
 enum TestStep {
     START,
@@ -71,8 +71,6 @@ void MainStateMachine::ScreenUpdate() {
     }
 }
 
-
-
 void millisecondTimerMSM(HardwareTimer*) {
 
     clockMsmTimer++;
@@ -80,6 +78,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     pController.updatePressure(pressure);
     uint32_t inspiratoryflow = 0;
     pController.updateInspiratoryFlow(inspiratoryflow);
+    // TODO: reactivate because higher priority timerIWatchdog.reload();
 
     if (clockMsmTimer % 10 == 0) {
         // Check if some buttons have been pushed
@@ -119,7 +118,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     // Executed juste after booting, until the first start.
     else if (msmstep == WAIT_FOR_START) {
         if ((clockMsmTimer % 1000u) == 0u) {
-            pController.sendSnapshot(false);
+            pController.sendSnapshot();
         }
 
         if ((clockMsmTimer % 100u) == 0u) {
@@ -142,6 +141,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     else if (msmstep == INIT_CYCLE) {
         pController.initRespiratoryCycle();
         lastMillis = millis();
+        lastMillisInTheLoop = millis();
         tick = 0;
         msmstep = INHALE_RISE;
 
@@ -151,18 +151,19 @@ void millisecondTimerMSM(HardwareTimer*) {
     else if (msmstep == INHALE_RISE || msmstep == INHALE_HOLD || msmstep == EXHALE_FALL
              || msmstep == EXHALE_HOLD) {
 
-        if (clockMsmTimer % 10 == 0) {
-            uint32_t currentMicro = micros();
-            pController.updateDt(currentMicro - lastMicro);
-            lastMicro = currentMicro;
+        uint32_t currentMillis = millis();
+        tick = (currentMillis - lastMillis) / 10u;
 
-            uint32_t currentMillis = millis();
-            tick = (currentMillis - lastMillis) / 10u;
-            pController.compute(tick);
-
-            if (tick > pController.tickPerCycle()) {
+        if (currentMillis - lastMillisInTheLoop > 10u) {
+            if (tick >= pController.tickPerCycle()) {
                 msmstep = END_CYCLE;
+            } else {
+                uint32_t currentMicro = micros();
+                pController.updateDt(currentMicro - lastMicro);
+                lastMicro = currentMicro;
+                pController.compute(tick);
             }
+            lastMillisInTheLoop = currentMillis;
         }
 
         /*if (msmstep == INHALE_RISE) {
@@ -188,27 +189,30 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
 
     else if (msmstep == END_CYCLE) {
+        Serial.print("Cycle duration:");
+        Serial.println(millis() - lastMillis);
         pController.endRespiratoryCycle();
         displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
                                   pController.peep());
-        if (activationController.isRunning()){
+        if (activationController.isRunning()) {
             msmstep = START_BREATHING;
         } else {
             msmstep = WAIT_FOR_START;
         }
-        
     }
 
     previousmsmstep = msmstep;
 }
 
 void MainStateMachine::setupAndStart() {
-
     // Set a 1 ms timer for the event loop
     // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
     ::msmTimer->setPrescaleFactor((::msmTimer->getTimerClkFreq() / 10000) - 1);
     // Set the period at 1 ms
     ::msmTimer->setOverflow(10);
+    // priority level :
+    // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
+    ::msmTimer->setInterruptPriority(0, 0);
     ::msmTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
     ::msmTimer->attachInterrupt(millisecondTimerMSM);
     ::msmTimer->resume();

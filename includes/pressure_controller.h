@@ -207,7 +207,7 @@ class PressureController {
 
     void stop();
 
-    void sendSnapshot(bool isRunning);
+    void sendSnapshot();
 
  private:
     /**

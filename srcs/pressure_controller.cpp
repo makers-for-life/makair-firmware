@@ -72,7 +72,7 @@ void PressureController::setup() {
     m_cycleNb = 0;
     m_blower_increment = 0;
 
-    m_dt = 0;
+    m_dt = PCONTROLLER_COMPUTE_PERIOD_US;
 
     inspiratoryValveLastAperture = 0;
     expiratoryValveLastAperture = 0;
@@ -185,8 +185,10 @@ void PressureController::initRespiratoryCycle() {
 void PressureController::endRespiratoryCycle() {
     // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
     // Don't calculate the first one (when starting up the machine)
+    uint32_t currentMillis = millis();
     if (m_lastEndOfRespirationDateMs != 0u) {
-        m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] = millis() - m_lastEndOfRespirationDateMs;
+        m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] =
+            currentMillis - m_lastEndOfRespirationDateMs;
         m_lastBreathPeriodsMsIndex++;
         if (m_lastBreathPeriodsMsIndex >= NUMBER_OF_BREATH_PERIOD) {
             m_lastBreathPeriodsMsIndex = 0;
@@ -197,10 +199,10 @@ void PressureController::endRespiratoryCycle() {
         }
         // Add "+(sum-1u)" to round instead of truncate
         m_CyclesPerMinuteMeasure = (((NUMBER_OF_BREATH_PERIOD * 60u) * 1000u) + (sum - 1u)) / sum;
-        //Serial.print("CPMmeasure:");
-        //Serial.println(((((float)NUMBER_OF_BREATH_PERIOD * 60.0) * 1000.0) + ((float)sum - 1.0)) / (float)sum);
+        Serial.print("CPMmeasure:");
+        Serial.println((float)sum / (float)NUMBER_OF_BREATH_PERIOD, 5);
     }
-    m_lastEndOfRespirationDateMs = millis();
+    m_lastEndOfRespirationDateMs = currentMillis;
 
     // Plateau pressure is the mean pressure during plateau
     m_plateauPressureMeasure = m_squarePlateauSum / m_squarePlateauCount;
@@ -229,7 +231,7 @@ void PressureController::endRespiratoryCycle() {
 #endif
 
     // Send snapshot of the firmware to th UI
-    sendSnapshot(true);
+    sendSnapshot();
 }
 
 void PressureController::updatePressure(int16_t p_currentPressure) {
@@ -283,9 +285,9 @@ void PressureController::compute(uint16_t p_tick) {
                        expiratoryValve.position)
 
     alarmController.updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick, m_pressure, m_inspiratoryFlow, m_expiratoryFlow, m_phase, m_subPhase,
-                     inspiratoryValve.position, expiratoryValve.position, blower.getSpeed() / 10u,
-                     getBatteryLevel());
+    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
+                     expiratoryValve.position, blower.getSpeed() / 10u, getBatteryLevel(),
+                     m_inspiratoryFlow, m_expiratoryFlow);
 
     executeCommands();
 }
@@ -446,6 +448,9 @@ void PressureController::computeTickParameters() {
 
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
     m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
+
+    Serial.print("m_ticksPerCycle");
+    Serial.println(m_ticksPerCycle);
 }
 
 void PressureController::executeCommands() {
@@ -721,7 +726,10 @@ void PressureController::reachSafetyPosition() {
 void PressureController::stop() {
     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
     blower.stop();
-    sendStoppedMessage();
+    sendStoppedMessage(mmH2OtoCmH2O(m_peakPressureNextCommand),
+                       mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
+                       m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
+                       m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand);
     // When stopped, open the valves
     reachSafetyPosition();
     // Stop alarms related to breathing cycle
@@ -734,16 +742,16 @@ void PressureController::stop() {
     alarmController.notDetectedAlarm(RCM_SW_19);
 }
 
-void PressureController::sendSnapshot(bool isRunning) {
+void PressureController::sendSnapshot() {
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)
-    sendMachineStateSnapshot(
-        m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
-        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
-        m_cyclesPerMinuteNextCommand, m_peakPressureMeasure, m_plateauPressureToDisplay,
-        m_peepMeasure, m_CyclesPerMinuteMeasure, alarmController.triggeredAlarms(),
-        m_tidalVolumeMeasure, m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
-        m_pressureTriggerOffsetNextCommand, isRunning);
+    sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
+                             mmH2OtoCmH2O(m_plateauPressureNextCommand),
+                             mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand,
+                             m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
+                             alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
+                             m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
+                             m_pressureTriggerOffsetNextCommand, m_CyclesPerMinuteMeasure);
 }
 
 void PressureController::onCycleDecrease() {

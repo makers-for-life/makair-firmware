@@ -12,7 +12,7 @@
 #include "../includes/alarm_controller.h"
 #include "../includes/cycle.h"
 
-#define PROTOCOL_VERSION 1u
+#define PROTOCOL_VERSION 2u
 
 /// Prepare Serial6 to send telemetry data
 void initTelemetry(void);
@@ -21,19 +21,25 @@ void initTelemetry(void);
 void sendBootMessage(void);
 
 /// Send a "stopped" message
-void sendStoppedMessage(void);
+void sendStoppedMessage(uint8_t peakCommand,
+                        uint8_t plateauCommand,
+                        uint8_t peepCommand,
+                        uint8_t cpmCommand,
+                        uint8_t expiratoryTerm,
+                        bool triggerEnabled,
+                        uint8_t triggerOffset);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
                       uint16_t pressureValue,
-                      uint16_t inspiratoryFlowValue,
-                      uint16_t expiratoryFlowValue,
                       CyclePhases phase,
                       CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
-                      uint8_t batteryLevel);
+                      uint8_t batteryLevel,
+                      int16_t inspiratoryFlowValue,
+                      int16_t expiratoryFlowValue);
 
 /// Send a "machine state snapshot" message
 // cppcheck-suppress misra-c2012-2.7
@@ -45,13 +51,12 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPeakPressureValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
-                              uint8_t previouscpmValue,
                               uint8_t currentAlarmCodes[ALARMS_SIZE],
                               uint16_t volumeValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
-                              bool isRunning);
+                              uint8_t previouscpmValue);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
