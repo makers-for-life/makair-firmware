@@ -458,7 +458,7 @@ void loop(void) {
             screen.print("sensor OK");
             // screen.print(mfmLastValue);
             screen.setCursor(0, 3);
-            (void)snprintf(buffer, 30, "volume=%dmL", volume);
+            (void)snprintf(buffer, sizeof(buffer), "volume=%dmL", volume);
             screen.print(buffer);
         }
 
