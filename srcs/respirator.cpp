@@ -45,7 +45,6 @@ HardwareTimer* hardwareTimer3;
 Blower* blower_pointer;
 Blower blower;
 
-int16_t pressureOffset;
 int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
@@ -225,9 +224,9 @@ void setup(void) {
 
     resetScreen();
     if (pressureOffsetCount != 0u) {
-        pressureOffset = pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
+        inspiratoryPressureSensorOffset = pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
     } else {
-        pressureOffset = 0;
+        inspiratoryPressureSensorOffset = 0;
     }
     DBG_DO({
         Serial.print("pressure offset = ");
@@ -235,7 +234,7 @@ void setup(void) {
         Serial.print(" / ");
         Serial.print(pressureOffsetCount);
         Serial.print(" = ");
-        Serial.print(pressureOffset);
+        Serial.print(inspiratoryPressureSensorOffset);
         Serial.println();
     })
 
@@ -260,11 +259,11 @@ void setup(void) {
         }
     }
 
-    if (pressureOffset >= MAX_PRESSURE_OFFSET) {
+    if (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET) {
         resetScreen();
         screen.setCursor(0, 0);
         char line1[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O", pressureOffset);
+        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O", inspiratoryPressureSensorOffset);
         screen.print(line1);
         screen.setCursor(0, 1);
         char line2[SCREEN_LINE_LENGTH + 1];
@@ -281,7 +280,7 @@ void setup(void) {
 
     screen.setCursor(0, 3);
     char message[SCREEN_LINE_LENGTH + 1];
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O", pressureOffset);
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O", inspiratoryPressureSensorOffset);
     screen.print(message);
     waitForInMs(1000);
 

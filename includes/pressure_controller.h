@@ -40,7 +40,7 @@ class PressureController {
     // cppcheck-suppress misra-c2012-2.7
     PressureController(const PressureValve& p_inspiratory_valve,
                        const PressureValve& p_expiratory_valve,
-                       AlarmController *p_alarmController,
+                       AlarmController* p_alarmController,
                        Blower* p_blower);
 
     /// Initialize actuators
@@ -57,6 +57,18 @@ class PressureController {
      * @param p_currentPressure  Measured pressure
      */
     void updatePressure(int16_t p_currentPressure);
+
+    /**
+     * Input a flow reading
+     * @param p_currentInspiratoryFlow  Measured inspiratory flow
+     */
+    void updateInspiratoryFlow(int16_t p_currentInspiratoryFlow);
+
+    /**
+     * Input a flow reading
+     * @param p_currentInspiratoryFlow  Measured inspiratory flow
+     */
+    void updateExpiratoryFlow(int16_t p_currentExpiratoryFlow);
 
     /**
      * Perform the pressure control
@@ -211,7 +223,7 @@ class PressureController {
 
     void stop();
 
-    void sendSnapshot();
+    void sendSnapshot(bool isRunning);
 
  private:
     /**
@@ -285,8 +297,6 @@ class PressureController {
 
     void calculateBlowerIncrement();
 
-
-
  private:
     /// Actual desired number of cycles per minute
     uint16_t m_cyclesPerMinuteCommand;
@@ -330,7 +340,6 @@ class PressureController {
     uint32_t m_plateauDurationMs;
     /// true if plateau pressure has been reached (but not necessarily converged.)
     bool m_plateauPressureReached;
-    
 
     /// Actual desired PEEP
     uint16_t m_peepCommand;
@@ -359,6 +368,9 @@ class PressureController {
     /// Desired expiratory term for next cycle
     uint16_t m_expiratoryTermNextCommand;
 
+    /// Measured value of the tidal volume (volume of air pushed in patient lungs in last
+    /// inspiration)
+    uint16_t m_tidalVolumeMeasure;
 
     /// Number of hundredth of second per cycle
     uint16_t m_ticksPerCycle;
@@ -368,6 +380,12 @@ class PressureController {
 
     /// Measured pressure
     uint16_t m_pressure;
+
+    /// Measured expiratory flow
+    int16_t m_inspiratoryFlow;
+
+    /// Measured inspiratory flow
+    int16_t m_expiratoryFlow;
 
     /// Inhalation last Pressre
     uint16_t m_inhalationLastPressure;
@@ -459,7 +477,7 @@ class PressureController {
     int32_t PC_expiratory_PID_LastError;
 
     /// Alarm controller
-    AlarmController *m_alarmController;
+    AlarmController* m_alarmController;
 
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
@@ -473,16 +491,13 @@ class PressureController {
     int32_t PC_expiratory_PID_last_errors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
     int32_t PC_expiratory_PID_last_errorsIndex;
 
-    
-
     /// Sum of the current cycle's pressures
-    uint32_t m_sumOfPressures;//TODO : be carefull for this parameter overflow !!
+    uint32_t m_sumOfPressures;  // TODO : be carefull for this parameter overflow !!
     /// Number of the current cycle's pressures
     uint16_t m_numberOfPressures;
 
     // Tick index, given by the main loop
     uint16_t m_tick;
-    
 };
 
 // INITIALISATION =============================================================

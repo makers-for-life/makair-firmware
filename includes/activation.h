@@ -31,6 +31,8 @@ class ActivationController {
      */
     bool isRunning() const { return m_state != STOPPED; }
 
+    void changeStateFromUI(uint16_t state);
+
     /**
      * Callback to call each time the start button is pushed
      */

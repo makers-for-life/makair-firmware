@@ -24,6 +24,8 @@ void sendStoppedMessage(void);
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
                       uint16_t pressureValue,
+                      uint16_t inspiratoryFlowValue,
+                      uint16_t expiratoryFlowValue,
                       CyclePhases phase,
                       CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
@@ -41,11 +43,13 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPeakPressureValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
+                              uint8_t previouscpmValue,
                               uint8_t currentAlarmCodes[ALARMS_SIZE],
                               uint16_t volumeValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
-                              uint8_t triggerOffset);
+                              uint8_t triggerOffset,
+                              bool isRunning);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,

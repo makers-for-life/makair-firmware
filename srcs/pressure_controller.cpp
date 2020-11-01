@@ -24,6 +24,7 @@
 #include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/telemetry.h"
+#include "../includes/pressure.h"
 
 static const int32_t INVALID_ERROR_MARKER = INT32_MIN;
 
@@ -45,6 +46,8 @@ void PressureController::setup() {
     DBG_DO(Serial.println("Setup the controller");)
 
     m_subPhase = HOLD_INSPIRATION;  // TODO remove subphase
+    m_inspiratoryFlow = 0;
+    m_expiratoryFlow = 0;
 
     m_cyclesPerMinuteCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
     m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
@@ -227,21 +230,14 @@ void PressureController::endRespiratoryCycle() {
 
 #ifdef MASS_FLOW_METER
     int32_t volume = MFM_read_milliliters(true);
-    uint16_t telemetryVolume =
+    uint16_t m_tidalVolumeMeasure =
         ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
 #else
-    uint16_t telemetryVolume = UINT16_MAX;
+    uint16_t m_tidalVolumeMeasure = UINT16_MAX;
 #endif
 
-    // Send the next command, because command has not been updated yet (will be at the beginning of
-    // the next cycle)
-    sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
-                             mmH2OtoCmH2O(m_plateauPressureNextCommand),
-                             mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand,
-                             m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
-                             m_alarmController->triggeredAlarms(), telemetryVolume,
-                             m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
-                             m_pressureTriggerOffsetNextCommand);
+    // Send snapshot of the firmware to th UI
+    sendSnapshot(true);
 }
 
 void PressureController::updatePressure(int16_t p_currentPressure) {
@@ -255,6 +251,16 @@ void PressureController::updatePressure(int16_t p_currentPressure) {
     if (m_lastPressureValuesIndex >= MAX_PRESSURE_SAMPLES) {
         m_lastPressureValuesIndex = 0;
     }
+}
+
+void PressureController::updateInspiratoryFlow(int16_t p_currentInspiratoryFlow) {
+    // TODO check if value is valid.
+    m_inspiratoryFlow = p_currentInspiratoryFlow;
+}
+
+void PressureController::updateExpiratoryFlow(int16_t p_currentExpiratoryFlow) {
+    // TODO check if value is valid.
+    m_expiratoryFlow = p_currentExpiratoryFlow;
 }
 
 void PressureController::compute(uint16_t p_tick) {
@@ -291,8 +297,9 @@ void PressureController::compute(uint16_t p_tick) {
                        m_expiratoryValve.command, m_expiratoryValve.position)
 
     m_alarmController->updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, m_inspiratoryValve.position,
-                     m_expiratoryValve.position, m_blower->getSpeed() / 10u, getBatteryLevel());
+    sendDataSnapshot(p_tick, m_pressure, m_inspiratoryFlow, m_expiratoryFlow, m_phase, m_subPhase,
+                     m_inspiratoryValve.position, m_expiratoryValve.position,
+                     m_blower->getSpeed() / 10u, getBatteryLevel());
 
     executeCommands();
 }
@@ -735,13 +742,16 @@ void PressureController::stop() {
     m_alarmController->notDetectedAlarm(RCM_SW_19);
 }
 
-void PressureController::sendSnapshot() {
+void PressureController::sendSnapshot(bool isRunning) {
+    // Send the next command, because command has not been updated yet (will be at the beginning of
+    // the next cycle)
     sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
                              mmH2OtoCmH2O(m_plateauPressureNextCommand),
                              mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand,
                              m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
-                             m_alarmController->triggeredAlarms(), 0, m_expiratoryTermNextCommand,
-                             m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand);
+                             m_CyclesPerMinuteMeasure, m_alarmController->triggeredAlarms(), m_tidalVolumeMeasure,
+                             m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
+                             m_pressureTriggerOffsetNextCommand, isRunning);
     // TODO : store volume
 }
 

@@ -20,6 +20,7 @@
 
 /// Internals
 #include "../includes/pressure_controller.h"
+#include "../includes/activation.h"
 
 // GLOBAL ITEMS ==============================================================
 
@@ -135,6 +136,10 @@ void serialControlLoop() {
 
                 case 7:  // TriggerOffset
                     pController.onTriggerOffsetSet(value);
+                    break;
+
+                case 8:  // Machine on/off
+                    activationController.changeStateFromUI(value);
                     break;
 
                 default:

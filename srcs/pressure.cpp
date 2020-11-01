@@ -21,8 +21,10 @@
 // PROGRAM =====================================================================
 
 // Get the measured or simulated pressure for the feedback control (in mmH2O)
-int16_t readPressureSensor(uint16_t tick, int16_t pressureOffset) {
+int16_t inspiratoryPressureSensorOffset = 0;
+
+int16_t readPressureSensor(uint16_t tick) {
     (void)tick;
-    int16_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - pressureOffset;
+    int16_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - inspiratoryPressureSensorOffset;
     return max(int16_t(0), withOffset);
 }

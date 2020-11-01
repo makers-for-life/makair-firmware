@@ -70,8 +70,10 @@ void millisecondTimerMSM(HardwareTimer*) {
 
     clockMsmTimer++;
     // TODO reactivate the watchdog  IWatchdog.reload();
-    uint32_t pressure = readPressureSensor(tick, 12);  // TODO change 100 to pressure offset
+    uint32_t pressure = readPressureSensor(tick, inspiratoryPressureSensorOffset); 
     pController.updatePressure(pressure);
+    uint32_t inspiratoryflow =0;
+    pController.updateInspiratoryFlow(inspiratoryflow);
 
     if (clockMsmTimer % 10 == 0) {
         // Check if some buttons have been pushed
@@ -113,7 +115,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         // TODO send boot message to UI.
 
         if ((clockMsmTimer % 1000u) == 0u) {
-            pController.sendSnapshot();
+            pController.sendSnapshot(false);
         }
 
         if ((clockMsmTimer % 100u) == 0u) {

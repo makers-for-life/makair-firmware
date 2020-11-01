@@ -127,7 +127,7 @@ void sendBootMessage() {
     CRC32 crc32;
     Serial6.write("B:");
     crc32.update("B:", 2);
-    Serial6.write((uint8_t)1u);
+    Serial6.write((uint8_t)1u); // Communication protocol version
     crc32.update((uint8_t)1u);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
@@ -202,6 +202,8 @@ void sendStoppedMessage() {
 // cppcheck-suppress unusedFunction
 void sendDataSnapshot(uint16_t centileValue,
                       uint16_t pressureValue,
+                      uint16_t inspiratoryFlowValue,
+                      uint16_t expiratoryFlowValue,
                       CyclePhases phase,
                       CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
@@ -259,6 +261,22 @@ void sendDataSnapshot(uint16_t centileValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
+    byte inspiratoryFlow[2];  // 16 bits
+    toBytes16(inspiratoryFlow, inspiratoryFlowValue);
+    Serial6.write(inspiratoryFlow, 2);
+    crc32.update(inspiratoryFlow, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte expiratoryFlow[2];  // 16 bits
+    toBytes16(expiratoryFlow, expiratoryFlowValue);
+    Serial6.write(expiratoryFlow, 2);
+    crc32.update(expiratoryFlow, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(phaseValue);
     crc32.update(phaseValue);
 
@@ -304,11 +322,13 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t previousPeakPressureValue,
                               uint16_t previousPlateauPressureValue,
                               uint16_t previousPeepPressureValue,
+                              uint8_t previouscpmValue,
                               uint8_t currentAlarmCodes[ALARMS_SIZE],
                               uint16_t volumeValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
-                              uint8_t triggerOffset) {
+                              uint8_t triggerOffset,
+                              bool isRunning) {
 
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
