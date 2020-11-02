@@ -63,9 +63,9 @@ bool MainStateMachine::isRunning() { return isMsmActive; }
 
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
-    displayCurrentVolume(pController.tidalVolumeMeasure(), pController.cyclesPerMinuteCommand());
-    displayCurrentSettings(pController.peakPressureCommand(), pController.plateauPressureCommand(),
-                           pController.peepCommand());
+    displayCurrentVolume(pController.tidalVolumeMeasure(), pController.cyclesPerMinuteNextCommand());
+    displayCurrentSettings(pController.peakPressureNextCommand(), pController.plateauPressureNextCommand(),
+                           pController.peepNextCommand());
     if (msmstep == WAIT_FOR_START) {
         displayMachineStopped();
     }

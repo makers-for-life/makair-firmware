@@ -103,7 +103,7 @@ void PCModeController::exhale() {
         PCexpiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt()));
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    if (pController.isTriggerModeEnabled() && pController.isPeepDetected()) {
+    if (pController.triggerModeEnabledCommand() && pController.isPeepDetected()) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
         if (static_cast<int32_t>(pController.pressure())

@@ -139,20 +139,46 @@ class PressureController {
      */
     void onTriggerOffsetSet(uint16_t TriggerOffset);
 
-    /// Get the desired number of cycles per minute
-    inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteNextCommand; }
-
     /// Get the desired max peak
-    inline uint16_t peakPressureCommand() const { return m_peakPressureNextCommand; }
-
+    inline uint16_t peakPressureCommand() const { return m_peakPressureCommand; }
+    /// Get the desired plateau pressure
+    inline uint16_t plateauPressureCommand() const { return m_plateauPressureCommand; }
     /// Get the desired PEEP
     inline uint16_t peepCommand() const { return m_peepNextCommand; }
-
-    /// Get the desired plateau pressure
-    inline uint16_t plateauPressureCommand() const { return m_plateauPressureNextCommand; }
-
     /// Get the desired number of cycles per minute
-    inline uint16_t cyclesPerMinute() const { return m_cyclesPerMinuteNextCommand; }
+    inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteCommand; }
+    /// Get the value of the inspiratory trigger pressure command
+    inline const uint16_t pressureTriggerOffsetCommand() const {
+        return m_pressureTriggerOffsetCommand;
+    }
+    // Get the enabling state of trigger mode
+    inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
+
+    /// Get the desired max peak for next cycle
+    inline uint16_t peakPressureNextCommand() const { return m_peakPressureNextCommand; }
+    /// Get the desired plateau pressure for next cycle
+    inline uint16_t plateauPressureNextCommand() const { return m_plateauPressureNextCommand; }
+    /// Get the desired PEEP for next cycle
+    inline uint16_t peepNextCommand() const { return m_peepNextCommand; }
+    /// Get the desired number of cycles per minute for next cycle
+    inline uint16_t cyclesPerMinuteNextCommand() const { return m_cyclesPerMinuteNextCommand; }
+    /// Get the value of the inspiratory trigger pressure command for next cycle
+    inline const uint16_t pressureTriggerOffsetNextCommand() const {
+        return m_pressureTriggerOffsetNextCommand;
+    }
+    // Get the enabling state of trigger mode for next cycle
+    inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
+
+    /// Get the measured peak pressure
+    inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
+    /// Get the measured plateau pressure
+    inline int16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
+    /// Get the measured PEEP
+    inline int16_t peepMeasure() const { return m_peepMeasure; }
+    /// Get the desired number of cycles per minute
+    inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
+        /// Get the measured tidal Volume
+    inline uint16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
 
     /// Get the number of past cycles since the beginning
     inline uint32_t cycleNumber() const { return m_cycleNb; }
@@ -169,24 +195,9 @@ class PressureController {
     /// Get the delta of time since the last cycle
     inline int32_t dt() const { return m_dt; }
 
-    /// Get the measured peak pressure
-    inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
-
-    /// Get the measured plateau pressure
-    inline int16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
-
-    /// Get the measured PEEP
-    inline int16_t peepMeasure() const { return m_peepMeasure; }
-
-    /// Get the measured tidal Volume
-    inline int16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
-
-    /// Get the measured number of cycles per minute
-    inline uint32_t cyclesPerMinuteMeasure() const { return m_CyclesPerMinuteMeasure; }
-
     /// Get the pressure command
     inline int32_t pressureCommand() const { return m_pressureCommand; }
-    
+
     /// Get the current cycle phase
     inline CyclePhases phase() const { return m_phase; }
 
@@ -196,28 +207,18 @@ class PressureController {
     /// Get the state of the inspiratory trigger
     inline const bool triggered() const { return m_triggered; }
 
-    /// Get the value of the inspiratory trigger pressure command
-    inline const uint16_t pressureTriggerOffsetCommand() const { return m_pressureTriggerOffsetNextCommand; }
-
     /// Reset the trigger to false
     inline const void setTrigger(bool triggerValue) { m_triggered = triggerValue; }
-
-    // Get the enabling state of trigger mode
-    inline const bool isTriggerModeEnabled() { return m_triggerModeEnabled; }
 
     // Get if the peep has been detected during this cycle
     inline const bool isPeepDetected() { return m_isPeepDetected; }
 
-
-    
-
-        /**
-         * Input the real duration since the last pressure controller computation
-         *
-         * @param p_dt Duration in microsecond
-         */
-        void
-        updateDt(int32_t p_dt);
+    /**
+     * Input the real duration since the last pressure controller computation
+     *
+     * @param p_dt Duration in microsecond
+     */
+    void updateDt(int32_t p_dt);
 
     void reachSafetyPosition();
 
@@ -277,7 +278,7 @@ class PressureController {
     /// Number of cycles per minute desired by the operator for next cycle
     uint16_t m_cyclesPerMinuteNextCommand;
     /// Measured number of cycles per minute
-    uint32_t m_CyclesPerMinuteMeasure;
+    uint32_t m_cyclesPerMinuteMeasure;
     /// Used to compute cpm with a moving mean on some cycles.
     uint32_t m_lastBreathPeriodsMs[NUMBER_OF_BREATH_PERIOD];
     /// Index for the m_lastBreathPeriodsMs array
@@ -321,20 +322,20 @@ class PressureController {
     bool m_isPeepDetected;
 
     // Actual Pressure trigger offset
-    uint16_t m_pressureTriggerOffset;
+    uint16_t m_pressureTriggerOffsetCommand;
     // Desired Pressure trigger offset for next cycle
     uint16_t m_pressureTriggerOffsetNextCommand;
     /// Is inspiratory triggered or not
     bool m_triggered;
 
     /// Actual state of enabling of trigger mode
-    bool m_triggerModeEnabled;
+    bool m_triggerModeEnabledCommand;
     /// Desired state of enabling of trigger mode for next cycle
     bool m_triggerModeEnabledNextCommand;
 
     // E term of the I:E ratio. I = 10, and E is in [10;60]
     /// Actual expiratory term
-    uint16_t m_expiratoryTerm;
+    uint16_t m_expiratoryTermCommand;
     /// Desired expiratory term for next cycle
     uint16_t m_expiratoryTermNextCommand;
 

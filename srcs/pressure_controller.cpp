@@ -53,19 +53,19 @@ void PressureController::setup() {
     m_peepCommand = DEFAULT_PEEP_COMMAND;
     m_peepNextCommand = DEFAULT_PEEP_COMMAND;
 
-    m_pressureTriggerOffset = DEFAULT_TRIGGER_OFFSET;
+    m_pressureTriggerOffsetCommand = DEFAULT_TRIGGER_OFFSET;
     m_pressureTriggerOffsetNextCommand = DEFAULT_TRIGGER_OFFSET;
-    m_triggerModeEnabled = TRIGGER_MODE_ENABLED_BY_DEFAULT;
+    m_triggerModeEnabledCommand = TRIGGER_MODE_ENABLED_BY_DEFAULT;
     m_triggerModeEnabledNextCommand = TRIGGER_MODE_ENABLED_BY_DEFAULT;
-    m_expiratoryTerm = DEFAULT_EXPIRATORY_TERM_COMMAND;
+    m_expiratoryTermCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
     m_expiratoryTermNextCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
 
-    m_CyclesPerMinuteMeasure = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_plateauPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_plateauPressureToDisplay = CONST_INITIAL_ZERO_PRESSURE;
     m_peepMeasure = CONST_INITIAL_ZERO_PRESSURE;
+    m_cyclesPerMinuteMeasure = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
 
     m_pressure = CONST_INITIAL_ZERO_PRESSURE;
     m_pressureCommand = CONST_INITIAL_ZERO_PRESSURE;
@@ -83,8 +83,6 @@ void PressureController::setup() {
     m_squarePlateauCount = 0;
 
     m_triggered = false;
-    m_pressureTriggerOffset = 0;
-
     m_isPeepDetected = false;
     m_plateauDurationMs = 0;
 
@@ -124,9 +122,9 @@ void PressureController::initRespiratoryCycle() {
     m_cyclesPerMinuteCommand = m_cyclesPerMinuteNextCommand;
     m_peepCommand = m_peepNextCommand;
     m_plateauPressureCommand = m_plateauPressureNextCommand;
-    m_triggerModeEnabled = m_triggerModeEnabledNextCommand;
-    m_pressureTriggerOffset = m_pressureTriggerOffsetNextCommand;
-    m_expiratoryTerm = m_expiratoryTermNextCommand;
+    m_triggerModeEnabledCommand = m_triggerModeEnabledNextCommand;
+    m_pressureTriggerOffsetCommand = m_pressureTriggerOffsetNextCommand;
+    m_expiratoryTermCommand = m_expiratoryTermNextCommand;
     computeTickParameters();
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
 
@@ -204,9 +202,7 @@ void PressureController::endRespiratoryCycle() {
             sum += m_lastBreathPeriodsMs[i];
         }
         // Add "+(sum-1u)" to round instead of truncate
-        m_CyclesPerMinuteMeasure = (((NUMBER_OF_BREATH_PERIOD * 60u) * 1000u) + (sum - 1u)) / sum;
-        Serial.print("CPMmeasure:");
-        Serial.println((float)sum / (float)NUMBER_OF_BREATH_PERIOD, 5);
+        m_cyclesPerMinuteMeasure = (((NUMBER_OF_BREATH_PERIOD * 60u) * 1000u) + (sum - 1u)) / sum;
     }
     m_lastEndOfRespirationDateMs = currentMillis;
 
@@ -349,7 +345,7 @@ void PressureController::computeTickParameters() {
     // Inspiratory term is always 10. Expiratory term is between 10 and 60 (default 20).
     // The folowing calculation is equivalent of  1000 * (10 / (10 + m_expiratoryTerm) * (60 /
     // m_cyclesPerMinute).
-    m_plateauDurationMs = ((10000u / (10u + m_expiratoryTerm)) * 60u) / m_cyclesPerMinuteCommand;
+    m_plateauDurationMs = ((10000u / (10u + m_expiratoryTermCommand)) * 60u) / m_cyclesPerMinuteCommand;
 
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
     m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
@@ -446,7 +442,7 @@ void PressureController::sendSnapshot() {
                              m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
                              alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
                              m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
-                             m_pressureTriggerOffsetNextCommand, m_CyclesPerMinuteMeasure);
+                             m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure);
 }
 
 void PressureController::onCycleDecrease() {
