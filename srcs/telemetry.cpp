@@ -501,10 +501,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte previouscpmV[2];  // 16 bits
-    toBytes16(previouscpmV, previouscpmValue);
-    Serial6.write(previouscpmV, 2);
-    crc32.update(previouscpmV, 2);
+    Serial6.write(previouscpmValue);
+    crc32.update(previouscpmValue);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

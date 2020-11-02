@@ -143,13 +143,13 @@ class PressureController {
     inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteNextCommand; }
 
     /// Get the desired max peak
-    inline uint16_t PeakPressureCommand() const { return m_peakPressureNextCommand; }
+    inline uint16_t peakPressureCommand() const { return m_peakPressureNextCommand; }
 
     /// Get the desired PEEP
-    inline uint16_t PeepCommand() const { return m_peepNextCommand; }
+    inline uint16_t peepCommand() const { return m_peepNextCommand; }
 
-    /// Get the desired maximal plateau pressure
-    inline uint16_t PlateauPressureCommand() const { return m_plateauPressureNextCommand; }
+    /// Get the desired plateau pressure
+    inline uint16_t plateauPressureCommand() const { return m_plateauPressureNextCommand; }
 
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinute() const { return m_cyclesPerMinuteNextCommand; }
@@ -166,21 +166,27 @@ class PressureController {
     /// Get the current measured pressure
     inline int16_t pressure() const { return m_pressure; }
 
+    /// Get the delta of time since the last cycle
+    inline int32_t dt() const { return m_dt; }
+
     /// Get the measured peak pressure
-    inline int16_t peakPressure() const { return m_peakPressureMeasure; }
+    inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
 
     /// Get the measured plateau pressure
-    inline int16_t plateauPressure() const { return m_plateauPressureMeasure; }
+    inline int16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
 
     /// Get the measured PEEP
-    inline int16_t peep() const { return m_peepMeasure; }
+    inline int16_t peepMeasure() const { return m_peepMeasure; }
 
     /// Get the measured tidal Volume
-    inline int16_t tidalVolume() const { return m_tidalVolumeMeasure; }
+    inline int16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
 
     /// Get the measured number of cycles per minute
-    inline uint32_t measuredCyclesPerMinute() const { return m_CyclesPerMinuteMeasure; }
+    inline uint32_t cyclesPerMinuteMeasure() const { return m_CyclesPerMinuteMeasure; }
 
+    /// Get the pressure command
+    inline int32_t pressureCommand() const { return m_pressureCommand; }
+    
     /// Get the current cycle phase
     inline CyclePhases phase() const { return m_phase; }
 
@@ -191,17 +197,27 @@ class PressureController {
     inline const bool triggered() const { return m_triggered; }
 
     /// Get the value of the inspiratory trigger pressure command
-    inline const uint16_t pressureTrigger() const { return m_pressureTriggerOffsetNextCommand; }
+    inline const uint16_t pressureTriggerOffsetCommand() const { return m_pressureTriggerOffsetNextCommand; }
 
     /// Reset the trigger to false
-    inline const void reset_trigger() { m_triggered = false; }
+    inline const void setTrigger(bool triggerValue) { m_triggered = triggerValue; }
 
-    /**
-     * Input the real duration since the last pressure controller computation
-     *
-     * @param p_dt Duration in microsecond
-     */
-    void updateDt(int32_t p_dt);
+    // Get the enabling state of trigger mode
+    inline const bool isTriggerModeEnabled() { return m_triggerModeEnabled; }
+
+    // Get if the peep has been detected during this cycle
+    inline const bool isPeepDetected() { return m_isPeepDetected; }
+
+
+    
+
+        /**
+         * Input the real duration since the last pressure controller computation
+         *
+         * @param p_dt Duration in microsecond
+         */
+        void
+        updateDt(int32_t p_dt);
 
     void reachSafetyPosition();
 
@@ -219,7 +235,7 @@ class PressureController {
 
     /// Update peak pressure and blower ramp up
     // cppcheck-suppress unusedPrivateFunction
-    void updatePeakPressure();
+    void updatepeakPressureMeasure();
 
     /// Perform the pressure control and compute the transistors commands during the inhalation
     /// phase
@@ -249,32 +265,6 @@ class PressureController {
 
     /// Give the computed commands to actuators
     void executeCommands();
-
-    /**
-     * Make a transition toward another subphase
-     *
-     * @param p_subPhase  Next cycle step
-     * @param p_tick  Duration from the begining of the cycle in hundredth of second
-     */
-    void setSubPhase(CycleSubPhases p_subPhase, uint16_t p_tick);
-
-    /**
-     * PID to controller the blower valve during some specific steps of the cycle
-     *
-     * @param targetPressure The pressure we want (in mmH2O)
-     * @param currentPressure The pressure measured by the sensor (in mmH2O)
-     * @param dt Time since the last computation (in microsecond)
-     */
-    int32_t PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
-
-    /**
-     * PID to controller the patient valve during some specific steps of the cycle
-     *
-     * @param targetPressure The pressure we want (in mmH2O)
-     * @param currentPressure The pressure measured by the sensor (in mmH2O)
-     * @param dt Time since the last computation (in microsecond)
-     */
-    int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     /// At the end of a respiratory cycle, check if some alarms are triggered
     void checkCycleAlarm();
@@ -318,12 +308,8 @@ class PressureController {
     uint64_t m_squarePlateauSum;
     /// Count for calulating square plateau value
     uint16_t m_squarePlateauCount;
-    /// Number of hundredth of second from the begining of the cycle till the plateau phase
-    uint16_t m_plateauStartTime;
     /// Duration of the plateau. Use this setting in trigger mode
     uint32_t m_plateauDurationMs;
-    /// true if plateau pressure has been reached (but not necessarily converged.)
-    bool m_plateauPressureReached;
 
     /// Actual desired PEEP
     uint16_t m_peepCommand;
@@ -383,9 +369,6 @@ class PressureController {
     /// Current respiratory cycle phase
     CycleSubPhases m_subPhase;
 
-    /// Blower increment
-    int32_t m_blower_increment;
-
     /// Number of passed cycles since beginning
     uint32_t m_cycleNb;
 
@@ -395,73 +378,9 @@ class PressureController {
     /// Requested pressure at a given point in time
     int32_t m_pressureCommand;
 
-    /**
-     * Integral gain of the blower PID
-     *
-     * @note This must be persisted between computations
-     */
-    int32_t PC_inspiratory_PID_integral;
-
-    /**
-     * Error of the last computation of the blower PID
-     *
-     * @note This must be persisted between computation in order to compute derivative gain
-     */
-    int32_t PC_inspiratory_PID_LastError;
-
-    /**
-     * Fast mode at start of expiration
-     *
-     * @note This must be persisted between computations
-     */
-    bool PC_expiratory_PID_fast_mode;
-
-    /**
-     * Fast mode at start of inspiration
-     *
-     * @note This must be persisted between computations
-     */
-    bool PC_inspiratory_PID_fast_mode;
-
-    /**
-     * Integral gain of the patient PID
-     *
-     * @note This must be persisted between computations
-     */
-    int32_t PC_expiratory_PID_integral;
-
-    /**
-     * Last aperture of the blower valve
-     *
-     * @note This must be persisted between computations
-     */
-    uint32_t inspiratoryValveLastAperture;
-
-    /**
-     * Last aperture of the blower valve
-     *
-     * @note This must be persisted between computations
-     */
-    uint32_t expiratoryValveLastAperture;
-
-    /**
-     * Error of the last computation of the patient PID
-     *
-     * @note This must be persisted between computation in order to compute derivative gain
-     */
-    int32_t PC_expiratory_PID_LastError;
-
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
     uint16_t m_lastPressureValuesIndex;
-
-    /// Last error in inspiratory PID
-    int32_t PC_inspiratory_PID_last_errors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-    int32_t PC_inspiratory_PID_last_errorsIndex;
-
-    /// Last error in expiratory PID
-    int32_t PC_expiratory_PID_last_errors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-    int32_t PC_expiratory_PID_last_errorsIndex;
 
     /// Sum of the current cycle's pressures
     uint32_t m_sumOfPressures;  // TODO : be carefull for this parameter overflow !!

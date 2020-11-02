@@ -63,9 +63,9 @@ bool MainStateMachine::isRunning() { return isMsmActive; }
 
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
-    displayCurrentVolume(pController.tidalVolume(), pController.cyclesPerMinuteCommand());
-    displayCurrentSettings(pController.PeakPressureCommand(), pController.PlateauPressureCommand(),
-                           pController.PeepCommand());
+    displayCurrentVolume(pController.tidalVolumeMeasure(), pController.cyclesPerMinuteCommand());
+    displayCurrentSettings(pController.peakPressureCommand(), pController.plateauPressureCommand(),
+                           pController.peepCommand());
     if (msmstep == WAIT_FOR_START) {
         displayMachineStopped();
     }
@@ -117,10 +117,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
     // Executed juste after booting, until the first start.
     else if (msmstep == WAIT_FOR_START) {
-        if ((clockMsmTimer % 1000u) == 0u) {
-            pController.sendSnapshot();
-        }
-
+ 
         if ((clockMsmTimer % 100u) == 0u) {
             pController.stop();
             displayMachineStopped();
@@ -166,15 +163,6 @@ void millisecondTimerMSM(HardwareTimer*) {
             lastMillisInTheLoop = currentMillis;
         }
 
-        /*if (msmstep == INHALE_RISE) {
-
-        } else if (msmstep == INHALE_HOLD) {
-
-        } else if (msmstep == EXHALE_FALL) {
-
-        } else if (msmstep == EXHALE_HOLD) {
-        }*/
-
         if (pController.triggered()) {
             msmstep = TRIGGER_RAISED;
         }
@@ -185,15 +173,19 @@ void millisecondTimerMSM(HardwareTimer*) {
         }
 
     } else if (msmstep == TRIGGER_RAISED) {
-        msmstep = END_CYCLE;
+        if (activationController.isRunning()) {
+            msmstep = START_BREATHING;
+        } else {
+            msmstep = WAIT_FOR_START;
+        }
     }
 
     else if (msmstep == END_CYCLE) {
         Serial.print("Cycle duration:");
         Serial.println(millis() - lastMillis);
         pController.endRespiratoryCycle();
-        displayCurrentInformation(pController.peakPressure(), pController.plateauPressure(),
-                                  pController.peep());
+        displayCurrentInformation(pController.peakPressureMeasure(), pController.plateauPressureMeasure(),
+                                  pController.peepMeasure());
         if (activationController.isRunning()) {
             msmstep = START_BREATHING;
         } else {
