@@ -10,7 +10,7 @@
 // INCLUDES ==================================================================
 
 // Associated header
-#include "../includes/PCModeController.h"
+#include "../includes/PC_CMV_Controller.h"
 
 // External
 #include "Arduino.h"
@@ -18,14 +18,14 @@
 
 // Internal
 
-#include "../includes/pressure_valve.h"
 #include "../includes/pressure_controller.h"
+#include "../includes/pressure_valve.h"
 
-PCModeController pcModeController;
+PC_CMV_Controller pcCmvController;
 
-PCModeController::PCModeController() {}
+PC_CMV_Controller::PC_CMV_Controller() {}
 
-void PCModeController::setup() {
+void PC_CMV_Controller::setup() {
 
     inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     expiratoryValveLastAperture = expiratoryValve.maxAperture();
@@ -40,7 +40,7 @@ void PCModeController::setup() {
     }
 }
 
-void PCModeController::initCycle() {
+void PC_CMV_Controller::initCycle() {
 
     m_plateauPressureReached = false;
     m_plateauStartTime = pController.tickPerInhalation();
@@ -77,23 +77,24 @@ void PCModeController::initCycle() {
     m_blower_increment = 0;
 }
 
-void PCModeController::inhale(uint16_t p_tick) {
+void PC_CMV_Controller::inhale(uint16_t p_tick) {
 
     // Keep the inspiratory valve open using a PID.
-    inspiratoryValve.open(
-        PCinspiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt()));
+    int32_t inspiratoryPidValue =
+        PCinspiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt());
 
-    // -5 is added to help blower convergence
-    if (pController.pressure() > pController.plateauPressureCommand() - 5
+    inspiratoryValve.open(inspiratoryPidValue);
+    expiratoryValve.close();
+
+    // m_plateauStartTime is used for blower regulations, -20 is added to help blower convergence
+    if (pController.pressure() > pController.plateauPressureCommand() - 20u
         && !m_plateauPressureReached) {
         m_plateauStartTime = p_tick;  // TODO make this only dependent of open loop rampup.
         m_plateauPressureReached = true;
     }
-    // Close the inspiratory valve
-    expiratoryValve.close();
 }
 
-void PCModeController::exhale() {
+void PC_CMV_Controller::exhale() {
 
     // Close the inspiratory valve
     inspiratoryValve.close();
@@ -107,16 +108,17 @@ void PCModeController::exhale() {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the
         // machine.
         if (static_cast<int32_t>(pController.pressure())
-                < (pController.pressureCommand() - static_cast<int32_t>(pController.pressureTriggerOffsetCommand()))
+                < (pController.pressureCommand()
+                   - static_cast<int32_t>(pController.pressureTriggerOffsetCommand()))
             && (pController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE)) {
             pController.setTrigger(true);
         }
     }
 }
 
-void PCModeController::endCycle() { calculateBlowerIncrement(); }
+void PC_CMV_Controller::endCycle() { calculateBlowerIncrement(); }
 
-void PCModeController::calculateBlowerIncrement() {
+void PC_CMV_Controller::calculateBlowerIncrement() {
     int16_t peakDelta = pController.peakPressureMeasure() - pController.plateauPressureCommand();
 
     // Number of tick for the half ramp (120ms)
@@ -127,7 +129,8 @@ void PCModeController::calculateBlowerIncrement() {
         if (m_plateauStartTime < ((pController.tickPerInhalation() * 30u) / 100u)) {
             // Only case for decreasing the blower : ramping is too fast or overshooting is too high
             if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
-                || ((peakDelta > 15) && (m_plateauStartTime < ((pController.tickPerInhalation() * 20u) / 100u)))
+                || ((peakDelta > 15)
+                    && (m_plateauStartTime < ((pController.tickPerInhalation() * 20u) / 100u)))
                 || (peakDelta > 25)) {
                 m_blower_increment = -100;
                 DBG_DO(Serial.println("BLOWER -100");)
@@ -155,11 +158,11 @@ void PCModeController::calculateBlowerIncrement() {
 }
 
 int32_t
-PCModeController::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
+PC_CMV_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 
     int32_t minAperture = inspiratoryValve.minAperture();
     int32_t maxAperture = inspiratoryValve.maxAperture();
-    uint32_t inspiratoryValveAperture;
+    int32_t inspiratoryValveAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;
@@ -259,11 +262,11 @@ PCModeController::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressu
 }
 
 int32_t
-PCModeController::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
+PC_CMV_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
 
     int32_t minAperture = expiratoryValve.minAperture();
     int32_t maxAperture = expiratoryValve.maxAperture();
-    uint32_t expiratoryValveAperture;
+    int32_t expiratoryValveAperture;
     int32_t derivative = 0;
     int32_t smoothError = 0;
     int32_t totalValues = 0;

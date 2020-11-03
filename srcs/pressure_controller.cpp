@@ -26,7 +26,6 @@
 #include "../includes/pressure.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/telemetry.h"
-#include "../includes/PCModeController.h"
 
 PressureController pController;
 
@@ -74,13 +73,10 @@ void PressureController::setup() {
 
     m_dt = PCONTROLLER_COMPUTE_PERIOD_US;
 
-    m_startPlateauComputation = false;
-    m_plateauComputed = false;
-
     m_sumOfPressures = 0;
     m_numberOfPressures = 0;
-    m_squarePlateauSum = 0;
-    m_squarePlateauCount = 0;
+    m_PlateauMeasureSum = 0;
+    m_PlateauMeasureCount = 0;
 
     m_triggered = false;
     m_isPeepDetected = false;
@@ -103,7 +99,8 @@ void PressureController::setup() {
         m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinuteCommand;
     }
 
-    pcModeController.setup();
+    ventilationController = &pcBIPAPController;
+    ventilationController->setup();
 }
 
 void PressureController::initRespiratoryCycle() {
@@ -114,11 +111,9 @@ void PressureController::initRespiratoryCycle() {
     m_peakPressureMeasure = 0;
     m_triggered = false;
     m_isPeepDetected = false;
-    m_startPlateauComputation = false;
-    m_plateauComputed = false;
 
     // Update new settings at the beginning of the respiratory cycle
-    //TODO duplicate getters
+    // TODO duplicate getters
     m_cyclesPerMinuteCommand = m_cyclesPerMinuteNextCommand;
     m_peepCommand = m_peepNextCommand;
     m_plateauPressureCommand = m_plateauPressureNextCommand;
@@ -136,33 +131,33 @@ void PressureController::initRespiratoryCycle() {
     m_sumOfPressures = 0u;
     m_numberOfPressures = 0u;
 
-    m_squarePlateauSum = 0u;
-    m_squarePlateauCount = 0u;
+    m_PlateauMeasureSum = 0u;
+    m_PlateauMeasureCount = 0u;
 
-    pcModeController.initCycle();
+    ventilationController->initCycle();
 }
 
 void PressureController::inhale(uint16_t p_tick) {
 
     // Control loop
-    pcModeController.inhale(p_tick);
+    ventilationController->inhale(p_tick);
 
-    // Compute mean plateau pressure only after the peak.
+    // Update peak pressure
     if (m_pressure > m_peakPressureMeasure) {
         m_peakPressureMeasure = m_pressure;
-        m_squarePlateauCount = 0;
-        m_squarePlateauSum = 0;
-    } else {
-        m_squarePlateauSum += m_pressure;
-        m_squarePlateauCount += 1u;
+    }
+
+    // Compute plateau at the end of the cycle TODO 20 = 200ms should be a parameter
+    if (p_tick > m_tickPerInhalation - 20) {
+        m_PlateauMeasureSum += m_pressure;
+        m_PlateauMeasureCount += 1u;
     }
 }
 
 void PressureController::exhale() {
 
-
     // Control loop
-    pcModeController.exhale();
+    ventilationController->exhale();
 
     // Compute the PEEP pressure
     uint16_t minValue = m_lastPressureValues[0u];
@@ -207,7 +202,7 @@ void PressureController::endRespiratoryCycle() {
     m_lastEndOfRespirationDateMs = currentMillis;
 
     // Plateau pressure is the mean pressure during plateau
-    m_plateauPressureMeasure = m_squarePlateauSum / m_squarePlateauCount;
+    m_plateauPressureMeasure = m_PlateauMeasureSum / m_PlateauMeasureCount;
 
     checkCycleAlarm();
 
@@ -225,16 +220,16 @@ void PressureController::endRespiratoryCycle() {
 
 #ifdef MASS_FLOW_METER
     int32_t volume = MFM_read_milliliters(true);
-    uint16_t m_tidalVolumeMeasure =
+    m_tidalVolumeMeasure =
         ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
 #else
-    uint16_t m_tidalVolumeMeasure = UINT16_MAX;
+    m_tidalVolumeMeasure = UINT16_MAX;
 #endif
 
     // Send snapshot of the firmware to the UI
     sendSnapshot();
 
-    pcModeController.endCycle();
+    ventilationController->endCycle();
 }
 
 void PressureController::updatePressure(int16_t p_currentPressure) {
@@ -268,6 +263,9 @@ void PressureController::compute(uint16_t p_tick) {
     // Compute metrics for alarms
     m_sumOfPressures += m_pressure;
     m_numberOfPressures++;
+    Serial.print(m_pressureCommand);
+    Serial.print(",");
+    Serial.println(m_pressure);
 
     // Act accordingly
     switch (m_phase) {
@@ -278,8 +276,6 @@ void PressureController::compute(uint16_t p_tick) {
 
     case CyclePhases::EXHALATION:
         exhale();
-        // Plateau happens with delay related to the pressure command.
-        computePlateau(p_tick);
         break;
     }
 
@@ -293,39 +289,6 @@ void PressureController::compute(uint16_t p_tick) {
                      m_inspiratoryFlow, m_expiratoryFlow);
 
     executeCommands();
-}
-
-// cppcheck-suppress unusedFunction
-void PressureController::computePlateau(uint16_t p_tick) {
-    uint16_t minValue = m_lastPressureValues[0u];
-    uint16_t maxValue = m_lastPressureValues[0u];
-    uint16_t totalValues = m_lastPressureValues[0u];
-
-    for (uint8_t index = 1u; index < MAX_PRESSURE_SAMPLES; index++) {
-        minValue = min(minValue, m_lastPressureValues[index]);
-        maxValue = max(maxValue, m_lastPressureValues[index]);
-        totalValues += m_lastPressureValues[index];
-    }
-
-    uint16_t diff = (maxValue - minValue);
-
-    // Start computing plateau pressure when:
-    // - the last pressure values were close enough
-    // - the hold inspiration phase is about to end
-    // - plateau pressure computation was not already started
-    if (!m_plateauComputed && (diff < 10u) && (p_tick >= ((m_tickPerInhalation * 95u) / 100u))) {
-        m_startPlateauComputation = true;
-    }
-
-    // Stop computing plateau pressure when pressure drops
-    if (m_startPlateauComputation && (diff > 10u)) {
-        m_startPlateauComputation = false;
-        m_plateauComputed = true;
-    }
-
-    if (m_startPlateauComputation) {
-        m_plateauPressureMeasure = totalValues / MAX_PRESSURE_SAMPLES;
-    }
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
@@ -345,7 +308,8 @@ void PressureController::computeTickParameters() {
     // Inspiratory term is always 10. Expiratory term is between 10 and 60 (default 20).
     // The folowing calculation is equivalent of  1000 * (10 / (10 + m_expiratoryTerm) * (60 /
     // m_cyclesPerMinute).
-    m_plateauDurationMs = ((10000u / (10u + m_expiratoryTermCommand)) * 60u) / m_cyclesPerMinuteCommand;
+    m_plateauDurationMs =
+        ((10000u / (10u + m_expiratoryTermCommand)) * 60u) / m_cyclesPerMinuteCommand;
 
     m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
     m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
@@ -405,8 +369,6 @@ void PressureController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_15);
     }
 }
-
-
 
 void PressureController::reachSafetyPosition() {
     inspiratoryValve.open();

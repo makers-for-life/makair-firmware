@@ -9,9 +9,9 @@
 
 #include "../includes/parameters.h"
 
-class PCModeController {
+class PC_CMV_Controller {
  public:
-    PCModeController();
+    PC_CMV_Controller();
     void setup();
     void initCycle();
     void inhale(uint16_t p_tick);
@@ -32,8 +32,7 @@ class PCModeController {
      * @param currentPressure The pressure measured by the sensor (in mmH2O)
      * @param dt Time since the last computation (in microsecond)
      */
-    int32_t
-    PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
+    int32_t PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     /**
      * PID to controller the patient valve during some specific steps of the cycle
@@ -42,64 +41,31 @@ class PCModeController {
      * @param currentPressure The pressure measured by the sensor (in mmH2O)
      * @param dt Time since the last computation (in microsecond)
      */
-    int32_t
-    PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
+    int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     int32_t m_blower_increment;
-    /**
-     * Integral gain of the blower PID
-     *
-     * @note This must be persisted between computations
-     */
+    /// Error of the last computation of the blower PID
     int32_t PC_inspiratory_PID_integral;
 
-    /**
-     * Error of the last computation of the blower PID
-     *
-     * @note This must be persisted between computation in order to compute derivative gain
-     */
+    ///Error of the last computation of the blower PID
     int32_t PC_inspiratory_PID_LastError;
 
-    /**
-     * Fast mode at start of expiration
-     *
-     * @note This must be persisted between computations
-     */
+    ///Fast mode at start of expiration
     bool PC_expiratory_PID_fast_mode;
 
-    /**
-     * Fast mode at start of inspiration
-     *
-     * @note This must be persisted between computations
-     */
+    /// Fast mode at start of inspiration
     bool PC_inspiratory_PID_fast_mode;
 
-    /**
-     * Integral gain of the patient PID
-     *
-     * @note This must be persisted between computations
-     */
+    /// Integral gain of the patient PID
     int32_t PC_expiratory_PID_integral;
 
-    /**
-     * Last aperture of the blower valve
-     *
-     * @note This must be persisted between computations
-     */
-    uint32_t inspiratoryValveLastAperture;
+    /// Last aperture of the blower valve
+    int32_t inspiratoryValveLastAperture;
 
-    /**
-     * Last aperture of the blower valve
-     *
-     * @note This must be persisted between computations
-     */
-    uint32_t expiratoryValveLastAperture;
+    /// Last aperture of the blower valve
+    int32_t expiratoryValveLastAperture;
 
-    /**
-     * Error of the last computation of the patient PID
-     *
-     * @note This must be persisted between computation in order to compute derivative gain
-     */
+    /// Error of the last computation of the patient PID
     int32_t PC_expiratory_PID_LastError;
     /// Last error in inspiratory PID
     int32_t PC_inspiratory_PID_last_errors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
@@ -110,4 +76,4 @@ class PCModeController {
     int32_t PC_expiratory_PID_last_errorsIndex;
 };
 
-extern PCModeController pcModeController;
+extern PC_CMV_Controller pcCmvController;

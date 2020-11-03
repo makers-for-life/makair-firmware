@@ -94,6 +94,7 @@ void millisecondTimerMSM(HardwareTimer*) {
             delay(10000);
         }
         alarmController.runAlarmEffects(tick);
+        tick++;// TODO this is not very beautiful
     }
     // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
     // so
@@ -169,7 +170,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         // Check if machine has been paused
         activationController.refreshState();
         if (!activationController.isRunning()) {
-            msmstep = END_CYCLE;
+            msmstep = WAIT_FOR_START;
         }
 
     } else if (msmstep == TRIGGER_RAISED) {

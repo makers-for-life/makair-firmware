@@ -15,6 +15,8 @@
 #include "../includes/cycle.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
+#include "../includes/PC_CMV_Controller.h"
+#include "../includes/PC_BIPAP_Controller.h"
 
 /// Number of values to aggregate when computing plateau pressure
 #define MAX_PRESSURE_SAMPLES 10u
@@ -256,14 +258,6 @@ class PressureController {
      */
     void computeTickParameters();
 
-    /**
-     * Compute plateau pressure
-     *
-     * @param p_tick  Duration from the begining of the cycle in hundredth of second
-     */
-    // cppcheck-suppress unusedPrivateFunction
-    void computePlateau(uint16_t p_tick);
-
     /// Give the computed commands to actuators
     void executeCommands();
 
@@ -273,6 +267,7 @@ class PressureController {
     void calculateBlowerIncrement();
 
  private:
+    PC_BIPAP_Controller *ventilationController;
     /// Actual desired number of cycles per minute
     uint16_t m_cyclesPerMinuteCommand;
     /// Number of cycles per minute desired by the operator for next cycle
@@ -301,14 +296,10 @@ class PressureController {
     uint16_t m_plateauPressureMeasure;
     /// This value is sometimes MAXINT and we dont want to display MAXINT
     uint16_t m_plateauPressureToDisplay;
-    /// True if we started to compute plateau measure, false otherwise
-    bool m_startPlateauComputation;
-    /// True if plateau is computed, false otherwise
-    bool m_plateauComputed;
-    /// Sum for calulating square plateau value
-    uint64_t m_squarePlateauSum;
-    /// Count for calulating square plateau value
-    uint16_t m_squarePlateauCount;
+    /// Sum for calulating plateau value
+    uint64_t m_PlateauMeasureSum;
+    /// Count for calulating plateau value
+    uint16_t m_PlateauMeasureCount;
     /// Duration of the plateau. Use this setting in trigger mode
     uint32_t m_plateauDurationMs;
 
