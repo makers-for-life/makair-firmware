@@ -9,6 +9,21 @@
 
 #include "Arduino.h"
 
+
+/**
+ * The divider between real battery voltage and stm32 input is 8.2K-1k resistors
+ * So, the multiplier is 1/(1+8.2)=0.1087
+ * Considering 1% precision resistances, multiplier is between 0,1068 and 0,1106
+ * The reference is 3.32V. 
+ * RawValue = (Vbat*0.1087)*1024/3.31
+ * So, Vbat = RawValue * (3.32/(1024*0.1087))
+ * 
+ * 1 bit = (3.32/1024)/0.1087 = 29.8mV . 
+ * 
+ * 
+ */
+#define RAW_BATTERY_MULTIPLIER 0.029828125
+
 /**
  * Expected voltage in volts when power cord is plugged.
  * Calculated by analogRead(PIN) * 0,0296484375 = 27,6 => 27,6 / 0,0296484375 = 930,9
