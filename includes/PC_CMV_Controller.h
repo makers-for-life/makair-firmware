@@ -8,8 +8,9 @@
 #pragma once
 
 #include "../includes/parameters.h"
+#include "../includes/VentilationController.h"
 
-class PC_CMV_Controller {
+class PC_CMV_Controller final : public VentilationController{
  public:
     PC_CMV_Controller();
     void setup();

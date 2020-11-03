@@ -59,6 +59,9 @@ void PressureController::setup() {
     m_expiratoryTermCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
     m_expiratoryTermNextCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
 
+    m_ventilationController = &pcBIPAPController;
+    m_ventilationControllerNextCommand = &pcBIPAPController;
+
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_plateauPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
@@ -99,8 +102,8 @@ void PressureController::setup() {
         m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinuteCommand;
     }
 
-    ventilationController = &pcBIPAPController;
-    ventilationController->setup();
+    
+    m_ventilationController->setup();
 }
 
 void PressureController::initRespiratoryCycle() {
@@ -120,6 +123,8 @@ void PressureController::initRespiratoryCycle() {
     m_triggerModeEnabledCommand = m_triggerModeEnabledNextCommand;
     m_pressureTriggerOffsetCommand = m_pressureTriggerOffsetNextCommand;
     m_expiratoryTermCommand = m_expiratoryTermNextCommand;
+    m_ventilationController = m_ventilationControllerNextCommand;
+
     computeTickParameters();
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
 
@@ -134,13 +139,13 @@ void PressureController::initRespiratoryCycle() {
     m_PlateauMeasureSum = 0u;
     m_PlateauMeasureCount = 0u;
 
-    ventilationController->initCycle();
+    m_ventilationController->initCycle();
 }
 
 void PressureController::inhale(uint16_t p_tick) {
 
     // Control loop
-    ventilationController->inhale(p_tick);
+    m_ventilationController->inhale(p_tick);
 
     // Update peak pressure
     if (m_pressure > m_peakPressureMeasure) {
@@ -157,7 +162,7 @@ void PressureController::inhale(uint16_t p_tick) {
 void PressureController::exhale() {
 
     // Control loop
-    ventilationController->exhale();
+    m_ventilationController->exhale();
 
     // Compute the PEEP pressure
     uint16_t minValue = m_lastPressureValues[0u];
@@ -229,7 +234,7 @@ void PressureController::endRespiratoryCycle() {
     // Send snapshot of the firmware to the UI
     sendSnapshot();
 
-    ventilationController->endCycle();
+    m_ventilationController->endCycle();
 }
 
 void PressureController::updatePressure(int16_t p_currentPressure) {
@@ -531,12 +536,15 @@ void PressureController::onPlateauPressureSet(uint16_t plateauPressure) {
 }
 
 void PressureController::onPeakPressureDecrease() {
-
-    // DO NOTHING
+    // TODO : remove this !! Only for debug
+    m_ventilationControllerNextCommand = &pcBIPAPController;
+    m_ventilationControllerNextCommand->setup();
 }
 
 void PressureController::onPeakPressureIncrease() {
-    // DO NOTHING
+  // TODO : remove this !! Only for debug
+   m_ventilationControllerNextCommand = &pcCmvController;
+   m_ventilationControllerNextCommand->setup();
 }
 
 // cppcheck-suppress unusedFunction

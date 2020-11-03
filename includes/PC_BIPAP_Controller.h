@@ -8,8 +8,9 @@
 #pragma once
 
 #include "../includes/parameters.h"
+#include "../includes/VentilationController.h"
 
-class PC_BIPAP_Controller {
+class PC_BIPAP_Controller final : public VentilationController{
  public:
     PC_BIPAP_Controller();
     void setup();
@@ -17,9 +18,10 @@ class PC_BIPAP_Controller {
     void inhale(uint16_t p_tick);
     void exhale();
     void endCycle();
-    void calculateBlowerIncrement();
+    
 
  private:
+    void calculateBlowerIncrement();
     /// Number of tick when plateau is reached for the first time
     uint16_t m_plateauStartTime;
 

@@ -267,7 +267,7 @@ class PressureController {
     void calculateBlowerIncrement();
 
  private:
-    PC_BIPAP_Controller *ventilationController;
+   
     /// Actual desired number of cycles per minute
     uint16_t m_cyclesPerMinuteCommand;
     /// Number of cycles per minute desired by the operator for next cycle
@@ -329,6 +329,11 @@ class PressureController {
     uint16_t m_expiratoryTermCommand;
     /// Desired expiratory term for next cycle
     uint16_t m_expiratoryTermNextCommand;
+
+    // Ventilation controller in use (for PID and so on...)
+    VentilationController *m_ventilationController;
+    // Ventilation controller (for PID and so on...) for next cycle
+    VentilationController *m_ventilationControllerNextCommand;
 
     /// Measured value of the tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)
