@@ -68,6 +68,7 @@ void PressureController::setup() {
     m_plateauPressureToDisplay = CONST_INITIAL_ZERO_PRESSURE;
     m_peepMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_cyclesPerMinuteMeasure = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
+    m_tidalVolumeMeasure = 0;  // TODO CONST DEFINE
 
     m_pressure = CONST_INITIAL_ZERO_PRESSURE;
     m_pressureCommand = CONST_INITIAL_ZERO_PRESSURE;
@@ -83,6 +84,7 @@ void PressureController::setup() {
 
     m_triggered = false;
     m_isPeepDetected = false;
+    m_tidalVolumeAlreadyRead = false;
     m_plateauDurationMs = 0;
 
     m_lastEndOfRespirationDateMs = 0;
@@ -102,7 +104,6 @@ void PressureController::setup() {
         m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinuteCommand;
     }
 
-    
     m_ventilationController->setup();
 }
 
@@ -114,16 +115,21 @@ void PressureController::initRespiratoryCycle() {
     m_peakPressureMeasure = 0;
     m_triggered = false;
     m_isPeepDetected = false;
+    m_tidalVolumeAlreadyRead = false;
 
     // Update new settings at the beginning of the respiratory cycle
-    // TODO duplicate getters
     m_cyclesPerMinuteCommand = m_cyclesPerMinuteNextCommand;
     m_peepCommand = m_peepNextCommand;
     m_plateauPressureCommand = m_plateauPressureNextCommand;
     m_triggerModeEnabledCommand = m_triggerModeEnabledNextCommand;
     m_pressureTriggerOffsetCommand = m_pressureTriggerOffsetNextCommand;
     m_expiratoryTermCommand = m_expiratoryTermNextCommand;
-    m_ventilationController = m_ventilationControllerNextCommand;
+
+    // Run setup of the controller only if different from previous.
+    if (m_ventilationController != m_ventilationControllerNextCommand) {
+        m_ventilationController = m_ventilationControllerNextCommand;
+        m_ventilationController->setup();
+    }
 
     computeTickParameters();
     DBG_AFFICHE_CSPCYCLE_CSPINSPI(m_ticksPerCycle, m_tickPerInhalation)
@@ -133,11 +139,14 @@ void PressureController::initRespiratoryCycle() {
     }
     m_lastPressureValuesIndex = 0;
 
-    m_sumOfPressures = 0u;
+    m_sumOfPressures = 0u; //Check if used
     m_numberOfPressures = 0u;
 
     m_PlateauMeasureSum = 0u;
     m_PlateauMeasureCount = 0u;
+
+    // Reset integral of the mass flow meter.
+    MFM_read_milliliters(true);
 
     m_ventilationController->initCycle();
 }
@@ -147,9 +156,12 @@ void PressureController::inhale(uint16_t p_tick) {
     // Control loop
     m_ventilationController->inhale(p_tick);
 
-    // Update peak pressure
+    // Update peak pressure and rebounce peak pressure.
     if (m_pressure > m_peakPressureMeasure) {
         m_peakPressureMeasure = m_pressure;
+        m_rebouncePeakPressureMeasure = m_pressure;
+    } else if (m_pressure < m_rebouncePeakPressureMeasure){
+        m_rebouncePeakPressureMeasure = m_pressure;
     }
 
     // Compute plateau at the end of the cycle TODO 20 = 200ms should be a parameter
@@ -216,20 +228,10 @@ void PressureController::endRespiratoryCycle() {
         m_plateauPressureMeasure = UINT16_MAX;
     }
 
-    // RCM-SW-18 // TODO check why this code is here ??
-
     m_plateauPressureToDisplay = m_plateauPressureMeasure;
     if (m_plateauPressureToDisplay == UINT16_MAX) {
         m_plateauPressureToDisplay = 0;
     }
-
-#ifdef MASS_FLOW_METER
-    int32_t volume = MFM_read_milliliters(true);
-    m_tidalVolumeMeasure =
-        ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
-#else
-    m_tidalVolumeMeasure = UINT16_MAX;
-#endif
 
     // Send snapshot of the firmware to the UI
     sendSnapshot();
@@ -250,6 +252,8 @@ void PressureController::updatePressure(int16_t p_currentPressure) {
     }
 }
 
+void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
+
 void PressureController::updateInspiratoryFlow(int16_t p_currentInspiratoryFlow) {
     // TODO check if value is valid.
     m_inspiratoryFlow = p_currentInspiratoryFlow;
@@ -268,9 +272,6 @@ void PressureController::compute(uint16_t p_tick) {
     // Compute metrics for alarms
     m_sumOfPressures += m_pressure;
     m_numberOfPressures++;
-    Serial.print(m_pressureCommand);
-    Serial.print(",");
-    Serial.println(m_pressure);
 
     // Act accordingly
     switch (m_phase) {
@@ -294,6 +295,19 @@ void PressureController::compute(uint16_t p_tick) {
                      m_inspiratoryFlow, m_expiratoryFlow);
 
     executeCommands();
+
+#ifdef MASS_FLOW_METER
+    // Measure Volume only during inspiration. Add 100ms to allow valve to close completely.
+    if (p_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
+        m_tidalVolumeAlreadyRead = true;
+        int32_t volume = MFM_read_milliliters(true);
+        m_tidalVolumeMeasure =
+            ((volume > 0xFFFE) || (volume < 0)) ? 0xFFFFu : static_cast<uint16_t>(volume);
+    }
+
+#else
+    m_tidalVolumeMeasure = UINT16_MAX;
+#endif
 }
 
 void PressureController::updatePhase(uint16_t p_tick) {
@@ -307,7 +321,7 @@ void PressureController::updatePhase(uint16_t p_tick) {
     }
 }
 
-void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
+
 
 void PressureController::computeTickParameters() {
     // Inspiratory term is always 10. Expiratory term is between 10 and 60 (default 20).
@@ -536,15 +550,17 @@ void PressureController::onPlateauPressureSet(uint16_t plateauPressure) {
 }
 
 void PressureController::onPeakPressureDecrease() {
+    DBG_DO(Serial.println("Peak Pressure --");)
     // TODO : remove this !! Only for debug
+    m_peakPressureNextCommand = 20;
     m_ventilationControllerNextCommand = &pcBIPAPController;
-    m_ventilationControllerNextCommand->setup();
 }
 
 void PressureController::onPeakPressureIncrease() {
-  // TODO : remove this !! Only for debug
-   m_ventilationControllerNextCommand = &pcCmvController;
-   m_ventilationControllerNextCommand->setup();
+    DBG_DO(Serial.println("Peak Pressure ++");)
+    // TODO : remove this !! Only for debug
+    m_ventilationControllerNextCommand = &pcCmvController;
+    m_peakPressureNextCommand = 0;
 }
 
 // cppcheck-suppress unusedFunction

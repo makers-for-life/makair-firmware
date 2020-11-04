@@ -10,13 +10,13 @@
 // INCLUDES ===================================================================
 
 // Internal
+#include "../includes/PC_BIPAP_Controller.h"
+#include "../includes/PC_CMV_Controller.h"
 #include "../includes/alarm_controller.h"
 #include "../includes/blower.h"
 #include "../includes/cycle.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
-#include "../includes/PC_CMV_Controller.h"
-#include "../includes/PC_BIPAP_Controller.h"
 
 /// Number of values to aggregate when computing plateau pressure
 #define MAX_PRESSURE_SAMPLES 10u
@@ -173,13 +173,15 @@ class PressureController {
 
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
+    /// Get the measured rebounce peak pressure
+    inline int16_t rebouncePeakPressureMeasure() const { return m_rebouncePeakPressureMeasure; }
     /// Get the measured plateau pressure
     inline int16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
     /// Get the measured PEEP
     inline int16_t peepMeasure() const { return m_peepMeasure; }
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
-        /// Get the measured tidal Volume
+    /// Get the measured tidal Volume
     inline uint16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
 
     /// Get the number of past cycles since the beginning
@@ -267,7 +269,6 @@ class PressureController {
     void calculateBlowerIncrement();
 
  private:
-   
     /// Actual desired number of cycles per minute
     uint16_t m_cyclesPerMinuteCommand;
     /// Number of cycles per minute desired by the operator for next cycle
@@ -283,8 +284,10 @@ class PressureController {
 
     /// Actual desired peak pressure
     uint16_t m_peakPressureCommand;
-    /// Measure the value of peak pressure
+    /// Measured value of peak pressure
     uint16_t m_peakPressureMeasure;
+    /// Measured value of rebounce peak pressure
+    int16_t m_rebouncePeakPressureMeasure;
     /// Peak pressure desired by the operator for next cycle
     uint16_t m_peakPressureNextCommand;
 
@@ -324,6 +327,9 @@ class PressureController {
     /// Desired state of enabling of trigger mode for next cycle
     bool m_triggerModeEnabledNextCommand;
 
+    /// True if Tidal volume has already been read during cycle.
+    bool m_tidalVolumeAlreadyRead;
+
     // E term of the I:E ratio. I = 10, and E is in [10;60]
     /// Actual expiratory term
     uint16_t m_expiratoryTermCommand;
@@ -331,9 +337,9 @@ class PressureController {
     uint16_t m_expiratoryTermNextCommand;
 
     // Ventilation controller in use (for PID and so on...)
-    VentilationController *m_ventilationController;
+    VentilationController* m_ventilationController;
     // Ventilation controller (for PID and so on...) for next cycle
-    VentilationController *m_ventilationControllerNextCommand;
+    VentilationController* m_ventilationControllerNextCommand;
 
     /// Measured value of the tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)

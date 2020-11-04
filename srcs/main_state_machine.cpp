@@ -24,6 +24,8 @@
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
 
+MainStateMachine mainStateMachine = MainStateMachine();
+
 uint32_t clockMsmTimer = 0;
 uint32_t lastMillis = 0;
 uint32_t lastMillisInTheLoop = 0;  // TODO better naming for this variable
@@ -34,10 +36,10 @@ uint32_t tick = 0;
 
 enum TestStep {
     START,
-    WAIT_FOR_START,
-    START_BREATHING,
+    WAIT_FOR_START,//TODO change name to stopped
+    START_BREATHING,// TODO remove this state
     INIT_CYCLE,
-    INHALE_RISE,
+    INHALE_RISE, //TODO only one state
     INHALE_HOLD,
     EXHALE_FALL,
     EXHALE_HOLD,
@@ -60,6 +62,22 @@ void MainStateMachine::activate() {
 }
 
 bool MainStateMachine::isRunning() { return isMsmActive; }
+
+void MainStateMachine::setupAndStart() {
+    // Set a 1 ms timer for the event loop
+    // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
+    ::msmTimer->setPrescaleFactor((::msmTimer->getTimerClkFreq() / 10000) - 1);
+    // Set the period at 1 ms
+    ::msmTimer->setOverflow(10);
+    // priority level :
+    // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
+    ::msmTimer->setInterruptPriority(0, 0);
+    ::msmTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
+    ::msmTimer->attachInterrupt(millisecondTimerMSM);
+    ::msmTimer->resume();
+}
+
+
 
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
@@ -182,8 +200,6 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
 
     else if (msmstep == END_CYCLE) {
-        Serial.print("Cycle duration:");
-        Serial.println(millis() - lastMillis);
         pController.endRespiratoryCycle();
         displayCurrentInformation(pController.peakPressureMeasure(), pController.plateauPressureMeasure(),
                                   pController.peepMeasure());
@@ -197,18 +213,3 @@ void millisecondTimerMSM(HardwareTimer*) {
     previousmsmstep = msmstep;
 }
 
-void MainStateMachine::setupAndStart() {
-    // Set a 1 ms timer for the event loop
-    // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
-    ::msmTimer->setPrescaleFactor((::msmTimer->getTimerClkFreq() / 10000) - 1);
-    // Set the period at 1 ms
-    ::msmTimer->setOverflow(10);
-    // priority level :
-    // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
-    ::msmTimer->setInterruptPriority(0, 0);
-    ::msmTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
-    ::msmTimer->attachInterrupt(millisecondTimerMSM);
-    ::msmTimer->resume();
-}
-
-MainStateMachine mainStateMachine = MainStateMachine();

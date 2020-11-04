@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../includes/parameters.h"
 #include "../includes/VentilationController.h"
+#include "../includes/parameters.h"
 
-class PC_CMV_Controller final : public VentilationController{
+class PC_CMV_Controller final : public VentilationController {
  public:
     PC_CMV_Controller();
     void setup();
@@ -18,9 +18,9 @@ class PC_CMV_Controller final : public VentilationController{
     void inhale(uint16_t p_tick);
     void exhale();
     void endCycle();
-    void calculateBlowerIncrement();
 
  private:
+    void calculateBlowerIncrement();
     /// Number of tick when plateau is reached for the first time
     uint16_t m_plateauStartTime;
 
@@ -48,10 +48,10 @@ class PC_CMV_Controller final : public VentilationController{
     /// Error of the last computation of the blower PID
     int32_t PC_inspiratory_PID_integral;
 
-    ///Error of the last computation of the blower PID
+    /// Error of the last computation of the blower PID
     int32_t PC_inspiratory_PID_LastError;
 
-    ///Fast mode at start of expiration
+    /// Fast mode at start of expiration
     bool PC_expiratory_PID_fast_mode;
 
     /// Fast mode at start of inspiration

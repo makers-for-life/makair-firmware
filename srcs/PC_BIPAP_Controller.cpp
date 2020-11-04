@@ -75,6 +75,8 @@ void PC_BIPAP_Controller::initCycle() {
         }
     }
     m_blower_increment = 0;
+
+    m_reOpenInspiratoryValve = false;
 }
 
 void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
@@ -82,12 +84,12 @@ void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
     PC_expiratory_PID_fast_mode = false;
 
     // Keep the inspiratory valve open using a PID.
-    int32_t inspiratoryPidValue =
+    int32_t inspiratoryValveOpenningValue =
         PCinspiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt());
 
     // Normally inspiratory vavle is open, but at the end of the cycle, it could be closed, and
     // expiratory valve will open
-    inspiratoryValve.open(inspiratoryPidValue);
+    inspiratoryValve.open(inspiratoryValveOpenningValue);
     expiratoryValve.close();
     /*if (inspiratoryPidValue >= 0 || !pController.isPlateauComputationStarted()) {
         inspiratoryValve.open(inspiratoryPidValue);
@@ -100,22 +102,34 @@ void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
 
     PC_expiratory_PID_fast_mode = true;
 
-    // m_plateauStartTime is used for blower regulations, -20 is added to help blower convergence
+    // m_plateauStartTime is used for blower regulations, -20 corresponds to open loop openning
     if (pController.pressure() > pController.plateauPressureCommand() - 20u
         && !m_plateauPressureReached) {
-        m_plateauStartTime = p_tick;  // TODO make this only dependent of open loop rampup.
+        m_plateauStartTime = p_tick;
+        m_inspiratorySlope = (pController.pressure() - pController.peepMeasure()) * 100
+                             / (p_tick - 0);  // in mmH2O/s
         m_plateauPressureReached = true;
     }
 }
 
 void PC_BIPAP_Controller::exhale() {
 
-    // Close the inspiratory valve
-    inspiratoryValve.close();
-
     // Open the expiratos valve so the patient can exhale outside
-    expiratoryValve.open(
-        PCexpiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt()));
+    int32_t inspiratoryValveOpenningValue =
+        PCexpiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt());
+
+    if (inspiratoryValveOpenningValue > 90) {
+        m_reOpenInspiratoryValve = true;
+    }
+    expiratoryValve.open(inspiratoryValveOpenningValue);
+    if (m_reOpenInspiratoryValve) {
+        // slightly reopen inspiratory valve. This create a circulatory flow and make it possible to
+        // detect an inspiratory trigger
+        inspiratoryValve.open(100);
+    } else {
+        // Close the inspiratory valve
+        inspiratoryValve.close();
+    }
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     if (pController.triggerModeEnabledCommand() && pController.isPeepDetected()) {
@@ -134,54 +148,54 @@ void PC_BIPAP_Controller::endCycle() { calculateBlowerIncrement(); }
 
 void PC_BIPAP_Controller::calculateBlowerIncrement() {
     int16_t peakDelta = pController.peakPressureMeasure() - pController.plateauPressureCommand();
+    int16_t rebouncePeakDelta =
+        pController.rebouncePeakPressureMeasure() - pController.plateauPressureCommand();
     DBG_DO(Serial.print("peakPressure:");)
     DBG_DO(Serial.println(pController.peakPressureMeasure());)
     DBG_DO(Serial.print("plateauPressureCommand:");)
     DBG_DO(Serial.println(pController.plateauPressureCommand());)
 
-    // Number of tick for the half ramp (120ms)
-    int32_t halfRampNumberOfTick = 1000 * 120 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
-
-    // Number of tick for the half ramp (120ms)
-    int32_t rampNumberOfTick = 1000 * 240 / static_cast<int32_t>(PCONTROLLER_COMPUTE_PERIOD_US);
-
-    // We want the m_plateauStartTime = 300 ms
+    // Check that pressure didnt rebounced.
+    // High rebounces will decrease the blower. Low rebounce will prevent increase (but not
+    // decrease)
+    bool veryHighRebounce = (peakDelta > 60) || (rebouncePeakDelta < -60 && peakDelta >= 0);
+    bool highRebounce = (peakDelta > 40) || (rebouncePeakDelta < -40 && peakDelta >= 0);
+    bool lowRebounce = (peakDelta > 20) || (rebouncePeakDelta < -15 && peakDelta >= 0);
+    bool veryLowRebounce = (peakDelta > 10) || (rebouncePeakDelta < -10 && peakDelta >= 0);
 
     // Update blower only if patient is plugged on the machine
-
     if (pController.peakPressureMeasure() > 20) {
         // Safety condition : A very too high peak (4cmH2O) should decrease the blower
-        if (peakDelta > 40) {
+        if (veryHighRebounce) {
             m_blower_increment = -100;
-            DBG_DO(Serial.println("BLOWER -100");)
-        } else if (m_plateauStartTime < 25) {
+        } else if (highRebounce) {
+            m_blower_increment = -10;
+        }
+        // We want the m_inspiratorySlope = 600 mmH2O/s
+        else if (m_inspiratorySlope > 650) {
             // Only case for decreasing the blower : ramping is too fast or overshooting is too high
-            if (m_plateauStartTime < 12
-                || ((peakDelta > 15) && (m_plateauStartTime < 20))
-                || (peakDelta > 25) ) {
+            if (m_inspiratorySlope > 1000 || (lowRebounce && (m_inspiratorySlope > 800))
+                || peakDelta > 25) {
                 m_blower_increment = -100;
-                DBG_DO(Serial.println("BLOWER -100");)
             } else {
                 m_blower_increment = 0;
-                DBG_DO(Serial.println("BLOWER 0");)
             }
-        } else if (m_plateauStartTime < 35) {
-            DBG_DO(Serial.println("BLOWER +0");)
+        } else if (m_inspiratorySlope > 550) {
             m_blower_increment = 0;
-        } else if (m_plateauStartTime < 45) {
-            m_blower_increment = +25;
-            DBG_DO(Serial.println("BLOWER +25"));
-        } else if (m_plateauStartTime < 55) {
+        } else if (m_inspiratorySlope > 450 && !veryLowRebounce) {
+            m_blower_increment = +15;
+        } else if (m_inspiratorySlope > 350 && !veryLowRebounce) {
+            m_blower_increment = +30;
+        } else if (m_inspiratorySlope > 250 && !veryLowRebounce) {
             m_blower_increment = +50;
-            DBG_DO(Serial.println("BLOWER +50"));
-        } else {
+        } else if (!lowRebounce) {
             m_blower_increment = +100;
-            DBG_DO(Serial.println("BLOWER +100"));
         }
     }
-
-    DBG_DO(Serial.print("Plateau Start time:");)
-    DBG_DO(Serial.println(m_plateauStartTime);)
+    DBG_DO(Serial.print("BLOWER"));
+    DBG_DO(Serial.println(m_blower_increment));
+    DBG_DO(Serial.print("m_inspiratorySlope:");)
+    DBG_DO(Serial.println(m_inspiratorySlope);)
 }
 
 int32_t
@@ -206,14 +220,20 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
     int32_t error = targetPressure - currentPressure;
 
     // Windowing. It overides the parameter.h coefficients
+    // For a high plateau pressure, a lower KP is requiered. For  = 100mmH2O, KP = 120. For  =
+    // 50mmH2O, KP = 250.
+    /*if (pController.plateauPressureCommand() > 300) {
+        coefficientP = 1000;
+    } else {
+        */
+    coefficientP = 2500;
+    //}
+    coefficientD = 0;
     if (error < 0) {
         coefficientI = 200;
-        coefficientP = 2500;
-        coefficientD = 0;
+
     } else {
         coefficientI = 50;
-        coefficientP = 2500;
-        coefficientD = 0;
     }
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
@@ -323,7 +343,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
 
     //  Windowing. It overides the parameter.h coefficients
     if (error < 0) {
-        coefficientI = 50;
+        coefficientI = 250;
         coefficientP = 2500;
         coefficientD = 0;
     } else {

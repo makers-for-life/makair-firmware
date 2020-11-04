@@ -78,7 +78,6 @@ void PC_CMV_Controller::initCycle() {
 }
 
 void PC_CMV_Controller::inhale(uint16_t p_tick) {
-
     // Keep the inspiratory valve open using a PID.
     int32_t inspiratoryPidValue =
         PCinspiratoryPID(pController.pressureCommand(), pController.pressure(), pController.dt());

@@ -41,5 +41,4 @@ class MainStateMachine {
     uint32_t testActive;
 };
 
-extern HardwareTimer* eolTimer;
 extern MainStateMachine mainStateMachine;

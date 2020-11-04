@@ -47,12 +47,6 @@ uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
 
-/*PressureValve inspiratoryValve;
-PressureValve expiratoryValve;
-PressureController pController;
-AlarmController alarmController;
-PressureSensor inspiratoryPressureSensor;*/
-// Blower blower;
 
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 
@@ -292,11 +286,9 @@ void setup(void) {
 
     // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
-        DBG_DO(Serial.println("beforeMsms");)
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
         mainStateMachine.activate();
         mainStateMachine.setupAndStart();
-        DBG_DO(Serial.println("beforeMsms");)
         IWatchdog.begin(WATCHDOG_TIMEOUT);
         IWatchdog.reload();
     } else {
@@ -306,7 +298,7 @@ void setup(void) {
 
 // cppcheck-suppress unusedFunction
 void loop(void) {
-    IWatchdog.reload();
+    //IWatchdog.reload();//TODO this should be in the timer
 }
 
 #endif

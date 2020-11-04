@@ -45,6 +45,12 @@ class PC_BIPAP_Controller final : public VentilationController{
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
+    /// True if we want to reopen the inspiratory vavle to create a flow circulation able to detecte inspiratory flow trigger
+    bool m_reOpenInspiratoryValve;
+
+    /// Slope of the inspiration open loop. In mmH2O/s
+    int32_t m_inspiratorySlope;
+
     int32_t m_blower_increment;
     /// Error of the last computation of the blower PID
     int32_t PC_inspiratory_PID_integral;
