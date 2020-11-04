@@ -47,7 +47,6 @@ uint32_t pressureOffsetCount;
 int16_t minOffsetValue = 0;
 int16_t maxOffsetValue = 0;
 
-
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 
 /**
@@ -78,7 +77,7 @@ void waitForInMs(uint16_t ms) {
 uint32_t lastpControllerComputeDate;
 
 void setup(void) {
-    DBG_DO(Serial.begin(115200);)
+    Serial.begin(115200);
     DBG_DO(Serial.println("Booting the system...");)
 
     startScreen();
@@ -297,8 +296,6 @@ void setup(void) {
 }
 
 // cppcheck-suppress unusedFunction
-void loop(void) {
-    //IWatchdog.reload();//TODO this should be in the timer
-}
+void loop(void) {}
 
 #endif

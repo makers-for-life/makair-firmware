@@ -93,7 +93,7 @@ void PC_CMV_Controller::inhale(uint16_t p_tick) {
     }
 }
 
-void PC_CMV_Controller::exhale() {
+void PC_CMV_Controller::exhale(uint16_t p_tick) {
 
     // Close the inspiratory valve
     inspiratoryValve.close();

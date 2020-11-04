@@ -16,7 +16,7 @@ class PC_BIPAP_Controller final : public VentilationController{
     void setup();
     void initCycle();
     void inhale(uint16_t p_tick);
-    void exhale();
+    void exhale(uint16_t p_tick);
     void endCycle();
     
 
@@ -44,6 +44,8 @@ class PC_BIPAP_Controller final : public VentilationController{
      * @param dt Time since the last computation (in microsecond)
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
+
+    int32_t m_blowerSpeed;
 
     /// True if we want to reopen the inspiratory vavle to create a flow circulation able to detecte inspiratory flow trigger
     bool m_reOpenInspiratoryValve;

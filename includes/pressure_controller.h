@@ -75,9 +75,9 @@ class PressureController {
     /**
      * Set the desired number of cycles per minute
      *
-     * @param cpm Desired number of cycle per minute
+     * @param p_cpm Desired number of cycle per minute
      */
-    void onCycleSet(uint16_t cpm);
+    void onCycleSet(uint16_t p_cpm);
 
     /// Decrease the minimal PEEP desired
     void onPeepPressureDecrease();
@@ -88,9 +88,9 @@ class PressureController {
     /**
      * Set the desired PEEP
      *
-     * @param peep Desired PEEP in mmH2O
+     * @param p_peep Desired PEEP in mmH2O
      */
-    void onPeepSet(uint16_t peep);
+    void onPeepSet(uint16_t p_peep);
 
     /// Decrease the desired plateau pressure
     void onPlateauPressureDecrease();
@@ -101,9 +101,9 @@ class PressureController {
     /**
      * Set the desired plateau pressure
      *
-     * @param plateauPressure Desired plateau pressure in mmH2O
+     * @param p_plateauPressure Desired plateau pressure in mmH2O
      */
-    void onPlateauPressureSet(uint16_t plateauPressure);
+    void onPlateauPressureSet(uint16_t p_plateauPressure);
 
     /**
      * Decrease the desired peak pressure
@@ -122,24 +122,24 @@ class PressureController {
     /**
      * Set the desired Expiratory term
      *
-     * @param ExpiratoryTerm : Expiration term in the "Inspiration/Expiration" ratio given that
+     * @param p_expiratoryTerm : Expiration term in the "Inspiration/Expiration" ratio given that
      * Inspiration = 10
      */
-    void onExpiratoryTermSet(uint16_t ExpiratoryTerm);
+    void onExpiratoryTermSet(uint16_t p_expiratoryTerm);
 
     /**
      * 0: trigger mode disable, 1: trigger mode enable
      *
-     * @param TriggerEnabled
+     * @param p_triggerEnabled
      */
-    void onTriggerEnabledSet(uint16_t TriggerEnabled);
+    void onTriggerEnabledSet(uint16_t p_triggerEnabled);
 
     /**
      * Set the desired Trigger Offset
      *
-     * @param TriggerOffset Desired trigger offset in mmH2O
+     * @param p_triggerOffset Desired trigger offset in mmH2O
      */
-    void onTriggerOffsetSet(uint16_t TriggerOffset);
+    void onTriggerOffsetSet(uint16_t p_triggerOffset);
 
     /// Get the desired max peak
     inline uint16_t peakPressureCommand() const { return m_peakPressureCommand; }
@@ -248,7 +248,7 @@ class PressureController {
 
     /// Perform the pressure control and compute the transistors commands during the exhalation
     /// phase
-    void exhale();
+    void exhale(uint16_t p_tick);
 
     /**
      * Compute various cycle durations given the desired number of cycles per minute
@@ -267,6 +267,8 @@ class PressureController {
     void checkCycleAlarm();
 
     void calculateBlowerIncrement();
+
+    void simulatorCommunication();
 
  private:
     /// Actual desired number of cycles per minute

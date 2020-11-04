@@ -16,7 +16,7 @@ class PC_CMV_Controller final : public VentilationController {
     void setup();
     void initCycle();
     void inhale(uint16_t p_tick);
-    void exhale();
+    void exhale(uint16_t p_tick);
     void endCycle();
 
  private:

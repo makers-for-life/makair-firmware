@@ -35,20 +35,16 @@ uint32_t lastMicro = 0;
 uint32_t tick = 0;
 
 enum TestStep {
-    START,
-    WAIT_FOR_START,//TODO change name to stopped
-    START_BREATHING,// TODO remove this state
+    SETUP,
+    STOPPED,
     INIT_CYCLE,
-    INHALE_RISE, //TODO only one state
-    INHALE_HOLD,
-    EXHALE_FALL,
-    EXHALE_HOLD,
+    BREATH,
     TRIGGER_RAISED,
     END_CYCLE
 };
 
-TestStep msmstep = START;
-TestStep previousmsmstep = START;
+TestStep msmstep = SETUP;
+TestStep previousmsmstep = SETUP;
 
 MainStateMachine::MainStateMachine() {
     isMsmActive = false;
@@ -63,38 +59,23 @@ void MainStateMachine::activate() {
 
 bool MainStateMachine::isRunning() { return isMsmActive; }
 
-void MainStateMachine::setupAndStart() {
-    // Set a 1 ms timer for the event loop
-    // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
-    ::msmTimer->setPrescaleFactor((::msmTimer->getTimerClkFreq() / 10000) - 1);
-    // Set the period at 1 ms
-    ::msmTimer->setOverflow(10);
-    // priority level :
-    // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
-    ::msmTimer->setInterruptPriority(0, 0);
-    ::msmTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
-    ::msmTimer->attachInterrupt(millisecondTimerMSM);
-    ::msmTimer->resume();
-}
-
-
-
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
-    displayCurrentVolume(pController.tidalVolumeMeasure(), pController.cyclesPerMinuteNextCommand());
-    displayCurrentSettings(pController.peakPressureNextCommand(), pController.plateauPressureNextCommand(),
-                           pController.peepNextCommand());
-    if (msmstep == WAIT_FOR_START) {
+    displayCurrentVolume(pController.tidalVolumeMeasure(),
+                         pController.cyclesPerMinuteNextCommand());
+    displayCurrentSettings(pController.peakPressureNextCommand(),
+                           pController.plateauPressureNextCommand(), pController.peepNextCommand());
+    if (msmstep == STOPPED) {
         displayMachineStopped();
     }
 }
 
 void millisecondTimerMSM(HardwareTimer*) {
-
-    clockMsmTimer++;
+    IWatchdog.reload();
+    clockMsmTimer++;    
     uint32_t pressure = inspiratoryPressureSensor.read();
     pController.updatePressure(pressure);
-    uint32_t inspiratoryflow = 0;
+    uint32_t inspiratoryflow = mfmLastValue;
     pController.updateInspiratoryFlow(inspiratoryflow);
     // TODO: reactivate because higher priority timerIWatchdog.reload();
 
@@ -112,7 +93,7 @@ void millisecondTimerMSM(HardwareTimer*) {
             delay(10000);
         }
         alarmController.runAlarmEffects(tick);
-        tick++;// TODO this is not very beautiful
+        tick++;  // TODO this is not very beautiful
     }
     // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
     // so
@@ -127,16 +108,16 @@ void millisecondTimerMSM(HardwareTimer*) {
         mainStateMachine.ScreenUpdate();
     }
 
-    if (msmstep == START) {
+    if (msmstep == SETUP) {
         pController.setup();
         mainStateMachine.ScreenUpdate();
         displayMachineStopped();
-        msmstep = WAIT_FOR_START;
+        msmstep = STOPPED;
 
     }
     // Executed juste after booting, until the first start.
-    else if (msmstep == WAIT_FOR_START) {
- 
+    else if (msmstep == STOPPED) {
+
         if ((clockMsmTimer % 100u) == 0u) {
             pController.stop();
             displayMachineStopped();
@@ -144,13 +125,8 @@ void millisecondTimerMSM(HardwareTimer*) {
 
         activationController.refreshState();
         if (activationController.isRunning()) {
-            msmstep = START_BREATHING;
+            msmstep = INIT_CYCLE;
         }
-
-    }
-
-    else if (msmstep == START_BREATHING) {
-        msmstep = INIT_CYCLE;
 
     }
 
@@ -159,13 +135,12 @@ void millisecondTimerMSM(HardwareTimer*) {
         lastMillis = millis();
         lastMillisInTheLoop = millis();
         tick = 0;
-        msmstep = INHALE_RISE;
+        msmstep = BREATH;
 
     }
 
     // If breathing
-    else if (msmstep == INHALE_RISE || msmstep == INHALE_HOLD || msmstep == EXHALE_FALL
-             || msmstep == EXHALE_HOLD) {
+    else if (msmstep == BREATH) {
 
         uint32_t currentMillis = millis();
         tick = (currentMillis - lastMillis) / 10u;
@@ -188,28 +163,41 @@ void millisecondTimerMSM(HardwareTimer*) {
         // Check if machine has been paused
         activationController.refreshState();
         if (!activationController.isRunning()) {
-            msmstep = WAIT_FOR_START;
+            msmstep = STOPPED;
         }
 
     } else if (msmstep == TRIGGER_RAISED) {
         if (activationController.isRunning()) {
-            msmstep = START_BREATHING;
+            msmstep = INIT_CYCLE;
         } else {
-            msmstep = WAIT_FOR_START;
+            msmstep = STOPPED;
         }
     }
 
     else if (msmstep == END_CYCLE) {
         pController.endRespiratoryCycle();
-        displayCurrentInformation(pController.peakPressureMeasure(), pController.plateauPressureMeasure(),
-                                  pController.peepMeasure());
+        displayCurrentInformation(pController.peakPressureMeasure(),
+                                  pController.plateauPressureMeasure(), pController.peepMeasure());
         if (activationController.isRunning()) {
-            msmstep = START_BREATHING;
+            msmstep = INIT_CYCLE;
         } else {
-            msmstep = WAIT_FOR_START;
+            msmstep = STOPPED;
         }
     }
 
     previousmsmstep = msmstep;
 }
 
+void MainStateMachine::setupAndStart() {
+    // Set a 1 ms timer for the event loop
+    // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
+    ::msmTimer->setPrescaleFactor((::msmTimer->getTimerClkFreq() / 10000) - 1);
+    // Set the period at 1 ms
+    ::msmTimer->setOverflow(10);
+    // priority level :
+    // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
+    ::msmTimer->setInterruptPriority(0, 0);
+    ::msmTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
+    ::msmTimer->attachInterrupt(millisecondTimerMSM);
+    ::msmTimer->resume();
+}

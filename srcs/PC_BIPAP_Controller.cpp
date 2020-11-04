@@ -64,16 +64,17 @@ void PC_BIPAP_Controller::initCycle() {
 
     // Apply blower ramp-up
     if (m_blower_increment >= 0) {
-        blower.runSpeed(blower.getSpeed() + static_cast<uint16_t>(abs(m_blower_increment)));
+        blower.runSpeed(m_blowerSpeed + static_cast<uint16_t>(abs(m_blower_increment)));
     } else {
         // When blower increment is negative, we need to check that it is less than current speed
         // If not, it would result in an overflow
         if (static_cast<uint16_t>(abs(m_blower_increment)) < blower.getSpeed()) {
-            blower.runSpeed(blower.getSpeed() - static_cast<uint16_t>(abs(m_blower_increment)));
+            blower.runSpeed(m_blowerSpeed - static_cast<uint16_t>(abs(m_blower_increment)));
         } else {
             blower.runSpeed(MIN_BLOWER_SPEED);
         }
     }
+    m_blowerSpeed = blower.getSpeed();
     m_blower_increment = 0;
 
     m_reOpenInspiratoryValve = false;
@@ -91,15 +92,7 @@ void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
     // expiratory valve will open
     inspiratoryValve.open(inspiratoryValveOpenningValue);
     expiratoryValve.close();
-    /*if (inspiratoryPidValue >= 0 || !pController.isPlateauComputationStarted()) {
-        inspiratoryValve.open(inspiratoryPidValue);
-        expiratoryValve.close();
-    } else {
-        inspiratoryValve.close();
-        expiratoryValve.open(PCexpiratoryPID(pController.pressureCommand(), pController.pressure(),
-                                             pController.dt()));
-    }*/
-
+   
     PC_expiratory_PID_fast_mode = true;
 
     // m_plateauStartTime is used for blower regulations, -20 corresponds to open loop openning
@@ -112,7 +105,8 @@ void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
     }
 }
 
-void PC_BIPAP_Controller::exhale() {
+void PC_BIPAP_Controller::exhale(uint16_t p_tick) {
+    blower.runSpeed(m_blowerSpeed - 400);  // todo check min blower speed
 
     // Open the expiratos valve so the patient can exhale outside
     int32_t inspiratoryValveOpenningValue =
@@ -122,14 +116,7 @@ void PC_BIPAP_Controller::exhale() {
         m_reOpenInspiratoryValve = true;
     }
     expiratoryValve.open(inspiratoryValveOpenningValue);
-    if (m_reOpenInspiratoryValve) {
-        // slightly reopen inspiratory valve. This create a circulatory flow and make it possible to
-        // detect an inspiratory trigger
-        inspiratoryValve.open(100);
-    } else {
-        // Close the inspiratory valve
-        inspiratoryValve.close();
-    }
+    inspiratoryValve.open(max((uint32_t)90, 125-(p_tick - pController.tickPerInhalation())/2));
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     if (pController.triggerModeEnabledCommand() && pController.isPeepDetected()) {
@@ -183,11 +170,11 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
         } else if (m_inspiratorySlope > 550) {
             m_blower_increment = 0;
         } else if (m_inspiratorySlope > 450 && !veryLowRebounce) {
-            m_blower_increment = +15;
+            m_blower_increment = +25;
         } else if (m_inspiratorySlope > 350 && !veryLowRebounce) {
-            m_blower_increment = +30;
-        } else if (m_inspiratorySlope > 250 && !veryLowRebounce) {
             m_blower_increment = +50;
+        } else if (m_inspiratorySlope > 250 && !veryLowRebounce) {
+            m_blower_increment = +75;
         } else if (!lowRebounce) {
             m_blower_increment = +100;
         }
@@ -220,14 +207,8 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
     int32_t error = targetPressure - currentPressure;
 
     // Windowing. It overides the parameter.h coefficients
-    // For a high plateau pressure, a lower KP is requiered. For  = 100mmH2O, KP = 120. For  =
-    // 50mmH2O, KP = 250.
-    /*if (pController.plateauPressureCommand() > 300) {
-        coefficientP = 1000;
-    } else {
-        */
     coefficientP = 2500;
-    //}
+
     coefficientD = 0;
     if (error < 0) {
         coefficientI = 200;
@@ -343,7 +324,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
 
     //  Windowing. It overides the parameter.h coefficients
     if (error < 0) {
-        coefficientI = 250;
+        coefficientI = 50;
         coefficientP = 2500;
         coefficientD = 0;
     } else {
@@ -354,7 +335,6 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
         } else {
             coefficientI = ((-130 * ((int32_t)pController.peepCommand())) / 50) + 380;
         }
-
         coefficientP = 2500;
         coefficientD = 0;
     }
