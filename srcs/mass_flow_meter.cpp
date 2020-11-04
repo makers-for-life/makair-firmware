@@ -368,6 +368,11 @@ bool MFM_init(void) {
     return !mfmFaultCondition;
 }
 
+/**
+ * return the inspiratory airflow in milliliters per minute
+ * 
+ * @note This is the latest value in the last 10ms, no filter.
+ */
 int32_t MFM_read_airflow(void) { return mfmInstantAirFlow; }
 
 void MFM_reset(void) { mfmAirVolumeSumMilliliters = 0; }
