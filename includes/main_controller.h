@@ -237,6 +237,8 @@ class MainController {
 
     void stop();
 
+    void sendStopMessageToUi();
+
     void sendSnapshot();
 
  private:

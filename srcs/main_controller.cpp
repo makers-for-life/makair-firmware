@@ -204,7 +204,6 @@ void MainController::updatePhase(uint16_t m_tick) {
     }
 }
 
-
 void MainController::inhale() {
 
     // Control loop
@@ -224,8 +223,6 @@ void MainController::inhale() {
         m_PlateauMeasureCount += 1u;
     }
 }
-
-
 
 void MainController::exhale() {
 
@@ -297,22 +294,21 @@ void MainController::endRespiratoryCycle() {
 
 void MainController::simulatorCommunication() {
 #if DEBUG == 2
-  Serial.print(m_pressure);
-  Serial.print(",");
-  Serial.print(m_pressureCommand);
-  Serial.print(",");
-  Serial.print(m_inspiratoryFlow/100);// division by 100 for homogenous scale in debug
-  Serial.print(",");
-  Serial.print(m_expiratoryFlow/100);// division by 100 for homogenous scale in debug
-  Serial.print(",");
-  Serial.print(inspiratoryValve.command);
-  Serial.print(",");
-  Serial.print(expiratoryValve.command);
-  Serial.print(",");
-  Serial.print(blower.getSpeed()/10); // division by 10 for homogenous scale in debug
-  Serial.println();
+    Serial.print(m_pressure);
+    Serial.print(",");
+    Serial.print(m_pressureCommand);
+    Serial.print(",");
+    Serial.print(m_inspiratoryFlow / 100);  // division by 100 for homogenous scale in debug
+    Serial.print(",");
+    Serial.print(m_expiratoryFlow / 100);  // division by 100 for homogenous scale in debug
+    Serial.print(",");
+    Serial.print(inspiratoryValve.command);
+    Serial.print(",");
+    Serial.print(expiratoryValve.command);
+    Serial.print(",");
+    Serial.print(blower.getSpeed() / 10);  // division by 10 for homogenous scale in debug
+    Serial.println();
 #endif
-    
 }
 
 void MainController::updatePressure(int16_t p_currentPressure) {
@@ -342,7 +338,6 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
     m_expiratoryFlow = p_currentExpiratoryFlow;
 }
 
-
 void MainController::computeTickParameters() {
     // Inspiratory term is always 10. Expiratory term is between 10 and 60 (default 20).
     // The folowing calculation is equivalent of  1000 * (10 / (10 + m_expiratoryTerm) * (60 /
@@ -350,8 +345,10 @@ void MainController::computeTickParameters() {
     m_plateauDurationMs =
         ((10000u / (10u + m_expiratoryTermCommand)) * 60u) / m_cyclesPerMinuteCommand;
 
-    m_ticksPerCycle = 60u * (1000000u / mainController_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
-    m_tickPerInhalation = (m_plateauDurationMs * 1000000u / mainController_COMPUTE_PERIOD_US) / 1000u;
+    m_ticksPerCycle =
+        60u * (1000000u / mainController_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
+    m_tickPerInhalation =
+        (m_plateauDurationMs * 1000000u / mainController_COMPUTE_PERIOD_US) / 1000u;
 }
 
 void MainController::executeCommands() {
@@ -412,13 +409,17 @@ void MainController::reachSafetyPosition() {
     executeCommands();
 }
 
-void MainController::stop() {
-    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-    blower.stop();
+void MainController::sendStopMessageToUi() {
     sendStoppedMessage(mmH2OtoCmH2O(m_peakPressureNextCommand),
                        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
                        m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
                        m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand);
+}
+
+void MainController::stop() {
+    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
+    blower.stop();
+    sendStopMessageToUi();
     // When stopped, open the valves
     reachSafetyPosition();
     // Stop alarms related to breathing cycle
