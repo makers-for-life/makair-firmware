@@ -79,10 +79,18 @@ void displayCurrentInformation(uint16_t peakPressure, uint16_t plateauPressure, 
  */
 void displayAlarmInformation(uint8_t p_alarmCodes[], uint8_t p_nbTriggeredAlarms);
 
+void displayPressureOffsetUnstable(uint32_t p_minOffsetValue, uint32_t p_maxOffsetValue);
+void displayPressureOffset(int32_t p_inspiratoryPressureSensorOffset);
+void displayFlowMeterFail(int32_t p_flowMeterFlowAtStarting, int32_t p_flowMeterFlowWithBlowerOn);
+void displayPatientMustBeUnplugged();
+void displayEndOfLineTestMode();
+void displayBatteryDeepDischarge();
+void displayWatchdogError();
+
 /**
  * Display a message when the machine is stopped
  */
-void displayMachineStopped(void);
+void displayMachineStopped();
 
 /// Force clear the alarm display cache
 void clearAlarmDisplayCache();
