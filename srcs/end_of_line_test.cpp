@@ -18,13 +18,17 @@
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
+#include "../includes/mass_flow_meter.h"
 
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
 uint32_t eolTestNumber = 1;
 int32_t pressureValue = 0;
-int32_t MinPressureValue = INT32_MAX;
-int32_t MaxPressureValue = 0;
+int32_t flowValue = 0;
+int32_t minPressureValue = INT32_MAX;
+int32_t maxPressureValue = 0;
+int32_t minFlowValue = INT32_MAX;
+int32_t maxFlowValue = 0;
 
 EolTest eolTest = EolTest();
 HardwareTimer* eolTimer;
@@ -110,10 +114,11 @@ enum TestStep {
     START_LONG_RUN_BLOWER,
     // cppcheck-suppress misra-c2012-12.3
     PRESSURE_NOT_STABLE,
+    FLOW_NOT_STABLE,
     END_SUCCESS
 };
 
-TestStep eolstep = START;
+TestStep eolstep = START_LONG_RUN_BLOWER;
 TestStep previousEolStep = START;
 boolean eolFail = false;
 #define EOLSCREENSIZE 100
@@ -460,20 +465,28 @@ void millisecondTimerEOL(HardwareTimer*) {
         expiratoryValve.open((expiratoryValve.minAperture() + expiratoryValve.maxAperture()) / 2u);
         expiratoryValve.execute();
         pressureValue = inspiratoryPressureSensor.read();
+        flowValue = MFM_read_airflow();
+
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
                        pressureValue);
 
         if (eolMSCount > 10000u) {
-            MaxPressureValue = max(MaxPressureValue, pressureValue);
-            MinPressureValue = min(MinPressureValue, pressureValue);
-            if ((MaxPressureValue - MinPressureValue) > 40) {
+            maxPressureValue = max(maxPressureValue, pressureValue);
+            minPressureValue = min(minPressureValue, pressureValue);
+            maxFlowValue = max(maxFlowValue, flowValue);
+            minFlowValue = min(minFlowValue, flowValue);
+            if ((maxPressureValue - minPressureValue) > 40) { //40 mmH2O 
                 eolstep = PRESSURE_NOT_STABLE;
+                eolMSCount = 0;
+            }
+            if ((maxFlowValue - minFlowValue) > 5000) { // 5000 mL/min
+                eolstep = FLOW_NOT_STABLE;
                 eolMSCount = 0;
             }
         }
 
-        if (eolMSCount > 300000u) {
-            if ((MaxPressureValue - MinPressureValue) < 40) {
+        if (eolMSCount > 60000u) {
+            if ((maxPressureValue - minPressureValue) < 40) {
                 eolstep = END_SUCCESS;
                 eolMSCount = 0;
                 eolTestNumber++;
@@ -486,14 +499,35 @@ void millisecondTimerEOL(HardwareTimer*) {
 
     // FAIL : pressure was not stable during long run test
     else if (eolstep == PRESSURE_NOT_STABLE) {
+        blower.stop();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
+        expiratoryValve.open();
+        expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Pression non stable\nMax= %d mmH2O \nMin= %d mmH2O", MaxPressureValue,
-                       MinPressureValue);
+                       "Pression non stable\nMax= %d mmH2O \nMin= %d mmH2O", maxPressureValue,
+                       minPressureValue);
+    }
+
+    // FAIL : flow was not stable during long run test
+    else if (eolstep == FLOW_NOT_STABLE) {
+        blower.stop();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
+        expiratoryValve.open();
+        expiratoryValve.execute();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                       "Flow non stable\nMax= %d SLM \nMin= %d SLM", maxFlowValue,
+                       minFlowValue);
     }
 
     // SUCESS : end of the procedure
     else if (eolstep == END_SUCCESS) {
         blower.stop();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
+        expiratoryValve.open();
+        expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "********************\n**** SUCCESS !! ****\n********************");
     } else {
