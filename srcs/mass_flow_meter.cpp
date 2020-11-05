@@ -56,7 +56,7 @@ volatile int32_t mfmAirVolumeSumMilliliters = 0;
 volatile int32_t mfmSensorDetected = 0;
 volatile int32_t mfmInstantAirFlow = 0;
 
-bool mfmFaultCondition = false;
+volatile bool mfmFaultCondition = false;
 
 int32_t mfmLastValue = 0;
 volatile int32_t mfmLastValueFixedFloat = 0;
@@ -370,10 +370,13 @@ bool MFM_init(void) {
 
 /**
  * return the inspiratory airflow in milliliters per minute
- * 
+ *
  * @note This is the latest value in the last 10ms, no filter.
+ * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
  */
-int32_t MFM_read_airflow(void) { return mfmInstantAirFlow; }
+int32_t MFM_read_airflow(void) {
+    return (mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmInstantAirFlow);
+}
 
 void MFM_reset(void) { mfmAirVolumeSumMilliliters = 0; }
 
