@@ -15,8 +15,8 @@ class VentilationController {
 	public:
 	virtual void setup() = 0;
     virtual void initCycle() = 0;
-    virtual void inhale(uint16_t p_tick) = 0;
-    virtual void exhale(uint16_t p_tick) = 0;
+    virtual void inhale() = 0;
+    virtual void exhale() = 0;
     virtual void endCycle() = 0;
 
     private:

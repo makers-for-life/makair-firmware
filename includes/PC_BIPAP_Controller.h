@@ -15,8 +15,8 @@ class PC_BIPAP_Controller final : public VentilationController{
     PC_BIPAP_Controller();
     void setup();
     void initCycle();
-    void inhale(uint16_t p_tick);
-    void exhale(uint16_t p_tick);
+    void inhale();
+    void exhale();
     void endCycle();
     
 

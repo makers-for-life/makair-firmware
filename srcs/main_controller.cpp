@@ -150,10 +150,10 @@ void MainController::initRespiratoryCycle() {
     m_ventilationController->initCycle();
 }
 
-void MainController::compute(uint16_t p_tick) {
+void MainController::compute() {
     // Update the cycle phase
-    updatePhase(p_tick);
-    m_tick = p_tick;
+    updatePhase(m_tick);
+    m_tick = m_tick;
 
     // Compute metrics for alarms
     m_sumOfPressures += m_pressure;
@@ -162,17 +162,17 @@ void MainController::compute(uint16_t p_tick) {
     // Act accordingly
     switch (m_phase) {
     case CyclePhases::INHALATION:
-        inhale(p_tick);
+        inhale();
         m_inhalationLastPressure = m_pressure;
         break;
 
     case CyclePhases::EXHALATION:
-        exhale(p_tick);
+        exhale();
         break;
     }
 
-    alarmController.updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
+    alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
+    sendDataSnapshot(m_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
                      expiratoryValve.position, blower.getSpeed() / 10u, getBatteryLevel(),
                      m_inspiratoryFlow, m_expiratoryFlow);
 
@@ -180,7 +180,7 @@ void MainController::compute(uint16_t p_tick) {
 
 #ifdef MASS_FLOW_METER
     // Measure Volume only during inspiration. Add 100ms to allow valve to close completely.
-    if (p_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
+    if (m_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = MFM_read_milliliters(true);
         m_tidalVolumeMeasure =
@@ -193,8 +193,8 @@ void MainController::compute(uint16_t p_tick) {
     simulatorCommunication();
 }
 
-void MainController::updatePhase(uint16_t p_tick) {
-    if (p_tick < m_tickPerInhalation) {
+void MainController::updatePhase(uint16_t m_tick) {
+    if (m_tick < m_tickPerInhalation) {
         m_phase = CyclePhases::INHALATION;
         m_pressureCommand = m_plateauPressureCommand;
 
@@ -205,10 +205,10 @@ void MainController::updatePhase(uint16_t p_tick) {
 }
 
 
-void MainController::inhale(uint16_t p_tick) {
+void MainController::inhale() {
 
     // Control loop
-    m_ventilationController->inhale(p_tick);
+    m_ventilationController->inhale();
 
     // Update peak pressure and rebounce peak pressure.
     if (m_pressure > m_peakPressureMeasure) {
@@ -219,7 +219,7 @@ void MainController::inhale(uint16_t p_tick) {
     }
 
     // Compute plateau at the end of the cycle TODO 20 = 200ms should be a parameter
-    if (p_tick > m_tickPerInhalation - 20) {
+    if (m_tick > m_tickPerInhalation - 20) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
     }
@@ -227,10 +227,10 @@ void MainController::inhale(uint16_t p_tick) {
 
 
 
-void MainController::exhale(uint16_t p_tick) {
+void MainController::exhale() {
 
     // Control loop
-    m_ventilationController->exhale(p_tick);
+    m_ventilationController->exhale();
 
     // Compute the PEEP pressure
     uint16_t minValue = m_lastPressureValues[0u];
@@ -329,6 +329,8 @@ void MainController::updatePressure(int16_t p_currentPressure) {
 }
 
 void MainController::updateDt(int32_t p_dt) { m_dt = p_dt; }
+
+void MainController::updateTick(uint32_t p_tick) { m_tick = p_tick; }
 
 void MainController::updateInspiratoryFlow(int32_t p_currentInspiratoryFlow) {
     // TODO check if value is valid.

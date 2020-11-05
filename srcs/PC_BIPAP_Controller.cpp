@@ -77,7 +77,7 @@ void PC_BIPAP_Controller::initCycle() {
     m_reOpenInspiratoryValve = false;
 }
 
-void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
+void PC_BIPAP_Controller::inhale() {
 
     m_expiratoryPidFastMode = false;
 
@@ -96,12 +96,12 @@ void PC_BIPAP_Controller::inhale(uint16_t p_tick) {
     if (mainController.pressure() > mainController.plateauPressureCommand() - 20u
         && !m_plateauPressureReached) {
         m_inspiratorySlope = (mainController.pressure() - mainController.peepMeasure()) * 100
-                             / (p_tick - 0);  // in mmH2O/s
+                             / (mainController.tick() - 0);  // in mmH2O/s
         m_plateauPressureReached = true;
     }
 }
 
-void PC_BIPAP_Controller::exhale(uint16_t p_tick) {
+void PC_BIPAP_Controller::exhale() {
     blower.runSpeed(m_blowerSpeed - 400);  // todo check min blower speed
 
     // Open the expiratos valve so the patient can exhale outside
@@ -112,7 +112,7 @@ void PC_BIPAP_Controller::exhale(uint16_t p_tick) {
         m_reOpenInspiratoryValve = true;
     }
     expiratoryValve.open(inspiratoryValveOpenningValue);
-    inspiratoryValve.open(max((uint32_t)70, 125 - (p_tick - mainController.tickPerInhalation()) / 2));
+    inspiratoryValve.open(max((uint32_t)70, 125 - (mainController.tick() - mainController.tickPerInhalation()) / 2));
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the machine.
@@ -120,7 +120,7 @@ void PC_BIPAP_Controller::exhale(uint16_t p_tick) {
         && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE)) {
 
         // triggering an inspiration is only possible within a time window
-        if (p_tick > m_triggerWindow) {
+        if (mainController.tick() > m_triggerWindow) {
             mainController.setTrigger(true);
         }
     }

@@ -152,7 +152,8 @@ void millisecondTimerMSM(HardwareTimer*) {
                 uint32_t currentMicro = micros();
                 mainController.updateDt(currentMicro - lastMicro);
                 lastMicro = currentMicro;
-                mainController.compute(tick);
+                mainController.updateTick(tick);
+                mainController.compute();
             }
             lastMillisInTheLoop = currentMillis;
         }

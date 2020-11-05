@@ -77,7 +77,7 @@ void PC_CMV_Controller::initCycle() {
     m_blowerIncrement = 0;
 }
 
-void PC_CMV_Controller::inhale(uint16_t p_tick) {
+void PC_CMV_Controller::inhale() {
     // Keep the inspiratory valve open using a PID.
     int32_t inspiratoryPidValue =
         PCinspiratoryPID(mainController.pressureCommand(), mainController.pressure(), mainController.dt());
@@ -88,12 +88,12 @@ void PC_CMV_Controller::inhale(uint16_t p_tick) {
     // m_plateauStartTime is used for blower regulations, -20 is added to help blower convergence
     if (mainController.pressure() > mainController.plateauPressureCommand() - 20u
         && !m_plateauPressureReached) {
-        m_plateauStartTime = p_tick;  // TODO make this only dependent of open loop rampup.
+        m_plateauStartTime = mainController.tick();  // TODO make this only dependent of open loop rampup.
         m_plateauPressureReached = true;
     }
 }
 
-void PC_CMV_Controller::exhale(uint16_t p_tick) {
+void PC_CMV_Controller::exhale() {
 
     // Close the inspiratory valve
     inspiratoryValve.close();
