@@ -27,11 +27,11 @@
 #include "../includes/end_of_line_test.h"
 
 #include "../includes/keyboard.h"
+#include "../includes/main_controller.h"
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure.h"
-#include "../includes/main_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
@@ -73,8 +73,6 @@ void waitForInMs(uint16_t ms) {
         continue;
     }
 }
-
-uint32_t lastmainControllerComputeDate;
 
 void setup(void) {
     Serial.begin(115200);
@@ -168,15 +166,12 @@ void setup(void) {
         }
     }
 
-    // Do not initialize pressure controller and keyboard in test mode
-    if (!eolTest.isRunning()) {
-        alarmController = AlarmController();
-        inspiratoryPressureSensor = PressureSensor();
+    alarmController = AlarmController();
+    inspiratoryPressureSensor = PressureSensor();
 
-        mainController = MainController();
+    mainController = MainController();
 
-        initKeyboard();
-    }
+    initKeyboard();
 
     // Prepare LEDs
     pinMode(PIN_LED_START, OUTPUT);
@@ -281,8 +276,6 @@ void setup(void) {
     screen.print(message);
     waitForInMs(1000);
 
-    lastmainControllerComputeDate = micros();
-
     // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
@@ -291,7 +284,9 @@ void setup(void) {
         IWatchdog.begin(WATCHDOG_TIMEOUT);
         IWatchdog.reload();
     } else {
+        Serial.println("Setup and start before");
         eolTest.setupAndStart();
+        Serial.println("Setup and start after");
     }
 }
 

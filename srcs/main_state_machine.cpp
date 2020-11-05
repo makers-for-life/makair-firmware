@@ -48,13 +48,14 @@ TestStep previousmsmstep = SETUP;
 
 MainStateMachine::MainStateMachine() {
     isMsmActive = false;
-    ::msmTimer = new HardwareTimer(TIM9);
+    
 }
 
 // cppcheck-suppress unusedFunction
 void MainStateMachine::activate() {
     isMsmActive = true;
     ::clockMsmTimer = 0;
+    ::msmTimer = new HardwareTimer(TIM9);
 }
 
 bool MainStateMachine::isRunning() { return isMsmActive; }

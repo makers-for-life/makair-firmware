@@ -25,17 +25,20 @@ uint32_t eolTestNumber = 1;
 int32_t pressureValue = 0;
 int32_t MinPressureValue = INT32_MAX;
 int32_t MaxPressureValue = 0;
+
+EolTest eolTest = EolTest();
 HardwareTimer* eolTimer;
 
 EolTest::EolTest() {
     testActive = 0;
-    ::eolTimer = new HardwareTimer(TIM9);
+    
 }
 
 // cppcheck-suppress unusedFunction
 void EolTest::activate() {
     testActive = EOL_TEST_ACTIVE;
     ::clockEOLTimer = 0;
+    ::eolTimer = new HardwareTimer(TIM9);
 }
 
 bool EolTest::isRunning() { return (EOL_TEST_ACTIVE == testActive); }
@@ -121,6 +124,7 @@ int16_t eolMatrixCurrentColumn = 1;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void millisecondTimerEOL(HardwareTimer*) {
+    Serial.println("EOL timer");
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
@@ -440,4 +444,4 @@ void EolTest::setupAndStart() {
     pinMode(PIN_IN_ROW3, INPUT);
 }
 
-EolTest eolTest = EolTest();
+
