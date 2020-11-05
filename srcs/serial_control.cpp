@@ -112,31 +112,31 @@ void serialControlLoop() {
 
                 switch (setting) {
                 case 1:  // PeakPressure
-                    //TODO remove this  pController.onPeakPressureSet(value);
+                    //TODO remove this  mainController.onPeakPressureSet(value);
                     break;
 
                 case 2:  // PlateauPressure
-                    pController.onPlateauPressureSet(value);
+                    mainController.onPlateauPressureSet(value);
                     break;
 
                 case 3:  // PEEP
-                    pController.onPeepSet(value);
+                    mainController.onPeepSet(value);
                     break;
 
                 case 4:  // CyclesPerMinute
-                    pController.onCycleSet(value);
+                    mainController.onCycleSet(value);
                     break;
 
                 case 5:  // ExpiratoryTerm
-                    pController.onExpiratoryTermSet(value);
+                    mainController.onExpiratoryTermSet(value);
                     break;
 
                 case 6:  // TriggerEnabled
-                    pController.onTriggerEnabledSet(value);
+                    mainController.onTriggerEnabledSet(value);
                     break;
 
                 case 7:  // TriggerOffset
-                    pController.onTriggerOffsetSet(value);
+                    mainController.onTriggerOffsetSet(value);
                     break;
 
                 case 8:  // Machine on/off

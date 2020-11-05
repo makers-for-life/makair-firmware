@@ -27,10 +27,10 @@ static const uint16_t MAX_PEAK_INCREMENT = 30u;
 // CLASS ======================================================================
 
 /// Controls breathing cycle
-class PressureController {
+class MainController {
  public:
     // cppcheck-suppress misra-c2012-2.7
-    PressureController();
+    MainController();
 
     /// Initialize actuators
     void setup();
@@ -51,13 +51,13 @@ class PressureController {
      * Input a flow reading
      * @param p_currentInspiratoryFlow  Measured inspiratory flow
      */
-    void updateInspiratoryFlow(int16_t p_currentInspiratoryFlow);
+    void updateInspiratoryFlow(int32_t p_currentInspiratoryFlow);
 
     /**
      * Input a flow reading
      * @param p_currentInspiratoryFlow  Measured inspiratory flow
      */
-    void updateExpiratoryFlow(int16_t p_currentExpiratoryFlow);
+    void updateExpiratoryFlow(int32_t p_currentExpiratoryFlow);
 
     /**
      * Perform the pressure control
@@ -238,10 +238,6 @@ class PressureController {
      */
     void updatePhase(uint16_t p_tick);
 
-    /// Update peak pressure and blower ramp up
-    // cppcheck-suppress unusedPrivateFunction
-    void updatepeakPressureMeasure();
-
     /// Perform the pressure control and compute the transistors commands during the inhalation
     /// phase
     void inhale(uint16_t p_tick);
@@ -357,10 +353,10 @@ class PressureController {
     uint16_t m_pressure;
 
     /// Measured expiratory flow
-    int16_t m_inspiratoryFlow;
+    int32_t m_inspiratoryFlow;
 
     /// Measured inspiratory flow
-    int16_t m_expiratoryFlow;
+    int32_t m_expiratoryFlow;
 
     /// Inhalation last Pressre
     uint16_t m_inhalationLastPressure;
@@ -396,4 +392,4 @@ class PressureController {
     uint16_t m_tick;
 };
 
-extern PressureController pController;
+extern MainController mainController;

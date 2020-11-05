@@ -36,28 +36,28 @@ static OneButton buttonStop(PIN_BTN_STOP, false, false);
  */
 
 /// Handler of the button to increase the crete pressure
-void onPeakPressureIncrease() { pController.onPeakPressureIncrease(); }
+void onPeakPressureIncrease() { mainController.onPeakPressureIncrease(); }
 
 /// Handler of the button to decrease the crete pressure
-void onPeakPressureDecrease() { pController.onPeakPressureDecrease(); }
+void onPeakPressureDecrease() { mainController.onPeakPressureDecrease(); }
 
 /// Handler of the button to increase the plateau pressure
-void onPlateauPressureIncrease() { pController.onPlateauPressureIncrease(); }
+void onPlateauPressureIncrease() { mainController.onPlateauPressureIncrease(); }
 
 /// Handler of the button to decrease the plateau pressure
-void onPlateauPressureDecrease() { pController.onPlateauPressureDecrease(); }
+void onPlateauPressureDecrease() { mainController.onPlateauPressureDecrease(); }
 
 /// Handler of the button to increase the PEP pressure
-void onPeepPressureIncrease() { pController.onPeepPressureIncrease(); }
+void onPeepPressureIncrease() { mainController.onPeepPressureIncrease(); }
 
 /// Handler of the button to decrease the PEP pressure
-void onPeepPressureDecrease() { pController.onPeepPressureDecrease(); }
+void onPeepPressureDecrease() { mainController.onPeepPressureDecrease(); }
 
 /// Handler of the button to increase the number of breathing cycles
-void onCycleIncrease() { pController.onCycleIncrease(); }
+void onCycleIncrease() { mainController.onCycleIncrease(); }
 
 /// Handler of the button to decrease the number of breathing cycles
-void onCycleDecrease() { pController.onCycleDecrease(); }
+void onCycleDecrease() { mainController.onCycleDecrease(); }
 
 /// Handler of the button to stop alarm
 void onAlarmOff() { alarmController.snooze(); }

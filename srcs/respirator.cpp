@@ -74,7 +74,7 @@ void waitForInMs(uint16_t ms) {
     }
 }
 
-uint32_t lastpControllerComputeDate;
+uint32_t lastmainControllerComputeDate;
 
 void setup(void) {
     Serial.begin(115200);
@@ -173,7 +173,7 @@ void setup(void) {
         alarmController = AlarmController();
         inspiratoryPressureSensor = PressureSensor();
 
-        pController = PressureController();
+        mainController = MainController();
 
         initKeyboard();
     }
@@ -281,7 +281,7 @@ void setup(void) {
     screen.print(message);
     waitForInMs(1000);
 
-    lastpControllerComputeDate = micros();
+    lastmainControllerComputeDate = micros();
 
     // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {

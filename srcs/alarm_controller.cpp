@@ -245,7 +245,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         unsnooze = true;
     }
 
-    if ((p_tick % (LCD_UPDATE_PERIOD_US / PCONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
+    if ((p_tick % (LCD_UPDATE_PERIOD_US / mainController_COMPUTE_PERIOD_US)) == 0u) {
         displayAlarmInformation(triggeredAlarmCodes, numberOfTriggeredAlarms);
     }
 

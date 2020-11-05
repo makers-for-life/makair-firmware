@@ -22,8 +22,9 @@ class PC_BIPAP_Controller final : public VentilationController{
 
  private:
     void calculateBlowerIncrement();
-    /// Number of tick when plateau is reached for the first time
-    uint16_t m_plateauStartTime;
+
+    /// Number of tick from which it is possible to trigger a new inspiration
+    uint16_t m_triggerWindow;
 
     /// true if plateau pressure has been reached (but not necessarily converged.)
     bool m_plateauPressureReached;
@@ -53,37 +54,37 @@ class PC_BIPAP_Controller final : public VentilationController{
     /// Slope of the inspiration open loop. In mmH2O/s
     int32_t m_inspiratorySlope;
 
-    int32_t m_blower_increment;
+    int32_t m_blowerIncrement;
     /// Error of the last computation of the blower PID
-    int32_t PC_inspiratory_PID_integral;
+    int32_t m_inspiratoryPidIntegral;
 
     ///Error of the last computation of the blower PID
-    int32_t PC_inspiratory_PID_LastError;
+    int32_t m_inspiratoryPidLastError;
 
     ///Fast mode at start of expiration
-    bool PC_expiratory_PID_fast_mode;
+    bool m_expiratoryPidFastMode;
 
     /// Fast mode at start of inspiration
-    bool PC_inspiratory_PID_fast_mode;
+    bool m_inspiratoryPidFastMode;
 
     /// Integral gain of the patient PID
-    int32_t PC_expiratory_PID_integral;
+    int32_t m_expiratoryPidIntegral;
 
     /// Last aperture of the blower valve
-    int32_t inspiratoryValveLastAperture;
+    int32_t m_inspiratoryValveLastAperture;
 
     /// Last aperture of the blower valve
-    int32_t expiratoryValveLastAperture;
+    int32_t m_expiratoryValveLastAperture;
 
     /// Error of the last computation of the patient PID
-    int32_t PC_expiratory_PID_LastError;
+    int32_t m_expiratoryPidLastError;
     /// Last error in inspiratory PID
-    int32_t PC_inspiratory_PID_last_errors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-    int32_t PC_inspiratory_PID_last_errorsIndex;
+    int32_t m_inspiratoryPidLastErrorsIndex[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    int32_t m_inspiratoryPidLastErrorsIndex;
 
     /// Last error in expiratory PID
-    int32_t PC_expiratory_PID_last_errors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-    int32_t PC_expiratory_PID_last_errorsIndex;
+    int32_t m_expiratoryPidLastErrorsIndex[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    int32_t m_expiratoryPidLastErrorsIndex;
 };
 
-extern PC_BIPAP_Controller pcBIPAPController;
+extern PC_BIPAP_Controller pcBIPAmainController;
