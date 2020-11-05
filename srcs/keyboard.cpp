@@ -23,7 +23,7 @@
 #include "../includes/buzzer.h"
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 
 
 // INITIALISATION =============================================================

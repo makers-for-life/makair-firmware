@@ -10,7 +10,7 @@
 // INCLUDES ===================================================================
 
 // Associated header
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 
 // External
 #include <algorithm>
@@ -59,8 +59,8 @@ void MainController::setup() {
     m_expiratoryTermCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
     m_expiratoryTermNextCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
 
-    m_ventilationController = &pcBIPAmainController;
-    m_ventilationControllerNextCommand = &pcBIPAmainController;
+    m_ventilationController = &pcBipapController;
+    m_ventilationControllerNextCommand = &pcBipapController;
 
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
@@ -568,7 +568,7 @@ void MainController::onPeakPressureDecrease() {
     DBG_DO(Serial.println("Peak Pressure --");)
     // TODO : remove this !! Only for debug
     m_peakPressureNextCommand = 20;
-    m_ventilationControllerNextCommand = &pcBIPAmainController;
+    m_ventilationControllerNextCommand = &pcBipapController;
 }
 
 void MainController::onPeakPressureIncrease() {

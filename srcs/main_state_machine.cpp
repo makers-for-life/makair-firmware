@@ -19,7 +19,7 @@
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"

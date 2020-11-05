@@ -69,11 +69,11 @@ class PC_CMV_Controller final : public VentilationController {
     /// Error of the last computation of the patient PID
     int32_t m_expiratoryPidLastError;
     /// Last error in inspiratory PID
-    int32_t m_inspiratoryPidLastErrorsIndex[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
     int32_t m_inspiratoryPidLastErrorsIndex;
 
     /// Last error in expiratory PID
-    int32_t m_expiratoryPidLastErrorsIndex[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
     int32_t m_expiratoryPidLastErrorsIndex;
 };
 

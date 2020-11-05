@@ -9,7 +9,7 @@
 
 #include "../includes/alarm_controller.h"
 #include "../includes/blower.h"
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 #include "../includes/pressure_valve.h"
 
 /// Controls the running of the embedded auto tests

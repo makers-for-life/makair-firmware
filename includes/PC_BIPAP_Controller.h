@@ -76,15 +76,15 @@ class PC_BIPAP_Controller final : public VentilationController{
     /// Last aperture of the blower valve
     int32_t m_expiratoryValveLastAperture;
 
-    /// Error of the last computation of the patient PID
+    /// Error of the last computation of the  PID
     int32_t m_expiratoryPidLastError;
     /// Last error in inspiratory PID
-    int32_t m_inspiratoryPidLastErrorsIndex[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
     int32_t m_inspiratoryPidLastErrorsIndex;
 
     /// Last error in expiratory PID
-    int32_t m_expiratoryPidLastErrorsIndex[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
     int32_t m_expiratoryPidLastErrorsIndex;
 };
 
-extern PC_BIPAP_Controller pcBIPAmainController;
+extern PC_BIPAP_Controller pcBipapController;

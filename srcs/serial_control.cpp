@@ -19,7 +19,7 @@
 #include "CRC32.h"
 
 /// Internals
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 #include "../includes/activation.h"
 
 

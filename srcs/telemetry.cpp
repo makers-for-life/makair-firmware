@@ -20,7 +20,7 @@
 #include "LL/stm32yyxx_ll_utils.h"
 
 /// Internals
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 
 // GLOBAL ITEMS ==============================================================
 

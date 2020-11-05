@@ -18,7 +18,7 @@
 
 // Internal
 
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 #include "../includes/pressure_valve.h"
 
 PC_CMV_Controller pcCmvController;
@@ -35,8 +35,8 @@ void PC_CMV_Controller::setup() {
     m_inspiratoryPidLastErrorsIndex = 0;
     m_expiratoryPidLastErrorsIndex = 0;
     for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
-        m_inspiratoryPidLastErrorsIndex[i] = 0u;
-        m_expiratoryPidLastErrorsIndex[i] = 0u;
+        m_inspiratoryPidLastErrors[i] = 0u;
+        m_expiratoryPidLastErrors[i] = 0u;
     }
 }
 
@@ -57,8 +57,8 @@ void PC_CMV_Controller::initCycle() {
     m_inspiratoryPidFastMode = true;
     m_expiratoryPidFastMode = true;
     for (uint8_t i = 0; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
-        m_inspiratoryPidLastErrorsIndex[i] = 0;
-        m_expiratoryPidLastErrorsIndex[i] =
+        m_inspiratoryPidLastErrors[i] = 0;
+        m_expiratoryPidLastErrors[i] =
             mainController.peepCommand() - mainController.plateauPressureCommand();
     }
 
@@ -189,14 +189,14 @@ PC_CMV_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPress
     }
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
-    m_inspiratoryPidLastErrorsIndex[m_inspiratoryPidLastErrorsIndex] = error;
+    m_inspiratoryPidLastErrors[m_inspiratoryPidLastErrorsIndex] = error;
     m_inspiratoryPidLastErrorsIndex++;
     if (m_inspiratoryPidLastErrorsIndex
         >= static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN)) {
         m_inspiratoryPidLastErrorsIndex = 0;
     }
     for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
-        totalValues += m_inspiratoryPidLastErrorsIndex[i];
+        totalValues += m_inspiratoryPidLastErrors[i];
     }
     smoothError = totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
 
@@ -281,14 +281,14 @@ PC_CMV_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressu
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
     // Calculate Derivative part. Include a moving average on error for smoothing purpose
-    m_expiratoryPidLastErrorsIndex[m_expiratoryPidLastErrorsIndex] = error;
+    m_expiratoryPidLastErrors[m_expiratoryPidLastErrorsIndex] = error;
     m_expiratoryPidLastErrorsIndex++;
     if (m_expiratoryPidLastErrorsIndex
         >= static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN)) {
         m_expiratoryPidLastErrorsIndex = 0;
     }
     for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
-        totalValues += m_expiratoryPidLastErrorsIndex[i];
+        totalValues += m_expiratoryPidLastErrors[i];
     }
     smoothError = totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
     derivative = (dt == 0) ? 0 : (1000000 * (smoothError - m_expiratoryPidLastError)) / dt;
