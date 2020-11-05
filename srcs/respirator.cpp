@@ -54,7 +54,7 @@ HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
  *
  * @param ms  Duration of the blocking in millisecond
  */
-void waitForInMs(uint16_t ms) {
+void waitAndMeasurePressure(uint16_t ms) {
     uint16_t start = millis();
     minOffsetValue = inspiratoryPressureSensor.read();
     maxOffsetValue = inspiratoryPressureSensor.read();
@@ -62,7 +62,7 @@ void waitForInMs(uint16_t ms) {
     pressureOffsetCount = 0;
 
     // Open valves
-    inspiratoryValve.open();
+    inspiratoryValve.close();
     inspiratoryValve.execute();
     expiratoryValve.open();
     expiratoryValve.execute();
@@ -174,15 +174,15 @@ void setup(void) {
     digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
     digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
     digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
-    waitForInMs(1000);
+    waitAndMeasurePressure(1000);
     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
     digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
     digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
     digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
-    waitForInMs(1000);
+    waitAndMeasurePressure(1000);
 
     displayPatientMustBeUnplugged();
-    waitForInMs(2000);
+    waitAndMeasurePressure(2000);
 
     int32_t inspiratoryPressureSensorOffset = 0;
     resetScreen();
@@ -202,9 +202,16 @@ void setup(void) {
         }
     }
 
+    
+
     int32_t flowMeterFlowAtStarting = MFM_read_airflow();
+    inspiratoryValve.open();
+    inspiratoryValve.execute();
+    expiratoryValve.open();
+    expiratoryValve.execute();
+    delay(500);
     blower.runSpeed(DEFAULT_BLOWER_SPEED);
-    waitForInMs(1000);
+    delay(1000);
     int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
 
     blower.stop();
@@ -219,13 +226,14 @@ void setup(void) {
     }
 
     displayPressureOffset(inspiratoryPressureSensorOffset);
-    waitForInMs(1000);
+    delay(1000);
 
-    // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
-        // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
+        
         mainStateMachine.activate();
         mainStateMachine.setupAndStart();
+
+        // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
         IWatchdog.begin(WATCHDOG_TIMEOUT);
         IWatchdog.reload();
     } else {
