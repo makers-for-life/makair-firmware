@@ -10,7 +10,7 @@
 // INCLUDES ===================================================================
 
 // Associated header
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 
 // External
 #include <algorithm>
@@ -27,15 +27,15 @@
 #include "../includes/pressure_valve.h"
 #include "../includes/telemetry.h"
 
-PressureController pController;
+MainController mainController;
 
 static const int32_t INVALID_ERROR_MARKER = INT32_MIN;
 
 // FUNCTIONS ==================================================================
 
-PressureController::PressureController() {}
+MainController::MainController() {}
 
-void PressureController::setup() {
+void MainController::setup() {
     DBG_DO(Serial.println(VERSION);)
     DBG_DO(Serial.println("Setup the controller");)
 
@@ -59,8 +59,8 @@ void PressureController::setup() {
     m_expiratoryTermCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
     m_expiratoryTermNextCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
 
-    m_ventilationController = &pcBIPAPController;
-    m_ventilationControllerNextCommand = &pcBIPAPController;
+    m_ventilationController = &pcBipapController;
+    m_ventilationControllerNextCommand = &pcBipapController;
 
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
@@ -75,7 +75,7 @@ void PressureController::setup() {
 
     m_cycleNb = 0;
 
-    m_dt = PCONTROLLER_COMPUTE_PERIOD_US;
+    m_dt = mainController_COMPUTE_PERIOD_US;
 
     m_sumOfPressures = 0;
     m_numberOfPressures = 0;
@@ -107,7 +107,7 @@ void PressureController::setup() {
     m_ventilationController->setup();
 }
 
-void PressureController::initRespiratoryCycle() {
+void MainController::initRespiratoryCycle() {
     DBG_DO(Serial.println("Init respiratory cycle");)
     m_cycleNb++;
     m_plateauPressureMeasure = 0;
@@ -150,10 +150,10 @@ void PressureController::initRespiratoryCycle() {
     m_ventilationController->initCycle();
 }
 
-void PressureController::compute(uint16_t p_tick) {
+void MainController::compute() {
     // Update the cycle phase
-    updatePhase(p_tick);
-    m_tick = p_tick;
+    updatePhase(m_tick);
+    m_tick = m_tick;
 
     // Compute metrics for alarms
     m_sumOfPressures += m_pressure;
@@ -162,17 +162,17 @@ void PressureController::compute(uint16_t p_tick) {
     // Act accordingly
     switch (m_phase) {
     case CyclePhases::INHALATION:
-        inhale(p_tick);
+        inhale();
         m_inhalationLastPressure = m_pressure;
         break;
 
     case CyclePhases::EXHALATION:
-        exhale(p_tick);
+        exhale();
         break;
     }
 
-    alarmController.updateCoreData(p_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(p_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
+    alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
+    sendDataSnapshot(m_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
                      expiratoryValve.position, blower.getSpeed() / 10u, getBatteryLevel(),
                      m_inspiratoryFlow, m_expiratoryFlow);
 
@@ -180,7 +180,7 @@ void PressureController::compute(uint16_t p_tick) {
 
 #ifdef MASS_FLOW_METER
     // Measure Volume only during inspiration. Add 100ms to allow valve to close completely.
-    if (p_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
+    if (m_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = MFM_read_milliliters(true);
         m_tidalVolumeMeasure =
@@ -193,8 +193,8 @@ void PressureController::compute(uint16_t p_tick) {
     simulatorCommunication();
 }
 
-void PressureController::updatePhase(uint16_t p_tick) {
-    if (p_tick < m_tickPerInhalation) {
+void MainController::updatePhase(uint16_t m_tick) {
+    if (m_tick < m_tickPerInhalation) {
         m_phase = CyclePhases::INHALATION;
         m_pressureCommand = m_plateauPressureCommand;
 
@@ -204,11 +204,10 @@ void PressureController::updatePhase(uint16_t p_tick) {
     }
 }
 
-
-void PressureController::inhale(uint16_t p_tick) {
+void MainController::inhale() {
 
     // Control loop
-    m_ventilationController->inhale(p_tick);
+    m_ventilationController->inhale();
 
     // Update peak pressure and rebounce peak pressure.
     if (m_pressure > m_peakPressureMeasure) {
@@ -219,18 +218,16 @@ void PressureController::inhale(uint16_t p_tick) {
     }
 
     // Compute plateau at the end of the cycle TODO 20 = 200ms should be a parameter
-    if (p_tick > m_tickPerInhalation - 20) {
+    if (m_tick > m_tickPerInhalation - 20) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
     }
 }
 
-
-
-void PressureController::exhale(uint16_t p_tick) {
+void MainController::exhale() {
 
     // Control loop
-    m_ventilationController->exhale(p_tick);
+    m_ventilationController->exhale();
 
     // Compute the PEEP pressure
     uint16_t minValue = m_lastPressureValues[0u];
@@ -254,7 +251,7 @@ void PressureController::exhale(uint16_t p_tick) {
     }
 }
 
-void PressureController::endRespiratoryCycle() {
+void MainController::endRespiratoryCycle() {
     // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
     // Don't calculate the first one (when starting up the machine)
     uint32_t currentMillis = millis();
@@ -295,27 +292,26 @@ void PressureController::endRespiratoryCycle() {
     m_ventilationController->endCycle();
 }
 
-void PressureController::simulatorCommunication() {
-#if SIMULATION == 1
-  Serial.print(m_pressure);
-  Serial.print(",");
-  Serial.print(m_pressureCommand);
-  Serial.print(",");
-  Serial.print(m_inspiratoryFlow*10);// multiplication by 10 for homogenous scale in debug
-  Serial.print(",");
-  Serial.print(m_expiratoryFlow*10);// multiplication by 10 for homogenous scale in debug
-  Serial.print(",");
-  Serial.print(inspiratoryValve.command);
-  Serial.print(",");
-  Serial.print(expiratoryValve.command);
-  Serial.print(",");
-  Serial.print(blower.getSpeed()/10); // division by 10 for homogenous scale in debug
-  Serial.println();
+void MainController::simulatorCommunication() {
+#if DEBUG == 2
+    Serial.print(m_pressure);
+    Serial.print(",");
+    Serial.print(m_pressureCommand);
+    Serial.print(",");
+    Serial.print(m_inspiratoryFlow / 100);  // division by 100 for homogenous scale in debug
+    Serial.print(",");
+    Serial.print(m_expiratoryFlow / 100);  // division by 100 for homogenous scale in debug
+    Serial.print(",");
+    Serial.print(inspiratoryValve.command);
+    Serial.print(",");
+    Serial.print(expiratoryValve.command);
+    Serial.print(",");
+    Serial.print(blower.getSpeed() / 10);  // division by 10 for homogenous scale in debug
+    Serial.println();
 #endif
-    
 }
 
-void PressureController::updatePressure(int16_t p_currentPressure) {
+void MainController::updatePressure(int16_t p_currentPressure) {
     m_pressure = p_currentPressure;
 
     // Store the current pressure to compute aggregates
@@ -328,31 +324,34 @@ void PressureController::updatePressure(int16_t p_currentPressure) {
     }
 }
 
-void PressureController::updateDt(int32_t p_dt) { m_dt = p_dt; }
+void MainController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 
-void PressureController::updateInspiratoryFlow(int16_t p_currentInspiratoryFlow) {
+void MainController::updateTick(uint32_t p_tick) { m_tick = p_tick; }
+
+void MainController::updateInspiratoryFlow(int32_t p_currentInspiratoryFlow) {
     // TODO check if value is valid.
     m_inspiratoryFlow = p_currentInspiratoryFlow;
 }
 
-void PressureController::updateExpiratoryFlow(int16_t p_currentExpiratoryFlow) {
+void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
     // TODO check if value is valid.
     m_expiratoryFlow = p_currentExpiratoryFlow;
 }
 
-
-void PressureController::computeTickParameters() {
+void MainController::computeTickParameters() {
     // Inspiratory term is always 10. Expiratory term is between 10 and 60 (default 20).
     // The folowing calculation is equivalent of  1000 * (10 / (10 + m_expiratoryTerm) * (60 /
     // m_cyclesPerMinute).
     m_plateauDurationMs =
         ((10000u / (10u + m_expiratoryTermCommand)) * 60u) / m_cyclesPerMinuteCommand;
 
-    m_ticksPerCycle = 60u * (1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
-    m_tickPerInhalation = (m_plateauDurationMs * 1000000u / PCONTROLLER_COMPUTE_PERIOD_US) / 1000u;
+    m_ticksPerCycle =
+        60u * (1000000u / mainController_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
+    m_tickPerInhalation =
+        (m_plateauDurationMs * 1000000u / mainController_COMPUTE_PERIOD_US) / 1000u;
 }
 
-void PressureController::executeCommands() {
+void MainController::executeCommands() {
     if (m_pressure > ALARM_THRESHOLD_MAX_PRESSURE) {
         inspiratoryValve.close();
         expiratoryValve.open();
@@ -365,7 +364,7 @@ void PressureController::executeCommands() {
     expiratoryValve.execute();
 }
 
-void PressureController::checkCycleAlarm() {
+void MainController::checkCycleAlarm() {
     // RCM-SW-1 + RCM-SW-14 : Check if plateau is reached
     uint16_t minPlateauBeforeAlarm =
         (m_plateauPressureCommand * (100u - ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100u;
@@ -404,19 +403,23 @@ void PressureController::checkCycleAlarm() {
     }
 }
 
-void PressureController::reachSafetyPosition() {
+void MainController::reachSafetyPosition() {
     inspiratoryValve.open();
     expiratoryValve.open();
     executeCommands();
 }
 
-void PressureController::stop() {
-    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-    blower.stop();
+void MainController::sendStopMessageToUi() {
     sendStoppedMessage(mmH2OtoCmH2O(m_peakPressureNextCommand),
                        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
                        m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
                        m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand);
+}
+
+void MainController::stop() {
+    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
+    blower.stop();
+    sendStopMessageToUi();
     // When stopped, open the valves
     reachSafetyPosition();
     // Stop alarms related to breathing cycle
@@ -429,7 +432,7 @@ void PressureController::stop() {
     alarmController.notDetectedAlarm(RCM_SW_19);
 }
 
-void PressureController::sendSnapshot() {
+void MainController::sendSnapshot() {
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)
     sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
@@ -441,7 +444,7 @@ void PressureController::sendSnapshot() {
                              m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure);
 }
 
-void PressureController::onCycleDecrease() {
+void MainController::onCycleDecrease() {
     DBG_DO(Serial.println("Cycle --");)
 
     m_cyclesPerMinuteNextCommand = m_cyclesPerMinuteNextCommand - 1;
@@ -454,7 +457,7 @@ void PressureController::onCycleDecrease() {
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
 }
 
-void PressureController::onCycleIncrease() {
+void MainController::onCycleIncrease() {
     DBG_DO(Serial.println("Cycle ++");)
 
     m_cyclesPerMinuteNextCommand = m_cyclesPerMinuteNextCommand + 1;
@@ -468,7 +471,7 @@ void PressureController::onCycleIncrease() {
 }
 
 // cppcheck-suppress unusedFunction
-void PressureController::onCycleSet(uint16_t p_cpm) {
+void MainController::onCycleSet(uint16_t p_cpm) {
     if (p_cpm < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteNextCommand = CONST_MIN_CYCLE;
     } else if (p_cpm > CONST_MAX_CYCLE) {
@@ -481,7 +484,7 @@ void PressureController::onCycleSet(uint16_t p_cpm) {
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
 }
 
-void PressureController::onPeepPressureDecrease() {
+void MainController::onPeepPressureDecrease() {
     DBG_DO(Serial.println("Peep Pressure --");)
 
     m_peepNextCommand = m_peepNextCommand - 10u;
@@ -494,7 +497,7 @@ void PressureController::onPeepPressureDecrease() {
     sendControlAck(3, m_peepNextCommand);
 }
 
-void PressureController::onPeepPressureIncrease() {
+void MainController::onPeepPressureIncrease() {
     DBG_DO(Serial.println("Peep Pressure ++");)
 
     m_peepNextCommand = m_peepNextCommand + 10u;
@@ -508,7 +511,7 @@ void PressureController::onPeepPressureIncrease() {
 }
 
 // cppcheck-suppress unusedFunction
-void PressureController::onPeepSet(uint16_t p_peep) {
+void MainController::onPeepSet(uint16_t p_peep) {
     if (p_peep > CONST_MAX_PEEP_PRESSURE) {
         m_peepNextCommand = CONST_MAX_PEEP_PRESSURE;
     } else if (p_peep < CONST_MIN_PEEP_PRESSURE) {
@@ -521,7 +524,7 @@ void PressureController::onPeepSet(uint16_t p_peep) {
     sendControlAck(3, m_peepNextCommand);
 }
 
-void PressureController::onPlateauPressureDecrease() {
+void MainController::onPlateauPressureDecrease() {
     DBG_DO(Serial.println("Plateau Pressure --");)
 
     m_plateauPressureNextCommand = m_plateauPressureNextCommand - 10u;
@@ -534,7 +537,7 @@ void PressureController::onPlateauPressureDecrease() {
     sendControlAck(2, m_plateauPressureNextCommand);
 }
 
-void PressureController::onPlateauPressureIncrease() {
+void MainController::onPlateauPressureIncrease() {
     DBG_DO(Serial.println("Plateau Pressure ++");)
 
     m_plateauPressureNextCommand = m_plateauPressureNextCommand + 10u;
@@ -551,7 +554,7 @@ void PressureController::onPlateauPressureIncrease() {
 }
 
 // cppcheck-suppress unusedFunction
-void PressureController::onPlateauPressureSet(uint16_t p_plateauPressure) {
+void MainController::onPlateauPressureSet(uint16_t p_plateauPressure) {
     if (p_plateauPressure > CONST_MAX_PLATEAU_PRESSURE) {
         m_plateauPressureNextCommand = CONST_MAX_PLATEAU_PRESSURE;
     } else if (p_plateauPressure < CONST_MIN_PLATEAU_PRESSURE) {
@@ -564,14 +567,14 @@ void PressureController::onPlateauPressureSet(uint16_t p_plateauPressure) {
     sendControlAck(2, m_plateauPressureNextCommand);
 }
 
-void PressureController::onPeakPressureDecrease() {
+void MainController::onPeakPressureDecrease() {
     DBG_DO(Serial.println("Peak Pressure --");)
     // TODO : remove this !! Only for debug
     m_peakPressureNextCommand = 20;
-    m_ventilationControllerNextCommand = &pcBIPAPController;
+    m_ventilationControllerNextCommand = &pcBipapController;
 }
 
-void PressureController::onPeakPressureIncrease() {
+void MainController::onPeakPressureIncrease() {
     DBG_DO(Serial.println("Peak Pressure ++");)
     // TODO : remove this !! Only for debug
     m_ventilationControllerNextCommand = &pcCmvController;
@@ -579,7 +582,7 @@ void PressureController::onPeakPressureIncrease() {
 }
 
 // cppcheck-suppress unusedFunction
-void PressureController::onExpiratoryTermSet(uint16_t p_expiratoryTerm) {
+void MainController::onExpiratoryTermSet(uint16_t p_expiratoryTerm) {
     if (p_expiratoryTerm > CONST_MAX_EXPIRATORY_TERM) {
         m_expiratoryTermNextCommand = CONST_MAX_EXPIRATORY_TERM;
     } else if (p_expiratoryTerm < CONST_MIN_EXPIRATORY_TERM) {
@@ -593,7 +596,7 @@ void PressureController::onExpiratoryTermSet(uint16_t p_expiratoryTerm) {
 }
 
 // cppcheck-suppress unusedFunction
-void PressureController::onTriggerEnabledSet(uint16_t p_triggerEnabled) {
+void MainController::onTriggerEnabledSet(uint16_t p_triggerEnabled) {
     if ((p_triggerEnabled == 0u) || (p_triggerEnabled == 1u)) {
         m_triggerModeEnabledNextCommand = p_triggerEnabled;
     }
@@ -603,7 +606,7 @@ void PressureController::onTriggerEnabledSet(uint16_t p_triggerEnabled) {
 }
 
 // cppcheck-suppress unusedFunction
-void PressureController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
+void MainController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
     if (p_triggerOffset > CONST_MAX_TRIGGER_OFFSET) {
         m_pressureTriggerOffsetNextCommand = CONST_MAX_TRIGGER_OFFSET;
         // cppcheck-suppress unsignedLessThanZero

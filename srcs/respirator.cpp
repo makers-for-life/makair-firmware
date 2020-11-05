@@ -27,11 +27,11 @@
 #include "../includes/end_of_line_test.h"
 
 #include "../includes/keyboard.h"
+#include "../includes/main_controller.h"
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure.h"
-#include "../includes/pressure_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
@@ -44,8 +44,8 @@ HardwareTimer* hardwareTimer3;
 
 int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
-int16_t minOffsetValue = 0;
-int16_t maxOffsetValue = 0;
+int32_t minOffsetValue = 0;
+int32_t maxOffsetValue = 0;
 
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 
@@ -54,17 +54,23 @@ HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
  *
  * @param ms  Duration of the blocking in millisecond
  */
-void waitForInMs(uint16_t ms) {
+void waitAndMeasurePressure(uint16_t ms) {
     uint16_t start = millis();
     minOffsetValue = inspiratoryPressureSensor.read();
     maxOffsetValue = inspiratoryPressureSensor.read();
     pressureOffsetSum = 0;
     pressureOffsetCount = 0;
 
+    // Open valves
+    inspiratoryValve.close();
+    inspiratoryValve.execute();
+    expiratoryValve.open();
+    expiratoryValve.execute();
+
     while ((millis() - start) < ms) {
         // Measure 1 pressure per ms we wait
         if ((millis() - start) > pressureOffsetCount) {
-            int16_t pressureValue = inspiratoryPressureSensor.read();
+            int32_t pressureValue = inspiratoryPressureSensor.read();
             pressureOffsetSum += pressureValue;
             minOffsetValue = min(pressureValue, minOffsetValue);
             maxOffsetValue = max(pressureValue, maxOffsetValue);
@@ -74,8 +80,6 @@ void waitForInMs(uint16_t ms) {
     }
 }
 
-uint32_t lastpControllerComputeDate;
-
 void setup(void) {
     Serial.begin(115200);
     DBG_DO(Serial.println("Booting the system...");)
@@ -84,13 +88,7 @@ void setup(void) {
 
     initBattery();
     if (isBatteryDeepDischarged()) {
-        screen.clear();
-        screen.setCursor(0, 0);
-        screen.print("Battery very low");
-        screen.setCursor(0, 2);
-        screen.print("Please charge");
-        screen.setCursor(0, 3);
-        screen.print("before running.");
+        displayBatteryDeepDischarge();
         while (true) {
         }
     }
@@ -98,20 +96,15 @@ void setup(void) {
     initTelemetry();
     sendBootMessage();
 
-    pinMode(PIN_PRESSURE_SENSOR, INPUT);
-    pinMode(PIN_BATTERY, INPUT);
-
     // Timer for valves
     hardwareTimer3 = new HardwareTimer(TIM3);
     hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
 
-    // Inspiratory valve setup
+    // Valves setup
     inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER,
                                      PIN_SERVO_BLOWER, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     inspiratoryValve.setup();
     hardwareTimer3->resume();
-
-    // Expiratory valve setup
     expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT,
                                     PIN_SERVO_PATIENT, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     expiratoryValve.setup();
@@ -123,71 +116,57 @@ void setup(void) {
     blower = Blower(hardwareTimer1, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
 
-    // Turn on the raspberry power
+    // Init Controllers
+    mainController = MainController();
+    alarmController = AlarmController();
+
+    // Init sensors
+    inspiratoryPressureSensor = PressureSensor();
+#ifdef MASS_FLOW_METER
+    MFM_init();
+    MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter. It has no
+                          // effect with the actual flowmeter
+#endif
+
+    // Setup pins of the microcontroller
+    pinMode(PIN_PRESSURE_SENSOR, INPUT);
+    pinMode(PIN_BATTERY, INPUT);
     pinMode(PIN_ENABLE_PWR_RASP, OUTPUT);
+    pinMode(PIN_LED_START, OUTPUT);
+    pinMode(PIN_LED_RED, OUTPUT);
+    pinMode(PIN_LED_YELLOW, OUTPUT);
+    pinMode(PIN_LED_GREEN, OUTPUT);
+    pinMode(PB12, INPUT);
+
+    // Turn on the raspberry power
     digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
 
     // Activate test mode if a service button is pressed. The end of line test mode cannot be
     // activated later on.
     // Autotest inputs: the service button on PB12, top right of the board's rear side
-    pinMode(PB12, INPUT);
+
     if (HIGH == digitalRead(PB12)) {
         eolTest.activate();
-        screen.clear();
-        screen.print("EOL Test Mode");
+        displayEndOfLineTestMode();
         while (HIGH == digitalRead(PB12)) {
             continue;
         }
     }
 
-    // Open both valves at startup
-    inspiratoryValve.open();
-    inspiratoryValve.execute();
-    expiratoryValve.open();
-    expiratoryValve.execute();
-
     // Catch potential Watchdog reset
-    // cppcheck-suppress misra-c2012-14.4 ; unknown external signature
     if (IWatchdog.isReset(true)) {
         // Run a high priority alarm
         BuzzerControl_Init();
         Buzzer_Init();
         Buzzer_High_Prio_Start();
-
-        // Print message on the screen
-        screen.clear();
-        screen.setCursor(0, 0);
-        screen.print("An error has occured");
-        screen.setCursor(0, 2);
-        screen.print("Check the machine");
-        screen.setCursor(0, 3);
-        screen.print("before re-using");
-
-        // Wait infinitely
+        displayWatchdogError();
         while (1) {
         }
     }
 
-    // Do not initialize pressure controller and keyboard in test mode
-    if (!eolTest.isRunning()) {
-        alarmController = AlarmController();
-        inspiratoryPressureSensor = PressureSensor();
-
-        pController = PressureController();
-
-        initKeyboard();
-    }
-
-    // Prepare LEDs
-    pinMode(PIN_LED_START, OUTPUT);
-    pinMode(PIN_LED_RED, OUTPUT);
-    pinMode(PIN_LED_YELLOW, OUTPUT);
-    pinMode(PIN_LED_GREEN, OUTPUT);
-
+    initKeyboard();
     BuzzerControl_Init();
     Buzzer_Init();
-
-    // escBlower needs 5s at speed 0 to be properly initalized
 
     // RCM-SW-17 (Christmas tree at startup)
     Buzzer_Boot_Start();
@@ -195,27 +174,17 @@ void setup(void) {
     digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
     digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
     digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
-    waitForInMs(1000);
+    waitAndMeasurePressure(1000);
     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
     digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
     digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
     digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
-    waitForInMs(3000);
+    waitAndMeasurePressure(1000);
 
-    screen.setCursor(0, 0);
-    screen.print("Calibrating P offset");
-    screen.setCursor(0, 2);
-    screen.print("Patient must be");
-    screen.setCursor(0, 3);
-    screen.print("unplugged");
-    waitForInMs(3000);
+    displayPatientMustBeUnplugged();
+    waitAndMeasurePressure(2000);
 
-// Mass Flow Meter, if any
-#ifdef MASS_FLOW_METER
-    (void)MFM_init();
-    MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter
-#endif
-    int16_t inspiratoryPressureSensorOffset = 0;
+    int32_t inspiratoryPressureSensorOffset = 0;
     resetScreen();
     if (pressureOffsetCount != 0u) {
         inspiratoryPressureSensorOffset =
@@ -223,71 +192,48 @@ void setup(void) {
     } else {
         inspiratoryPressureSensorOffset = 0;
     }
-    DBG_DO({
-        Serial.print("pressure offset = ");
-        Serial.print(pressureOffsetSum);
-        Serial.print(" / ");
-        Serial.print(pressureOffsetCount);
-        Serial.print(" = ");
-        Serial.print(inspiratoryPressureSensorOffset);
-        Serial.println();
-    })
 
     // Happens when patient is plugged at starting
-    if ((maxOffsetValue - minOffsetValue) >= 10) {
-        resetScreen();
-        screen.setCursor(0, 0);
-        char line1[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset is unstable");
-        screen.print(line1);
-        screen.setCursor(0, 1);
-        char line2[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "Max-Min: %3d mmH2O",
-                       maxOffsetValue - minOffsetValue);
-        screen.print(line2);
-        screen.setCursor(0, 2);
-        screen.print("Unplug patient and");
-        screen.setCursor(0, 3);
-        screen.print("reboot");
+    if ((maxOffsetValue - minOffsetValue) >= 10
+        || inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET) {
+        displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
         Buzzer_High_Prio_Start();
         while (true) {
         }
     }
 
-    if (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET) {
-        resetScreen();
-        screen.setCursor(0, 0);
-        char line1[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O",
-                       inspiratoryPressureSensorOffset);
-        screen.print(line1);
-        screen.setCursor(0, 1);
-        char line2[SCREEN_LINE_LENGTH + 1];
-        (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "P offset is > %-3d", MAX_PRESSURE_OFFSET);
-        screen.print(line2);
-        screen.setCursor(0, 2);
-        screen.print("Unplug patient and");
-        screen.setCursor(0, 3);
-        screen.print("reboot");
+    
+
+    int32_t flowMeterFlowAtStarting = MFM_read_airflow();
+    inspiratoryValve.open();
+    inspiratoryValve.execute();
+    expiratoryValve.open();
+    expiratoryValve.execute();
+    delay(500);
+    blower.runSpeed(DEFAULT_BLOWER_SPEED);
+    delay(1000);
+    int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
+
+    blower.stop();
+
+    // Happens when flow meter fail
+    if (flowMeterFlowAtStarting < -1000 || flowMeterFlowAtStarting > 1000
+        || flowMeterFlowWithBlowerOn < 20000 || flowMeterFlowWithBlowerOn > 100000) {
+        displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
         Buzzer_High_Prio_Start();
         while (true) {
         }
     }
 
-    screen.setCursor(0, 3);
-    char message[SCREEN_LINE_LENGTH + 1];
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O",
-                   inspiratoryPressureSensorOffset);
-    screen.print(message);
-    waitForInMs(1000);
+    displayPressureOffset(inspiratoryPressureSensorOffset);
+    delay(1000);
 
-    lastpControllerComputeDate = micros();
-
-    // No watchdog in end of line test mode
     if (!eolTest.isRunning()) {
-        // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
+        
         mainStateMachine.activate();
         mainStateMachine.setupAndStart();
+
+        // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
         IWatchdog.begin(WATCHDOG_TIMEOUT);
         IWatchdog.reload();
     } else {

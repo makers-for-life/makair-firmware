@@ -25,7 +25,7 @@
 ///@{
 
 // Période de traitement en microseconds
-#define PCONTROLLER_COMPUTE_PERIOD_US 10000u
+#define mainController_COMPUTE_PERIOD_US 10000u
 
 // Minimum & maximum execution parameters
 #define CONST_MAX_PEAK_PRESSURE 700u     // arbitrary [mmH2O]
@@ -142,7 +142,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define SCREEN_LINE_LENGTH 20
 
 /// Period between screen updates in microsecond. Should be a multiple of
-/// PCONTROLLER_COMPUTE_PERIOD_US
+/// mainController_COMPUTE_PERIOD_US
 #define LCD_UPDATE_PERIOD_US 300000u
 
 /// Period between screen resets in minutes

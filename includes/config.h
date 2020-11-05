@@ -18,11 +18,10 @@
  * Activates debug traces
  *
  * When DEBUG = 1, additional code is added to send debug traces using serial
- */
+ * When DEBUG = 2, information are sent in serial for PID debug
+ */ 
 #define DEBUG 0
 
-// Simulation mode is used with a model of the lung (matlab)
-#define SIMULATION 1
 
 // Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor

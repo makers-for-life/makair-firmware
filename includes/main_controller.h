@@ -27,10 +27,10 @@ static const uint16_t MAX_PEAK_INCREMENT = 30u;
 // CLASS ======================================================================
 
 /// Controls breathing cycle
-class PressureController {
+class MainController {
  public:
     // cppcheck-suppress misra-c2012-2.7
-    PressureController();
+    MainController();
 
     /// Initialize actuators
     void setup();
@@ -42,6 +42,12 @@ class PressureController {
     void endRespiratoryCycle();
 
     /**
+     * Input a tick number
+     * @param p_currentPressure Tick number
+     */
+    void updateTick(uint32_t p_tick);
+
+    /**
      * Input a pressure reading
      * @param p_currentPressure  Measured pressure
      */
@@ -51,20 +57,20 @@ class PressureController {
      * Input a flow reading
      * @param p_currentInspiratoryFlow  Measured inspiratory flow
      */
-    void updateInspiratoryFlow(int16_t p_currentInspiratoryFlow);
+    void updateInspiratoryFlow(int32_t p_currentInspiratoryFlow);
 
     /**
      * Input a flow reading
      * @param p_currentInspiratoryFlow  Measured inspiratory flow
      */
-    void updateExpiratoryFlow(int16_t p_currentExpiratoryFlow);
+    void updateExpiratoryFlow(int32_t p_currentExpiratoryFlow);
 
     /**
      * Perform the pressure control
      *
      * @param p_tick  Duration in hundredth of second from the begining of the cycle
      */
-    void compute(uint16_t p_tick);
+    void compute();
 
     /// Decrease the desired number of cycles per minute
     void onCycleDecrease();
@@ -199,6 +205,9 @@ class PressureController {
     /// Get the delta of time since the last cycle
     inline int32_t dt() const { return m_dt; }
 
+    /// Get the tick number of the current cycle 
+    inline uint32_t tick() const { return m_tick; }
+    
     /// Get the pressure command
     inline int32_t pressureCommand() const { return m_pressureCommand; }
 
@@ -228,6 +237,8 @@ class PressureController {
 
     void stop();
 
+    void sendStopMessageToUi();
+
     void sendSnapshot();
 
  private:
@@ -238,17 +249,13 @@ class PressureController {
      */
     void updatePhase(uint16_t p_tick);
 
-    /// Update peak pressure and blower ramp up
-    // cppcheck-suppress unusedPrivateFunction
-    void updatepeakPressureMeasure();
-
     /// Perform the pressure control and compute the transistors commands during the inhalation
     /// phase
-    void inhale(uint16_t p_tick);
+    void inhale();
 
     /// Perform the pressure control and compute the transistors commands during the exhalation
     /// phase
-    void exhale(uint16_t p_tick);
+    void exhale();
 
     /**
      * Compute various cycle durations given the desired number of cycles per minute
@@ -271,6 +278,9 @@ class PressureController {
     void simulatorCommunication();
 
  private:
+    /// Actual tick number (given by the main state machine)
+    uint32_t m_tick;
+
     /// Actual desired number of cycles per minute
     uint16_t m_cyclesPerMinuteCommand;
     /// Number of cycles per minute desired by the operator for next cycle
@@ -357,10 +367,10 @@ class PressureController {
     uint16_t m_pressure;
 
     /// Measured expiratory flow
-    int16_t m_inspiratoryFlow;
+    int32_t m_inspiratoryFlow;
 
     /// Measured inspiratory flow
-    int16_t m_expiratoryFlow;
+    int32_t m_expiratoryFlow;
 
     /// Inhalation last Pressre
     uint16_t m_inhalationLastPressure;
@@ -392,8 +402,6 @@ class PressureController {
     /// Number of the current cycle's pressures
     uint16_t m_numberOfPressures;
 
-    // Tick index, given by the main loop
-    uint16_t m_tick;
 };
 
-extern PressureController pController;
+extern MainController mainController;

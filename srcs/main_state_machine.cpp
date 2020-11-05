@@ -19,7 +19,7 @@
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
@@ -48,23 +48,24 @@ TestStep previousmsmstep = SETUP;
 
 MainStateMachine::MainStateMachine() {
     isMsmActive = false;
-    ::msmTimer = new HardwareTimer(TIM9);
+    
 }
 
 // cppcheck-suppress unusedFunction
 void MainStateMachine::activate() {
     isMsmActive = true;
     ::clockMsmTimer = 0;
+    ::msmTimer = new HardwareTimer(TIM9);
 }
 
 bool MainStateMachine::isRunning() { return isMsmActive; }
 
 // Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
-    displayCurrentVolume(pController.tidalVolumeMeasure(),
-                         pController.cyclesPerMinuteNextCommand());
-    displayCurrentSettings(pController.peakPressureNextCommand(),
-                           pController.plateauPressureNextCommand(), pController.peepNextCommand());
+    displayCurrentVolume(mainController.tidalVolumeMeasure(),
+                         mainController.cyclesPerMinuteNextCommand());
+    displayCurrentSettings(mainController.peakPressureNextCommand(),
+                           mainController.plateauPressureNextCommand(), mainController.peepNextCommand());
     if (msmstep == STOPPED) {
         displayMachineStopped();
     }
@@ -74,16 +75,16 @@ void millisecondTimerMSM(HardwareTimer*) {
     IWatchdog.reload();
     clockMsmTimer++;    
     uint32_t pressure = inspiratoryPressureSensor.read();
-    pController.updatePressure(pressure);
-    uint32_t inspiratoryflow = mfmLastValue;
-    pController.updateInspiratoryFlow(inspiratoryflow);
+    mainController.updatePressure(pressure);
+    int32_t inspiratoryflow = MFM_read_airflow();
+    mainController.updateInspiratoryFlow(inspiratoryflow);
     // TODO: reactivate because higher priority timerIWatchdog.reload();
 
     if (clockMsmTimer % 10 == 0) {
         // Check if some buttons have been pushed
         keyboardLoop();
         // Check if battery state has changed
-        batteryLoop(pController.cycleNumber());
+        batteryLoop(mainController.cycleNumber());
         // Check serial input
         serialControlLoop();
 
@@ -109,7 +110,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
 
     if (msmstep == SETUP) {
-        pController.setup();
+        mainController.setup();
         mainStateMachine.ScreenUpdate();
         displayMachineStopped();
         msmstep = STOPPED;
@@ -119,7 +120,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     else if (msmstep == STOPPED) {
 
         if ((clockMsmTimer % 100u) == 0u) {
-            pController.stop();
+            mainController.stop();
             displayMachineStopped();
         }
 
@@ -131,7 +132,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
 
     else if (msmstep == INIT_CYCLE) {
-        pController.initRespiratoryCycle();
+        mainController.initRespiratoryCycle();
         lastMillis = millis();
         lastMillisInTheLoop = millis();
         tick = 0;
@@ -146,18 +147,19 @@ void millisecondTimerMSM(HardwareTimer*) {
         tick = (currentMillis - lastMillis) / 10u;
 
         if (currentMillis - lastMillisInTheLoop > 10u) {
-            if (tick >= pController.tickPerCycle()) {
+            if (tick >= mainController.tickPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
                 uint32_t currentMicro = micros();
-                pController.updateDt(currentMicro - lastMicro);
+                mainController.updateDt(currentMicro - lastMicro);
                 lastMicro = currentMicro;
-                pController.compute(tick);
+                mainController.updateTick(tick);
+                mainController.compute();
             }
             lastMillisInTheLoop = currentMillis;
         }
 
-        if (pController.triggered()) {
+        if (mainController.triggered()) {
             msmstep = TRIGGER_RAISED;
         }
         // Check if machine has been paused
@@ -175,9 +177,9 @@ void millisecondTimerMSM(HardwareTimer*) {
     }
 
     else if (msmstep == END_CYCLE) {
-        pController.endRespiratoryCycle();
-        displayCurrentInformation(pController.peakPressureMeasure(),
-                                  pController.plateauPressureMeasure(), pController.peepMeasure());
+        mainController.endRespiratoryCycle();
+        displayCurrentInformation(mainController.peakPressureMeasure(),
+                                  mainController.plateauPressureMeasure(), mainController.peepMeasure());
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         } else {
