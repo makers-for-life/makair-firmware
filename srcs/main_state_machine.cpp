@@ -170,7 +170,7 @@ void millisecondTimerMSM(HardwareTimer*) {
 
     } else if (msmstep == TRIGGER_RAISED) {
         if (activationController.isRunning()) {
-            msmstep = INIT_CYCLE;
+            msmstep = END_CYCLE;
         } else {
             msmstep = STOPPED;
         }
