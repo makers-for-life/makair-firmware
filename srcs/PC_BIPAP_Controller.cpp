@@ -44,7 +44,7 @@ void PC_BIPAP_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow = mainController.tickPerCycle() - 100;  // Possible to trigger 1s before end
 
-    m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
+    //m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
     m_inspiratoryPidIntegral = 0;
@@ -90,6 +90,7 @@ void PC_BIPAP_Controller::inhale() {
     inspiratoryValve.open(inspiratoryValveOpenningValue);
     expiratoryValve.close();
 
+
     m_expiratoryPidFastMode = true;
 
     // m_inspiratorySlope is used for blower regulations, -20 corresponds to open loop openning
@@ -105,14 +106,14 @@ void PC_BIPAP_Controller::exhale() {
     blower.runSpeed(m_blowerSpeed - 400);  // todo check min blower speed
 
     // Open the expiratos valve so the patient can exhale outside
-    int32_t inspiratoryValveOpenningValue =
+    int32_t expiratoryValveOpenningValue =
         PCexpiratoryPID(mainController.pressureCommand(), mainController.pressure(), mainController.dt());
 
-    if (inspiratoryValveOpenningValue > 90) {
-        m_reOpenInspiratoryValve = true;
-    }
-    expiratoryValve.open(inspiratoryValveOpenningValue);
-    inspiratoryValve.open(max((uint32_t)70, 125 - (mainController.tick() - mainController.tickPerInhalation()) / 2));
+    expiratoryValve.open(expiratoryValveOpenningValue);
+
+    int32_t inspiratoryValveOpenningValue = max((uint32_t)70, 125 - (mainController.tick() - mainController.tickPerInhalation()) / 2);
+    inspiratoryValve.open(inspiratoryValveOpenningValue);
+    m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the machine.
