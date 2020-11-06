@@ -26,7 +26,7 @@ PressureSensor::PressureSensor(){
 }
 
 // Get the measured for the feedback control (in mmH2O)
-int16_t PressureSensor::read() {
-    int16_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - m_PressureSensorOffset;
-    return max(int16_t(0), withOffset);
+int32_t PressureSensor::read() {
+    int32_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - m_PressureSensorOffset;
+    return max(int32_t(0), withOffset);
 }

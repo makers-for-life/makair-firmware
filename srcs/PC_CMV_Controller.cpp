@@ -86,7 +86,7 @@ void PC_CMV_Controller::inhale() {
     expiratoryValve.close();
 
     // m_plateauStartTime is used for blower regulations, -20 is added to help blower convergence
-    if (mainController.pressure() > mainController.plateauPressureCommand() - 20u
+    if (mainController.pressure() > mainController.plateauPressureCommand() - 5u
         && !m_plateauPressureReached) {
         m_plateauStartTime = mainController.tick();  // TODO make this only dependent of open loop rampup.
         m_plateauPressureReached = true;

@@ -193,6 +193,8 @@ void setup(void) {
         inspiratoryPressureSensorOffset = 0;
     }
 
+    inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
+
     // Happens when patient is plugged at starting
     if ((maxOffsetValue - minOffsetValue) >= 10
         || inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET) {

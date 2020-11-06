@@ -20,12 +20,14 @@
 
 class PressureSensor {
  public:
-  PressureSensor();
-  int16_t read();
+    PressureSensor();
+    int32_t read();
+    void setPressureSensorOffset(int32_t p_pressureSensorOffest) {
+        m_PressureSensorOffset = p_pressureSensorOffest;
+    }
 
  private:
- 	uint16_t m_PressureSensorOffset;
-   
+    int32_t m_PressureSensorOffset;
 };
 
 extern PressureSensor inspiratoryPressureSensor;

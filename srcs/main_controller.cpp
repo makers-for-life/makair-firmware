@@ -59,8 +59,8 @@ void MainController::setup() {
     m_expiratoryTermCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
     m_expiratoryTermNextCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
 
-    m_ventilationController = &pcBipapController;
-    m_ventilationControllerNextCommand = &pcBipapController;
+    m_ventilationController = &pcCmvController;
+    m_ventilationControllerNextCommand = &pcCmvController;
 
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
