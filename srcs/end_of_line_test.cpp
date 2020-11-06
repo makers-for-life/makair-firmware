@@ -118,7 +118,7 @@ enum TestStep {
     END_SUCCESS
 };
 
-TestStep eolstep = START_LONG_RUN_BLOWER;
+TestStep eolstep = START;
 TestStep previousEolStep = START;
 boolean eolFail = false;
 #define EOLSCREENSIZE 100
@@ -145,6 +145,7 @@ void millisecondTimerEOL(HardwareTimer*) {
     if (eolstep == START) {
         eolstep = CHECK_FAN;
         eolMSCount = 0;
+        mainController.setup();
     }
 
     // The operator should check that both fans are running, and hit "start" to confirm
@@ -304,7 +305,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         // Check serial from the UI
         serialControlLoop();
 
-        if (mainController.triggerModeEnabledNextCommand()) {
+        if (mainController.triggerModeEnabledNextCommand() ) {
             eolstep = PLUG_AIR_TEST_SYTEM;
             eolMSCount = 0;
         }
