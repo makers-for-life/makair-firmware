@@ -165,7 +165,7 @@ void MainController::compute() {
 #ifdef MASS_FLOW_METER
     // Measure volume only during inspiration
     // Add 100 ms to allow valve to close completely
-    if (m_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
+    if (m_tick > m_ticksPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = m_currentDeliveredVolume;
         m_tidalVolumeMeasure =
@@ -179,7 +179,7 @@ void MainController::compute() {
 }
 
 void MainController::updatePhase(uint16_t m_tick) {
-    if (m_tick < m_tickPerInhalation) {
+    if (m_tick < m_ticksPerInhalation) {
         m_phase = CyclePhases::INHALATION;
         m_pressureCommand = m_plateauPressureCommand;
 
@@ -203,7 +203,7 @@ void MainController::inhale() {
 
     // Compute plateau at the end of the cycle
     // TODO 20 = 200 ms should be a parameter
-    if (m_tick > m_tickPerInhalation - 20) {
+    if (m_tick > m_ticksPerInhalation - 20) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
     }
@@ -336,7 +336,7 @@ void MainController::computeTickParameters() {
 
     m_ticksPerCycle =
         60u * (1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
-    m_tickPerInhalation =
+    m_ticksPerInhalation =
         (m_plateauDurationMs * 1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_US) / 1000u;
 }
 

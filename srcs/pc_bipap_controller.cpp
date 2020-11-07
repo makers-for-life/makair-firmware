@@ -31,7 +31,7 @@ void PC_BIPAP_Controller::setup() {
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.tickPerInhalation() + 100;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 100;  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
@@ -45,7 +45,7 @@ void PC_BIPAP_Controller::setup() {
 void PC_BIPAP_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.tickPerInhalation() + 140;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 140;  // Possible to trigger 1s before end
 
     // m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();  TODO ?
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
@@ -120,7 +120,7 @@ void PC_BIPAP_Controller::exhale() {
     expiratoryValve.open(expiratoryValveOpenningValue);
 
     int32_t inspiratoryValveOpenningValue =
-        max((uint32_t)70, 125 - (mainController.tick() - mainController.tickPerInhalation()) / 2);
+        max((uint32_t)70, 125 - (mainController.tick() - mainController.ticksPerInhalation()) / 2);
     inspiratoryValve.open(inspiratoryValveOpenningValue);
     m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 

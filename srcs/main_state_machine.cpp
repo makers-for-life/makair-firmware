@@ -141,7 +141,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         tick = (currentMillis - lastMillis) / 10u;
 
         if (currentMillis - lastMillisInTheLoop > 10u) {
-            if (tick >= mainController.tickPerCycle()) {
+            if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
                 uint32_t currentMicro = micros();

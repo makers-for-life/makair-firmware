@@ -31,7 +31,7 @@ void PC_CMV_Controller::setup() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
-    m_plateauStartTime = mainController.tickPerInhalation();
+    m_plateauStartTime = mainController.ticksPerInhalation();
 
     m_inspiratoryPidLastErrorsIndex = 0;
     m_expiratoryPidLastErrorsIndex = 0;
@@ -43,7 +43,7 @@ void PC_CMV_Controller::setup() {
 
 void PC_CMV_Controller::initCycle() {
     m_plateauPressureReached = false;
-    m_plateauStartTime = mainController.tickPerInhalation();
+    m_plateauStartTime = mainController.ticksPerInhalation();
 
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
@@ -129,11 +129,11 @@ void PC_CMV_Controller::calculateBlowerIncrement() {
 
     // Update blower only if patient is plugged on the machine
     if (mainController.peakPressureMeasure() > 20) {
-        if (m_plateauStartTime < ((mainController.tickPerInhalation() * 30u) / 100u)) {
+        if (m_plateauStartTime < ((mainController.ticksPerInhalation() * 30u) / 100u)) {
             // Only case for decreasing the blower: ramping is too fast or overshooting is too high
             if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
                 || ((peakDelta > 15)
-                    && (m_plateauStartTime < ((mainController.tickPerInhalation() * 20u) / 100u)))
+                    && (m_plateauStartTime < ((mainController.ticksPerInhalation() * 20u) / 100u)))
                 || (peakDelta > 25)) {
                 m_blowerIncrement = -100;
                 DBG_DO(Serial.println("BLOWER -100");)
@@ -141,13 +141,13 @@ void PC_CMV_Controller::calculateBlowerIncrement() {
                 m_blowerIncrement = 0;
                 DBG_DO(Serial.println("BLOWER 0");)
             }
-        } else if (m_plateauStartTime < ((mainController.tickPerInhalation() * 40u) / 100u)) {
+        } else if (m_plateauStartTime < ((mainController.ticksPerInhalation() * 40u) / 100u)) {
             DBG_DO(Serial.println("BLOWER +0");)
             m_blowerIncrement = 0;
-        } else if (m_plateauStartTime < ((mainController.tickPerInhalation() * 50u) / 100u)) {
+        } else if (m_plateauStartTime < ((mainController.ticksPerInhalation() * 50u) / 100u)) {
             m_blowerIncrement = +25;
             DBG_DO(Serial.println("BLOWER +25"));
-        } else if (m_plateauStartTime < ((mainController.tickPerInhalation() * 60u) / 100u)) {
+        } else if (m_plateauStartTime < ((mainController.ticksPerInhalation() * 60u) / 100u)) {
             m_blowerIncrement = +50;
             DBG_DO(Serial.println("BLOWER +50"));
         } else {
