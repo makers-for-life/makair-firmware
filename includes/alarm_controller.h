@@ -79,7 +79,6 @@ class AlarmController {
     void updateCoreData(uint32_t p_tick,
                         uint16_t p_pressure,
                         CyclePhases p_phase,
-                        CycleSubPhases p_subphase,
                         uint32_t p_cycle_number);
 
     /// Get the alarms triggered during this cycle
@@ -109,9 +108,6 @@ class AlarmController {
 
     /// Current phase
     CyclePhases m_phase;
-
-    /// Current subphase
-    CycleSubPhases m_subphase;
 
     /// Current cycle number
     uint32_t m_cycle_number;

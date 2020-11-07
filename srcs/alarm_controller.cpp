@@ -115,7 +115,6 @@ AlarmController::AlarmController()
       m_tick(0u),
       m_pressure(0u),
       m_phase(CyclePhases::INHALATION),
-      m_subphase(CycleSubPhases::INSPIRATION),
       m_cycle_number(0u) {
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         m_snoozedAlarms[i] = false;
@@ -164,9 +163,9 @@ void AlarmController::detectedAlarm(uint8_t p_alarmCode,
                 }
 
                 if (!wasTriggered) {
-                    sendAlarmTrap(m_tick, m_pressure, m_phase, m_subphase, m_cycle_number,
-                                  current->getCode(), current->getPriority(), true, p_expected,
-                                  p_measured, current->getCyclesSinceTrigger());
+                    sendAlarmTrap(m_tick, m_pressure, m_phase, m_cycle_number, current->getCode(),
+                                  current->getPriority(), true, p_expected, p_measured,
+                                  current->getCyclesSinceTrigger());
                 }
             }
             break;
@@ -209,8 +208,8 @@ void AlarmController::notDetectedAlarm(uint8_t p_alarmCode) {
                 }
 
                 if (wasTriggered) {
-                    sendAlarmTrap(m_tick, m_pressure, m_phase, m_subphase, m_cycle_number,
-                                  current->getCode(), current->getPriority(), false, 0u, 0u,
+                    sendAlarmTrap(m_tick, m_pressure, m_phase, m_cycle_number, current->getCode(),
+                                  current->getPriority(), false, 0u, 0u,
                                   current->getCyclesSinceTrigger());
                 }
             }
@@ -302,11 +301,9 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
 void AlarmController::updateCoreData(uint32_t p_tick,
                                      uint16_t p_pressure,
                                      CyclePhases p_phase,
-                                     CycleSubPhases p_subphase,
                                      uint32_t p_cycle_number) {
     m_tick = p_tick;
     m_pressure = p_pressure;
     m_phase = p_phase;
-    m_subphase = p_subphase;
     m_cycle_number = p_cycle_number;
 }

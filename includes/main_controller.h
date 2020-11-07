@@ -17,13 +17,13 @@
 #include "../includes/telemetry.h"
 #endif
 
-#include "../includes/pc_bipap_controller.h"
-#include "../includes/pc_cmv_controller.h"
 #include "../includes/blower.h"
 #include "../includes/config.h"
 #include "../includes/cycle.h"
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
+#include "../includes/pc_bipap_controller.h"
+#include "../includes/pc_cmv_controller.h"
 #include "../includes/pressure_valve.h"
 
 /// Number of values to aggregate when computing plateau pressure
@@ -229,9 +229,6 @@ class MainController {
     /// Get the current cycle phase
     inline CyclePhases phase() const { return m_phase; }
 
-    /// Get the current cycle subphase
-    inline CycleSubPhases subPhase() const { return m_subPhase; }
-
     /// Get the state of the inspiratory trigger
     inline const bool triggered() const { return m_triggered; }
 
@@ -426,9 +423,6 @@ class MainController {
 
     /// Current respiratory cycle phase
     CyclePhases m_phase;
-
-    /// Current respiratory cycle subphase
-    CycleSubPhases m_subPhase;
 
     /// Number of elapsed cycles since beginning
     uint32_t m_cycleNb;

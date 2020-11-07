@@ -26,7 +26,6 @@ void MainController::setup() {
     DBG_DO(Serial.println(VERSION);)
     DBG_DO(Serial.println("Setup the controller");)
 
-    m_subPhase = HOLD_INSPIRATION;  // TODO remove subphase
     m_inspiratoryFlow = 0;
     m_expiratoryFlow = 0;
 
@@ -155,8 +154,8 @@ void MainController::compute() {
         break;
     }
 
-    alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(m_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
+    alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_cycleNb);
+    sendDataSnapshot(m_tick, m_pressure, m_phase, inspiratoryValve.position,
                      expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
                      m_inspiratoryFlow, m_expiratoryFlow);
 
