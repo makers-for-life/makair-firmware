@@ -18,7 +18,7 @@
  * @brief  System Clock Configuration, for hardware v3 and later on.
  * @note   SYSCLK = 100000000 Hz for STM32F411xE
  */
-
+// cppcheck-suppress unusedFunction
 extern "C" void SystemClock_Config(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};

@@ -17,18 +17,19 @@ class PC_BIPAP_Controller final : public VentilationController {
     PC_BIPAP_Controller();
 
     /// Initialize controller
-    void setup();
+    void setup() override;
 
     /// Begin a new breathing cycle
-    void initCycle();
+    void initCycle() override;
 
     /// Control the inhalation
-    void inhale();
+    void inhale() override;
 
     /// Control the exhalation
-    void exhale();
+    void exhale() override;
+
     /// End the current breathing cycle
-    void endCycle();
+    void endCycle() override;
 
  private:
     /// Determine the blower speed to adopt

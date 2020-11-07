@@ -217,7 +217,7 @@ void displayPressureOffsetUnstable(uint32_t p_minOffsetValue, uint32_t p_maxOffs
     screen.print(line1);
     screen.setCursor(0, 1);
     char line2[SCREEN_LINE_LENGTH + 1];
-    (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "Max-Min: %3d mmH2O",
+    (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "Max-Min: %3u mmH2O",
                    p_maxOffsetValue - p_minOffsetValue);
     screen.print(line2);
     screen.setCursor(0, 2);
