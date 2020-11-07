@@ -162,7 +162,7 @@ void MainController::compute() {
 
     executeCommands();
 
-#ifdef MASS_FLOW_METER
+#ifdef MASS_FLOW_METER_ENABLED
     // Measure volume only during inspiration
     // Add 100 ms to allow valve to close completely
     if (m_tick > m_ticksPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {

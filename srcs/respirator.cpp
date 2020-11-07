@@ -121,7 +121,7 @@ void setup(void) {
 
     // Init sensors
     inspiratoryPressureSensor = PressureSensor();
-#ifdef MASS_FLOW_METER
+#ifdef MASS_FLOW_METER_ENABLED
     MFM_init();
     MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter. It has no
                           // effect with the actual flowmeter

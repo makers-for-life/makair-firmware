@@ -218,7 +218,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
  */
 ///@{
 
-#ifdef MASS_FLOW_METER
+#ifdef MASS_FLOW_METER_ENABLED
 #define MASS_FLOW_TIMER TIM10
 #define MASS_FLOW_CHANNEL 1
 #define PIN_I2C_SDA PB9

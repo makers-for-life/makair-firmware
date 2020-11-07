@@ -31,7 +31,7 @@
 
 /// Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor
-#define MASS_FLOW_METER
+#define MASS_FLOW_METER_ENABLED
 
 /**
  * @name Available Mass Flow Meters

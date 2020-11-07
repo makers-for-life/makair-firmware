@@ -30,7 +30,7 @@
 // INITIALISATION =============================================================
 
 // Hardware is ensured to be at least v2
-#ifdef MASS_FLOW_METER
+#ifdef MASS_FLOW_METER_ENABLED
 
 // 2 kHz => prescaler = 50000 => still OK for a 16 bit timer. it cannnot be slower
 // 10 kHz => nice
