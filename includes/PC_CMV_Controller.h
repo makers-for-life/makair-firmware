@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../includes/VentilationController.h"
+#include "../includes/ventilation_controller.h"
 #include "../includes/parameters.h"
 
 /// Controller for the CMV mode

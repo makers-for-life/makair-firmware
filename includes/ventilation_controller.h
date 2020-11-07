@@ -1,7 +1,7 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file VentilationController.h
+ * @file ventilation_controller.h
  * @brief Abstract class for ventilation controllers
  *****************************************************************************/
 
