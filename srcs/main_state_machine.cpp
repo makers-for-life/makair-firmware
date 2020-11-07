@@ -111,10 +111,8 @@ void millisecondTimerMSM(HardwareTimer*) {
         mainStateMachine.ScreenUpdate();
         displayMachineStopped();
         msmstep = STOPPED;
-    }
-
-    // Executed just after booting, until the first start
-    else if (msmstep == STOPPED) {
+    } else if (msmstep == STOPPED) {
+        // Executed just after booting, until the first start
         if ((clockMsmTimer % 100u) == 0u) {
             mainController.stop();
             displayMachineStopped();
@@ -124,19 +122,15 @@ void millisecondTimerMSM(HardwareTimer*) {
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         }
-    }
-
-    else if (msmstep == INIT_CYCLE) {
+    } else if (msmstep == INIT_CYCLE) {
         mainController.initRespiratoryCycle();
         lastMillis = millis();
         lastMillisInTheLoop = millis();
         tick = 0;
         msmstep = BREATH;
         MFM_read_milliliters(true);  // Reset volume integral
-    }
-
-    // If breathing
-    else if (msmstep == BREATH) {
+    } else if (msmstep == BREATH) {
+        // If breathing
         uint32_t currentMillis = millis();
         tick = (currentMillis - lastMillis) / 10u;
 
@@ -169,9 +163,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         } else {
             msmstep = STOPPED;
         }
-    }
-
-    else if (msmstep == END_CYCLE) {
+    } else if (msmstep == END_CYCLE) {
         mainController.endRespiratoryCycle();
         displayCurrentInformation(mainController.peakPressureMeasure(),
                                   mainController.plateauPressureMeasure(),

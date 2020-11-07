@@ -256,7 +256,6 @@ void sendDataSnapshot(uint16_t centileValue,
                       uint8_t batteryLevel,
                       int16_t inspiratoryFlowValue,
                       int16_t expiratoryFlowValue) {
-
     uint8_t phaseValue;
     if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001
@@ -374,7 +373,6 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
                               uint8_t previouscpmValue) {
-
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -523,7 +521,6 @@ void sendAlarmTrap(uint16_t centileValue,
                    uint32_t expectedValue,
                    uint32_t measuredValue,
                    uint32_t cyclesSinceTriggerValue) {
-
     uint8_t phaseValue;
     if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001

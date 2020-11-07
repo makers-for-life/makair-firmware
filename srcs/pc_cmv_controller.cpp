@@ -230,10 +230,7 @@ PC_CMV_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPress
         } else {
             inspiratoryValveAperture = 0;
         }
-    }
-
-    // If not in fast mode, the PID is used
-    else {
+    } else {  // If not in fast mode, the PID is used
         derivative = ((dt == 0)) ? 0 : ((1000000 * (m_inspiratoryPidLastError - smoothError)) / dt);
 
         temporarym_inspiratoryPidIntegral =
@@ -341,10 +338,7 @@ PC_CMV_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressu
         } else {
             expiratoryValveAperture = 0;
         }
-    }
-
-    // If not in fast mode, the PID is used
-    else {
+    } else {  // If not in fast mode, the PID is used
         temporarym_expiratoryPidIntegral =
             m_expiratoryPidIntegral + ((coefficientI * error * dt) / 1000000);
         temporarym_expiratoryPidIntegral =

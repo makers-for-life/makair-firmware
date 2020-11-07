@@ -136,7 +136,6 @@ void PC_BIPAP_Controller::exhale() {
     }
 
     if (mainController.triggerModeEnabledCommand()) {
-
         // triggering an inspiration is only possible within a time window
         if (mainController.tick() >= m_triggerWindow) {
             int32_t sum = 0;
@@ -180,9 +179,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
             m_blowerIncrement = -100;
         } else if (highRebounce) {
             m_blowerIncrement = -10;
-        }
-        // We want the m_inspiratorySlope = 600 mmH2O/s
-        else if (m_inspiratorySlope > 650) {
+        } else if (m_inspiratorySlope > 650) {  // We want the m_inspiratorySlope = 600 mmH2O/s
             // Only case for decreasing the blower: ramping is too fast or overshooting is too high
             if (m_inspiratorySlope > 1000 || (lowRebounce && (m_inspiratorySlope > 800))
                 || peakDelta > 25) {
@@ -278,10 +275,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
         } else {
             inspiratoryValveAperture = 0;
         }
-    }
-
-    // If not in fast mode, the PID is used
-    else {
+    } else {  // If not in fast mode, the PID is used
         derivative = ((dt == 0)) ? 0 : ((1000000 * (m_inspiratoryPidLastError - smoothError)) / dt);
 
         temporarym_inspiratoryPidIntegral =
@@ -379,10 +373,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
     // Fast mode: open loop with ramp
     if (m_expiratoryPidFastMode) {
         expiratoryValveAperture = 0;
-    }
-
-    // If not in fast mode, the PID is used
-    else {
+    } else {  // If not in fast mode, the PID is used
         temporarym_expiratoryPidIntegral =
             m_expiratoryPidIntegral + ((coefficientI * error * dt) / 1000000);
         temporarym_expiratoryPidIntegral =
