@@ -202,7 +202,11 @@ void setup(void) {
         }
     }
 
+#ifdef MASS_FLOW_METER_ENABLED
     int32_t flowMeterFlowAtStarting = MFM_read_airflow();
+#else
+    int32_t flowMeterFlowAtStarting = 0;
+#endif
     inspiratoryValve.open();
     inspiratoryValve.execute();
     expiratoryValve.open();
@@ -210,7 +214,11 @@ void setup(void) {
     delay(500);
     blower.runSpeed(DEFAULT_BLOWER_SPEED);
     delay(1000);
+#ifdef MASS_FLOW_METER_ENABLED
     int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
+#else
+    int32_t flowMeterFlowWithBlowerOn = 0;
+#endif
 
     blower.stop();
 
