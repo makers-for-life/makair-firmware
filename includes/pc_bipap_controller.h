@@ -1,7 +1,7 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file PC_BIPAP_Controller.h
+ * @file pc_bipap_controller.h
  * @brief PID for BIPAP pressure control
  *****************************************************************************/
 
