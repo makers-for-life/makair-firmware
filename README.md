@@ -18,7 +18,7 @@ In order to setup your environment and build the code, please follow the followi
 2. `arduino-cli config init --additional-urls https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json`
 3. `arduino-cli core update-index`
 4. `arduino-cli core install STM32:stm32@1.8.0`
-5. `arduino-cli lib install LiquidCrystal@1.0.7 && arduino-cli lib install "Analog Buttons"@1.2.0 && arduino-cli lib install OneButton@1.5.0 && arduino-cli lib install CRC32@2.0.0`
+5. `arduino-cli lib install LiquidCrystal@1.0.7 && arduino-cli lib install OneButton@1.5.0 && arduino-cli lib install CRC32@2.0.0`
 
 Then, compile the project:
 
