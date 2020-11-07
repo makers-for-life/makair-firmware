@@ -142,7 +142,7 @@ void PC_BIPAP_Controller::exhale() {
             for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
                 sum += m_inspiratoryFlowLastValues[i];
             }
-            int32_t meanFLow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
+            int32_t meanFlow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
 
             if (mainController.inspiratoryFlow()
                 > 280 * 100 + 100 * mainController.pressureTriggerOffsetCommand()) {
