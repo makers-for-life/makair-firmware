@@ -1,25 +1,38 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file PC_CMV_Controller.h
+ * @file pc_cmv_controller.h
  * @brief PID for CMV pressure control
  *****************************************************************************/
 
 #pragma once
 
-#include "../includes/VentilationController.h"
+#include "../includes/ventilation_controller.h"
 #include "../includes/parameters.h"
 
+/// Controller for the CMV mode
 class PC_CMV_Controller final : public VentilationController {
  public:
+    /// Default constructor
     PC_CMV_Controller();
-    void setup();
-    void initCycle();
-    void inhale();
-    void exhale();
-    void endCycle();
+
+    /// Initialize controller
+    void setup() override;
+
+    /// Begin a new breathing cycle
+    void initCycle() override;
+
+    /// Control the inhalation
+    void inhale() override;
+
+    /// Control the exhalation
+    void exhale() override;
+
+    /// End the current breathing cycle
+    void endCycle() override;
 
  private:
+    /// Determine the blower speed to adopt
     void calculateBlowerIncrement();
 
     /// Number of ticks when plateau is reached for the first time
@@ -46,6 +59,7 @@ class PC_CMV_Controller final : public VentilationController {
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
+    /// Current blower speed increment (to apply at the beginning of the next cycle)
     int32_t m_blowerIncrement;
 
     /// Error of the last computation of the blower PID

@@ -79,12 +79,39 @@ void displayCurrentInformation(uint16_t peakPressure, uint16_t plateauPressure, 
  */
 void displayAlarmInformation(uint8_t p_alarmCodes[], uint8_t p_nbTriggeredAlarms);
 
+/**
+ * Display error when pressure offset is unstable
+ *
+ * @param p_minOffsetValue Minimum measured offset value
+ * @param p_maxOffsetValue Maximum measured offset value
+ */
 void displayPressureOffsetUnstable(uint32_t p_minOffsetValue, uint32_t p_maxOffsetValue);
+
+/**
+ * Display pressure offset
+ *
+ * @param p_inspiratoryPressureSensorOffset Measured offset value
+ */
 void displayPressureOffset(int32_t p_inspiratoryPressureSensorOffset);
+
+/**
+ * Display error when flow meter fails
+ *
+ * @param p_flowMeterFlowAtStarting Measured flow offset value
+ * @param p_flowMeterFlowWithBlowerOn Maximum measured flow offset value
+ */
 void displayFlowMeterFail(int32_t p_flowMeterFlowAtStarting, int32_t p_flowMeterFlowWithBlowerOn);
+
+/// Display the "calibration in progress" message
 void displayPatientMustBeUnplugged();
+
+/// Show that EOL mode was triggered
 void displayEndOfLineTestMode();
+
+/// Display error when battery level is too discharged
 void displayBatteryDeepDischarge();
+
+/// Display error when machine was restarted by watchdog
 void displayWatchdogError();
 
 /**

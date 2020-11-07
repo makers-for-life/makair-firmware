@@ -38,127 +38,22 @@ jobs:
         run: |
           sed -Ei "s/#define VERSION \".+\"/#define VERSION \"${{ steps.version.outputs.version }}\"/" includes/parameters.h
 
-      - name: Build production HW2-FAULHABER
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 2/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-production.bin "dist/respirator-production-HW2-FAULHABER-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build qualification HW2-FAULHABER
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 2/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_QUALIFICATION/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/qualification.cpp --output output/respirator-qualification
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-qualification.bin "dist/respirator-qualification-HW2-FAULHABER-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build integration test HW2-FAULHABER
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 2/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_INTEGRATION_TEST/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/qualification.cpp --output output/respirator-integration-test
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-integration-test.bin "dist/respirator-integration-test-HW2-FAULHABER-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build production HW2
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 2/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_CHU/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_SERVO_V1/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-production.bin "dist/respirator-production-HW2-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build qualification HW2
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 2/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_QUALIFICATION/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_CHU/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_SERVO_V1/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/qualification.cpp --output output/respirator-qualification
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-qualification.bin "dist/respirator-qualification-HW2-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build integration test HW2
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 2/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_INTEGRATION_TEST/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_CHU/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_SERVO_V1/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/qualification.cpp --output output/respirator-integration-test
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-integration-test.bin "dist/respirator-integration-test-HW2-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build production HW1
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 1/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_CHU/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_SERVO_V1/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-production.bin "dist/respirator-production-HW1-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build qualification HW1
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 1/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_QUALIFICATION/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_CHU/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_SERVO_V1/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/qualification.cpp --output output/respirator-qualification
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-qualification.bin "dist/respirator-qualification-HW1-$VERSION-$GITHUB_SHA.bin"
-
-      - name: Build integration test HW1
-        run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 1/' includes/config.h
-          sed -Ei 's/#define MODE .+/#define MODE MODE_INTEGRATION_TEST/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_CHU/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_SERVO_V1/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/qualification.cpp --output output/respirator-integration-test
-          mkdir -p dist/
-          VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-integration-test.bin "dist/respirator-integration-test-HW1-$VERSION-$GITHUB_SHA.bin"
-
       - name: Build production HW3
         run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 3/' includes/config.h
           sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
           arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
           mkdir -p dist/
           VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-production.bin "dist/respirator-production-HW3-FAULHABER-$VERSION-$GITHUB_SHA.bin"
+          cp output/respirator-production.bin "dist/respirator-production-HW3-$VERSION-$GITHUB_SHA.bin"
 
-      - name: Build production HW3 with mass flow meter
+      - name: Build production HW3 without mass flow meter
         run: |
-          sed -Ei 's/#define HARDWARE_VERSION [0-9]+/#define HARDWARE_VERSION 3/' includes/config.h
           sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
-          sed -Ei 's/#define PNEUMATIC_HARDWARE_VERSION .+/#define PNEUMATIC_HARDWARE_VERSION PHW_FAULHABER/' includes/config.h
-          sed -Ei 's/#define VALVE_TYPE .+/#define VALVE_TYPE VT_FAULHABER/' includes/config.h
-          sed -Ei 's/\/\/ #define MASS_FLOW_METER/#define MASS_FLOW_METER/' includes/config.h
+          sed -Ei 's/#define MASS_FLOW_METER_ENABLED/\/\/ #define MASS_FLOW_METER_ENABLED/' includes/config.h
           arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
           mkdir -p dist/
           VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
-          cp output/respirator-production.bin "dist/respirator-production-HW3-FAULHABER-MASSFLOWMETER-$VERSION-$GITHUB_SHA.bin"
+          cp output/respirator-production.bin "dist/respirator-production-HW3-NOMASSFLOWMETER-$VERSION-$GITHUB_SHA.bin"
 
       - name: Archive binaries
         uses: actions/upload-artifact@v1

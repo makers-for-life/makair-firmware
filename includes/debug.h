@@ -7,7 +7,11 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 #include "../includes/config.h"
+
+// FUNCTIONS ==================================================================
 
 /**
  * Expand arbitrary code only when in debug mode

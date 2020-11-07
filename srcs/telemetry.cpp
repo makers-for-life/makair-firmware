@@ -171,7 +171,8 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t cpmCommand,
                         uint8_t expiratoryTerm,
                         bool triggerEnabled,
-                        uint8_t triggerOffset) {
+                        uint8_t triggerOffset,
+                        bool alarmSnoozed) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
@@ -236,6 +237,12 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.write(triggerOffset);
     crc32.update(triggerOffset);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmSnoozed);
+    crc32.update(alarmSnoozed);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -249,14 +256,12 @@ void sendStoppedMessage(uint8_t peakCommand,
 void sendDataSnapshot(uint16_t centileValue,
                       uint16_t pressureValue,
                       CyclePhases phase,
-                      CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
                       uint8_t batteryLevel,
                       int16_t inspiratoryFlowValue,
                       int16_t expiratoryFlowValue) {
-
     uint8_t phaseValue;
     if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001
@@ -373,8 +378,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
-                              uint8_t previouscpmValue) {
-
+                              uint8_t previouscpmValue,
+                              bool alarmSnoozed) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -502,6 +507,12 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(previouscpmValue);
     crc32.update(previouscpmValue);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmSnoozed);
+    crc32.update(alarmSnoozed);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -515,7 +526,6 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
 void sendAlarmTrap(uint16_t centileValue,
                    uint16_t pressureValue,
                    CyclePhases phase,
-                   CycleSubPhases subPhase,
                    uint32_t cycleValue,
                    uint8_t alarmCode,
                    AlarmPriority alarmPriority,
@@ -523,7 +533,6 @@ void sendAlarmTrap(uint16_t centileValue,
                    uint32_t expectedValue,
                    uint32_t measuredValue,
                    uint32_t cyclesSinceTriggerValue) {
-
     uint8_t phaseValue;
     if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001

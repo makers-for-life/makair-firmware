@@ -30,7 +30,7 @@
 // INITIALISATION =============================================================
 
 // Hardware is ensured to be at least v2
-#ifdef MASS_FLOW_METER
+#ifdef MASS_FLOW_METER_ENABLED
 
 // 2 kHz => prescaler = 50000 => still OK for a 16 bit timer. it cannnot be slower
 // 10 kHz => nice
@@ -147,20 +147,22 @@ void MFM_Timer_Callback(HardwareTimer*) {
         // Theorical formula: Flow(slpm) = 200*((rawvalue/16384)-0.1)/0.8
         // float implementation, 1 liter per minute unit
         // mfmLastValueFloat =
-        //    MFM_RANGE * (((uint32_t)mfmInspiratoryLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
+        //    MFM_RANGE * (((uint32_t)mfmInspiratoryLastValue / 16384.0) - 0.1) / 0.8;
+        // (Output value in SLPM)
 
         // fixed float implementation, 1 milliliter per minute unit
-        mfmInspiratoryLastValueFixedFloat = (((10 * mfmInspiratoryLastValue) - 16384) * 1526) / 1000;
+        mfmInspiratoryLastValueFixedFloat =
+            (((10 * mfmInspiratoryLastValue) - 16384) * 1526) / 1000;
 
         // 100 value per second, 100 slpm during 10 minutes : sum will be 1.2e9. it fits in a int32
         // int32 max with milliliters = 2e6 liters.
 
-        // The sensor (100 SLM version anyway) tends to output spurrious values located at around 500
-        // SLM, which are obviously not correct. Let's filter them out based on the range of the
+        // The sensor (100 SPLM version anyway) tends to output spurrious values located at around
+        // 500 SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
         if (mfmInspiratoryLastValueFixedFloat < (MFM_RANGE * 1100)) {
             mfmInspiratoryInstantAirFlow = mfmInspiratoryLastValueFixedFloat;
-            if (mfmInspiratoryLastValueFixedFloat > 500) {  // less than 0.5 SLM is noise
+            if (mfmInspiratoryLastValueFixedFloat > 500) {  // less than 0.5 SPLM is noise
                 mfmInspiratoryAirVolumeSumMilliliters += mfmInspiratoryLastValueFixedFloat;
             }
         }
@@ -408,8 +410,9 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     // period is MASS_FLOW_PERIOD / 10000  (100 µs prescaler)
-    result = mfmInspiratoryFaultCondition ? MASS_FLOW_ERROR_VALUE
-                               : ((mfmInspiratoryAirVolumeSumMilliliters * MASS_FLOW_PERIOD) / (60 * 10000));
+    result = mfmInspiratoryFaultCondition
+                 ? MASS_FLOW_ERROR_VALUE
+                 : ((mfmInspiratoryAirVolumeSumMilliliters * MASS_FLOW_PERIOD) / (60 * 10000));
 #endif
 
     if (reset_after_read) {
@@ -426,7 +429,6 @@ void onStartClick() { MFM_reset(); }
 OneButton btn_stop(PIN_BTN_ALARM_OFF, false, false);
 
 void setup(void) {
-
     Serial.begin(115200);
     Serial.println("init mass flow meter");
     boolean ok = MFM_init();

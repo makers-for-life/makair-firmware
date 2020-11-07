@@ -26,7 +26,6 @@ void MainController::setup() {
     DBG_DO(Serial.println(VERSION);)
     DBG_DO(Serial.println("Setup the controller");)
 
-    m_subPhase = HOLD_INSPIRATION;  // TODO remove subphase
     m_inspiratoryFlow = 0;
     m_expiratoryFlow = 0;
 
@@ -155,17 +154,17 @@ void MainController::compute() {
         break;
     }
 
-    alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
-    sendDataSnapshot(m_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
+    alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_cycleNb);
+    sendDataSnapshot(m_tick, m_pressure, m_phase, inspiratoryValve.position,
                      expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
                      m_inspiratoryFlow, m_expiratoryFlow);
 
     executeCommands();
 
-#ifdef MASS_FLOW_METER
+#ifdef MASS_FLOW_METER_ENABLED
     // Measure volume only during inspiration
     // Add 100 ms to allow valve to close completely
-    if (m_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
+    if (m_tick > m_ticksPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = m_currentDeliveredVolume;
         m_tidalVolumeMeasure =
@@ -179,7 +178,7 @@ void MainController::compute() {
 }
 
 void MainController::updatePhase(uint16_t m_tick) {
-    if (m_tick < m_tickPerInhalation) {
+    if (m_tick < m_ticksPerInhalation) {
         m_phase = CyclePhases::INHALATION;
         m_pressureCommand = m_plateauPressureCommand;
 
@@ -203,7 +202,7 @@ void MainController::inhale() {
 
     // Compute plateau at the end of the cycle
     // TODO 20 = 200 ms should be a parameter
-    if (m_tick > m_tickPerInhalation - 20) {
+    if (m_tick > m_ticksPerInhalation - 20) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
     }
@@ -268,7 +267,7 @@ void MainController::endRespiratoryCycle() {
     }
 
     // Send telemetry machine state snapshot message
-    sendSnapshot();
+    sendMachineState();
 
     m_ventilationController->endCycle();
 }
@@ -336,7 +335,7 @@ void MainController::computeTickParameters() {
 
     m_ticksPerCycle =
         60u * (1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
-    m_tickPerInhalation =
+    m_ticksPerInhalation =
         (m_plateauDurationMs * 1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_US) / 1000u;
 }
 
@@ -409,7 +408,8 @@ void MainController::sendStopMessageToUi() {
     sendStoppedMessage(mmH2OtoCmH2O(m_peakPressureNextCommand),
                        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
                        m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
-                       m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand);
+                       m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand,
+                       alarmController.isSnoozed());
 #endif
 }
 
@@ -432,17 +432,17 @@ void MainController::stop() {
 #endif
 }
 
-void MainController::sendSnapshot() {
+void MainController::sendMachineState() {
 #if !SIMULATION
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)
-    sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
-                             mmH2OtoCmH2O(m_plateauPressureNextCommand),
-                             mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand,
-                             m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
-                             alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
-                             m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
-                             m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure);
+    sendMachineStateSnapshot(
+        m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
+        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
+        m_cyclesPerMinuteNextCommand, m_peakPressureMeasure, m_plateauPressureToDisplay,
+        m_peepMeasure, alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
+        m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
+        m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed());
 #endif
 }
 

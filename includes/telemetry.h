@@ -28,13 +28,13 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t cpmCommand,
                         uint8_t expiratoryTerm,
                         bool triggerEnabled,
-                        uint8_t triggerOffset);
+                        uint8_t triggerOffset,
+                        bool alarmSnoozed);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
                       uint16_t pressureValue,
                       CyclePhases phase,
-                      CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
@@ -57,13 +57,13 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
-                              uint8_t previouscpmValue);
+                              uint8_t previouscpmValue,
+                              bool alarmSnoozed);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
                    uint16_t pressureValue,
                    CyclePhases phase,
-                   CycleSubPhases subPhase,
                    uint32_t cycleValue,
                    uint8_t alarmCode,
                    AlarmPriority alarmPriority,

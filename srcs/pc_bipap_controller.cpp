@@ -1,14 +1,14 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file PC_BIPAP_Controller.cpp
+ * @file pc_bipap_controller.cpp
  * @brief PID for BIPAP pressure control
  *****************************************************************************/
 
 // INCLUDES ==================================================================
 
 // Associated header
-#include "../includes/PC_BIPAP_Controller.h"
+#include "../includes/pc_bipap_controller.h"
 
 // External
 #include "Arduino.h"
@@ -31,7 +31,7 @@ void PC_BIPAP_Controller::setup() {
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.tickPerInhalation() + 100;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 100;  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
@@ -45,7 +45,7 @@ void PC_BIPAP_Controller::setup() {
 void PC_BIPAP_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.tickPerInhalation() + 140;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 140;  // Possible to trigger 1s before end
 
     // m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();  TODO ?
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
@@ -120,7 +120,7 @@ void PC_BIPAP_Controller::exhale() {
     expiratoryValve.open(expiratoryValveOpenningValue);
 
     int32_t inspiratoryValveOpenningValue =
-        max((uint32_t)70, 125 - (mainController.tick() - mainController.tickPerInhalation()) / 2);
+        max((uint32_t)70, 125 - (mainController.tick() - mainController.ticksPerInhalation()) / 2);
     inspiratoryValve.open(inspiratoryValveOpenningValue);
     m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
@@ -136,14 +136,13 @@ void PC_BIPAP_Controller::exhale() {
     }
 
     if (mainController.triggerModeEnabledCommand()) {
-
         // triggering an inspiration is only possible within a time window
         if (mainController.tick() >= m_triggerWindow) {
             int32_t sum = 0;
             for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
                 sum += m_inspiratoryFlowLastValues[i];
             }
-            int32_t meanFLow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
+            int32_t meanFlow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
 
             if (mainController.inspiratoryFlow()
                 > 280 * 100 + 100 * mainController.pressureTriggerOffsetCommand()) {
@@ -180,9 +179,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
             m_blowerIncrement = -100;
         } else if (highRebounce) {
             m_blowerIncrement = -10;
-        }
-        // We want the m_inspiratorySlope = 600 mmH2O/s
-        else if (m_inspiratorySlope > 650) {
+        } else if (m_inspiratorySlope > 650) {  // We want the m_inspiratorySlope = 600 mmH2O/s
             // Only case for decreasing the blower: ramping is too fast or overshooting is too high
             if (m_inspiratorySlope > 1000 || (lowRebounce && (m_inspiratorySlope > 800))
                 || peakDelta > 25) {
@@ -278,10 +275,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
         } else {
             inspiratoryValveAperture = 0;
         }
-    }
-
-    // If not in fast mode, the PID is used
-    else {
+    } else {  // If not in fast mode, the PID is used
         derivative = ((dt == 0)) ? 0 : ((1000000 * (m_inspiratoryPidLastError - smoothError)) / dt);
 
         temporarym_inspiratoryPidIntegral =
@@ -379,10 +373,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
     // Fast mode: open loop with ramp
     if (m_expiratoryPidFastMode) {
         expiratoryValveAperture = 0;
-    }
-
-    // If not in fast mode, the PID is used
-    else {
+    } else {  // If not in fast mode, the PID is used
         temporarym_expiratoryPidIntegral =
             m_expiratoryPidIntegral + ((coefficientI * error * dt) / 1000000);
         temporarym_expiratoryPidIntegral =

@@ -25,7 +25,7 @@ uint16_t valveAngle2MicroSeconds(uint16_t value);
 
 // CLASS =================================================================
 
-/// Controls an Pressure Valve's servomotor
+/// Controls a pressure valve
 class PressureValve {
  public:
     /// Default constructor
@@ -86,8 +86,10 @@ class PressureValve {
         }
     }
 
+    /// Minimum servomotor aperture angle in degrees
     inline uint16_t minAperture() const { return minApertureAngle; }
 
+    /// Maximum servomotor aperture angle in degrees
     inline uint16_t maxAperture() const { return maxApertureAngle; }
 
     /// Value of the requested aperture
@@ -103,8 +105,10 @@ class PressureValve {
     /// Maximum servomotor aperture angle in degrees
     uint16_t maxApertureAngle;
 
+    /// Open aperture angle in degrees
     uint16_t openApertureAngle;
 
+    /// Close aperture angle in degrees
     uint16_t closeApertureAngle;
 
     /// Hardware time for this servomotor
