@@ -52,16 +52,16 @@
 
 HardwareTimer* massFlowTimer;
 
-int32_t mfmCalibrationOffset = 0;
+int32_t mfmInspiratoryCalibrationOffset = 0;
 
-volatile int32_t mfmAirVolumeSumMilliliters = 0;
-volatile int32_t mfmSensorDetected = 0;
-volatile int32_t mfmInstantAirFlow = 0;
+volatile int32_t mfmInspiratoryAirVolumeSumMilliliters = 0;
+volatile int32_t mfmInspiratorySensorDetected = 0;
+volatile int32_t mfmInspiratoryInstantAirFlow = 0;
 
-volatile bool mfmFaultCondition = false;
+volatile bool mfmInspiratoryFaultCondition = false;
 
-int32_t mfmLastValue = 0;
-volatile int32_t mfmLastValueFixedFloat = 0;
+int32_t mfmInspiratoryLastValue = 0;
+volatile int32_t mfmInspiratoryLastValueFixedFloat = 0;
 
 // Time to reset the sensor after I2C restart, in periods => 100 ms
 // the restart time is 50 ms (warm up time in the datasheet)
@@ -82,7 +82,7 @@ union {
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void MFM_Timer_Callback(HardwareTimer*) {
-    if (!mfmFaultCondition) {
+    if (!mfmInspiratoryFaultCondition) {
 #if MODE == MODE_MFM_TESTS
         // cppcheck-suppress misra-c2012-12.3
         digitalWrite(PIN_LED_START, HIGH);
@@ -95,14 +95,14 @@ void MFM_Timer_Callback(HardwareTimer*) {
         mfmLastData.c[1] = Wire.read();
         mfmLastData.c[0] = Wire.read();
         if (Wire.endTransmission() != 0) {  // If transmission failed
-            mfmFaultCondition = true;
+            mfmInspiratoryFaultCondition = true;
             mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
         }
 
-        mfmLastValue = (int32_t)mfmLastData.i - 0x8000;
+        mfmInspiratoryLastValue = (int32_t)mfmLastData.i - 0x8000;
 
-        if (mfmLastValue > 28) {
-            mfmAirVolumeSum += mfmLastValue;
+        if (mfmInspiratoryLastValue > 28) {
+            mfmAirVolumeSum += mfmInspiratoryLastValue;
         }
 #endif
 
@@ -112,12 +112,12 @@ void MFM_Timer_Callback(HardwareTimer*) {
         mfmLastData.c[0] = Wire.read();
 
         if (Wire.endTransmission() != 0) {  // If transmission failed
-            // mfmFaultCondition = true;
+            // mfmInspiratoryFaultCondition = true;
             // mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
         }
-        mfmLastValue = abs(mfmLastData.si);
-        if (mfmLastValue > 40) {
-            mfmAirVolumeSum += sqrt(mfmLastValue);
+        mfmInspiratoryLastValue = abs(mfmLastData.si);
+        if (mfmInspiratoryLastValue > 40) {
+            mfmAirVolumeSum += sqrt(mfmInspiratoryLastValue);
         }
 
         // mfmSampleCount++;
@@ -136,21 +136,21 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
         // Hardware reset if not able to read two bytes.
         if (readCount != 2) {
-            mfmFaultCondition = true;
+            mfmInspiratoryFaultCondition = true;
             mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
-            mfmAirVolumeSumMilliliters = 1000000000;  // 1e9
+            mfmInspiratoryAirVolumeSumMilliliters = 1000000000;  // 1e9
         }
 
-        mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
-        mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
+        mfmInspiratoryLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
+        mfmInspiratoryLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
         // Theorical formula: Flow(slpm) = 200*((rawvalue/16384)-0.1)/0.8
         // float implementation, 1 liter per minute unit
         // mfmLastValueFloat =
-        //    MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
+        //    MFM_RANGE * (((uint32_t)mfmInspiratoryLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
 
         // fixed float implementation, 1 milliliter per minute unit
-        mfmLastValueFixedFloat = (((10 * mfmLastValue) - 16384) * 1526) / 1000;
+        mfmInspiratoryLastValueFixedFloat = (((10 * mfmInspiratoryLastValue) - 16384) * 1526) / 1000;
 
         // 100 value per second, 100 slpm during 10 minutes : sum will be 1.2e9. it fits in a int32
         // int32 max with milliliters = 2e6 liters.
@@ -158,10 +158,10 @@ void MFM_Timer_Callback(HardwareTimer*) {
         // The sensor (100 SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
-        if (mfmLastValueFixedFloat < (MFM_RANGE * 1100)) {
-            mfmInstantAirFlow = mfmLastValueFixedFloat;
-            if (mfmLastValueFixedFloat > 500) {  // less than 0.5 SLM is noise
-                mfmAirVolumeSumMilliliters += mfmLastValueFixedFloat;
+        if (mfmInspiratoryLastValueFixedFloat < (MFM_RANGE * 1100)) {
+            mfmInspiratoryInstantAirFlow = mfmInspiratoryLastValueFixedFloat;
+            if (mfmInspiratoryLastValueFixedFloat > 500) {  // less than 0.5 SLM is noise
+                mfmInspiratoryAirVolumeSumMilliliters += mfmInspiratoryLastValueFixedFloat;
             }
         }
 
@@ -221,7 +221,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
             Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
             Wire.write(0x10);
             Wire.write(0x00);
-            mfmFaultCondition = (Wire.endTransmission() != 0);
+            mfmInspiratoryFaultCondition = (Wire.endTransmission() != 0);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
@@ -240,7 +240,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
             Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
             Wire.write(0xF1);
-            mfmFaultCondition = (Wire.endTransmission() != 0);
+            mfmInspiratoryFaultCondition = (Wire.endTransmission() != 0);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
@@ -251,10 +251,10 @@ void MFM_Timer_Callback(HardwareTimer*) {
             uint8_t status = Wire.endTransmission();  // actually send the data
             Wire.end();
 
-            mfmFaultCondition = (status != 0);
+            mfmInspiratoryFaultCondition = (status != 0);
 #endif
 
-            if (mfmFaultCondition) {
+            if (mfmInspiratoryFaultCondition) {
                 mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
             }
         }
@@ -262,7 +262,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
 }
 
 bool MFM_init(void) {
-    mfmAirVolumeSumMilliliters = 0;
+    mfmInspiratoryAirVolumeSumMilliliters = 0;
 
     // Set power on (hardware v3)
     pinMode(MFM_POWER_CONTROL, OUTPUT);
@@ -300,7 +300,7 @@ bool MFM_init(void) {
 
     // mfmTimerCounter = 0;
 
-    mfmFaultCondition = (Wire.endTransmission() != 0);
+    mfmInspiratoryFaultCondition = (Wire.endTransmission() != 0);
     delay(100);
 #endif
 
@@ -326,14 +326,14 @@ bool MFM_init(void) {
     mfmLastData.c[0] = Wire.read();
 
     if (Wire.endTransmission() != 0) {  // If transmission failed
-        mfmFaultCondition = true;
+        mfmInspiratoryFaultCondition = true;
         mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
     }
 #if MODE == MODE_MFM_TESTS
     Serial.println("Read 1");
     Serial.println(mfmLastData.i);
     Serial.println("fault condition:");
-    Serial.println(mfmFaultCondition);
+    Serial.println(mfmInspiratoryFaultCondition);
 #endif
     delay(100);
 #endif
@@ -362,14 +362,14 @@ bool MFM_init(void) {
 
     Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
     Wire.write(0xF1);
-    mfmFaultCondition = (Wire.endTransmission() != 0);
+    mfmInspiratoryFaultCondition = (Wire.endTransmission() != 0);
 
     delay(10);
 
 #endif
 
     massFlowTimer->resume();
-    return !mfmFaultCondition;
+    return !mfmInspiratoryFaultCondition;
 }
 
 /**
@@ -379,10 +379,10 @@ bool MFM_init(void) {
  * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
  */
 int32_t MFM_read_airflow(void) {
-    return (mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmInstantAirFlow);
+    return (mfmInspiratoryFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmInspiratoryInstantAirFlow);
 }
 
-void MFM_reset(void) { mfmAirVolumeSumMilliliters = 0; }
+void MFM_reset(void) { mfmInspiratoryAirVolumeSumMilliliters = 0; }
 
 /**
  *  If the massflow meter needs to be calibrated, this function will be usefull.
@@ -395,7 +395,7 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
     // This should be an atomic operation (32 bits aligned data)
-    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmAirVolumeSum / (60 * 120);
+    result = mfmInspiratoryFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmAirVolumeSum / (60 * 120);
 
     // Correction factor is 120. Divide by 60 to convert ml.min-1 to ml.ms-1, hence the 7200 =
     // 120 * 60
@@ -403,13 +403,13 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
     // This should be an atomic operation (32 bits aligned data)
-    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE : (mfmAirVolumeSum / 6.5);
+    result = mfmInspiratoryFaultCondition ? MASS_FLOW_ERROR_VALUE : (mfmAirVolumeSum / 6.5);
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     // period is MASS_FLOW_PERIOD / 10000  (100 µs prescaler)
-    result = mfmFaultCondition ? MASS_FLOW_ERROR_VALUE
-                               : ((mfmAirVolumeSumMilliliters * MASS_FLOW_PERIOD) / (60 * 10000));
+    result = mfmInspiratoryFaultCondition ? MASS_FLOW_ERROR_VALUE
+                               : ((mfmInspiratoryAirVolumeSumMilliliters * MASS_FLOW_PERIOD) / (60 * 10000));
 #endif
 
     if (reset_after_read) {
@@ -446,7 +446,7 @@ void setup(void) {
 
     btn_stop.attachClick(onStartClick);
     btn_stop.setDebounceTicks(0);
-    mfmAirVolumeSumMilliliters = 0;
+    mfmInspiratoryAirVolumeSumMilliliters = 0;
     Serial.println("init done");
 }
 
@@ -473,7 +473,7 @@ void loop(void) {
             screen.print("sensor not OK");
         } else {
             screen.print("sensor OK");
-            // screen.print(mfmLastValue);
+            // screen.print(mfmInspiratoryLastValue);
             screen.setCursor(0, 3);
             (void)snprintf(buffer, sizeof(buffer), "vol=%dmL %dmLpm ", volume, MFM_read_airflow());
             screen.print(buffer);

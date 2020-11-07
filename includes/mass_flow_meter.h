@@ -40,8 +40,6 @@ void MFM_calibrateZero(void);
  */
 int32_t MFM_read_airflow(void);
 
-extern int32_t mfmLastValue;
-
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
 #define MFM_SENSOR_I2C_ADDRESS 0x40
 #endif
