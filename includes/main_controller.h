@@ -17,8 +17,8 @@
 #include "../includes/telemetry.h"
 #endif
 
-#include "../includes/PC_BIPAP_Controller.h"
-#include "../includes/PC_CMV_Controller.h"
+#include "../includes/pc_bipap_controller.h"
+#include "../includes/pc_cmv_controller.h"
 #include "../includes/blower.h"
 #include "../includes/config.h"
 #include "../includes/cycle.h"
