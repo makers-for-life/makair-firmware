@@ -10,26 +10,30 @@
 // INCLUDES ===================================================================
 
 // Internal
+
+#if !SIMULATION
+#include "../includes/alarm_controller.h"
+#include "../includes/battery.h"
+#include "../includes/telemetry.h"
+#endif
+
 #include "../includes/PC_BIPAP_Controller.h"
 #include "../includes/PC_CMV_Controller.h"
-#include "../includes/alarm_controller.h"
 #include "../includes/blower.h"
+#include "../includes/config.h"
 #include "../includes/cycle.h"
+#include "../includes/debug.h"
 #include "../includes/parameters.h"
 #include "../includes/pressure_valve.h"
 
 /// Number of values to aggregate when computing plateau pressure
 #define MAX_PRESSURE_SAMPLES 10u
 
-/// Max value for increment / decrement of peak command
-static const uint16_t MAX_PEAK_INCREMENT = 30u;
-
 // CLASS ======================================================================
 
 /// Controls breathing cycle
 class MainController {
  public:
-    // cppcheck-suppress misra-c2012-2.7
     MainController();
 
     /// Initialize actuators
@@ -202,12 +206,18 @@ class MainController {
     /// Get the current measured pressure
     inline int16_t pressure() const { return m_pressure; }
 
+    /// Get the current inspiratoryFlow
+    inline int32_t inspiratoryFlow() const { return m_inspiratoryFlow; }
+
+    /// Get the current expiratoryFlow
+    inline int32_t expiratoryFlow() const { return m_expiratoryFlow; }
+
     /// Get the delta of time since the last cycle
     inline int32_t dt() const { return m_dt; }
 
-    /// Get the tick number of the current cycle 
+    /// Get the tick number of the current cycle
     inline uint32_t tick() const { return m_tick; }
-    
+
     /// Get the pressure command
     inline int32_t pressureCommand() const { return m_pressureCommand; }
 
@@ -232,6 +242,8 @@ class MainController {
      * @param p_dt Duration in microsecond
      */
     void updateDt(int32_t p_dt);
+
+    void updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume);
 
     void reachSafetyPosition();
 
@@ -372,6 +384,10 @@ class MainController {
     /// Measured inspiratory flow
     int32_t m_expiratoryFlow;
 
+    /// Current delivered volume by the blower. NOT equals to Vt, because of recirculation during
+    /// exhale
+    int32_t m_currentDeliveredVolume;
+
     /// Inhalation last Pressre
     uint16_t m_inhalationLastPressure;
 
@@ -401,7 +417,6 @@ class MainController {
     uint32_t m_sumOfPressures;  // TODO : be carefull for this parameter overflow !!
     /// Number of the current cycle's pressures
     uint16_t m_numberOfPressures;
-
 };
 
 extern MainController mainController;

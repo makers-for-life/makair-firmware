@@ -42,8 +42,6 @@ int32_t MFM_read_airflow(void);
 
 extern int32_t mfmLastValue;
 
-#define MASS_FLOW_ERROR_VALUE 999999
-
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
 #define MFM_SENSOR_I2C_ADDRESS 0x40
 #endif

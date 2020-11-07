@@ -81,8 +81,9 @@ static const int32_t PID_PATIENT_INTEGRAL_MIN = -1000;
 /// pressure
 static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
-
 #define PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN 10u
+
+#define NUMBER_OF_SAMPLE_FLOW_LAST_VALUES 20
 
 /// Number of periods used for calculating the respiratory rate
 #define NUMBER_OF_BREATH_PERIOD 3u
@@ -189,7 +190,6 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define LED_GREEN_ACTIVE HIGH
 #define LED_GREEN_INACTIVE LOW
 
-
 ///@}
 
 /**
@@ -221,6 +221,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define MFM_POWER_OFF LOW
 #define MFM_POWER_ON HIGH
 #endif
+#define MASS_FLOW_ERROR_VALUE 999999
 
 ///@}
 
@@ -233,4 +234,3 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define ALARM_THRESHOLD_MAX_PRESSURE 800u        // RCM-SW-18
 #define ALARM_THRESHOLD_DIFFERENCE_PERCENT 20u   // RCM-SW-1 + RCM-SW-14
 #define ALARM_THRESHOLD_DIFFERENCE_PRESSURE 20u  // RCM-SW-3 + RCM-SW-15
-

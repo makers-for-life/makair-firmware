@@ -137,6 +137,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         lastMillisInTheLoop = millis();
         tick = 0;
         msmstep = BREATH;
+        MFM_read_milliliters(true);// Reset volume integral
 
     }
 
@@ -151,6 +152,7 @@ void millisecondTimerMSM(HardwareTimer*) {
                 msmstep = END_CYCLE;
             } else {
                 uint32_t currentMicro = micros();
+                mainController.updateCurrentDeliveredVolume(MFM_read_milliliters(false));
                 mainController.updateDt(currentMicro - lastMicro);
                 lastMicro = currentMicro;
                 mainController.updateTick(tick);

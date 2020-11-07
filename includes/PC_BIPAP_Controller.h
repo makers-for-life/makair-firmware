@@ -85,6 +85,10 @@ class PC_BIPAP_Controller final : public VentilationController{
     /// Last error in expiratory PID
     int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
     int32_t m_expiratoryPidLastErrorsIndex;
+
+    /// Last flow values
+    int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_FLOW_LAST_VALUES];
+    int32_t m_inspiratoryFlowLastValuesIndex;
 };
 
 extern PC_BIPAP_Controller pcBipapController;
