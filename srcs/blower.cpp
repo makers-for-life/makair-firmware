@@ -15,6 +15,8 @@
 // Internal libraries
 #include "../includes/parameters.h"
 
+// INITIALISATION =============================================================
+
 Blower blower;
 
 // FUNCTIONS ==================================================================

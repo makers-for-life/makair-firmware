@@ -18,10 +18,13 @@
 // Internal libraries
 #include "../includes/parameters.h"
 
+// INITIALISATION =============================================================
+
 PressureValve expiratoryValve;
 PressureValve inspiratoryValve;
 
 // FUNCTIONS ==================================================================
+
 PressureValve::PressureValve() {}
 
 PressureValve::PressureValve(HardwareTimer* p_hardwareTimer,

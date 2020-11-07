@@ -1,10 +1,8 @@
-
-
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pressure.cpp
- * @brief Pressure sensor related functions
+ * @file PC_BIPAP_Controller.cpp
+ * @brief PID for BIPAP pressure control
  *****************************************************************************/
 
 // INCLUDES ==================================================================
@@ -20,16 +18,20 @@
 #include "../includes/main_controller.h"
 #include "../includes/pressure_valve.h"
 
+// INITIALISATION =============================================================
+
 PC_BIPAP_Controller pcBipapController;
+
+// FUNCTIONS ==================================================================
 
 PC_BIPAP_Controller::PC_BIPAP_Controller() {}
 
 void PC_BIPAP_Controller::setup() {
-
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
-    m_triggerWindow = mainController.tickPerInhalation() + 100;  // Possible to trigger 1s before end
+    m_triggerWindow =
+        mainController.tickPerInhalation() + 100;  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
@@ -41,11 +43,11 @@ void PC_BIPAP_Controller::setup() {
 }
 
 void PC_BIPAP_Controller::initCycle() {
-
     m_plateauPressureReached = false;
-    m_triggerWindow = mainController.tickPerInhalation() + 140;  // Possible to trigger 1s before end
+    m_triggerWindow =
+        mainController.tickPerInhalation() + 140;  // Possible to trigger 1s before end
 
-    // m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
+    // m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();  TODO ?
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
     m_inspiratoryPidIntegral = 0;
@@ -86,14 +88,13 @@ void PC_BIPAP_Controller::initCycle() {
 }
 
 void PC_BIPAP_Controller::inhale() {
-
     m_expiratoryPidFastMode = false;
 
-    // Keep the inspiratory valve open using a PID.
+    // Keep the inspiratory valve open using a PID
     int32_t inspiratoryValveOpenningValue = PCinspiratoryPID(
         mainController.pressureCommand(), mainController.pressure(), mainController.dt());
 
-    // Normally inspiratory vavle is open, but at the end of the cycle, it could be closed, and
+    // Normally inspiratory valve is open, but at the end of the cycle it could be closed and
     // expiratory valve will open
     inspiratoryValve.open(inspiratoryValveOpenningValue);
     expiratoryValve.close();
@@ -110,9 +111,9 @@ void PC_BIPAP_Controller::inhale() {
 }
 
 void PC_BIPAP_Controller::exhale() {
-    blower.runSpeed(m_blowerSpeed - 400);  // todo check min blower speed
+    blower.runSpeed(m_blowerSpeed - 400);  // TODO: check min blower speed
 
-    // Open the expiratos valve so the patient can exhale outside
+    // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
         mainController.pressureCommand(), mainController.pressure(), mainController.dt());
 
@@ -124,8 +125,8 @@ void PC_BIPAP_Controller::exhale() {
     m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensure that the patient is plugged on the machine.
-    if ( mainController.tick() < m_triggerWindow) {
+    // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the machine
+    if (mainController.tick() < m_triggerWindow) {
         m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
             mainController.inspiratoryFlow();
         m_inspiratoryFlowLastValuesIndex++;
@@ -134,7 +135,7 @@ void PC_BIPAP_Controller::exhale() {
         }
     }
 
-    if (mainController.triggerModeEnabledCommand() ) {
+    if (mainController.triggerModeEnabledCommand()) {
 
         // triggering an inspiration is only possible within a time window
         if (mainController.tick() >= m_triggerWindow) {
@@ -144,11 +145,10 @@ void PC_BIPAP_Controller::exhale() {
             }
             int32_t meanFLow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
 
-            if (mainController.inspiratoryFlow() > 280*100 + 100*mainController.pressureTriggerOffsetCommand() ){
+            if (mainController.inspiratoryFlow()
+                > 280 * 100 + 100 * mainController.pressureTriggerOffsetCommand()) {
                 mainController.setTrigger(true);
             }
-
-            
         }
     }
 }
@@ -165,9 +165,9 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
     DBG_DO(Serial.print("plateauPressureCommand:");)
     DBG_DO(Serial.println(mainController.plateauPressureCommand());)
 
-    // Check that pressure didnt rebounced.
-    // High rebounces will decrease the blower. Low rebounce will prevent increase (but not
-    // decrease)
+    // Check that pressure didn't rebounced
+    // High rebounces will decrease the blower
+    // Low rebounce will prevent increase (but not decrease)
     bool veryHighRebounce = (peakDelta > 60) || (rebouncePeakDelta < -60 && peakDelta >= 0);
     bool highRebounce = (peakDelta > 40) || (rebouncePeakDelta < -40 && peakDelta >= 0);
     bool lowRebounce = (peakDelta > 20) || (rebouncePeakDelta < -15 && peakDelta >= 0);
@@ -175,7 +175,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
 
     // Update blower only if patient is plugged on the machine
     if (mainController.peakPressureMeasure() > 20) {
-        // Safety condition : A very too high peak (4cmH2O) should decrease the blower
+        // Safety condition: a too high peak (4 cmH2O) should decrease the blower
         if (veryHighRebounce) {
             m_blowerIncrement = -100;
         } else if (highRebounce) {
@@ -183,7 +183,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
         }
         // We want the m_inspiratorySlope = 600 mmH2O/s
         else if (m_inspiratorySlope > 650) {
-            // Only case for decreasing the blower : ramping is too fast or overshooting is too high
+            // Only case for decreasing the blower: ramping is too fast or overshooting is too high
             if (m_inspiratorySlope > 1000 || (lowRebounce && (m_inspiratorySlope > 800))
                 || peakDelta > 25) {
                 m_blowerIncrement = -100;
@@ -210,7 +210,6 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
 
 int32_t
 PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
-
     int32_t minAperture = inspiratoryValve.minAperture();
     int32_t maxAperture = inspiratoryValve.maxAperture();
     int32_t inspiratoryValveAperture;
@@ -229,7 +228,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
     // Compute error
     int32_t error = targetPressure - currentPressure;
 
-    // Windowing. It overides the parameter.h coefficients
+    // Windowing (it overrides the parameter.h coefficients)
     coefficientP = 2500;
 
     coefficientD = 0;
@@ -240,7 +239,8 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
         coefficientI = 50;
     }
 
-    // Calculate Derivative part. Include a moving average on error for smoothing purpose
+    // Calculate derivative part
+    // Include a moving average on error for smoothing purpose
     m_inspiratoryPidLastErrors[m_inspiratoryPidLastErrorsIndex] = error;
     m_inspiratoryPidLastErrorsIndex++;
     if (m_inspiratoryPidLastErrorsIndex
@@ -252,8 +252,8 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
     }
     smoothError = totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
 
-    // Fast mode ends at 20mmH20 from target. When changing from fast-mode to PID, Set the
-    // integral to the previous value
+    // Fast mode ends at 20 mmH20 from target
+    // When changing from fast mode to PID, set the integral to the previous value
     if (error < 20) {
         if (m_inspiratoryPidFastMode) {
             proportionnalWeight = (coefficientP * error) / 1000;
@@ -266,10 +266,10 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
         m_inspiratoryPidFastMode = false;
     }
 
-    // In fast mode : everything is openned (Open loop)
+    // In fast mode: everything is openned (open loop)
     if (m_inspiratoryPidFastMode) {
-        // Ramp from 125 to 0 angle during 250ms.
-        int32_t increment = 5 * ((int32_t)mainController_COMPUTE_PERIOD_US) / 10000;
+        // Ramp from 125 to 0 angle during 250 ms
+        int32_t increment = 5 * ((int32_t)MAIN_CONTROLLER_COMPUTE_PERIOD_US) / 10000;
         if (m_inspiratoryValveLastAperture >= static_cast<uint32_t>(abs(increment))) {
             inspiratoryValveAperture =
                 max(minAperture,
@@ -280,7 +280,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
         }
     }
 
-    // In not fast mode the PID is used
+    // If not in fast mode, the PID is used
     else {
         derivative = ((dt == 0)) ? 0 : ((1000000 * (m_inspiratoryPidLastError - smoothError)) / dt);
 
@@ -300,7 +300,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
                 min(maxAperture, maxAperture + (minAperture - maxAperture) * blowerCommand / 1000));
     }
 
-    // If the valve is completly open or completly closed, dont update Integral
+    // If the valve is completely open or completely closed, don't update integral part
     if ((inspiratoryValveAperture != static_cast<uint32_t>(minAperture))
         && (inspiratoryValveAperture != static_cast<uint32_t>(maxAperture))) {
         m_inspiratoryPidIntegral = temporarym_inspiratoryPidIntegral;
@@ -314,7 +314,6 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
 
 int32_t
 PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
-
     int32_t minAperture = expiratoryValve.minAperture();
     int32_t maxAperture = expiratoryValve.maxAperture();
     int32_t expiratoryValveAperture;
@@ -332,7 +331,8 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
     // Compute error
     int32_t error = targetPressure + PID_PATIENT_SAFETY_PEEP_OFFSET - currentPressure;
 
-    // Calculate Derivative part. Include a moving average on error for smoothing purpose
+    // Calculate derivative part
+    // Include a moving average on error for smoothing purpose
     m_expiratoryPidLastErrors[m_expiratoryPidLastErrorsIndex] = error;
     m_expiratoryPidLastErrorsIndex++;
     if (m_expiratoryPidLastErrorsIndex
@@ -345,14 +345,15 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
     smoothError = totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
     derivative = (dt == 0) ? 0 : (1000000 * (smoothError - m_expiratoryPidLastError)) / dt;
 
-    //  Windowing. It overides the parameter.h coefficients
+    //  Windowing (it overrides the parameter.h coefficients)
     if (error < 0) {
         coefficientI = 50;
         coefficientP = 2500;
         coefficientD = 0;
     } else {
-        // For a high peep, a lower KI is requiered. For Peep = 100mmH2O, KI = 120. For Peep =
-        // 50mmH2O, KI = 250.
+        // For a high PEEP, a lower KI is required
+        // For PEEP = 100 mmH2O, KI = 120
+        // For PEEP = 50 mmH2O, KI = 250
         if (mainController.peepCommand() > 100) {
             coefficientI = 120;
         } else {
@@ -362,8 +363,8 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
         coefficientD = 0;
     }
 
-    // Fast mode ends at 30mmH20 from target. When changing from fast-mode to
-    // PID, Set the integral to the previous value
+    // Fast mode ends at 30 mmH20 from target
+    // When changing from fast mode to PID, set the integral to the previous value
     if (error > -30) {
         if (m_expiratoryPidFastMode) {
             proportionnalWeight = (coefficientP * error) / 1000;
@@ -375,12 +376,12 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
         m_expiratoryPidFastMode = false;
     }
 
-    // Fast mode : open loop with ramp
+    // Fast mode: open loop with ramp
     if (m_expiratoryPidFastMode) {
         expiratoryValveAperture = 0;
     }
 
-    // In not fast mode the PID is used
+    // If not in fast mode, the PID is used
     else {
         temporarym_expiratoryPidIntegral =
             m_expiratoryPidIntegral + ((coefficientI * error * dt) / 1000000);
@@ -399,7 +400,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
             min(maxAperture, maxAperture + (maxAperture - minAperture) * patientCommand / 1000));
     }
 
-    // If the valve is completly open or completly closed, dont update Integral
+    // If the valve is completely open or completely closed, don't update integral part
     if ((expiratoryValveAperture != static_cast<uint32_t>(minAperture))
         && (expiratoryValveAperture != static_cast<uint32_t>(maxAperture))) {
         m_expiratoryPidIntegral = temporarym_expiratoryPidIntegral;

@@ -14,11 +14,11 @@
 #include "../includes/buzzer_control.h"
 #include "../includes/end_of_line_test.h"
 #include "../includes/main_controller.h"
+#include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
-#include "../includes/mass_flow_meter.h"
 
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
@@ -141,7 +141,7 @@ void millisecondTimerEOL(HardwareTimer*) {
 
     batteryLoop(0);
 
-    // First step : reset the step count
+    // First step: reset the step count
     if (eolstep == START) {
         eolstep = CHECK_FAN;
         eolMSCount = 0;
@@ -181,7 +181,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // FAIL : Battery voltage is too low
+    // FAIL: Battery voltage is too low
     else if (eolstep == BATTERY_DEEP_DISCHARGE) {
         eolFail = true;
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
@@ -305,7 +305,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         // Check serial from the UI
         serialControlLoop();
 
-        if (mainController.triggerModeEnabledNextCommand() ) {
+        if (mainController.triggerModeEnabledNextCommand()) {
             eolstep = PLUG_AIR_TEST_SYTEM;
             eolMSCount = 0;
         }
@@ -321,7 +321,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // Turn on the blower and check if able to reach the max pressure 650mmH2O
+    // Turn on the blower and check if able to reach the max pressure 650 mmH2O
     else if (eolstep == REACH_MAX_PRESSURE) {
         expiratoryValve.close();
         expiratoryValve.execute();
@@ -342,13 +342,13 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // FAIL : Case max pressure was not reached
+    // FAIL: Case max pressure was not reached
     else if (eolstep == MAX_PRESSURE_NOT_REACHED) {
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Mise sous pression\nimpossible ! ");
     }
 
-    // Close the valves and wait 1000ms
+    // Close the valves and wait 1000 ms
     else if (eolstep == MAX_PRESSURE_REACHED_OK) {
         inspiratoryValve.close();
         inspiratoryValve.execute();
@@ -383,7 +383,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // FAIL : Case Leak is too high
+    // FAIL: Case Leak is too high
     else if (eolstep == LEAK_IS_TOO_HIGH) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Fuite importante\nPfinale = %d mmH2O",
                        pressureValue);
@@ -410,7 +410,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // FAIL : Case emptying the system did not work
+    // FAIL: Case emptying the system did not work
     else if (eolstep == MIN_PRESSURE_NOT_REACHED) {
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Vidage valves\nimpossible ! ");
     }
@@ -429,7 +429,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // Close the valves, run the blower, and wait for pressure to go above 100mmH2O
+    // Close the valves, run the blower, and wait for pressure to go above 100 mmH2O
     else if (eolstep == START_O2_TEST) {
         blower.runSpeed(1790);
         inspiratoryValve.close();
@@ -452,7 +452,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // FAIL : the pressure did not bo above 100mmh2O during O2 test
+    // FAIL: the pressure did not bo above 100 mmh2O during O2 test
     else if (eolstep == O2_PRESSURE_NOT_REACH) {
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Tuyau O2\nBouche ! ");
@@ -476,11 +476,11 @@ void millisecondTimerEOL(HardwareTimer*) {
             minPressureValue = min(minPressureValue, pressureValue);
             maxFlowValue = max(maxFlowValue, flowValue);
             minFlowValue = min(minFlowValue, flowValue);
-            if ((maxPressureValue - minPressureValue) > 40) { //40 mmH2O 
+            if ((maxPressureValue - minPressureValue) > 40) {  // 40 mmH2O
                 eolstep = PRESSURE_NOT_STABLE;
                 eolMSCount = 0;
             }
-            if ((maxFlowValue - minFlowValue) > 5000) { // 5000 mL/min
+            if ((maxFlowValue - minFlowValue) > 5000) {  // 5000 mL/min
                 eolstep = FLOW_NOT_STABLE;
                 eolMSCount = 0;
             }
@@ -498,7 +498,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         }
     }
 
-    // FAIL : pressure was not stable during long run test
+    // FAIL: pressure was not stable during long run test
     else if (eolstep == PRESSURE_NOT_STABLE) {
         blower.stop();
         inspiratoryValve.open();
@@ -510,19 +510,18 @@ void millisecondTimerEOL(HardwareTimer*) {
                        minPressureValue);
     }
 
-    // FAIL : flow was not stable during long run test
+    // FAIL: flow was not stable during long run test
     else if (eolstep == FLOW_NOT_STABLE) {
         blower.stop();
         inspiratoryValve.open();
         inspiratoryValve.execute();
         expiratoryValve.open();
         expiratoryValve.execute();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Flow non stable\nMax= %d SLM \nMin= %d SLM", maxFlowValue,
-                       minFlowValue);
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Flow non stable\nMax= %d SLM \nMin= %d SLM",
+                       maxFlowValue, minFlowValue);
     }
 
-    // SUCESS : end of the procedure
+    // SUCESS: end of the procedure
     else if (eolstep == END_SUCCESS) {
         blower.stop();
         inspiratoryValve.open();

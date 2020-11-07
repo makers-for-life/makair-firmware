@@ -1,8 +1,8 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file end_of_line_test.h
- * @brief Auto test for end of line unit test
+ * @file main_state_machine.h
+ * @brief Main state machine
  *****************************************************************************/
 
 #pragma once
@@ -12,31 +12,32 @@
 #include "../includes/main_controller.h"
 #include "../includes/pressure_valve.h"
 
-/// Controls the running of the embedded auto tests
+/// Main state machine
 class MainStateMachine {
  public:
     /// Default constructor
     MainStateMachine();
 
-    /// Enable test mode
+    /// Starts the state machine and its hardware timer
     void activate();
 
     /**
-     * Check if test mode is enabled
+     * Check if the state machine is enabled
      *
-     * @return True if test mode is enabled
+     * @return True if the state machine is enabled
      */
     bool isRunning();
 
+    /// Display information on screen
     void ScreenUpdate();
 
-    //void millisecondTimerMSM();
+    // void millisecondTimerMSM();
 
-    /// Run test mode
+    /// Run the state machine
     void setupAndStart();
 
  private:
-    /// Test mode activation state
+    /// Main state machine activation state
     bool isMsmActive;
     uint32_t testActive;
 };

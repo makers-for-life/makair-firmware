@@ -19,11 +19,10 @@
 #include "CRC32.h"
 
 /// Internals
-#include "../includes/main_controller.h"
 #include "../includes/activation.h"
+#include "../includes/main_controller.h"
 
-
-// GLOBAL ITEMS ==============================================================
+// INITIALISATION =============================================================
 
 #define CONTROL_HEADER_SIZE 2
 static const uint8_t header[CONTROL_HEADER_SIZE] = {0x05, 0x0A};
@@ -112,7 +111,7 @@ void serialControlLoop() {
 
                 switch (setting) {
                 case 1:  // PeakPressure
-                    //TODO remove this  mainController.onPeakPressureSet(value);
+                    // This setting was removed
                     break;
 
                 case 2:  // PlateauPressure

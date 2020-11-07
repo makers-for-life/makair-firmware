@@ -24,10 +24,10 @@
  */
 ///@{
 
-// Période de traitement en microseconds
-#define mainController_COMPUTE_PERIOD_US 10000u
+// Main controller compute period in microsecond
+#define MAIN_CONTROLLER_COMPUTE_PERIOD_US 10000u
 
-// Minimum & maximum execution parameters
+// Minimum and maximum bounds of execution parameters
 #define CONST_MAX_PEAK_PRESSURE 700u     // arbitrary [mmH2O]
 #define CONST_MIN_PEAK_PRESSURE 100u     // arbitrary [mmH2O]
 #define CONST_MAX_PLATEAU_PRESSURE 400u  // PP MAX ARDS = 300 [mmH2O]
@@ -118,9 +118,11 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
  * @name Blower
  */
 ///@{
+
 #define MIN_BLOWER_SPEED 300u
 #define MAX_BLOWER_SPEED 1800u
 #define DEFAULT_BLOWER_SPEED 900u
+
 ///@}
 
 /**
@@ -143,7 +145,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define SCREEN_LINE_LENGTH 20
 
 /// Period between screen updates in microsecond. Should be a multiple of
-/// mainController_COMPUTE_PERIOD_US
+/// MAIN_CONTROLLER_COMPUTE_PERIOD_US
 #define LCD_UPDATE_PERIOD_US 300000u
 
 /// Period between screen resets in minutes
@@ -234,3 +236,5 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define ALARM_THRESHOLD_MAX_PRESSURE 800u        // RCM-SW-18
 #define ALARM_THRESHOLD_DIFFERENCE_PERCENT 20u   // RCM-SW-1 + RCM-SW-14
 #define ALARM_THRESHOLD_DIFFERENCE_PRESSURE 20u  // RCM-SW-3 + RCM-SW-15
+
+///@}

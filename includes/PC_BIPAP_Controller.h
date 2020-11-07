@@ -1,16 +1,16 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pressure.h
- * @brief PID pour pressure control
+ * @file PC_BIPAP_Controller.h
+ * @brief PID for BIPAP pressure control
  *****************************************************************************/
 
 #pragma once
 
-#include "../includes/parameters.h"
 #include "../includes/VentilationController.h"
+#include "../includes/parameters.h"
 
-class PC_BIPAP_Controller final : public VentilationController{
+class PC_BIPAP_Controller final : public VentilationController {
  public:
     PC_BIPAP_Controller();
     void setup();
@@ -18,18 +18,18 @@ class PC_BIPAP_Controller final : public VentilationController{
     void inhale();
     void exhale();
     void endCycle();
-    
 
  private:
     void calculateBlowerIncrement();
 
-    /// Number of tick from which it is possible to trigger a new inspiration
+    /// Number of ticks from which it is possible to trigger a new inspiration
     uint16_t m_triggerWindow;
 
-    /// true if plateau pressure has been reached (but not necessarily converged.)
+    /// True if plateau pressure has been reached (but not necessarily converged)
     bool m_plateauPressureReached;
+
     /**
-     * PID to controller the blower valve during some specific steps of the cycle
+     * PID to control the blower valve during some specific steps of the cycle
      *
      * @param targetPressure The pressure we want (in mmH2O)
      * @param currentPressure The pressure measured by the sensor (in mmH2O)
@@ -38,7 +38,7 @@ class PC_BIPAP_Controller final : public VentilationController{
     int32_t PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     /**
-     * PID to controller the patient valve during some specific steps of the cycle
+     * PID to control the patient valve during some specific steps of the cycle
      *
      * @param targetPressure The pressure we want (in mmH2O)
      * @param currentPressure The pressure measured by the sensor (in mmH2O)
@@ -48,20 +48,22 @@ class PC_BIPAP_Controller final : public VentilationController{
 
     int32_t m_blowerSpeed;
 
-    /// True if we want to reopen the inspiratory vavle to create a flow circulation able to detecte inspiratory flow trigger
+    /// True if we want to reopen the inspiratory valve to create a circulation flow able to detect
+    /// inspiratory flow trigger
     bool m_reOpenInspiratoryValve;
 
-    /// Slope of the inspiration open loop. In mmH2O/s
+    /// Slope of the inspiration open loop (in mmH2O/s)
     int32_t m_inspiratorySlope;
 
     int32_t m_blowerIncrement;
+
     /// Error of the last computation of the blower PID
     int32_t m_inspiratoryPidIntegral;
 
-    ///Error of the last computation of the blower PID
+    /// Error of the last computation of the blower PID
     int32_t m_inspiratoryPidLastError;
 
-    ///Fast mode at start of expiration
+    /// Fast mode at start of expiration
     bool m_expiratoryPidFastMode;
 
     /// Fast mode at start of inspiration
@@ -76,18 +78,25 @@ class PC_BIPAP_Controller final : public VentilationController{
     /// Last aperture of the blower valve
     int32_t m_expiratoryValveLastAperture;
 
-    /// Error of the last computation of the  PID
+    /// Error of the last computation of the PID
     int32_t m_expiratoryPidLastError;
-    /// Last error in inspiratory PID
+
+    /// Last errors in inspiratory PID
     int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+
+    /// Last error index in inspiratory PID
     int32_t m_inspiratoryPidLastErrorsIndex;
 
-    /// Last error in expiratory PID
+    /// Last errors in expiratory PID
     int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+
+    /// Last error index in expiratory PID
     int32_t m_expiratoryPidLastErrorsIndex;
 
     /// Last flow values
     int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_FLOW_LAST_VALUES];
+
+    /// Last flow index
     int32_t m_inspiratoryFlowLastValuesIndex;
 };
 

@@ -7,11 +7,15 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 #include "../includes/config.h"
 #include "Arduino.h"
 
+// FUNCTIONS ==================================================================
+
 /**
- * @brief  System Clock Configuration, for hardware v3 and later on. 
+ * @brief  System Clock Configuration, for hardware v3 and later on.
  * @note   SYSCLK = 100000000 Hz for STM32F411xE
  */
 

@@ -3,12 +3,12 @@
  * @copyright Copyright (c) 2020 Makers For Life
  * @file mass_flow_meter.cpp
  * @brief Mass Flow meter management
+ *
+ * SFM3300-D sensirion mass flow meter is connected on I2C bus.
+ * To perform the integral of the mass flow, I2C polling must be done in a high priority timer.
  *****************************************************************************/
 
-/**
- * SFM3300-D sensirion mass flow meter is connected on I2C bus.
- * To perform the integral of the mass flow, I2C polling must be done in a high priority timer
- */
+// INCLUDES ===================================================================
 
 // Associated header
 #include "../includes/mass_flow_meter.h"
@@ -26,6 +26,8 @@
 #include "../includes/config.h"
 #include "../includes/parameters.h"
 #include "../includes/screen.h"
+
+// INITIALISATION =============================================================
 
 // Hardware is ensured to be at least v2
 #ifdef MASS_FLOW_METER
@@ -75,6 +77,8 @@ union {
     unsigned char c[2];
     // cppcheck-suppress misra-c2012-19.2 ; union correctly used
 } mfmLastData;
+
+// FUNCTIONS ==================================================================
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 void MFM_Timer_Callback(HardwareTimer*) {
@@ -140,7 +144,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
         mfmLastValue = (uint32_t)(mfmLastData.c[1] & 0xFFu);
         mfmLastValue |= (((uint32_t)mfmLastData.c[0]) << 8) & 0x0000FF00u;
 
-        // Theorical formula : Flow(slpm) = 200*((rawvalue/16384)-0.1)/0.8
+        // Theorical formula: Flow(slpm) = 200*((rawvalue/16384)-0.1)/0.8
         // float implementation, 1 liter per minute unit
         // mfmLastValueFloat =
         //    MFM_RANGE * (((uint32_t)mfmLastValue / 16384.0) - 0.1) / 0.8;  // Output value in SLPM
@@ -151,12 +155,12 @@ void MFM_Timer_Callback(HardwareTimer*) {
         // 100 value per second, 100 slpm during 10 minutes : sum will be 1.2e9. it fits in a int32
         // int32 max with milliliters = 2e6 liters.
 
-        // The sensor (100SLM version anyway) tends to output spurrious values located at around 500
+        // The sensor (100 SLM version anyway) tends to output spurrious values located at around 500
         // SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
         if (mfmLastValueFixedFloat < (MFM_RANGE * 1100)) {
             mfmInstantAirFlow = mfmLastValueFixedFloat;
-            if (mfmLastValueFixedFloat > 500) {  // less than 0.5SLPM is noise
+            if (mfmLastValueFixedFloat > 500) {  // less than 0.5 SLM is noise
                 mfmAirVolumeSumMilliliters += mfmLastValueFixedFloat;
             }
         }

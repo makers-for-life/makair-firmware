@@ -2,9 +2,9 @@
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
  * @file keyboard.cpp
- * @brief Analog buttons related functions
+ * @brief Buttons related functions
  *
- * This relies on the Analog Buttons library (https://github.com/rlogiacco/AnalogButtons).
+ * This relies on the OneButton library (https://github.com/mathertel/OneButton).
  *****************************************************************************/
 
 #pragma once
@@ -22,18 +22,16 @@
 #include "../includes/activation.h"
 #include "../includes/buzzer.h"
 #include "../includes/debug.h"
-#include "../includes/parameters.h"
 #include "../includes/main_controller.h"
-
+#include "../includes/parameters.h"
 
 // INITIALISATION =============================================================
+
 static OneButton buttonAlarmOff(PIN_BTN_ALARM_OFF, false, false);
 static OneButton buttonStart(PIN_BTN_START, false, false);
 static OneButton buttonStop(PIN_BTN_STOP, false, false);
 
-/*-----------------------------------------------------------------------------
- * Button handlers
- */
+// FUNCTIONS ==================================================================
 
 /// Handler of the button to increase the crete pressure
 void onPeakPressureIncrease() { mainController.onPeakPressureIncrease(); }
@@ -69,7 +67,6 @@ void onStart() { activationController.onStartButton(); }
 void onStop() { activationController.onStopButton(); }
 
 void initKeyboard() {
-
     // define the 3x3 matrix keyboard input and output
     pinMode(PIN_OUT_COL1, OUTPUT);
     pinMode(PIN_OUT_COL2, OUTPUT);
@@ -101,7 +98,7 @@ uint16_t scanMatrixCounterC3R3 = 0;
 #define SM_REPEAT 20   // number of ticks before starting continuous press action repeat
 #define SM_PERIOD 15   // period of action repeat in case of a continuous press
 
-// fast solution : no hardware timer, no interrupt priority or atomicity issue. Close to Arduino
+// fast solution: no hardware timer, no interrupt priority or atomicity issue. Close to Arduino
 // philosophy.
 void scanMatrixLoop() {
     if (1 == scanMatrixCurrentColumn) {
@@ -220,6 +217,4 @@ void keyboardLoop() {
 }
 
 // cppcheck-suppress unusedFunction
-void calibrateButtons() {
-
-}
+void calibrateButtons() {}

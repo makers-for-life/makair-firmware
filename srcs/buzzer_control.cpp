@@ -5,18 +5,24 @@
  * @brief Abstraction to switch buzzer ON or OFF
  *****************************************************************************/
 
+// INCLUDES ===================================================================
+
 #include "../includes/buzzer_control.h"
 #include "../includes/config.h"
 #include "../includes/parameters.h"
 #include "Arduino.h"
 
+// INITIALISATION =============================================================
+
 /// Buzzer frequency in Hz
-#define BUZZER_FREQ 400 //TODO remove this for debug
+#define BUZZER_FREQ 400  // TODO: remove this for debug
 
 #define PERIOD_BUZZER_US (1000000 / BUZZER_FREQ)
 
 HardwareTimer* Buzzer_Hw_Timer;
 uint32_t Buzzer_Timer_Channel;
+
+// FUNCTIONS ==================================================================
 
 void BuzzerControl_Init(void) {
     TIM_TypeDef* Buzzer_Timer_Number = reinterpret_cast<TIM_TypeDef*>(

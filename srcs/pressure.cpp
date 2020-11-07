@@ -18,15 +18,16 @@
 // Internal
 #include "../includes/parameters.h"
 
+// INITIALISATION =============================================================
 
 PressureSensor inspiratoryPressureSensor;
 
-PressureSensor::PressureSensor(){
-	m_PressureSensorOffset = 0;
-}
+// FUNCTIONS ==================================================================
 
-// Get the measured for the feedback control (in mmH2O)
+PressureSensor::PressureSensor() { m_PressureSensorOffset = 0; }
+
 int32_t PressureSensor::read() {
-    int32_t withOffset = convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - m_PressureSensorOffset;
+    int32_t withOffset =
+        convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - m_PressureSensorOffset;
     return max(int32_t(0), withOffset);
 }

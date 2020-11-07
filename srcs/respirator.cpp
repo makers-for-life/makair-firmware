@@ -25,7 +25,6 @@
 #include "../includes/buzzer_control.h"
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
-
 #include "../includes/keyboard.h"
 #include "../includes/main_controller.h"
 #include "../includes/main_state_machine.h"
@@ -116,7 +115,7 @@ void setup(void) {
     blower = Blower(hardwareTimer1, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
 
-    // Init Controllers
+    // Init controllers
     mainController = MainController();
     alarmController = AlarmController();
 
@@ -138,13 +137,12 @@ void setup(void) {
     pinMode(PIN_LED_GREEN, OUTPUT);
     pinMode(PB12, INPUT);
 
-    // Turn on the raspberry power
+    // Turn on the Raspberry Pi power
     digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
 
-    // Activate test mode if a service button is pressed. The end of line test mode cannot be
-    // activated later on.
+    // Activate test mode if a service button is pressed
+    // The end of line test mode cannot be activated later on.
     // Autotest inputs: the service button on PB12, top right of the board's rear side
-
     if (HIGH == digitalRead(PB12)) {
         eolTest.activate();
         displayEndOfLineTestMode();
@@ -204,8 +202,6 @@ void setup(void) {
         }
     }
 
-    
-
     int32_t flowMeterFlowAtStarting = MFM_read_airflow();
     inspiratoryValve.open();
     inspiratoryValve.execute();
@@ -218,7 +214,7 @@ void setup(void) {
 
     blower.stop();
 
-    // Happens when flow meter fail
+    // Happens when flow meter fails
     if (flowMeterFlowAtStarting < -1000 || flowMeterFlowAtStarting > 1000
         || flowMeterFlowWithBlowerOn < 20000 || flowMeterFlowWithBlowerOn > 100000) {
         displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
@@ -231,7 +227,6 @@ void setup(void) {
     delay(1000);
 
     if (!eolTest.isRunning()) {
-        
         mainStateMachine.activate();
         mainStateMachine.setupAndStart();
 

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "../includes/config.h"
-
 // INCLUDES ===================================================================
 
 // Associated header
@@ -22,7 +20,7 @@
 /// Internals
 #include "../includes/main_controller.h"
 
-// GLOBAL ITEMS ==============================================================
+// INITIALISATION =============================================================
 
 /// The device ID to be joined with telemetry messages
 static byte deviceId[12];  // 3 * 32 bits = 96 bits

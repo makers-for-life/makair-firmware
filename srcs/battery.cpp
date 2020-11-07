@@ -20,7 +20,6 @@
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
 
-
 // PROGRAM =====================================================================
 
 static uint32_t rawBatterySample[BATTERY_MAX_SAMPLES];  // Array to store battery voltage samples
@@ -64,7 +63,6 @@ void updateBatterySample() {
 }
 
 void updateBatteryState(uint32_t p_cycleNumber) {
-
     // hardware v3 expander is connected to AC ON relay. that remains an optionnal wiring.
     pinMode(PIN_IN_MAINS_CONNECTED, INPUT_PULLUP);
     mainsConnected = (LOW == digitalRead(PIN_IN_MAINS_CONNECTED));

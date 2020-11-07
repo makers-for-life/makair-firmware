@@ -7,6 +7,8 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 #include "../includes/parameters.h"
 #include "Arduino.h"
 #include <IWatchdog.h>
@@ -16,13 +18,15 @@
 #include "../includes/buzzer_control.h"
 #include "../includes/debug.h"
 #include "../includes/keyboard.h"
+#include "../includes/main_controller.h"
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
-#include "../includes/main_controller.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
+
+// INITIALISATION =============================================================
 
 MainStateMachine mainStateMachine = MainStateMachine();
 
@@ -34,22 +38,14 @@ HardwareTimer* msmTimer;
 uint32_t lastMicro = 0;
 uint32_t tick = 0;
 
-enum TestStep {
-    SETUP,
-    STOPPED,
-    INIT_CYCLE,
-    BREATH,
-    TRIGGER_RAISED,
-    END_CYCLE
-};
+enum TestStep { SETUP, STOPPED, INIT_CYCLE, BREATH, TRIGGER_RAISED, END_CYCLE };
 
 TestStep msmstep = SETUP;
 TestStep previousmsmstep = SETUP;
 
-MainStateMachine::MainStateMachine() {
-    isMsmActive = false;
-    
-}
+// FUNCTIONS ==================================================================
+
+MainStateMachine::MainStateMachine() { isMsmActive = false; }
 
 // cppcheck-suppress unusedFunction
 void MainStateMachine::activate() {
@@ -60,12 +56,12 @@ void MainStateMachine::activate() {
 
 bool MainStateMachine::isRunning() { return isMsmActive; }
 
-// Display informations on screen.
 void MainStateMachine::ScreenUpdate() {
     displayCurrentVolume(mainController.tidalVolumeMeasure(),
                          mainController.cyclesPerMinuteNextCommand());
     displayCurrentSettings(mainController.peakPressureNextCommand(),
-                           mainController.plateauPressureNextCommand(), mainController.peepNextCommand());
+                           mainController.plateauPressureNextCommand(),
+                           mainController.peepNextCommand());
     if (msmstep == STOPPED) {
         displayMachineStopped();
     }
@@ -73,7 +69,7 @@ void MainStateMachine::ScreenUpdate() {
 
 void millisecondTimerMSM(HardwareTimer*) {
     IWatchdog.reload();
-    clockMsmTimer++;    
+    clockMsmTimer++;
     uint32_t pressure = inspiratoryPressureSensor.read();
     mainController.updatePressure(pressure);
     int32_t inspiratoryflow = MFM_read_airflow();
@@ -96,6 +92,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         alarmController.runAlarmEffects(tick);
         tick++;  // TODO this is not very beautiful
     }
+
     // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
     // so
     if (clockMsmTimer % 300000 == 0) {
@@ -114,11 +111,10 @@ void millisecondTimerMSM(HardwareTimer*) {
         mainStateMachine.ScreenUpdate();
         displayMachineStopped();
         msmstep = STOPPED;
-
     }
-    // Executed juste after booting, until the first start.
-    else if (msmstep == STOPPED) {
 
+    // Executed just after booting, until the first start
+    else if (msmstep == STOPPED) {
         if ((clockMsmTimer % 100u) == 0u) {
             mainController.stop();
             displayMachineStopped();
@@ -128,7 +124,6 @@ void millisecondTimerMSM(HardwareTimer*) {
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         }
-
     }
 
     else if (msmstep == INIT_CYCLE) {
@@ -137,13 +132,11 @@ void millisecondTimerMSM(HardwareTimer*) {
         lastMillisInTheLoop = millis();
         tick = 0;
         msmstep = BREATH;
-        MFM_read_milliliters(true);// Reset volume integral
-
+        MFM_read_milliliters(true);  // Reset volume integral
     }
 
     // If breathing
     else if (msmstep == BREATH) {
-
         uint32_t currentMillis = millis();
         tick = (currentMillis - lastMillis) / 10u;
 
@@ -164,12 +157,12 @@ void millisecondTimerMSM(HardwareTimer*) {
         if (mainController.triggered()) {
             msmstep = TRIGGER_RAISED;
         }
+
         // Check if machine has been paused
         activationController.refreshState();
         if (!activationController.isRunning()) {
             msmstep = STOPPED;
         }
-
     } else if (msmstep == TRIGGER_RAISED) {
         if (activationController.isRunning()) {
             msmstep = END_CYCLE;
@@ -181,7 +174,8 @@ void millisecondTimerMSM(HardwareTimer*) {
     else if (msmstep == END_CYCLE) {
         mainController.endRespiratoryCycle();
         displayCurrentInformation(mainController.peakPressureMeasure(),
-                                  mainController.plateauPressureMeasure(), mainController.peepMeasure());
+                                  mainController.plateauPressureMeasure(),
+                                  mainController.peepMeasure());
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         } else {

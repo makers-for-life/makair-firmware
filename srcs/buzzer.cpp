@@ -91,6 +91,8 @@ bool Buzzer_Muted = false;
 HardwareTimer* BuzzerTim;
 uint32_t BuzzerTimerChannel;
 
+// FUNCTIONS ==================================================================
+
 /**
  * When timer period expires, switch to next state in the pattern of the buzzer
  * @note API update since version 1.9.0 of Arduino_Core_STM32

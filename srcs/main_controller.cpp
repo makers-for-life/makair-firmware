@@ -1,14 +1,18 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pressure_controller.cpp
+ * @file main_controller.cpp
  * @brief Core logic to control the breathing cycle
  *****************************************************************************/
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 // Associated header
 #include "../includes/main_controller.h"
+
+// INITIALISATION =============================================================
 
 MainController mainController;
 
@@ -58,7 +62,7 @@ void MainController::setup() {
 
     m_cycleNb = 0;
 
-    m_dt = mainController_COMPUTE_PERIOD_US;
+    m_dt = MAIN_CONTROLLER_COMPUTE_PERIOD_US;
 
     m_sumOfPressures = 0;
     m_numberOfPressures = 0;
@@ -108,7 +112,7 @@ void MainController::initRespiratoryCycle() {
     m_pressureTriggerOffsetCommand = m_pressureTriggerOffsetNextCommand;
     m_expiratoryTermCommand = m_expiratoryTermNextCommand;
 
-    // Run setup of the controller only if different from previous.
+    // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
         m_ventilationController = m_ventilationControllerNextCommand;
         m_ventilationController->setup();
@@ -121,7 +125,7 @@ void MainController::initRespiratoryCycle() {
     }
     m_lastPressureValuesIndex = 0;
 
-    m_sumOfPressures = 0u;  // Check if used
+    m_sumOfPressures = 0u;  // TODO: check if used
     m_numberOfPressures = 0u;
 
     m_PlateauMeasureSum = 0u;
@@ -159,7 +163,8 @@ void MainController::compute() {
     executeCommands();
 
 #ifdef MASS_FLOW_METER
-    // Measure Volume only during inspiration. Add 100ms to allow valve to close completely.
+    // Measure volume only during inspiration
+    // Add 100 ms to allow valve to close completely
     if (m_tick > m_tickPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = m_currentDeliveredVolume;
@@ -185,11 +190,10 @@ void MainController::updatePhase(uint16_t m_tick) {
 }
 
 void MainController::inhale() {
-
     // Control loop
     m_ventilationController->inhale();
 
-    // Update peak pressure and rebounce peak pressure.
+    // Update peak pressure and rebounce peak pressure
     if (m_pressure > m_peakPressureMeasure) {
         m_peakPressureMeasure = m_pressure;
         m_rebouncePeakPressureMeasure = m_pressure;
@@ -197,7 +201,8 @@ void MainController::inhale() {
         m_rebouncePeakPressureMeasure = m_pressure;
     }
 
-    // Compute plateau at the end of the cycle TODO 20 = 200ms should be a parameter
+    // Compute plateau at the end of the cycle
+    // TODO 20 = 200 ms should be a parameter
     if (m_tick > m_tickPerInhalation - 20) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
@@ -205,7 +210,6 @@ void MainController::inhale() {
 }
 
 void MainController::exhale() {
-
     // Control loop
     m_ventilationController->exhale();
 
@@ -263,7 +267,7 @@ void MainController::endRespiratoryCycle() {
         m_plateauPressureToDisplay = 0;
     }
 
-    // Send snapshot of the firmware to the UI
+    // Send telemetry machine state snapshot message
     sendSnapshot();
 
     m_ventilationController->endCycle();
@@ -331,9 +335,9 @@ void MainController::computeTickParameters() {
         ((10000u / (10u + m_expiratoryTermCommand)) * 60u) / m_cyclesPerMinuteCommand;
 
     m_ticksPerCycle =
-        60u * (1000000u / mainController_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
+        60u * (1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_US) / m_cyclesPerMinuteCommand;
     m_tickPerInhalation =
-        (m_plateauDurationMs * 1000000u / mainController_COMPUTE_PERIOD_US) / 1000u;
+        (m_plateauDurationMs * 1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_US) / 1000u;
 }
 
 void MainController::executeCommands() {
@@ -355,7 +359,7 @@ void MainController::executeCommands() {
 
 void MainController::checkCycleAlarm() {
 #if !SIMULATION
-    // RCM-SW-1 + RCM-SW-14 : Check if plateau is reached
+    // RCM-SW-1 + RCM-SW-14: check if plateau is reached
     uint16_t minPlateauBeforeAlarm =
         (m_plateauPressureCommand * (100u - ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100u;
     uint16_t maxPlateauBeforeAlarm =
@@ -369,7 +373,7 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_14);
     }
 
-    // RCM-SW-2 + RCM-SW-19 : Check is mean pressure was < 2 cmH2O
+    // RCM-SW-2 + RCM-SW-19: check is mean pressure was < 2 cmH2O
     uint16_t meanPressure = m_sumOfPressures / m_numberOfPressures;
     if (meanPressure <= ALARM_THRESHOLD_MIN_PRESSURE) {
         alarmController.detectedAlarm(RCM_SW_2, m_cycleNb, ALARM_THRESHOLD_MIN_PRESSURE,
@@ -410,7 +414,6 @@ void MainController::sendStopMessageToUi() {
 }
 
 void MainController::stop() {
-
     blower.stop();
     sendStopMessageToUi();
     // When stopped, open the valves
@@ -452,7 +455,7 @@ void MainController::onCycleDecrease() {
         m_cyclesPerMinuteNextCommand = CONST_MIN_CYCLE;
     }
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
 #endif
 }
@@ -467,7 +470,7 @@ void MainController::onCycleIncrease() {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
 #endif
 }
@@ -483,7 +486,7 @@ void MainController::onCycleSet(uint16_t p_cpm) {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
 #endif
 }
@@ -498,7 +501,7 @@ void MainController::onPeepPressureDecrease() {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(3, m_peepNextCommand);
 #endif
 }
@@ -513,7 +516,7 @@ void MainController::onPeepPressureIncrease() {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(3, m_peepNextCommand);
 #endif
 }
@@ -529,7 +532,7 @@ void MainController::onPeepSet(uint16_t p_peep) {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(3, m_peepNextCommand);
 #endif
 }
@@ -544,7 +547,7 @@ void MainController::onPlateauPressureDecrease() {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
 #endif
 }
@@ -562,7 +565,7 @@ void MainController::onPlateauPressureIncrease() {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
 #endif
 }
@@ -578,7 +581,7 @@ void MainController::onPlateauPressureSet(uint16_t p_plateauPressure) {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
 #endif
 }
@@ -608,7 +611,7 @@ void MainController::onExpiratoryTermSet(uint16_t p_expiratoryTerm) {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(5, m_expiratoryTermNextCommand);
 #endif
 }
@@ -619,7 +622,7 @@ void MainController::onTriggerEnabledSet(uint16_t p_triggerEnabled) {
         m_triggerModeEnabledNextCommand = p_triggerEnabled;
     }
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(6, m_triggerModeEnabledNextCommand);
 #endif
 }
@@ -636,7 +639,7 @@ void MainController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
     }
 
 #if !SIMULATION
-    // Send acknoledgment to the UI
+    // Send acknowledgment to the UI
     sendControlAck(7, m_pressureTriggerOffsetNextCommand);
 #endif
 }

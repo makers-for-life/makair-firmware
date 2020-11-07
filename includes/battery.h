@@ -10,26 +10,26 @@
 #include "Arduino.h"
 
 /**
- * The divider between real battery voltage and stm32 input is 8.2K-1k resistors
+ * The divider between real battery voltage and STM32 input is 8.2K-1k resistors
  * So, the multiplier is 1/(1+8.2)=0.1087
  * Considering 0.1% precision resistances, multiplier is between 0,108502 and 0,108889
  * The reference is 3.348V (measured on 53 HW V3 boards)
  * RawValue = (Vbat*0.1087)*1024/3.348
  * So, Vbat = RawValue * (3.348/(1024*0.1087))
  *
- * 1 bit = 3.348/(1024*0.1087) = 30.07mV .
+ * 1 bit = 3.348/(1024*0.1087) = 30.07mV
  */
 #define RAW_BATTERY_MULTIPLIER 0.0300784843606
 
 /**
- * Expected voltage in volts when power cord is plugged.
+ * Expected voltage in volts when power cord is plugged
  * 27,4 V => 27,4 / RAW_BATTERY_MULTIPLIER
  */
 #define RAW_VOLTAGE_MAINS 907
 
 /**
  * RCM_SW_16
- * Expected voltage in volts when power cord is unplugged.
+ * Expected voltage in volts when power cord is unplugged
  *  = 27 => 27 / RAW_BATTERY_MULTIPLIER
  */
 #define RAW_VOLTAGE_ON_BATTERY_HIGH 897u

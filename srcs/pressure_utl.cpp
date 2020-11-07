@@ -5,9 +5,13 @@
  * @brief Pressure computing utility function
  *****************************************************************************/
 
+// INCLUDES ===================================================================
+
 #include <algorithm>
 
 #include "../includes/pressure_utl.h"
+
+// INITIALISATION =============================================================
 
 static int32_t filteredRawPressure = 0;
 
@@ -28,6 +32,8 @@ static const int16_t RAW_PRESSURE_TO_MMH20_CONSTANT = 45;
 //      3.3 / 1024.0 / RATIO_VOLTAGE_DIVIDER / V_SUPPLY / 0.09 * KPA_MMH2O
 static const int32_t RAW_PRESSURE_TO_MMH20_NUM = 8774;
 static const int32_t RAW_PRESSURE_TO_MMH20_DEN = 10000;
+
+// FUNCTIONS ==================================================================
 
 int16_t convertSensor2Pressure(uint32_t sensorValue) {
     int32_t rawPressure = static_cast<int32_t>(sensorValue);

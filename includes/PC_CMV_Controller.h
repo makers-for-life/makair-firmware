@@ -1,8 +1,8 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pressure.h
- * @brief PID pour pressure control
+ * @file PC_CMV_Controller.h
+ * @brief PID for CMV pressure control
  *****************************************************************************/
 
 #pragma once
@@ -21,13 +21,15 @@ class PC_CMV_Controller final : public VentilationController {
 
  private:
     void calculateBlowerIncrement();
-    /// Number of tick when plateau is reached for the first time
+
+    /// Number of ticks when plateau is reached for the first time
     uint16_t m_plateauStartTime;
 
-    /// true if plateau pressure has been reached (but not necessarily converged.)
+    /// True if plateau pressure has been reached (but not necessarily converged)
     bool m_plateauPressureReached;
+
     /**
-     * PID to controller the blower valve during some specific steps of the cycle
+     * PID to control the blower valve during some specific steps of the cycle
      *
      * @param targetPressure The pressure we want (in mmH2O)
      * @param currentPressure The pressure measured by the sensor (in mmH2O)
@@ -36,7 +38,7 @@ class PC_CMV_Controller final : public VentilationController {
     int32_t PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     /**
-     * PID to controller the patient valve during some specific steps of the cycle
+     * PID to control the patient valve during some specific steps of the cycle
      *
      * @param targetPressure The pressure we want (in mmH2O)
      * @param currentPressure The pressure measured by the sensor (in mmH2O)
@@ -45,6 +47,7 @@ class PC_CMV_Controller final : public VentilationController {
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     int32_t m_blowerIncrement;
+
     /// Error of the last computation of the blower PID
     int32_t m_inspiratoryPidIntegral;
 
@@ -68,12 +71,17 @@ class PC_CMV_Controller final : public VentilationController {
 
     /// Error of the last computation of the patient PID
     int32_t m_expiratoryPidLastError;
-    /// Last error in inspiratory PID
+
+    /// Last errors in inspiratory PID
     int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+
+    /// Last error index in inspiratory PID
     int32_t m_inspiratoryPidLastErrorsIndex;
 
-    /// Last error in expiratory PID
+    /// Last errors in expiratory PID
     int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+
+    /// Last error index in expiratory PID
     int32_t m_expiratoryPidLastErrorsIndex;
 };
 

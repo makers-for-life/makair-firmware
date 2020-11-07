@@ -1,7 +1,7 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pressure_controller.h
+ * @file main_controller.h
  * @brief Core logic to control the breathing cycle
  *****************************************************************************/
 
@@ -47,25 +47,29 @@ class MainController {
 
     /**
      * Input a tick number
-     * @param p_currentPressure Tick number
+     *
+     * @param p_tick Tick number
      */
     void updateTick(uint32_t p_tick);
 
     /**
      * Input a pressure reading
+     *
      * @param p_currentPressure  Measured pressure
      */
     void updatePressure(int16_t p_currentPressure);
 
     /**
-     * Input a flow reading
+     * Input an inspiratory flow reading
+     *
      * @param p_currentInspiratoryFlow  Measured inspiratory flow
      */
     void updateInspiratoryFlow(int32_t p_currentInspiratoryFlow);
 
     /**
-     * Input a flow reading
-     * @param p_currentInspiratoryFlow  Measured inspiratory flow
+     * Input an expiratory flow reading
+     *
+     * @param p_currentExpiratoryFlow  Measured expiratory flow
      */
     void updateExpiratoryFlow(int32_t p_currentExpiratoryFlow);
 
@@ -85,7 +89,7 @@ class MainController {
     /**
      * Set the desired number of cycles per minute
      *
-     * @param p_cpm Desired number of cycle per minute
+     * @param p_cpm Desired number of cycles per minute
      */
     void onCycleSet(uint16_t p_cpm);
 
@@ -118,34 +122,34 @@ class MainController {
     /**
      * Decrease the desired peak pressure
      *
-     * DEPRECATED
+     * @deprecated
      */
     void onPeakPressureDecrease();
 
     /**
      * Increase the desired peak pressure
      *
-     * DEPRECATED
+     * @deprecated
      */
     void onPeakPressureIncrease();
 
     /**
-     * Set the desired Expiratory term
+     * Set the desired expiratory term
      *
-     * @param p_expiratoryTerm : Expiration term in the "Inspiration/Expiration" ratio given that
+     * @param p_expiratoryTerm  Expiration term in the "Inspiration/Expiration" ratio given that
      * Inspiration = 10
      */
     void onExpiratoryTermSet(uint16_t p_expiratoryTerm);
 
     /**
-     * 0: trigger mode disable, 1: trigger mode enable
+     * Enable or disable expiratory trigger
      *
-     * @param p_triggerEnabled
+     * @param p_triggerEnabled  0: disable trigger mode, 1: enable trigger mode
      */
     void onTriggerEnabledSet(uint16_t p_triggerEnabled);
 
     /**
-     * Set the desired Trigger Offset
+     * Set the desired offset for expiratory trigger
      *
      * @param p_triggerOffset Desired trigger offset in mmH2O
      */
@@ -166,19 +170,19 @@ class MainController {
     // Get the enabling state of trigger mode
     inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
 
-    /// Get the desired max peak for next cycle
+    /// Get the desired max peak for the next cycle
     inline uint16_t peakPressureNextCommand() const { return m_peakPressureNextCommand; }
-    /// Get the desired plateau pressure for next cycle
+    /// Get the desired plateau pressure for the next cycle
     inline uint16_t plateauPressureNextCommand() const { return m_plateauPressureNextCommand; }
-    /// Get the desired PEEP for next cycle
+    /// Get the desired PEEP for the next cycle
     inline uint16_t peepNextCommand() const { return m_peepNextCommand; }
-    /// Get the desired number of cycles per minute for next cycle
+    /// Get the desired number of cycles per minute for the next cycle
     inline uint16_t cyclesPerMinuteNextCommand() const { return m_cyclesPerMinuteNextCommand; }
-    /// Get the value of the inspiratory trigger pressure command for next cycle
+    /// Get the value of the inspiratory trigger pressure command for the next cycle
     inline const uint16_t pressureTriggerOffsetNextCommand() const {
         return m_pressureTriggerOffsetNextCommand;
     }
-    // Get the enabling state of trigger mode for next cycle
+    // Get the enabling state of trigger mode for the next cycle
     inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
 
     /// Get the measured peak pressure
@@ -191,7 +195,7 @@ class MainController {
     inline int16_t peepMeasure() const { return m_peepMeasure; }
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
-    /// Get the measured tidal Volume
+    /// Get the measured Tidal Volume
     inline uint16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
 
     /// Get the number of past cycles since the beginning
@@ -212,7 +216,7 @@ class MainController {
     /// Get the current expiratoryFlow
     inline int32_t expiratoryFlow() const { return m_expiratoryFlow; }
 
-    /// Get the delta of time since the last cycle
+    /// Get the delta of time since the last cycle (in ms)
     inline int32_t dt() const { return m_dt; }
 
     /// Get the tick number of the current cycle
@@ -233,7 +237,7 @@ class MainController {
     /// Reset the trigger to false
     inline const void setTrigger(bool triggerValue) { m_triggered = triggerValue; }
 
-    // Get if the peep has been detected during this cycle
+    // Get if the PEEP has been detected during this cycle
     inline const bool isPeepDetected() { return m_isPeepDetected; }
 
     /**
@@ -261,11 +265,11 @@ class MainController {
      */
     void updatePhase(uint16_t p_tick);
 
-    /// Perform the pressure control and compute the transistors commands during the inhalation
+    /// Perform the pressure control and compute the actuators commands during the inhalation
     /// phase
     void inhale();
 
-    /// Perform the pressure control and compute the transistors commands during the exhalation
+    /// Perform the pressure control and compute the actuators commands during the exhalation
     /// phase
     void exhale();
 
@@ -275,11 +279,11 @@ class MainController {
      * - duration of a cycle in hundredth of second
      * - duration of the inhalation phase in hundredth of second
      *
-     *  N.B.: Inhalation lasts 1/3 of a cycle while exhalation lasts 2/3 of a cycle
+     *  @note Inhalation lasts 1/3 of a cycle while exhalation lasts 2/3 of a cycle
      */
     void computeTickParameters();
 
-    /// Give the computed commands to actuators
+    /// Send the computed commands to actuators
     void executeCommands();
 
     /// At the end of a respiratory cycle, check if some alarms are triggered
@@ -295,15 +299,19 @@ class MainController {
 
     /// Actual desired number of cycles per minute
     uint16_t m_cyclesPerMinuteCommand;
-    /// Number of cycles per minute desired by the operator for next cycle
+    /// Number of cycles per minute desired by the operator for the next cycle
     uint16_t m_cyclesPerMinuteNextCommand;
     /// Measured number of cycles per minute
     uint32_t m_cyclesPerMinuteMeasure;
-    /// Used to compute cpm with a moving mean on some cycles.
+    /**
+     * Period durations of last beathings
+     *
+     * @note Used to compute cpm with a moving mean on several cycles
+     */
     uint32_t m_lastBreathPeriodsMs[NUMBER_OF_BREATH_PERIOD];
     /// Index for the m_lastBreathPeriodsMs array
     uint32_t m_lastBreathPeriodsMsIndex;
-    /// Date of the last end of a respiration
+    /// Date of the last ending of a respiration
     uint32_t m_lastEndOfRespirationDateMs;
 
     /// Actual desired peak pressure
@@ -312,60 +320,74 @@ class MainController {
     uint16_t m_peakPressureMeasure;
     /// Measured value of rebounce peak pressure
     int16_t m_rebouncePeakPressureMeasure;
-    /// Peak pressure desired by the operator for next cycle
+    /// Peak pressure desired by the operator for the next cycle
     uint16_t m_peakPressureNextCommand;
 
     /// Actual desired plateau pressure
     uint16_t m_plateauPressureCommand;
-    /// Plateau pressure desired by the operator for next cycle
+    /// Plateau pressure desired by the operator for the next cycle
     uint16_t m_plateauPressureNextCommand;
-    /// Measured value of the plateau pressure
+    /**
+     * Measured value of the plateau pressure
+     *
+     * @note Can sometimes have the special value of MAXINT
+     */
     uint16_t m_plateauPressureMeasure;
-    /// This value is sometimes MAXINT and we dont want to display MAXINT
+    /**
+     * Measured value of the plateau pressure for display
+     *
+     * @note Special value of MAXINT in m_plateauPressureMeasure is replaced by 0
+     */
     uint16_t m_plateauPressureToDisplay;
     /// Sum for calulating plateau value
     uint64_t m_PlateauMeasureSum;
     /// Count for calulating plateau value
     uint16_t m_PlateauMeasureCount;
-    /// Duration of the plateau. Use this setting in trigger mode
+    /**
+     * Duration of the plateau
+     *
+     * @note This setting is used in trigger mode
+     */
     uint32_t m_plateauDurationMs;
 
     /// Actual desired PEEP
     uint16_t m_peepCommand;
-    /// Desired PEEP for next cycle
+    /// Desired PEEP for the next cycle
     uint16_t m_peepNextCommand;
     /// Measured value of the PEEP
     uint16_t m_peepMeasure;
-    /// Is PEEP pressure detected in the cycle
+    /// Is PEEP pressure detected in the cycle?
     bool m_isPeepDetected;
 
     // Actual Pressure trigger offset
     uint16_t m_pressureTriggerOffsetCommand;
-    // Desired Pressure trigger offset for next cycle
+    // Desired Pressure trigger offset for the next cycle
     uint16_t m_pressureTriggerOffsetNextCommand;
-    /// Is inspiratory triggered or not
+    /// Is inspiratory triggered or not?
     bool m_triggered;
 
     /// Actual state of enabling of trigger mode
     bool m_triggerModeEnabledCommand;
-    /// Desired state of enabling of trigger mode for next cycle
+    /// Desired state of enabling of trigger mode for the next cycle
     bool m_triggerModeEnabledNextCommand;
 
-    /// True if Tidal volume has already been read during cycle.
+    /// True if Tidal volume has already been read during cycle
     bool m_tidalVolumeAlreadyRead;
 
-    // E term of the I:E ratio. I = 10, and E is in [10;60]
-    /// Actual expiratory term
+    /** Actual expiratory term
+     *
+     * E term of the I:E ratio. I = 10, and E is in [10;60]
+     */
     uint16_t m_expiratoryTermCommand;
-    /// Desired expiratory term for next cycle
+    /// Desired expiratory term for the next cycle
     uint16_t m_expiratoryTermNextCommand;
 
-    // Ventilation controller in use (for PID and so on...)
+    // Ventilation controller in use (for everything related to breathing control)
     VentilationController* m_ventilationController;
-    // Ventilation controller (for PID and so on...) for next cycle
+    // Ventilation controller for the next cycle
     VentilationController* m_ventilationControllerNextCommand;
 
-    /// Measured value of the tidal volume (volume of air pushed in patient lungs in last
+    /// Measured value of the Tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)
     uint16_t m_tidalVolumeMeasure;
 
@@ -384,11 +406,14 @@ class MainController {
     /// Measured inspiratory flow
     int32_t m_expiratoryFlow;
 
-    /// Current delivered volume by the blower. NOT equals to Vt, because of recirculation during
-    /// exhale
+    /**
+     * Current delivered volume by the blower
+     *
+     * @note This is not equal to Vt, because of recirculation during exhale
+     */
     int32_t m_currentDeliveredVolume;
 
-    /// Inhalation last Pressre
+    /// Last pressure of inhalation
     uint16_t m_inhalationLastPressure;
 
     /// Blower valve angle at peak
@@ -397,10 +422,10 @@ class MainController {
     /// Current respiratory cycle phase
     CyclePhases m_phase;
 
-    /// Current respiratory cycle phase
+    /// Current respiratory cycle subphase
     CycleSubPhases m_subPhase;
 
-    /// Number of passed cycles since beginning
+    /// Number of elapsed cycles since beginning
     uint32_t m_cycleNb;
 
     /// Time since the last computation (in microsecond)
@@ -414,7 +439,8 @@ class MainController {
     uint16_t m_lastPressureValuesIndex;
 
     /// Sum of the current cycle's pressures
-    uint32_t m_sumOfPressures;  // TODO : be carefull for this parameter overflow !!
+    uint32_t m_sumOfPressures;  // TODO : be carefull for this parameter overflow!!
+
     /// Number of the current cycle's pressures
     uint16_t m_numberOfPressures;
 };
