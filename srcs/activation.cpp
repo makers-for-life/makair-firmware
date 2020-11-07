@@ -26,7 +26,7 @@ ActivationController::ActivationController() : m_state(STOPPED), m_timeOfLastSto
 
 void ActivationController::onStartButton() { m_state = RUNNING; }
 
-void ActivationController::changeStateFromUI(uint16_t state) {
+void ActivationController::changeState(uint16_t state) {
     if (state == 0) {
         m_state = STOPPED;
     } else if (state == 1) {

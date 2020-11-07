@@ -2,7 +2,7 @@
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
  * @file alarm.h
- * @brief Describes an alarm and handle its dynamic state
+ * @brief Describe an alarm and handle its dynamic state
  *****************************************************************************/
 
 #pragma once
@@ -14,10 +14,12 @@
 
 // ENUMS =====================================================================
 
+/// Priority levels of an alarm
 enum AlarmPriority { ALARM_NONE, ALARM_LOW, ALARM_MEDIUM, ALARM_HIGH };
 
 // CLASS =====================================================================
 
+/// Describe an alarm and handle its dynamic state
 class Alarm {
  public:
     /**

@@ -268,7 +268,7 @@ void MainController::endRespiratoryCycle() {
     }
 
     // Send telemetry machine state snapshot message
-    sendSnapshot();
+    sendMachineState();
 
     m_ventilationController->endCycle();
 }
@@ -432,7 +432,7 @@ void MainController::stop() {
 #endif
 }
 
-void MainController::sendSnapshot() {
+void MainController::sendMachineState() {
 #if !SIMULATION
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)

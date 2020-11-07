@@ -139,7 +139,7 @@ void serialControlLoop() {
                     break;
 
                 case 8:  // Machine on/off
-                    activationController.changeStateFromUI(value);
+                    activationController.changeState(value);
                     break;
 
                 default:

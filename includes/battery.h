@@ -110,8 +110,11 @@ uint32_t getBatteryLevelX10();
  */
 uint32_t getBatteryLevelX100();
 
+/// Check if battery level is very low
 bool isBatteryVeryLow();
 
+/// Check if battery is deeply discharged
 bool isBatteryDeepDischarged();
 
+/// Check if mains are connected
 bool isMainsConnected();

@@ -32,6 +32,7 @@
 
 // CLASS =====================================================================
 
+/// Manage alarm features
 class AlarmController {
  public:
     /// Default constructor

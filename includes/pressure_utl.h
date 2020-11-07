@@ -7,19 +7,23 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 #include <stdint.h>
 
+// FUNCTIONS ==================================================================
+
 /**
- * @brief Convert the analog value from sensor to a pressure value
+ * Convert the analog value from sensor to a pressure value
  *
  * @param sensorValue Value read from the analog input connected to the sensor
- * @return the pressure in mmH2O
+ * @return The pressure in mmH2O
  */
 int16_t convertSensor2Pressure(uint32_t sensorValue);
 
 /**
- * @brief Reset the value of void filteredRawPressure to 0.
- * Mainly for testing purpose
+ * Reset the value of void filteredRawPressure to 0
  *
+ * @note Mainly for testing purpose
  */
 void resetFilteredRawPressure();

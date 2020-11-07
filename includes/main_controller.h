@@ -34,6 +34,7 @@
 /// Controls breathing cycle
 class MainController {
  public:
+    /// Default constructor
     MainController();
 
     /// Initialize actuators
@@ -122,14 +123,14 @@ class MainController {
     /**
      * Decrease the desired peak pressure
      *
-     * @deprecated
+     * @deprecated Peak pressure is now based on plateau pressure
      */
     void onPeakPressureDecrease();
 
     /**
      * Increase the desired peak pressure
      *
-     * @deprecated
+     * @deprecated Peak pressure is now based on plateau pressure
      */
     void onPeakPressureIncrease();
 
@@ -167,7 +168,7 @@ class MainController {
     inline const uint16_t pressureTriggerOffsetCommand() const {
         return m_pressureTriggerOffsetCommand;
     }
-    // Get the enabling state of trigger mode
+    /// Get the enabling state of trigger mode
     inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
 
     /// Get the desired max peak for the next cycle
@@ -182,7 +183,7 @@ class MainController {
     inline const uint16_t pressureTriggerOffsetNextCommand() const {
         return m_pressureTriggerOffsetNextCommand;
     }
-    // Get the enabling state of trigger mode for the next cycle
+    /// Get the enabling state of trigger mode for the next cycle
     inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
 
     /// Get the measured peak pressure
@@ -237,7 +238,7 @@ class MainController {
     /// Reset the trigger to false
     inline const void setTrigger(bool triggerValue) { m_triggered = triggerValue; }
 
-    // Get if the PEEP has been detected during this cycle
+    /// Get if the PEEP has been detected during this cycle
     inline const bool isPeepDetected() { return m_isPeepDetected; }
 
     /**
@@ -249,13 +250,17 @@ class MainController {
 
     void updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume);
 
+    /// Put actuators in safety position
     void reachSafetyPosition();
 
+    /// Stop the breathing
     void stop();
 
+    /// Send a "stopped" telemetry message
     void sendStopMessageToUi();
 
-    void sendSnapshot();
+    /// Send a "machine state snapshot" telemetry message
+    void sendMachineState();
 
  private:
     /**
@@ -359,9 +364,9 @@ class MainController {
     /// Is PEEP pressure detected in the cycle?
     bool m_isPeepDetected;
 
-    // Actual Pressure trigger offset
+    /// Actual pressure trigger offset
     uint16_t m_pressureTriggerOffsetCommand;
-    // Desired Pressure trigger offset for the next cycle
+    /// Desired pressure trigger offset for the next cycle
     uint16_t m_pressureTriggerOffsetNextCommand;
     /// Is inspiratory triggered or not?
     bool m_triggered;
@@ -382,9 +387,9 @@ class MainController {
     /// Desired expiratory term for the next cycle
     uint16_t m_expiratoryTermNextCommand;
 
-    // Ventilation controller in use (for everything related to breathing control)
+    /// Ventilation controller in use (for everything related to breathing control)
     VentilationController* m_ventilationController;
-    // Ventilation controller for the next cycle
+    /// Ventilation controller for the next cycle
     VentilationController* m_ventilationControllerNextCommand;
 
     /// Measured value of the Tidal volume (volume of air pushed in patient lungs in last
@@ -436,6 +441,8 @@ class MainController {
 
     /// Last pressure values
     uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
+
+    /// Last pressure index
     uint16_t m_lastPressureValuesIndex;
 
     /// Sum of the current cycle's pressures

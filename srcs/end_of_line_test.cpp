@@ -7,6 +7,8 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 #include "../includes/parameters.h"
 #include "Arduino.h"
 
@@ -20,6 +22,8 @@
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
 
+// INITIALISATION =============================================================
+
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
 uint32_t eolTestNumber = 1;
@@ -32,6 +36,8 @@ int32_t maxFlowValue = 0;
 
 EolTest eolTest = EolTest();
 HardwareTimer* eolTimer;
+
+// FUNCTIONS ==================================================================
 
 EolTest::EolTest() { testActive = 0; }
 

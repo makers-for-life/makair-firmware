@@ -10,16 +10,28 @@
 #include "../includes/VentilationController.h"
 #include "../includes/parameters.h"
 
+/// Controller for the CMV mode
 class PC_CMV_Controller final : public VentilationController {
  public:
+    /// Default constructor
     PC_CMV_Controller();
+
+    /// Initialize controller
     void setup();
+
+    /// Begin a new breathing cycle
     void initCycle();
+
+    /// Control the inhalation
     void inhale();
+
+    /// Control the exhalation
     void exhale();
+    /// End the current breathing cycle
     void endCycle();
 
  private:
+    /// Determine the blower speed to adopt
     void calculateBlowerIncrement();
 
     /// Number of ticks when plateau is reached for the first time
@@ -46,6 +58,7 @@ class PC_CMV_Controller final : public VentilationController {
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
+    /// Current blower speed increment (to apply at the beginning of the next cycle)
     int32_t m_blowerIncrement;
 
     /// Error of the last computation of the blower PID
