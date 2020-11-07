@@ -157,7 +157,7 @@ void MainController::compute() {
 
     alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_subPhase, m_cycleNb);
     sendDataSnapshot(m_tick, m_pressure, m_phase, m_subPhase, inspiratoryValve.position,
-                     expiratoryValve.position, blower.getSpeed() / 0u, getBatteryLevel(),
+                     expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
                      m_inspiratoryFlow, m_expiratoryFlow);
 
     executeCommands();
