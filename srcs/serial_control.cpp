@@ -110,6 +110,14 @@ void serialControlLoop() {
                 });
 
                 switch (setting) {
+                case 0:  // Heartbeat
+                    if (value == 43690u) {
+                        // Disable RPi watchdog completely
+                    } else {
+                        // Send heartbeat to the RPi watchdog
+                    }
+                    break;
+
                 case 1:  // PeakPressure
                     // This setting was removed
                     break;
