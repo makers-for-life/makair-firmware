@@ -45,6 +45,9 @@ class AlarmController {
      */
     void snooze();
 
+    /// Check if alarms are currently snoozed
+    bool isSnoozed() const { return m_snoozeTime != 0; }
+
     /**
      * Mark a specific alarm as detected
      *

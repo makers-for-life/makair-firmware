@@ -171,7 +171,8 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t cpmCommand,
                         uint8_t expiratoryTerm,
                         bool triggerEnabled,
-                        uint8_t triggerOffset) {
+                        uint8_t triggerOffset,
+                        bool alarmSnoozed) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
@@ -235,6 +236,12 @@ void sendStoppedMessage(uint8_t peakCommand,
 
     Serial6.write(triggerOffset);
     crc32.update(triggerOffset);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmSnoozed);
+    crc32.update(alarmSnoozed);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
@@ -372,7 +379,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
-                              uint8_t previouscpmValue) {
+                              uint8_t previouscpmValue,
+                              bool alarmSnoozed) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -499,6 +507,12 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
 
     Serial6.write(previouscpmValue);
     crc32.update(previouscpmValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmSnoozed);
+    crc32.update(alarmSnoozed);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
