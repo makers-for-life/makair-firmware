@@ -379,7 +379,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
                               uint8_t previouscpmValue,
-                              bool alarmSnoozed) {
+                              bool alarmSnoozed,
+                              uint8_t cpuLoad) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -512,6 +513,12 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
 
     Serial6.write(alarmSnoozed);
     crc32.update(alarmSnoozed);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(cpuLoad);
+    crc32.update(cpuLoad);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

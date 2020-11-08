@@ -58,7 +58,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               bool triggerEnabled,
                               uint8_t triggerOffset,
                               uint8_t previouscpmValue,
-                              bool alarmSnoozed);
+                              bool alarmSnoozed,
+                              uint8_t cpuLoad);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
