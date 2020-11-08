@@ -28,7 +28,13 @@ class RpiWatchdog {
 
  private:
     int32_t m_countDown;
-    enum RpiWatchdogStep { COUNT_DOWN, SWITCH_OFF_RASPBERRY, SWITCH_ON_RASPBERRY, DISABLED };
+    enum RpiWatchdogStep {
+        COUNT_DOWN,
+        SWITCH_OFF_RASPBERRY,
+        SWITCH_ON_RASPBERRY,
+        WAIT_FOR_FIRST_HEARTBEAT,
+        DISABLED
+    };
     RpiWatchdogStep m_rpiWatchdogStep;
 };
 

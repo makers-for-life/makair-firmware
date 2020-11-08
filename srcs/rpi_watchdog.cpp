@@ -36,12 +36,21 @@ void RpiWatchdog::update() {
         // Turn on the Raspberry Pi power
         digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
         m_countDown = COUNTDOWN_IN_S;
-        m_rpiWatchdogStep = COUNT_DOWN;
+        m_rpiWatchdogStep = WAIT_FOR_FIRST_HEARTBEAT;
+    } else if (m_rpiWatchdogStep == WAIT_FOR_FIRST_HEARTBEAT) {
+        // Do nothing here
+        // Next time resetCountDown() is called because a heartbeat was received, let's resume
     } else if (m_rpiWatchdogStep == DISABLED) {
         // Do nothing when watchdog is disabled
     }
 }
 
-void RpiWatchdog::resetCountDown() { m_countDown = COUNTDOWN_IN_S; }
+void RpiWatchdog::resetCountDown() {
+    if (m_rpiWatchdogStep == WAIT_FOR_FIRST_HEARTBEAT) {
+        m_rpiWatchdogStep = COUNT_DOWN;
+    }
+
+    m_countDown = COUNTDOWN_IN_S;
+}
 
 void RpiWatchdog::disable() { m_rpiWatchdogStep = DISABLED; }
