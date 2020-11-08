@@ -126,7 +126,6 @@ AlarmController::AlarmController()
 }
 
 void AlarmController::snooze() {
-  Serial.println("snoze");
     if (m_unsnooze) {
         m_unsnooze = false;
         digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
@@ -304,7 +303,6 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
 
 // cppcheck-suppress unusedFunction
 void AlarmController::unsnooze() {
-  Serial.println("unsnoze");
     digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
     m_snoozeTime = 0u;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {

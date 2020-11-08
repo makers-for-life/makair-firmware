@@ -207,7 +207,6 @@ void millisecondTimerEOL(HardwareTimer*) {
         maxbatlevel = max(maxbatlevel, batlevel);
         // Wait for 400 mV raise, or mains connected signal
         if ((maxbatlevel - minbatlevel) > 40 || isMainsConnected()) {
-            Serial.println();
             BuzzerControl_On();
             eolTestNumber++;
             blower.stop();
