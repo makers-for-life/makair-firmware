@@ -274,6 +274,7 @@ uint32_t cpuLoadLatestCycleCount = 0;
 
 extern "C" {
 // this is the highest priority 1 ms callback.
+// cppcheck-suppress unusedFunction
 void osSystickHandler() {
     cpuLoadTimeCount--;
     if (cpuLoadTimeCount == 0) {

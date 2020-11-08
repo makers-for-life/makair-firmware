@@ -25,9 +25,7 @@ PC_CMV_Controller pcCmvController;
 
 // FUNCTIONS ==================================================================
 
-PC_CMV_Controller::PC_CMV_Controller() {}
-
-void PC_CMV_Controller::setup() {
+PC_CMV_Controller::PC_CMV_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
@@ -39,6 +37,18 @@ void PC_CMV_Controller::setup() {
         m_inspiratoryPidLastErrors[i] = 0u;
         m_expiratoryPidLastErrors[i] = 0u;
     }
+
+    m_blowerIncrement = DEFAULT_BLOWER_SPEED;
+    m_inspiratoryPidIntegral = 0;
+    m_inspiratoryPidLastError = 0;
+    m_expiratoryPidFastMode = true;
+    m_inspiratoryPidFastMode = true;
+    m_expiratoryPidIntegral = 0;
+    m_expiratoryPidLastError = 0;
+}
+
+void PC_CMV_Controller::setup() {
+    // No specific setup code
 }
 
 void PC_CMV_Controller::initCycle() {

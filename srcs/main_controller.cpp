@@ -317,6 +317,7 @@ void MainController::updateInspiratoryFlow(int32_t p_currentInspiratoryFlow) {
     }
 }
 
+// cppcheck-suppress unusedFunction
 void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
     if (p_currentExpiratoryFlow != MASS_FLOW_ERROR_VALUE) {
         m_expiratoryFlow = p_currentExpiratoryFlow;

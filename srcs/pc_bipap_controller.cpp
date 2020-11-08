@@ -24,9 +24,7 @@ PC_BIPAP_Controller pcBipapController;
 
 // FUNCTIONS ==================================================================
 
-PC_BIPAP_Controller::PC_BIPAP_Controller() {}
-
-void PC_BIPAP_Controller::setup() {
+PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
@@ -36,10 +34,29 @@ void PC_BIPAP_Controller::setup() {
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
     m_expiratoryPidLastErrorsIndex = 0;
+    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
+        m_inspiratoryFlowLastValues[i] = 0u;
+    }
     for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
         m_inspiratoryPidLastErrors[i] = 0u;
         m_expiratoryPidLastErrors[i] = 0u;
     }
+
+    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
+    m_reOpenInspiratoryValve = false;
+    m_inspiratorySlope = 0;
+    m_blowerIncrement = 0;
+    m_inspiratoryPidIntegral = 0;
+    m_inspiratoryPidLastError = 0;
+    m_expiratoryPidFastMode = true;
+    m_inspiratoryPidFastMode = true;
+    m_expiratoryPidIntegral = 0;
+    m_expiratoryPidLastError = 0;
+    m_maxInspiratoryFlow = 0;
+}
+
+void PC_BIPAP_Controller::setup() {
+    // No specific setup code
 }
 
 void PC_BIPAP_Controller::initCycle() {
@@ -141,6 +158,8 @@ void PC_BIPAP_Controller::exhale() {
             for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
                 sum += m_inspiratoryFlowLastValues[i];
             }
+
+            // cppcheck-suppress unreadVariable
             int32_t meanFlow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
 
             if (mainController.inspiratoryFlow()
