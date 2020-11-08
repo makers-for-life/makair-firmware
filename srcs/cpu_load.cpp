@@ -12,6 +12,8 @@
 // Associated header
 #include "../includes/cpu_load.h"
 
+#include "Arduino.h"
+
 // INITIALISATION =============================================================
 
 // idleCyclesCount will be incremented in the loop, and read in the systick IRQ
