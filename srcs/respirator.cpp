@@ -36,6 +36,7 @@
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
+#include "../includes/rpi_watchdog.h"
 
 // PROGRAM =====================================================================
 
@@ -140,6 +141,9 @@ void setup(void) {
 
     // Turn on the Raspberry Pi power
     digitalWrite(PIN_ENABLE_PWR_RASP, PWR_RASP_ACTIVE);
+#if DEBUG != 0
+    rpiWatchdog.disable();
+#endif
 
     // Activate test mode if a service button is pressed
     // The end of line test mode cannot be activated later on.
