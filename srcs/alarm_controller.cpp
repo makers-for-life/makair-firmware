@@ -113,6 +113,7 @@ AlarmController::AlarmController()
            */
           Alarm(AlarmPriority::ALARM_LOW, RCM_SW_16, 1u)}),
       m_tick(0u),
+      m_unsnooze(true),
       m_pressure(0u),
       m_phase(CyclePhases::INHALATION),
       m_cycle_number(0u) {
@@ -125,7 +126,9 @@ AlarmController::AlarmController()
 }
 
 void AlarmController::snooze() {
-    if (m_snoozeTime == 0u) {
+  Serial.println("snoze");
+    if (m_unsnooze) {
+        m_unsnooze = false;
         digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
         m_snoozeTime = millis();
         for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
@@ -139,6 +142,7 @@ void AlarmController::snooze() {
 
         Buzzer_Mute();
     }
+    sendControlAck(9, !m_unsnooze);
 }
 
 void AlarmController::detectedAlarm(uint8_t p_alarmCode,
@@ -222,7 +226,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
     AlarmPriority highestPriority = AlarmPriority::ALARM_NONE;
     uint8_t triggeredAlarmCodes[ALARMS_SIZE];
     uint8_t numberOfTriggeredAlarms = 0;
-    bool unsnooze = false;
+    bool justUnsnoozed = false;
 
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         Alarm* current = &m_alarms[i];
@@ -234,15 +238,18 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
             triggeredAlarmCodes[numberOfTriggeredAlarms] = current->getCode();
             numberOfTriggeredAlarms++;
 
-            if ((m_snoozeTime > 0u) && !m_snoozedAlarms[i]) {
-                unsnooze = true;
+            if (!m_unsnooze && !m_snoozedAlarms[i]) {
+                unsnooze();
+                justUnsnoozed = true;
             }
+        } else {
+          m_snoozedAlarms[i] = false;
         }
     }
 
-    int32_t millisSinceSnooze = millis() - m_snoozeTime;
-    if (!unsnooze && (m_snoozeTime > 0u) && (millisSinceSnooze >= 120000)) {
-        unsnooze = true;
+    uint32_t millisSinceSnooze = millis() - m_snoozeTime;
+    if (!m_unsnooze && (m_snoozeTime > 0u) && (millisSinceSnooze >= 120000)) {
+        unsnooze();
     }
 
     if ((p_tick % (LCD_UPDATE_PERIOD_US / MAIN_CONTROLLER_COMPUTE_PERIOD_US)) == 0u) {
@@ -250,8 +257,10 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
     }
 
     if (highestPriority == AlarmPriority::ALARM_HIGH) {
-        if ((m_highestPriority != highestPriority) || unsnooze) {
-            Buzzer_High_Prio_Start();
+        if ((m_highestPriority != highestPriority) || justUnsnoozed) {
+            if (m_unsnooze){
+              Buzzer_High_Prio_Start();
+            }
         }
 
         if ((p_tick % 100u) == 50u) {
@@ -262,8 +271,10 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         }
         digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
     } else if (highestPriority == AlarmPriority::ALARM_MEDIUM) {
-        if ((m_highestPriority != highestPriority) || unsnooze) {
-            Buzzer_Medium_Prio_Start();
+        if ((m_highestPriority != highestPriority) || justUnsnoozed) {
+            if (m_unsnooze){
+              Buzzer_Medium_Prio_Start();
+            }
         }
         digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
         if ((p_tick % 100u) == 50u) {
@@ -273,8 +284,10 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         } else {
         }
     } else if (highestPriority == AlarmPriority::ALARM_LOW) {
-        if ((m_highestPriority != highestPriority) || unsnooze) {
-            Buzzer_Low_Prio_Start();
+        if ((m_highestPriority != highestPriority) || justUnsnoozed) {
+            if (m_unsnooze){
+              Buzzer_Low_Prio_Start();
+            }
         }
 
         digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
@@ -286,15 +299,19 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
     }
 
-    if (unsnooze) {
-        digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
-        m_snoozeTime = 0u;
-        for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
-            m_snoozedAlarms[i] = false;
-        }
-    }
-
     m_highestPriority = highestPriority;
+}
+
+// cppcheck-suppress unusedFunction
+void AlarmController::unsnooze() {
+  Serial.println("unsnoze");
+    digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
+    m_snoozeTime = 0u;
+    for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
+        m_snoozedAlarms[i] = false;
+    }
+    m_unsnooze = true;
+    sendControlAck(9, !m_unsnooze);
 }
 
 // cppcheck-suppress unusedFunction

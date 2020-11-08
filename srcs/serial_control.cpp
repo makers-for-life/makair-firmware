@@ -21,6 +21,7 @@
 /// Internals
 #include "../includes/activation.h"
 #include "../includes/main_controller.h"
+#include "../includes/alarm_controller.h"
 
 // INITIALISATION =============================================================
 
@@ -148,6 +149,10 @@ void serialControlLoop() {
 
                 case 8:  // Machine on/off
                     activationController.changeState(value);
+                    break;
+
+                case 9:  // Snooze alarms
+                    alarmController.snooze();
                     break;
 
                 default:

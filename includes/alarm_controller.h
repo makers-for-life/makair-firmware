@@ -45,8 +45,14 @@ class AlarmController {
      */
     void snooze();
 
+    /**
+     * Unsnooze alarms
+     */
+    void unsnooze();
+
+
     /// Check if alarms are currently snoozed
-    bool isSnoozed() const { return m_snoozeTime != 0; }
+    bool isSnoozed() const { return !m_unsnooze; }
 
     /**
      * Mark a specific alarm as detected
@@ -111,6 +117,9 @@ class AlarmController {
 
     /// Current cycle number
     uint32_t m_cycle_number;
+
+    /// Is unsnoozed right now
+    bool m_unsnooze;
 };
 
 // INITIALISATION =============================================================
