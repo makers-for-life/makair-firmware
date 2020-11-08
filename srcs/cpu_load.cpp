@@ -36,8 +36,6 @@ uint32_t cpuLoadLatestCycleCount = 0;
 
 // FUNCTIONS ==================================================================
 
-void countIdleCycle(void) { idleCyclesCount++; }
-
 uint8_t readCpuLoadPercent(void) { return cpuLoadPercent; }
 
 void cpuLoadCallback(void) {

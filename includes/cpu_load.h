@@ -33,7 +33,5 @@
  */
 uint8_t readCpuLoadPercent(void);
 
-/**
- * Access to idleCyclesCount needed by COUNT_IDLE_CYCLE macro
- */
+/// Access to idleCyclesCount needed by the COUNT_IDLE_CYCLE macro
 extern volatile uint32_t idleCyclesCount;
