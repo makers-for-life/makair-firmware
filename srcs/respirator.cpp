@@ -33,10 +33,10 @@
 #include "../includes/parameters.h"
 #include "../includes/pressure.h"
 #include "../includes/pressure_valve.h"
+#include "../includes/rpi_watchdog.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
-#include "../includes/rpi_watchdog.h"
 
 // PROGRAM =====================================================================
 
@@ -82,6 +82,8 @@ void waitAndMeasurePressure(uint16_t ms) {
 }
 
 void setup(void) {
+    // Nothing should be sent to Serial in production, but this will avoid crashing the program if
+    // some Serial.print() was forgotten
     Serial.begin(115200);
     DBG_DO(Serial.println("Booting the system...");)
 
