@@ -38,7 +38,7 @@ PC_CMV_Controller::PC_CMV_Controller() {
         m_expiratoryPidLastErrors[i] = 0u;
     }
 
-    m_blowerIncrement = DEFAULT_BLOWER_SPEED;
+    m_blowerIncrement = 0;
     m_inspiratoryPidIntegral = 0;
     m_inspiratoryPidLastError = 0;
     m_expiratoryPidFastMode = true;
