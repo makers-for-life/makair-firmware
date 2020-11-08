@@ -254,6 +254,6 @@ void setup(void) {
 }
 
 // cppcheck-suppress unusedFunction
-void loop(void) { countIdleCycle(); }
+void loop(void) { COUNT_IDLE_CYCLE; }
 
 #endif

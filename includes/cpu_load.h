@@ -21,9 +21,9 @@
 /**
  * Increment the idle cycles counter
  *
- * @note This must be called in the main loop()
+ * @note This must be called in the main loop() with nothing else in the loop
  */
-void countIdleCycle(void);
+#define COUNT_IDLE_CYCLE idleCyclesCount++
 
 /**
  * Get the value of the CPU load
@@ -32,3 +32,8 @@ void countIdleCycle(void);
  * @note If this raises to 100%, there is some blocking code somewhere
  */
 uint8_t readCpuLoadPercent(void);
+
+/**
+ * Access to idleCyclesCount needed by COUNT_IDLE_CYCLE macro
+ */
+extern volatile uint32_t idleCyclesCount;
