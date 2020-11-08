@@ -87,11 +87,10 @@ void PC_CMV_Controller::inhale() {
     inspiratoryValve.open(inspiratoryPidValue);
     expiratoryValve.close();
 
-    // m_plateauStartTime is used for blower regulations, -20 is added to help blower convergence
+    // m_plateauStartTime is used for blower regulations, -5 is added to help blower convergence
     if (mainController.pressure() > mainController.plateauPressureCommand() - 5u
         && !m_plateauPressureReached) {
-        m_plateauStartTime =
-            mainController.tick();  // TODO: make this only dependent of open loop ramp-up
+        m_plateauStartTime = mainController.tick();
         m_plateauPressureReached = true;
     }
 }

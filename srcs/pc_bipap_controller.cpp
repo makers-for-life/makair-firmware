@@ -47,7 +47,6 @@ void PC_BIPAP_Controller::initCycle() {
     m_triggerWindow =
         mainController.ticksPerInhalation() + 140;  // Possible to trigger 1s before end
 
-    // m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();  TODO ?
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
     m_inspiratoryPidIntegral = 0;
@@ -111,7 +110,7 @@ void PC_BIPAP_Controller::inhale() {
 }
 
 void PC_BIPAP_Controller::exhale() {
-    blower.runSpeed(m_blowerSpeed - 400);  // TODO: check min blower speed
+    blower.runSpeed(m_blowerSpeed - 400); 
 
     // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(

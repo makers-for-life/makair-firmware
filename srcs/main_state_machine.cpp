@@ -32,8 +32,7 @@ MainStateMachine mainStateMachine = MainStateMachine();
 
 uint32_t clockMsmTimer = 0;
 uint32_t lastMillis = 0;
-uint32_t lastMillisInTheLoop = 0;  // TODO better naming for this variable
-uint32_t MainStateMachineNumber = 1;
+uint32_t lastMainControllerCall = 0; 
 HardwareTimer* msmTimer;
 uint32_t lastMicro = 0;
 uint32_t tick = 0;
@@ -67,7 +66,6 @@ void millisecondTimerMSM(HardwareTimer*) {
     mainController.updatePressure(pressure);
     int32_t inspiratoryflow = MFM_read_airflow();
     mainController.updateInspiratoryFlow(inspiratoryflow);
-    // TODO: reactivate because higher priority timerIWatchdog.reload();
 
     if (clockMsmTimer % 10 == 0) {
         // Check if some buttons have been pushed
@@ -83,7 +81,6 @@ void millisecondTimerMSM(HardwareTimer*) {
             delay(10000);
         }
         alarmController.runAlarmEffects(tick);
-        tick++;  // TODO this is not very beautiful
     }
 
     // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
@@ -111,14 +108,21 @@ void millisecondTimerMSM(HardwareTimer*) {
             displayMachineStopped();
         }
 
+        if ((clockMsmTimer % 10u) == 0u) {
+            tick++;  // Also increase ticks during stop, for alarm controller
+        }
+
         activationController.refreshState();
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         }
+
+        
+        
     } else if (msmstep == INIT_CYCLE) {
         mainController.initRespiratoryCycle();
         lastMillis = millis();
-        lastMillisInTheLoop = millis();
+        lastMainControllerCall = millis();
         tick = 0;
         msmstep = BREATH;
         MFM_read_milliliters(true);  // Reset volume integral
@@ -127,7 +131,7 @@ void millisecondTimerMSM(HardwareTimer*) {
         uint32_t currentMillis = millis();
         tick = (currentMillis - lastMillis) / 10u;
 
-        if (currentMillis - lastMillisInTheLoop > 10u) {
+        if (currentMillis - lastMainControllerCall > 10u) {
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
@@ -137,8 +141,10 @@ void millisecondTimerMSM(HardwareTimer*) {
                 lastMicro = currentMicro;
                 mainController.updateTick(tick);
                 mainController.compute();
+                lastMainControllerCall = currentMillis;
+                tick++;
             }
-            lastMillisInTheLoop = currentMillis;
+            
         }
 
         if (mainController.triggered()) {

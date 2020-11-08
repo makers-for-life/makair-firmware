@@ -37,6 +37,7 @@
 #define CONST_MIN_TRIGGER_OFFSET 0u      // [mmH2O]
 #define CONST_MAX_TRIGGER_OFFSET 100u    // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0    // [mmH2O]
+#define CONST_INITIAL_ZERO_VOLUME 0    // [mL]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u

@@ -54,7 +54,7 @@ void MainController::setup() {
     m_plateauPressureToDisplay = CONST_INITIAL_ZERO_PRESSURE;
     m_peepMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_cyclesPerMinuteMeasure = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
-    m_tidalVolumeMeasure = 0;  // TODO CONST DEFINE
+    m_tidalVolumeMeasure = CONST_INITIAL_ZERO_VOLUME; 
 
     m_pressure = CONST_INITIAL_ZERO_PRESSURE;
     m_pressureCommand = CONST_INITIAL_ZERO_PRESSURE;
@@ -124,7 +124,7 @@ void MainController::initRespiratoryCycle() {
     }
     m_lastPressureValuesIndex = 0;
 
-    m_sumOfPressures = 0u;  // TODO: check if used
+    m_sumOfPressures = 0u;  
     m_numberOfPressures = 0u;
 
     m_PlateauMeasureSum = 0u;
