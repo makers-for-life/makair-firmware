@@ -111,47 +111,47 @@ void serialControlLoop() {
                 });
 
                 switch (setting) {
-                case 0:  // Heartbeat
-                    if (value == 43690u) {
+                case Heartbeat:
+                    if (value == DISABLE_RPI_WATCHDOG) {
                         // Disable RPi watchdog completely
                     } else {
                         // Send heartbeat to the RPi watchdog
                     }
                     break;
 
-                case 1:  // PeakPressure
+                case PeakPressure:
                     // This setting was removed
                     break;
 
-                case 2:  // PlateauPressure
+                case PlateauPressure:
                     mainController.onPlateauPressureSet(value);
                     break;
 
-                case 3:  // PEEP
+                case PEEP:
                     mainController.onPeepSet(value);
                     break;
 
-                case 4:  // CyclesPerMinute
+                case CyclesPerMinute:
                     mainController.onCycleSet(value);
                     break;
 
-                case 5:  // ExpiratoryTerm
+                case ExpiratoryTerm:
                     mainController.onExpiratoryTermSet(value);
                     break;
 
-                case 6:  // TriggerEnabled
+                case TriggerEnabled:
                     mainController.onTriggerModeEnabledSet(value);
                     break;
 
-                case 7:  // TriggerOffset
+                case TriggerOffset:
                     mainController.onTriggerOffsetSet(value);
                     break;
 
-                case 8:  // Machine on/off
+                case RespirationEnabled:
                     activationController.changeState(value);
                     break;
 
-                case 9:  // Snooze alarms
+                case AlarmSnooze:
                     alarmController.snooze();
                     break;
 
