@@ -242,7 +242,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
                 justUnsnoozed = true;
             }
         } else {
-          m_snoozedAlarms[i] = false;
+            m_snoozedAlarms[i] = false;
         }
     }
 
@@ -257,8 +257,8 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
 
     if (highestPriority == AlarmPriority::ALARM_HIGH) {
         if ((m_highestPriority != highestPriority) || justUnsnoozed) {
-            if (m_unsnooze){
-              Buzzer_High_Prio_Start();
+            if (m_unsnooze) {
+                Buzzer_High_Prio_Start();
             }
         }
 
@@ -271,8 +271,8 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
     } else if (highestPriority == AlarmPriority::ALARM_MEDIUM) {
         if ((m_highestPriority != highestPriority) || justUnsnoozed) {
-            if (m_unsnooze){
-              Buzzer_Medium_Prio_Start();
+            if (m_unsnooze) {
+                Buzzer_Medium_Prio_Start();
             }
         }
         digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
@@ -284,8 +284,8 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
         }
     } else if (highestPriority == AlarmPriority::ALARM_LOW) {
         if ((m_highestPriority != highestPriority) || justUnsnoozed) {
-            if (m_unsnooze){
-              Buzzer_Low_Prio_Start();
+            if (m_unsnooze) {
+                Buzzer_Low_Prio_Start();
             }
         }
 

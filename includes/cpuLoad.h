@@ -9,8 +9,7 @@
 
 /**
  * CPU load in percent. Only available in production software (MODE_PROD)
- * 
+ *
  * @note If this raise to 100%, there is some blocking code somewhere.
  */
 int32_t readCpuLoadPercent(void);
-

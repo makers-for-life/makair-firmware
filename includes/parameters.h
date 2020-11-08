@@ -37,7 +37,7 @@
 #define CONST_MIN_TRIGGER_OFFSET 0u      // [mmH2O]
 #define CONST_MAX_TRIGGER_OFFSET 100u    // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0    // [mmH2O]
-#define CONST_INITIAL_ZERO_VOLUME 0    // [mL]
+#define CONST_INITIAL_ZERO_VOLUME 0      // [mL]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
@@ -101,12 +101,12 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 /// Angle when closed
 #define VALVE_CLOSED_STATE 125u
-#define VALVE_PERIOD 1000  // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
-#define FAULHABER_OPENED 640     // PWM duty cycle 64% -> open
-#define FAULHABER_CLOSED 900     // PWM duty cycle 90% -> closed
+#define VALVE_PERIOD 1000     // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
+#define FAULHABER_OPENED 640  // PWM duty cycle 64% -> open
+#define FAULHABER_CLOSED 900  // PWM duty cycle 90% -> closed
 
-#define PIN_INSPIRATORY_VALVE D5   // PB4 / TIM3_CH1
-#define PIN_EXPIRATORY_VALVE D4  // PB5 / TIM3_CH2
+#define PIN_INSPIRATORY_VALVE D5  // PB4 / TIM3_CH1
+#define PIN_EXPIRATORY_VALVE D4   // PB5 / TIM3_CH2
 #define TIM_CHANNEL_INSPIRATORY_VALVE 1
 #define TIM_CHANNEL_EXPIRATORY_VALVE 2
 #define ESC_PPM_PERIOD                                                                             \

@@ -50,7 +50,6 @@ class AlarmController {
      */
     void unsnooze();
 
-
     /// Check if alarms are currently snoozed
     bool isSnoozed() const { return !m_unsnooze; }
 

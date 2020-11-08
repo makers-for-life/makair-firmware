@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../includes/ventilation_controller.h"
 #include "../includes/parameters.h"
+#include "../includes/ventilation_controller.h"
 
 /// Controller for the BIPAP mode
 class PC_BIPAP_Controller final : public VentilationController {

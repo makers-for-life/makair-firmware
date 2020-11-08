@@ -110,7 +110,7 @@ void PC_BIPAP_Controller::inhale() {
 }
 
 void PC_BIPAP_Controller::exhale() {
-    blower.runSpeed(m_blowerSpeed - 400); 
+    blower.runSpeed(m_blowerSpeed - 400);
 
     // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(

@@ -20,8 +20,8 @@
 
 /// Internals
 #include "../includes/activation.h"
-#include "../includes/main_controller.h"
 #include "../includes/alarm_controller.h"
+#include "../includes/main_controller.h"
 
 // INITIALISATION =============================================================
 

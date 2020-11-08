@@ -32,7 +32,7 @@ MainStateMachine mainStateMachine = MainStateMachine();
 
 uint32_t clockMsmTimer = 0;
 uint32_t lastMillis = 0;
-uint32_t lastMainControllerCall = 0; 
+uint32_t lastMainControllerCall = 0;
 HardwareTimer* msmTimer;
 uint32_t lastMicro = 0;
 uint32_t tick = 0;
@@ -117,8 +117,6 @@ void millisecondTimerMSM(HardwareTimer*) {
             msmstep = INIT_CYCLE;
         }
 
-        
-        
     } else if (msmstep == INIT_CYCLE) {
         mainController.initRespiratoryCycle();
         lastMillis = millis();
@@ -144,7 +142,6 @@ void millisecondTimerMSM(HardwareTimer*) {
                 lastMainControllerCall = currentMillis;
                 tick++;
             }
-            
         }
 
         if (mainController.triggered()) {

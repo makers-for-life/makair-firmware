@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../includes/ventilation_controller.h"
 #include "../includes/parameters.h"
+#include "../includes/ventilation_controller.h"
 
 /// Controller for the CMV mode
 class PC_CMV_Controller final : public VentilationController {

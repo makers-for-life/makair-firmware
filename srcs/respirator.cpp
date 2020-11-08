@@ -23,6 +23,7 @@
 #include "../includes/blower.h"
 #include "../includes/buzzer.h"
 #include "../includes/buzzer_control.h"
+#include "../includes/cpuLoad.h"
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
 #include "../includes/keyboard.h"
@@ -35,7 +36,6 @@
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
-#include "../includes/cpuLoad.h"
 
 // PROGRAM =====================================================================
 

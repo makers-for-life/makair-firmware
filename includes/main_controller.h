@@ -447,8 +447,8 @@ class MainController {
     uint16_t m_lastPressureValuesIndex;
 
     /// Sum of the current cycle's pressures
-    uint32_t m_sumOfPressures;  
-    
+    uint32_t m_sumOfPressures;
+
     /// Number of the current cycle's pressures
     uint16_t m_numberOfPressures;
 };
