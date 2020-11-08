@@ -54,7 +54,7 @@ void MainController::setup() {
     m_plateauPressureToDisplay = CONST_INITIAL_ZERO_PRESSURE;
     m_peepMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_cyclesPerMinuteMeasure = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
-    m_tidalVolumeMeasure = CONST_INITIAL_ZERO_VOLUME; 
+    m_tidalVolumeMeasure = CONST_INITIAL_ZERO_VOLUME;
 
     m_pressure = CONST_INITIAL_ZERO_PRESSURE;
     m_pressureCommand = CONST_INITIAL_ZERO_PRESSURE;
@@ -124,7 +124,7 @@ void MainController::initRespiratoryCycle() {
     }
     m_lastPressureValuesIndex = 0;
 
-    m_sumOfPressures = 0u;  
+    m_sumOfPressures = 0u;
     m_numberOfPressures = 0u;
 
     m_PlateauMeasureSum = 0u;
@@ -200,7 +200,6 @@ void MainController::inhale() {
     }
 
     // Compute plateau at the end of the cycle
-    // TODO 20 = 200 ms should be a parameter
     if (m_tick > m_ticksPerInhalation - 20) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
@@ -587,16 +586,12 @@ void MainController::onPlateauPressureSet(uint16_t p_plateauPressure) {
 
 void MainController::onPeakPressureDecrease() {
     DBG_DO(Serial.println("Peak Pressure --");)
-    // TODO : remove this !! Only for debug
-    m_peakPressureNextCommand = 20;
-    m_ventilationControllerNextCommand = &pcBipapController;
+    DBG_DO(m_peakPressureNextCommand = 20; m_ventilationControllerNextCommand = &pcBipapController;)
 }
 
 void MainController::onPeakPressureIncrease() {
     DBG_DO(Serial.println("Peak Pressure ++");)
-    // TODO : remove this !! Only for debug
-    m_ventilationControllerNextCommand = &pcCmvController;
-    m_peakPressureNextCommand = 0;
+    DBG_DO(m_ventilationControllerNextCommand = &pcCmvController; m_peakPressureNextCommand = 0;)
 }
 
 // cppcheck-suppress unusedFunction

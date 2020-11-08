@@ -15,7 +15,7 @@
 // INITIALISATION =============================================================
 
 /// Buzzer frequency in Hz
-#define BUZZER_FREQ 400  // TODO: remove this for debug
+#define BUZZER_FREQ 4000 
 
 #define PERIOD_BUZZER_US (1000000 / BUZZER_FREQ)
 
