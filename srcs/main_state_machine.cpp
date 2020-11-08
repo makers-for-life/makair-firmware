@@ -104,7 +104,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     } else if (msmstep == STOPPED) {
         // Executed just after booting, until the first start
         if ((clockMsmTimer % 100u) == 0u) {
-            mainController.stop();
+            mainController.stop(millis());
             displayMachineStopped();
         }
 
@@ -163,7 +163,7 @@ void millisecondTimerMSM(HardwareTimer*) {
             msmstep = STOPPED;
         }
     } else if (msmstep == END_CYCLE) {
-        mainController.endRespiratoryCycle();
+        mainController.endRespiratoryCycle(millis());
         displayCurrentInformation(mainController.peakPressureMeasure(),
                                   mainController.plateauPressureMeasure(),
                                   mainController.peepMeasure());

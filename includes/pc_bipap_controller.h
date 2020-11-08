@@ -113,6 +113,8 @@ class PC_BIPAP_Controller final : public VentilationController {
 
     /// Last flow index
     int32_t m_inspiratoryFlowLastValuesIndex;
+
+    int32_t m_maxInspiratoryFlow;
 };
 
 extern PC_BIPAP_Controller pcBipapController;

@@ -73,8 +73,6 @@ void MainController::setup() {
     m_tidalVolumeAlreadyRead = false;
     m_plateauDurationMs = 0;
 
-    m_lastEndOfRespirationDateMs = 0;
-
     m_inspiratoryValveAngle = VALVE_CLOSED_STATE;
 
     computeTickParameters();
@@ -232,9 +230,9 @@ void MainController::exhale() {
     }
 }
 
-void MainController::endRespiratoryCycle() {
+void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
     // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
-    uint32_t currentMillis = m_tick * 10;
+    uint32_t currentMillis = p_currentMillis;
     m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] =
         currentMillis - m_lastEndOfRespirationDateMs;
     m_lastBreathPeriodsMsIndex++;
@@ -411,11 +409,12 @@ void MainController::sendStopMessageToUi() {
 #endif
 }
 
-void MainController::stop() {
+void MainController::stop(uint32_t p_currentMillis) {
     blower.stop();
     sendStopMessageToUi();
     // When stopped, open the valves
     reachSafetyPosition();
+    m_lastEndOfRespirationDateMs = p_currentMillis;
 
 #if !SIMULATION
     // Stop alarms related to breathing cycle

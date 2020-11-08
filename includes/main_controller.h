@@ -44,7 +44,7 @@ class MainController {
     void initRespiratoryCycle();
 
     /// End a respiratory cycle
-    void endRespiratoryCycle();
+    void endRespiratoryCycle(uint32_t p_currentMillis);
 
     /**
      * Input a tick number
@@ -257,7 +257,7 @@ class MainController {
     void reachSafetyPosition();
 
     /// Stop the breathing
-    void stop();
+    void stop(uint32_t p_currentMillis);
 
     /// Send a "stopped" telemetry message
     void sendStopMessageToUi();
