@@ -12,5 +12,5 @@
  * 
  * @note If this raise to 100%, there is some blocking code somewhere.
  */
-void readCpuLoadPercent(void);
+int32_t readCpuLoadPercent(void);
 

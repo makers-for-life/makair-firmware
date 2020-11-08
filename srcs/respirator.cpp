@@ -292,6 +292,6 @@ void osSystickHandler() {
 }
 }
 
-void readCpuLoadPercent(void) { return cpuLoadPercent; }
+int32_t readCpuLoadPercent(void) { return cpuLoadPercent; }
 
 #endif
