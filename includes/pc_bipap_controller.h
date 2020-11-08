@@ -32,7 +32,7 @@ class PC_BIPAP_Controller final : public VentilationController {
     void endCycle() override;
 
  private:
-    /// Determine the blower speed to adopt
+    /// Determine the blower speed to adopt for next cycle
     void calculateBlowerIncrement();
 
     /// Number of ticks from which it is possible to trigger a new inspiration

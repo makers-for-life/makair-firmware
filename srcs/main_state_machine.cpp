@@ -38,21 +38,14 @@ HardwareTimer* msmTimer;
 uint32_t lastMicro = 0;
 uint32_t tick = 0;
 
-enum TestStep { SETUP, STOPPED, INIT_CYCLE, BREATH, TRIGGER_RAISED, END_CYCLE };
+enum Step { SETUP, STOPPED, INIT_CYCLE, BREATH, TRIGGER_RAISED, END_CYCLE };
 
-TestStep msmstep = SETUP;
-TestStep previousmsmstep = SETUP;
+Step msmstep = SETUP;
+Step previousmsmstep = SETUP;
 
 // FUNCTIONS ==================================================================
 
 MainStateMachine::MainStateMachine() { isMsmActive = false; }
-
-// cppcheck-suppress unusedFunction
-void MainStateMachine::activate() {
-    isMsmActive = true;
-    ::clockMsmTimer = 0;
-    ::msmTimer = new HardwareTimer(TIM9);
-}
 
 bool MainStateMachine::isRunning() { return isMsmActive; }
 
@@ -179,6 +172,9 @@ void millisecondTimerMSM(HardwareTimer*) {
 }
 
 void MainStateMachine::setupAndStart() {
+    isMsmActive = true;
+    ::clockMsmTimer = 0;
+    ::msmTimer = new HardwareTimer(TIM9);
     // Set a 1 ms timer for the event loop
     // Prescaler at 10 kHz; stm32f411 clock is 100 mHz
     ::msmTimer->setPrescaleFactor((::msmTimer->getTimerClkFreq() / 10000) - 1);

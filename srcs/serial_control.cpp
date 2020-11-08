@@ -139,7 +139,7 @@ void serialControlLoop() {
                     break;
 
                 case 6:  // TriggerEnabled
-                    mainController.onTriggerEnabledSet(value);
+                    mainController.onTriggerModeEnabledSet(value);
                     break;
 
                 case 7:  // TriggerOffset

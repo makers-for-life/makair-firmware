@@ -2,7 +2,7 @@
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
  * @file pressure_valve.cpp
- * @brief Tools to control an Pressure Valve's servomotor
+ * @brief Tools to control Pressure Valves
  *****************************************************************************/
 
 #pragma once
@@ -29,12 +29,12 @@ PressureValve::PressureValve() {}
 
 PressureValve::PressureValve(HardwareTimer* p_hardwareTimer,
                              uint16_t p_timerChannel,
-                             uint16_t p_servoPin,
+                             uint16_t p_valvePin,
                              uint16_t p_openApertureAngle,
                              uint16_t p_closeApertureAngle) {
     actuator = p_hardwareTimer;
     timerChannel = p_timerChannel;
-    servoPin = p_servoPin;
+    valvePin = p_valvePin;
     openApertureAngle = p_openApertureAngle;
     closeApertureAngle = p_closeApertureAngle;
     minApertureAngle = min(p_closeApertureAngle, p_openApertureAngle);
@@ -44,7 +44,7 @@ PressureValve::PressureValve(HardwareTimer* p_hardwareTimer,
 }
 
 void PressureValve::setup() {
-    actuator->setMode(timerChannel, TIMER_OUTPUT_COMPARE_PWM1, servoPin);
+    actuator->setMode(timerChannel, TIMER_OUTPUT_COMPARE_PWM1, valvePin);
     actuator->setCaptureCompare(timerChannel, 0, MICROSEC_COMPARE_FORMAT);
 }
 

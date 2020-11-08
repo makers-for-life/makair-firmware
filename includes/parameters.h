@@ -100,14 +100,14 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 
 /// Angle when closed
 #define VALVE_CLOSED_STATE 125u
-#define SERVO_VALVE_PERIOD 1000  // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
+#define VALVE_PERIOD 1000  // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
 #define FAULHABER_OPENED 640     // PWM duty cycle 64% -> open
 #define FAULHABER_CLOSED 900     // PWM duty cycle 90% -> closed
 
-#define PIN_SERVO_BLOWER D5   // PB4 / TIM3_CH1
-#define PIN_SERVO_PATIENT D4  // PB5 / TIM3_CH2
-#define TIM_CHANNEL_SERVO_VALVE_BLOWER 1
-#define TIM_CHANNEL_SERVO_VALVE_PATIENT 2
+#define PIN_INSPIRATORY_VALVE D5   // PB4 / TIM3_CH1
+#define PIN_EXPIRATORY_VALVE D4  // PB5 / TIM3_CH2
+#define TIM_CHANNEL_INSPIRATORY_VALVE 1
+#define TIM_CHANNEL_EXPIRATORY_VALVE 2
 #define ESC_PPM_PERIOD                                                                             \
     10000  // ESC should be driven in 50 Hz. 100 Hz is a security against ESC or nucleo bugs. Some
            // ESC stops very quickly

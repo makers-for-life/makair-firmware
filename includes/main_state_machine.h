@@ -18,9 +18,6 @@ class MainStateMachine {
     /// Default constructor
     MainStateMachine();
 
-    /// Starts the state machine and its hardware timer
-    void activate();
-
     /**
      * Check if the state machine is enabled
      *
@@ -31,15 +28,12 @@ class MainStateMachine {
     /// Display information on screen
     void ScreenUpdate();
 
-    // void millisecondTimerMSM();
-
     /// Run the state machine
     void setupAndStart();
 
  private:
     /// Main state machine activation state
     bool isMsmActive;
-    uint32_t testActive;
 };
 
 extern MainStateMachine mainStateMachine;

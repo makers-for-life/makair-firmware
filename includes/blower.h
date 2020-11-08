@@ -33,7 +33,7 @@ class Blower {
      * Parameterized constructor
      *
      * @param p_hardwareTimer Hardware time for the blower
-     * @param p_timerChannel TIM channel for this servomotor
+     * @param p_timerChannel TIM channel for this blower
      * @param p_blowerPin Data pin for this blower
      */
     Blower(HardwareTimer* p_hardwareTimer, uint16_t p_timerChannel, uint16_t p_blowerPin);

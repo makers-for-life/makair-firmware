@@ -32,7 +32,7 @@ class PC_CMV_Controller final : public VentilationController {
     void endCycle() override;
 
  private:
-    /// Determine the blower speed to adopt
+    /// Determine the blower speed to adopt for next cycle
     void calculateBlowerIncrement();
 
     /// Number of ticks when plateau is reached for the first time

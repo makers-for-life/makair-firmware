@@ -135,8 +135,7 @@ void MainController::initRespiratoryCycle() {
 
 void MainController::compute() {
     // Update the cycle phase
-    updatePhase(m_tick);
-    m_tick = m_tick;
+    updatePhase();
 
     // Compute metrics for alarms
     m_sumOfPressures += m_pressure;
@@ -174,10 +173,10 @@ void MainController::compute() {
 #else
     m_tidalVolumeMeasure = UINT16_MAX;
 #endif
-    simulatorCommunication();
+    printDebugValues();
 }
 
-void MainController::updatePhase(uint16_t m_tick) {
+void MainController::updatePhase() {
     if (m_tick < m_ticksPerInhalation) {
         m_phase = CyclePhases::INHALATION;
         m_pressureCommand = m_plateauPressureCommand;
@@ -272,7 +271,7 @@ void MainController::endRespiratoryCycle() {
     m_ventilationController->endCycle();
 }
 
-void MainController::simulatorCommunication() {
+void MainController::printDebugValues() {
 #if DEBUG == 2
     Serial.print(m_pressure);
     Serial.print(",");
@@ -617,7 +616,7 @@ void MainController::onExpiratoryTermSet(uint16_t p_expiratoryTerm) {
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onTriggerEnabledSet(uint16_t p_triggerEnabled) {
+void MainController::onTriggerModeEnabledSet(uint16_t p_triggerEnabled) {
     if ((p_triggerEnabled == 0u) || (p_triggerEnabled == 1u)) {
         m_triggerModeEnabledNextCommand = p_triggerEnabled;
     }

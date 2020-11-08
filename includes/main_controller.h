@@ -143,11 +143,11 @@ class MainController {
     void onExpiratoryTermSet(uint16_t p_expiratoryTerm);
 
     /**
-     * Enable or disable expiratory trigger
+     * Enable or disable expiratory trigger mode
      *
      * @param p_triggerEnabled  0: disable trigger mode, 1: enable trigger mode
      */
-    void onTriggerEnabledSet(uint16_t p_triggerEnabled);
+    void onTriggerModeEnabledSet(uint16_t p_triggerEnabled);
 
     /**
      * Set the desired offset for expiratory trigger
@@ -245,6 +245,12 @@ class MainController {
      */
     void updateDt(int32_t p_dt);
 
+    /**
+     * Input the current delivered volume in inspiratory branch since beginning of the respiratory
+     * cycle
+     *
+     * @param p_currentDeliveredVolume Delivered Volume in mL/s
+     */
     void updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume);
 
     /// Put actuators in safety position
@@ -265,7 +271,7 @@ class MainController {
      *
      * @param p_tick  Duration from the begining of the cycle in hundredth of second
      */
-    void updatePhase(uint16_t p_tick);
+    void updatePhase();
 
     /// Perform the pressure control and compute the actuators commands during the inhalation
     /// phase
@@ -293,7 +299,8 @@ class MainController {
 
     void calculateBlowerIncrement();
 
-    void simulatorCommunication();
+    /// Print debug values, used to tweak PID, and triggers
+    void printDebugValues();
 
  private:
     /// Actual tick number (given by the main state machine)

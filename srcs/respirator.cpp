@@ -98,15 +98,15 @@ void setup(void) {
 
     // Timer for valves
     hardwareTimer3 = new HardwareTimer(TIM3);
-    hardwareTimer3->setOverflow(SERVO_VALVE_PERIOD, MICROSEC_FORMAT);
+    hardwareTimer3->setOverflow(VALVE_PERIOD, MICROSEC_FORMAT);
 
     // Valves setup
-    inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_BLOWER,
-                                     PIN_SERVO_BLOWER, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
+    inspiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_INSPIRATORY_VALVE,
+                                     PIN_INSPIRATORY_VALVE, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     inspiratoryValve.setup();
     hardwareTimer3->resume();
-    expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_SERVO_VALVE_PATIENT,
-                                    PIN_SERVO_PATIENT, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
+    expiratoryValve = PressureValve(hardwareTimer3, TIM_CHANNEL_EXPIRATORY_VALVE,
+                                    PIN_EXPIRATORY_VALVE, VALVE_OPEN_STATE, VALVE_CLOSED_STATE);
     expiratoryValve.setup();
     hardwareTimer3->resume();
 
@@ -236,7 +236,6 @@ void setup(void) {
     delay(1000);
 
     if (!eolTest.isRunning()) {
-        mainStateMachine.activate();
         mainStateMachine.setupAndStart();
 
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests

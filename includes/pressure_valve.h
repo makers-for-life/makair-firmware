@@ -16,10 +16,10 @@
 // MACROS =================================================================
 
 /**
- * Convert an angle in degrees to a value in microseconds for the servomotor controller
+ * Convert an angle in degrees to a value in microseconds for the valve controller
  *
  * @param value Angle in degrees
- * @return Value in microsends for the servomotor controller
+ * @return Value in microsends for the valve controller
  */
 uint16_t valveAngle2MicroSeconds(uint16_t value);
 
@@ -34,19 +34,19 @@ class PressureValve {
     /**
      * Parameterized constructor
      *
-     * @param p_hardwareTimer       Hardware time for this servomotor
-     * @param p_timerChannel        TIM channel for this servomotor
-     * @param p_servoPin            Data pin for this servomotor
+     * @param p_hardwareTimer       Hardware time for this valve
+     * @param p_timerChannel        TIM channel for this valve
+     * @param p_valvePin            Data pin for this valve
      * @param p_openApertureAngle   Open aperture angle in degrees
      * @param p_closeApertureAngle  Close aperture angle in degrees
      */
     PressureValve(HardwareTimer* p_hardwareTimer,
                   uint16_t p_timerChannel,
-                  uint16_t p_servoPin,
+                  uint16_t p_valvePin,
                   uint16_t p_openApertureAngle,
                   uint16_t p_closeApertureAngle);
     /**
-     * Initialize this servomotor
+     * Initialize this valve
      *
      * This must be called once to be able to use this Pressure Valve
      */
@@ -66,7 +66,7 @@ class PressureValve {
     void close();
 
     /**
-     * Command the servomotor to go to the requested aperture
+     * Command the valve to go to the requested aperture
      *
      * @note Nothing will happen if this function is not called after requesting a new aperture
      */
@@ -86,10 +86,10 @@ class PressureValve {
         }
     }
 
-    /// Minimum servomotor aperture angle in degrees
+    /// Minimum valve aperture angle in degrees
     inline uint16_t minAperture() const { return minApertureAngle; }
 
-    /// Maximum servomotor aperture angle in degrees
+    /// Maximum valve aperture angle in degrees
     inline uint16_t maxAperture() const { return maxApertureAngle; }
 
     /// Value of the requested aperture
@@ -99,10 +99,10 @@ class PressureValve {
     uint16_t position;
 
  private:
-    /// Minimum servomotor aperture angle in degrees
+    /// Minimum valve aperture angle in degrees
     uint16_t minApertureAngle;
 
-    /// Maximum servomotor aperture angle in degrees
+    /// Maximum valve aperture angle in degrees
     uint16_t maxApertureAngle;
 
     /// Open aperture angle in degrees
@@ -111,14 +111,14 @@ class PressureValve {
     /// Close aperture angle in degrees
     uint16_t closeApertureAngle;
 
-    /// Hardware time for this servomotor
+    /// Hardware time for this valve
     HardwareTimer* actuator;
 
-    /// TIM channel for this servomotor
+    /// TIM channel for this valve
     uint16_t timerChannel;
 
-    /// Data pin for this servomotor
-    uint16_t servoPin;
+    /// Data pin for this valve
+    uint16_t valvePin;
 };
 
 extern PressureValve expiratoryValve;

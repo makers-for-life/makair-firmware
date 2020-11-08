@@ -34,7 +34,10 @@
  */
 #define RAW_VOLTAGE_ON_BATTERY_HIGH 897u
 
-// analogRead(PIN) * RAW_BATTERY_MULTIPLIER = 0,1 => 0,1 / RAW_BATTERY_MULTIPLIER = 3
+/**
+ * Hysteresis is used to prevent fast switching when voltage is at the limit of 2 states
+ *  analogRead(PIN) * RAW_BATTERY_MULTIPLIER = 0,1 => 0,1 / RAW_BATTERY_MULTIPLIER = 3
+ */
 #define RAW_VOLTAGE_HYSTERESIS 3u
 
 /**
