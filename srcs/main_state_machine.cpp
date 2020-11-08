@@ -22,10 +22,10 @@
 #include "../includes/main_state_machine.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/pressure.h"
+#include "../includes/rpi_watchdog.h"
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
-#include "../includes/rpi_watchdog.h"
 
 // INITIALISATION =============================================================
 
@@ -97,7 +97,8 @@ void millisecondTimerMSM(HardwareTimer*) {
         mainStateMachine.ScreenUpdate();
     }
 
-    // Chech that raspberry UI has send heart beat in the last 60s. Otherwise restart the power.
+    // Check that the UI software on the Raspberry PI has sent a heartbeat in the last 60s
+    // Otherwise restart the power
     if ((clockMsmTimer % 1000u) == 0u) {
         rpiWatchdog.update();
     }
