@@ -20,14 +20,13 @@ static const int32_t INVALID_ERROR_MARKER = INT32_MIN;
 
 // FUNCTIONS ==================================================================
 
-MainController::MainController() {}
-
-void MainController::setup() {
-    DBG_DO(Serial.println(VERSION);)
-    DBG_DO(Serial.println("Setup the controller");)
+MainController::MainController() {
+    m_tick = 0;
+    m_phase = CyclePhases::INHALATION;
 
     m_inspiratoryFlow = 0;
     m_expiratoryFlow = 0;
+    m_currentDeliveredVolume = 0;
 
     m_cyclesPerMinuteCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
     m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
@@ -50,6 +49,8 @@ void MainController::setup() {
 
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
+    m_rebouncePeakPressureMeasure = 0;
+    m_inhalationLastPressure = 0;
     m_plateauPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
     m_plateauPressureToDisplay = CONST_INITIAL_ZERO_PRESSURE;
     m_peepMeasure = CONST_INITIAL_ZERO_PRESSURE;
@@ -76,7 +77,6 @@ void MainController::setup() {
     m_inspiratoryValveAngle = VALVE_CLOSED_STATE;
 
     computeTickParameters();
-    reachSafetyPosition();
 
     m_lastPressureValuesIndex = 0;
     for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -87,6 +87,13 @@ void MainController::setup() {
     for (uint8_t i = 0u; i < NUMBER_OF_BREATH_PERIOD; i++) {
         m_lastBreathPeriodsMs[i] = (1000u * 60u) / m_cyclesPerMinuteCommand;
     }
+}
+
+void MainController::setup() {
+    DBG_DO(Serial.println(VERSION);)
+    DBG_DO(Serial.println("Setup the controller");)
+
+    reachSafetyPosition();
 
     m_ventilationController->setup();
 }
