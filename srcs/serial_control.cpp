@@ -22,6 +22,7 @@
 #include "../includes/activation.h"
 #include "../includes/alarm_controller.h"
 #include "../includes/main_controller.h"
+#include "../includes/rpi_watchdog.h"
 
 // INITIALISATION =============================================================
 
@@ -113,9 +114,9 @@ void serialControlLoop() {
                 switch (setting) {
                 case Heartbeat:
                     if (value == DISABLE_RPI_WATCHDOG) {
-                        // Disable RPi watchdog completely
+                        rpiWatchdog.disable();
                     } else {
-                        // Send heartbeat to the RPi watchdog
+                        rpiWatchdog.resetCountDown();
                     }
                     break;
 

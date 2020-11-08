@@ -25,6 +25,7 @@
 #include "../includes/screen.h"
 #include "../includes/serial_control.h"
 #include "../includes/telemetry.h"
+#include "../includes/rpi_watchdog.h"
 
 // INITIALISATION =============================================================
 
@@ -94,6 +95,11 @@ void millisecondTimerMSM(HardwareTimer*) {
     // Refresh screen every 300 ms, no more
     if ((clockMsmTimer % 300u) == 0u) {
         mainStateMachine.ScreenUpdate();
+    }
+
+    // Chech that raspberry UI has send heart beat in the last 60s. Otherwise restart the power.
+    if ((clockMsmTimer % 1000u) == 0u) {
+        rpiWatchdog.update();
     }
 
     if (msmstep == SETUP) {
