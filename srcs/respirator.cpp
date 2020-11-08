@@ -23,7 +23,7 @@
 #include "../includes/blower.h"
 #include "../includes/buzzer.h"
 #include "../includes/buzzer_control.h"
-#include "../includes/cpuLoad.h"
+#include "../includes/cpu_load.h"
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
 #include "../includes/keyboard.h"
@@ -252,52 +252,7 @@ void setup(void) {
     }
 }
 
-// Implements a CPU load estimation
-
-// idleCyclesCount will be incremented in the loop, and read in the systick IRQ.
-// if the systick IRQ set idleCyclesCount to 0, there is no guarantee it returns to 0,
-// because chances are high to be in the middle of the increment operation, which is not atomic.
-volatile uint32_t idleCyclesCount = 0;
-
-// every 1000ms, reset the cpu cycle count and store the result in totalCycleCount.
-#define TIME_CPU_CYCLE_RESET 1000u
-
-// the result is in percent
-volatile int32_t cpuLoadPercent = 0;
-
-// do not add anything in the loop
-void loop(void) { idleCyclesCount++; }
-
-// As there is no Free RTOS here, we can use is for CPU load estimator
-uint16_t cpuLoadTimeCount = TIME_CPU_CYCLE_RESET;
-
-// when nothing is enabled, the increment in the loop is done xx /second
-// to measure it, remove all the code in setup except Serial initialization,
-// and uncomment Serial output below.
-#define CPU_MAX_LOOP_PER_SECOND 8327007
-
-uint32_t cpuLoadLatestCycleCount = 0;
-
-extern "C" {
-// this is the highest priority 1 ms callback.
 // cppcheck-suppress unusedFunction
-void osSystickHandler() {
-    cpuLoadTimeCount--;
-    if (cpuLoadTimeCount == 0) {
-        cpuLoadTimeCount = TIME_CPU_CYCLE_RESET;
-        // overflow won't be a problem, same type.
-        uint32_t delta = idleCyclesCount - cpuLoadLatestCycleCount;
-        cpuLoadLatestCycleCount = idleCyclesCount;
-        if (delta > CPU_MAX_LOOP_PER_SECOND) {
-            delta = CPU_MAX_LOOP_PER_SECOND;
-        }
-        cpuLoadPercent = 100 - (100 * delta) / CPU_MAX_LOOP_PER_SECOND;
-        // Uncomment to tune CPU_MAX_LOOP_PER_SECOND value.
-        // Serial.println(delta);
-    }
-}
-}
-
-int32_t readCpuLoadPercent(void) { return cpuLoadPercent; }
+void loop(void) { countIdleCycle(); }
 
 #endif
