@@ -187,13 +187,13 @@ class MainController {
     inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
 
     /// Get the measured peak pressure
-    inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
+    inline uint16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
     /// Get the measured rebounce peak pressure
-    inline int16_t rebouncePeakPressureMeasure() const { return m_rebouncePeakPressureMeasure; }
+    inline uint16_t rebouncePeakPressureMeasure() const { return m_rebouncePeakPressureMeasure; }
     /// Get the measured plateau pressure
-    inline int16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
+    inline uint16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
     /// Get the measured PEEP
-    inline int16_t peepMeasure() const { return m_peepMeasure; }
+    inline uint16_t peepMeasure() const { return m_peepMeasure; }
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
     /// Get the measured Tidal Volume
@@ -209,7 +209,7 @@ class MainController {
     inline uint32_t ticksPerInhalation() const { return m_ticksPerInhalation; }
 
     /// Get the current measured pressure
-    inline int16_t pressure() const { return m_pressure; }
+    inline uint16_t pressure() const { return m_pressure; }
 
     /// Get the current inspiratoryFlow
     inline int32_t inspiratoryFlow() const { return m_inspiratoryFlow; }
@@ -328,7 +328,7 @@ class MainController {
     /// Measured value of peak pressure
     uint16_t m_peakPressureMeasure;
     /// Measured value of rebounce peak pressure
-    int16_t m_rebouncePeakPressureMeasure;
+    uint16_t m_rebouncePeakPressureMeasure;
     /// Peak pressure desired by the operator for the next cycle
     uint16_t m_peakPressureNextCommand;
 

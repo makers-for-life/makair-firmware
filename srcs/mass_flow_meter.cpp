@@ -135,7 +135,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
         Wire.end();
 
         // Hardware reset if not able to read two bytes.
-        if (readCount != 2) {
+        if (readCount != 2u) {
             mfmInspiratoryFaultCondition = true;
             mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
             mfmInspiratoryAirVolumeSumMilliliters = 1000000000;  // 1e9
@@ -253,7 +253,7 @@ void MFM_Timer_Callback(HardwareTimer*) {
             uint8_t status = Wire.endTransmission();  // actually send the data
             Wire.end();
 
-            mfmInspiratoryFaultCondition = (status != 0);
+            mfmInspiratoryFaultCondition = (status != 0u);
 #endif
 
             if (mfmInspiratoryFaultCondition) {

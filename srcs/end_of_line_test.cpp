@@ -68,6 +68,7 @@ void eolScreenMessage(char* message, bool isFailed) {
 
     // Print line by line, respect newlines
     int line = 1;
+    // cppcheck-suppress misra-c2012-12.3 ; call to unknown external: screen.setCursor
     screen.setCursor(0, line);
     int i = 0;
     while (i < 62) {
@@ -206,7 +207,7 @@ void millisecondTimerEOL(HardwareTimer*) {
         minbatlevel = min(minbatlevel, batlevel);
         maxbatlevel = max(maxbatlevel, batlevel);
         // Wait for 400 mV raise, or mains connected signal
-        if ((maxbatlevel - minbatlevel) > 40 || isMainsConnected()) {
+        if (((maxbatlevel - minbatlevel) > 40) || isMainsConnected()) {
             BuzzerControl_On();
             eolTestNumber++;
             blower.stop();
@@ -256,15 +257,17 @@ void millisecondTimerEOL(HardwareTimer*) {
                 buttonsPushed[8] = 1;
             }
             // there is no button on col3 x row3
+        } else {
+            // Do nothing
         }
         // next column
         eolMatrixCurrentColumn++;
         if (4 == eolMatrixCurrentColumn) {
             eolMatrixCurrentColumn = 1;
         }
-        digitalWrite(PIN_OUT_COL1, 1 == eolMatrixCurrentColumn ? HIGH : LOW);
-        digitalWrite(PIN_OUT_COL2, 2 == eolMatrixCurrentColumn ? HIGH : LOW);
-        digitalWrite(PIN_OUT_COL3, 3 == eolMatrixCurrentColumn ? HIGH : LOW);
+        digitalWrite(PIN_OUT_COL1, (1 == eolMatrixCurrentColumn) ? HIGH : LOW);
+        digitalWrite(PIN_OUT_COL2, (2 == eolMatrixCurrentColumn) ? HIGH : LOW);
+        digitalWrite(PIN_OUT_COL3, (3 == eolMatrixCurrentColumn) ? HIGH : LOW);
 
         if (digitalRead(PIN_BTN_START) == HIGH) {
             buttonsPushed[9] = 1;

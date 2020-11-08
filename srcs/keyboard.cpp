@@ -94,14 +94,14 @@ uint16_t scanMatrixCounterC2R3 = 0;
 uint16_t scanMatrixCounterC3R1 = 0;
 uint16_t scanMatrixCounterC3R2 = 0;
 uint16_t scanMatrixCounterC3R3 = 0;
-#define SM_DEBOUNCE 2  // number of debounce ticks before trigger an action
-#define SM_REPEAT 20   // number of ticks before starting continuous press action repeat
-#define SM_PERIOD 15   // period of action repeat in case of a continuous press
+#define SM_DEBOUNCE 2u  // number of debounce ticks before trigger an action
+#define SM_REPEAT 20u   // number of ticks before starting continuous press action repeat
+#define SM_PERIOD 15u   // period of action repeat in case of a continuous press
 
 // fast solution: no hardware timer, no interrupt priority or atomicity issue. Close to Arduino
 // philosophy.
 void scanMatrixLoop() {
-    if (1 == scanMatrixCurrentColumn) {
+    if (1u == scanMatrixCurrentColumn) {
         // Increase counter for each column and row
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
             scanMatrixCounterC1R1++;
@@ -120,22 +120,22 @@ void scanMatrixLoop() {
         }
         // first click (after debounce ticks) or
         // later clicks if continuous press trigger action
-        if (SM_DEBOUNCE == scanMatrixCounterC1R1
-            || (scanMatrixCounterC1R1 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC1R1 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC1R1)
+            || ((scanMatrixCounterC1R1 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC1R1 - SM_REPEAT) % SM_PERIOD))) {
             onPeakPressureIncrease();
         }
-        if (SM_DEBOUNCE == scanMatrixCounterC1R2
-            || (scanMatrixCounterC1R2 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC1R2 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC1R2)
+            || ((scanMatrixCounterC1R2 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC1R2 - SM_REPEAT) % SM_PERIOD))) {
             onPeakPressureDecrease();
         }
-        if (SM_DEBOUNCE == scanMatrixCounterC1R3
-            || (scanMatrixCounterC1R3 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC1R3 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC1R3)
+            || ((scanMatrixCounterC1R3 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC1R3 - SM_REPEAT) % SM_PERIOD))) {
             onPlateauPressureIncrease();
         }
-    } else if (2 == scanMatrixCurrentColumn) {
+    } else if (2u == scanMatrixCurrentColumn) {
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
             scanMatrixCounterC2R1++;
         } else {
@@ -153,22 +153,22 @@ void scanMatrixLoop() {
         }
         // first click (after debounce ticks) or
         // later clicks if continuous press trigger action
-        if (SM_DEBOUNCE == scanMatrixCounterC2R1
-            || (scanMatrixCounterC2R1 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC2R1 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC2R1)
+            || ((scanMatrixCounterC2R1 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC2R1 - SM_REPEAT) % SM_PERIOD))) {
             onPlateauPressureDecrease();
         }
-        if (SM_DEBOUNCE == scanMatrixCounterC2R2
-            || (scanMatrixCounterC2R2 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC2R2 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC2R2)
+            || ((scanMatrixCounterC2R2 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC2R2 - SM_REPEAT) % SM_PERIOD))) {
             onPeepPressureIncrease();
         }
-        if (SM_DEBOUNCE == scanMatrixCounterC2R3
-            || (scanMatrixCounterC2R3 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC2R3 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC2R3)
+            || ((scanMatrixCounterC2R3 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC2R3 - SM_REPEAT) % SM_PERIOD))) {
             onPeepPressureDecrease();
         }
-    } else if (3 == scanMatrixCurrentColumn) {
+    } else if (3u == scanMatrixCurrentColumn) {
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
             scanMatrixCounterC3R1++;
         } else {
@@ -186,27 +186,29 @@ void scanMatrixLoop() {
         }
         // first click (after debounce ticks) or
         // later clicks if continuous press trigger action
-        if (SM_DEBOUNCE == scanMatrixCounterC3R1
-            || (scanMatrixCounterC3R1 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC3R1 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC3R1)
+            || ((scanMatrixCounterC3R1 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC3R1 - SM_REPEAT) % SM_PERIOD))) {
             onCycleIncrease();
         }
-        if (SM_DEBOUNCE == scanMatrixCounterC3R2
-            || (scanMatrixCounterC3R2 >= SM_REPEAT
-                && 0 == (scanMatrixCounterC3R2 - SM_REPEAT) % SM_PERIOD)) {
+        if ((SM_DEBOUNCE == scanMatrixCounterC3R2)
+            || ((scanMatrixCounterC3R2 >= SM_REPEAT)
+                && (0u == (scanMatrixCounterC3R2 - SM_REPEAT) % SM_PERIOD))) {
             onCycleDecrease();
         }
         // there is no button on col3 x row3
+    } else {
+        // Do nothing
     }
 
     // next column
     scanMatrixCurrentColumn++;
-    if (4 == scanMatrixCurrentColumn) {
+    if (4u == scanMatrixCurrentColumn) {
         scanMatrixCurrentColumn = 1;
     }
-    digitalWrite(PIN_OUT_COL1, 1 == scanMatrixCurrentColumn ? HIGH : LOW);
-    digitalWrite(PIN_OUT_COL2, 2 == scanMatrixCurrentColumn ? HIGH : LOW);
-    digitalWrite(PIN_OUT_COL3, 3 == scanMatrixCurrentColumn ? HIGH : LOW);
+    digitalWrite(PIN_OUT_COL1, (1u == scanMatrixCurrentColumn) ? HIGH : LOW);
+    digitalWrite(PIN_OUT_COL2, (2u == scanMatrixCurrentColumn) ? HIGH : LOW);
+    digitalWrite(PIN_OUT_COL3, (3u == scanMatrixCurrentColumn) ? HIGH : LOW);
 }
 
 void keyboardLoop() {

@@ -156,6 +156,10 @@ void MainController::compute() {
     case CyclePhases::EXHALATION:
         exhale();
         break;
+
+    default:
+        // Do nothing
+        break;
     }
 
     alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_cycleNb);
@@ -168,7 +172,7 @@ void MainController::compute() {
 #ifdef MASS_FLOW_METER_ENABLED
     // Measure volume only during inspiration
     // Add 100 ms to allow valve to close completely
-    if (m_tick > m_ticksPerInhalation + 10 && !m_tidalVolumeAlreadyRead) {
+    if ((m_tick > (m_ticksPerInhalation + 10u)) && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = m_currentDeliveredVolume;
         m_tidalVolumeMeasure =
@@ -202,10 +206,12 @@ void MainController::inhale() {
         m_rebouncePeakPressureMeasure = m_pressure;
     } else if (m_pressure < m_rebouncePeakPressureMeasure) {
         m_rebouncePeakPressureMeasure = m_pressure;
+    } else {
+        // Do nothing
     }
 
     // Compute plateau at the end of the cycle
-    if (m_tick > m_ticksPerInhalation - 20) {
+    if (m_tick > (m_ticksPerInhalation - 20u)) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
     }
@@ -454,7 +460,7 @@ void MainController::sendMachineState() {
 void MainController::onCycleDecrease() {
     DBG_DO(Serial.println("Cycle --");)
 
-    m_cyclesPerMinuteNextCommand = m_cyclesPerMinuteNextCommand - 1;
+    m_cyclesPerMinuteNextCommand = m_cyclesPerMinuteNextCommand - 1u;
 
     if (m_cyclesPerMinuteNextCommand < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteNextCommand = CONST_MIN_CYCLE;
@@ -468,7 +474,7 @@ void MainController::onCycleDecrease() {
 void MainController::onCycleIncrease() {
     DBG_DO(Serial.println("Cycle ++");)
 
-    m_cyclesPerMinuteNextCommand = m_cyclesPerMinuteNextCommand + 1;
+    m_cyclesPerMinuteNextCommand = m_cyclesPerMinuteNextCommand + 1u;
 
     if (m_cyclesPerMinuteNextCommand > CONST_MAX_CYCLE) {
         m_cyclesPerMinuteNextCommand = CONST_MAX_CYCLE;

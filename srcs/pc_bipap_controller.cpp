@@ -29,7 +29,7 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.ticksPerInhalation() + 100;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 100u;  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
@@ -62,7 +62,7 @@ void PC_BIPAP_Controller::setup() {
 void PC_BIPAP_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.ticksPerInhalation() + 140;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 140u;  // Possible to trigger 1s before end
 
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
@@ -118,16 +118,16 @@ void PC_BIPAP_Controller::inhale() {
     m_expiratoryPidFastMode = true;
 
     // m_inspiratorySlope is used for blower regulations, -20 corresponds to open loop openning
-    if (mainController.pressure() > mainController.plateauPressureCommand() - 20u
+    if ((mainController.pressure() > (mainController.plateauPressureCommand() - 20u))
         && !m_plateauPressureReached) {
-        m_inspiratorySlope = (mainController.pressure() - mainController.peepMeasure()) * 100
-                             / (mainController.tick() - 0);  // in mmH2O/s
+        m_inspiratorySlope = ((mainController.pressure() - mainController.peepMeasure()) * 100u)
+                             / (mainController.tick() - 0u);  // in mmH2O/s
         m_plateauPressureReached = true;
     }
 }
 
 void PC_BIPAP_Controller::exhale() {
-    blower.runSpeed(m_blowerSpeed - 400);
+    blower.runSpeed(m_blowerSpeed - 400u);
 
     // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
@@ -136,7 +136,10 @@ void PC_BIPAP_Controller::exhale() {
     expiratoryValve.open(expiratoryValveOpenningValue);
 
     int32_t inspiratoryValveOpenningValue =
-        max((uint32_t)70, 125 - (mainController.tick() - mainController.ticksPerInhalation()) / 2);
+        max(static_cast<int32_t>(70),
+            125
+                - static_cast<int32_t>((mainController.tick() - mainController.ticksPerInhalation())
+                                       / 2u));
     inspiratoryValve.open(inspiratoryValveOpenningValue);
     m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
@@ -146,7 +149,8 @@ void PC_BIPAP_Controller::exhale() {
         m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
             mainController.inspiratoryFlow();
         m_inspiratoryFlowLastValuesIndex++;
-        if (m_inspiratoryFlowLastValuesIndex >= NUMBER_OF_SAMPLE_FLOW_LAST_VALUES) {
+        if (m_inspiratoryFlowLastValuesIndex
+            >= static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES)) {
             m_inspiratoryFlowLastValuesIndex = 0;
         }
     }
@@ -160,10 +164,11 @@ void PC_BIPAP_Controller::exhale() {
             }
 
             // cppcheck-suppress unreadVariable
-            int32_t meanFlow = sum / NUMBER_OF_SAMPLE_FLOW_LAST_VALUES;
+            int32_t meanFlow = sum / static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES);
 
             if (mainController.inspiratoryFlow()
-                > 280 * 100 + 100 * mainController.pressureTriggerOffsetCommand()) {
+                > ((280 * 100)
+                   + (100 * static_cast<int32_t>(mainController.pressureTriggerOffsetCommand())))) {
                 mainController.setTrigger(true);
             }
         }
@@ -185,13 +190,13 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
     // Check that pressure didn't rebounced
     // High rebounces will decrease the blower
     // Low rebounce will prevent increase (but not decrease)
-    bool veryHighRebounce = (peakDelta > 60) || (rebouncePeakDelta < -60 && peakDelta >= 0);
-    bool highRebounce = (peakDelta > 40) || (rebouncePeakDelta < -40 && peakDelta >= 0);
-    bool lowRebounce = (peakDelta > 20) || (rebouncePeakDelta < -15 && peakDelta >= 0);
-    bool veryLowRebounce = (peakDelta > 10) || (rebouncePeakDelta < -10 && peakDelta >= 0);
+    bool veryHighRebounce = (peakDelta > 60) || ((rebouncePeakDelta < -60) && (peakDelta >= 0));
+    bool highRebounce = (peakDelta > 40) || ((rebouncePeakDelta < -40) && (peakDelta >= 0));
+    bool lowRebounce = (peakDelta > 20) || ((rebouncePeakDelta < -15) && (peakDelta >= 0));
+    bool veryLowRebounce = (peakDelta > 10) || ((rebouncePeakDelta < -10) && (peakDelta >= 0));
 
     // Update blower only if patient is plugged on the machine
-    if (mainController.peakPressureMeasure() > 20) {
+    if (mainController.peakPressureMeasure() > 20u) {
         // Safety condition: a too high peak (4 cmH2O) should decrease the blower
         if (veryHighRebounce) {
             m_blowerIncrement = -100;
@@ -199,22 +204,24 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
             m_blowerIncrement = -10;
         } else if (m_inspiratorySlope > 650) {  // We want the m_inspiratorySlope = 600 mmH2O/s
             // Only case for decreasing the blower: ramping is too fast or overshooting is too high
-            if (m_inspiratorySlope > 1000 || (lowRebounce && (m_inspiratorySlope > 800))
-                || peakDelta > 25) {
+            if ((m_inspiratorySlope > 1000)
+                || ((lowRebounce && (m_inspiratorySlope > 800)) || (peakDelta > 25))) {
                 m_blowerIncrement = -100;
             } else {
                 m_blowerIncrement = 0;
             }
         } else if (m_inspiratorySlope > 550) {
             m_blowerIncrement = 0;
-        } else if (m_inspiratorySlope > 450 && !veryLowRebounce) {
+        } else if ((m_inspiratorySlope > 450) && !veryLowRebounce) {
             m_blowerIncrement = +25;
-        } else if (m_inspiratorySlope > 350 && !veryLowRebounce) {
+        } else if ((m_inspiratorySlope > 350) && !veryLowRebounce) {
             m_blowerIncrement = +50;
-        } else if (m_inspiratorySlope > 250 && !veryLowRebounce) {
+        } else if ((m_inspiratorySlope > 250) && !veryLowRebounce) {
             m_blowerIncrement = +75;
         } else if (!lowRebounce) {
             m_blowerIncrement = +100;
+        } else {
+            // Do nothing
         }
     }
     DBG_DO(Serial.print("BLOWER"));
@@ -285,7 +292,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
     if (m_inspiratoryPidFastMode) {
         // Ramp from 125 to 0 angle during 250 ms
         int32_t increment = 5 * ((int32_t)MAIN_CONTROLLER_COMPUTE_PERIOD_US) / 10000;
-        if (m_inspiratoryValveLastAperture >= static_cast<uint32_t>(abs(increment))) {
+        if (m_inspiratoryValveLastAperture >= abs(increment)) {
             inspiratoryValveAperture =
                 max(minAperture,
                     min(maxAperture,
@@ -313,8 +320,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
     }
 
     // If the valve is completely open or completely closed, don't update integral part
-    if ((inspiratoryValveAperture != static_cast<uint32_t>(minAperture))
-        && (inspiratoryValveAperture != static_cast<uint32_t>(maxAperture))) {
+    if ((inspiratoryValveAperture != minAperture) && (inspiratoryValveAperture != maxAperture)) {
         m_inspiratoryPidIntegral = temporarym_inspiratoryPidIntegral;
     }
 
@@ -366,7 +372,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
         // For a high PEEP, a lower KI is required
         // For PEEP = 100 mmH2O, KI = 120
         // For PEEP = 50 mmH2O, KI = 250
-        if (mainController.peepCommand() > 100) {
+        if (mainController.peepCommand() > 100u) {
             coefficientI = 120;
         } else {
             coefficientI = ((-130 * ((int32_t)mainController.peepCommand())) / 50) + 380;
@@ -410,8 +416,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
     }
 
     // If the valve is completely open or completely closed, don't update integral part
-    if ((expiratoryValveAperture != static_cast<uint32_t>(minAperture))
-        && (expiratoryValveAperture != static_cast<uint32_t>(maxAperture))) {
+    if ((expiratoryValveAperture != minAperture) && (expiratoryValveAperture != maxAperture)) {
         m_expiratoryPidIntegral = temporarym_expiratoryPidIntegral;
     }
 

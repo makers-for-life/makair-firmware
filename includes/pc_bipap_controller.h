@@ -60,7 +60,7 @@ class PC_BIPAP_Controller final : public VentilationController {
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
     /// Current blower speed
-    int32_t m_blowerSpeed;
+    uint16_t m_blowerSpeed;
 
     /// True if we want to reopen the inspiratory valve to create a circulation flow able to detect
     /// inspiratory flow trigger

@@ -126,7 +126,7 @@ void setup(void) {
     // Init sensors
     inspiratoryPressureSensor = PressureSensor();
 #ifdef MASS_FLOW_METER_ENABLED
-    MFM_init();
+    (void)MFM_init();
     MFM_calibrateZero();  // Patient unplugged, also set the zero of mass flow meter. It has no
                           // effect with the actual flowmeter
 #endif
@@ -159,6 +159,7 @@ void setup(void) {
     }
 
     // Catch potential Watchdog reset
+    // cppcheck-suppress misra-c2012-14.4 ; IWatchdog.isReset() returns a boolean
     if (IWatchdog.isReset(true)) {
         // Run a high priority alarm
         BuzzerControl_Init();
@@ -201,8 +202,8 @@ void setup(void) {
     inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
 
     // Happens when patient is plugged at starting
-    if ((maxOffsetValue - minOffsetValue) >= 10
-        || inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET) {
+    if (((maxOffsetValue - minOffsetValue) >= 10)
+        || (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET)) {
         displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
         Buzzer_High_Prio_Start();
         while (true) {
@@ -230,8 +231,8 @@ void setup(void) {
     blower.stop();
 
     // Happens when flow meter fails
-    if (flowMeterFlowAtStarting < -1000 || flowMeterFlowAtStarting > 1000
-        || flowMeterFlowWithBlowerOn < 20000 || flowMeterFlowWithBlowerOn > 100000) {
+    if ((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)
+        || (flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000)) {
         displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
         Buzzer_High_Prio_Start();
         while (true) {

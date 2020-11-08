@@ -38,6 +38,7 @@ HardwareTimer* msmTimer;
 uint32_t lastMicro = 0;
 uint32_t tick = 0;
 
+// cppcheck-suppress misra-c2012-12.3 ; cppcheck error
 enum Step { SETUP, STOPPED, INIT_CYCLE, BREATH, TRIGGER_RAISED, END_CYCLE };
 
 Step msmstep = SETUP;
@@ -60,7 +61,14 @@ void MainStateMachine::ScreenUpdate() {
     }
 }
 
-void millisecondTimerMSM(HardwareTimer*) {
+// API update since version 1.9.0 of Arduino_Core_STM32
+#if (STM32_CORE_VERSION < 0x01090000)
+// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
+void millisecondTimerMSM(HardwareTimer*)  // NOLINT(readability/casting)
+#else
+void millisecondTimerMSM(void)
+#endif
+{
     IWatchdog.reload();
     clockMsmTimer++;
     uint32_t pressure = inspiratoryPressureSensor.read();
@@ -68,7 +76,7 @@ void millisecondTimerMSM(HardwareTimer*) {
     int32_t inspiratoryflow = MFM_read_airflow();
     mainController.updateInspiratoryFlow(inspiratoryflow);
 
-    if (clockMsmTimer % 10 == 0) {
+    if ((clockMsmTimer % 10u) == 0u) {
         // Check if some buttons have been pushed
         keyboardLoop();
         // Check if battery state has changed
@@ -86,7 +94,7 @@ void millisecondTimerMSM(HardwareTimer*) {
 
     // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
     // so
-    if (clockMsmTimer % 300000 == 0) {
+    if ((clockMsmTimer % 300000u) == 0u) {
         DBG_DO(Serial.println("resetting LCD screen");)
         resetScreen();
         clearAlarmDisplayCache();
@@ -130,13 +138,13 @@ void millisecondTimerMSM(HardwareTimer*) {
         lastMainControllerCall = millis();
         tick = 0;
         msmstep = BREATH;
-        MFM_read_milliliters(true);  // Reset volume integral
+        (void)MFM_read_milliliters(true);  // Reset volume integral
     } else if (msmstep == BREATH) {
         // If breathing
         uint32_t currentMillis = millis();
         tick = (currentMillis - lastMillis) / 10u;
 
-        if (currentMillis - lastMainControllerCall > 10u) {
+        if ((currentMillis - lastMainControllerCall) > 10u) {
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
@@ -176,6 +184,8 @@ void millisecondTimerMSM(HardwareTimer*) {
         } else {
             msmstep = STOPPED;
         }
+    } else {
+        // Do nothing
     }
 
     previousmsmstep = msmstep;

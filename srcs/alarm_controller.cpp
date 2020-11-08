@@ -247,7 +247,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
     }
 
     uint32_t millisSinceSnooze = millis() - m_snoozeTime;
-    if (!m_unsnooze && (m_snoozeTime > 0u) && (millisSinceSnooze >= 120000)) {
+    if (!m_unsnooze && (m_snoozeTime > 0u) && (millisSinceSnooze >= 120000u)) {
         unsnooze();
     }
 

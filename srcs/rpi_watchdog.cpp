@@ -42,6 +42,8 @@ void RpiWatchdog::update() {
         // Next time resetCountDown() is called because a heartbeat was received, let's resume
     } else if (m_rpiWatchdogStep == DISABLED) {
         // Do nothing when watchdog is disabled
+    } else {
+        // Do nothing
     }
 }
 
