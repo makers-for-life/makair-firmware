@@ -243,17 +243,31 @@ void setup(void) {
     delay(1000);
 
     if (!eolTest.isRunning()) {
-        mainStateMachine.setupAndStart();
+        //mainStateMachine.setupAndStart();
 
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
-        IWatchdog.begin(WATCHDOG_TIMEOUT);
-        IWatchdog.reload();
+        // IWatchdog.begin(WATCHDOG_TIMEOUT);
+        //IWatchdog.reload();
     } else {
         eolTest.setupAndStart();
     }
 }
 
 // cppcheck-suppress unusedFunction
-void loop(void) { COUNT_IDLE_CYCLE; }
+void loop(void) { 
+
+inspiratoryValve.open();
+expiratoryValve.open();
+
+inspiratoryValve.execute();
+expiratoryValve.execute();
+
+blower.runSpeed(MAX_BLOWER_SPEED);
+
+Serial.println(MFM_read_airflow());
+delay(10);
+
+
+}
 
 #endif
