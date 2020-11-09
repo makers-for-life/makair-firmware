@@ -26,7 +26,9 @@ Then, compile the project:
 arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
 ```
 
-And flash it to the motherboard:
+## How To Flash?
+
+In order to flash the firmware that you just built using the instructions above:
 
 1. Plug your ST-Link programmer to the motherboard, and switch the motherboard to flash mode (switch position to flash mode on the motherboard);
 2. Plug the ST-Link programmer to your computer, over USB, and fetch its device name via the `arduino-cli board list` command (we will call it `{SERIAL_PORT}`);
