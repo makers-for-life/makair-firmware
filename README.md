@@ -26,6 +26,18 @@ Then, compile the project:
 arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
 ```
 
+And flash it to the motherboard:
+
+1. Plug your ST-Link programmer to the motherboard, and switch the motherboard to flash mode (switch position to flash mode on the motherboard);
+2. Plug the ST-Link programmer to your computer, over USB, and fetch its device name via the `arduino-cli board list` command (we will call it `{SERIAL_PORT}`);
+3. Make sure that [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) is installed on your computer, and run:
+
+```sh
+arduino-cli upload --port {SERIAL_PORT} --fqbn STM32:stm32:Nucleo_64:pnum=NUCLEO_F411RE,upload_method=swdMethod --input output/respirator-production
+```
+
+_Make sure to replace {SERIAL_PORT} with your serial port, which should begin with `/dev/`._
+
 ## Configuration
 
 High-level configuration options are available and documented in [includes/config.h](includes/config.h).
