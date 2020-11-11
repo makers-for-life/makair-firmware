@@ -24,9 +24,10 @@
  */
 ///@{
 
-// Main controller compute period in millisecond : min 1 ms max 10 ms
+// Main controller computes period in millisecond: minimum 1 ms, maximum 10 ms
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_MS 10u
-#define MAIN_CONTROLLER_COMPUTE_PERIOD_US (1000u*MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
+// cppcheck-suppress misra-c2012-5.4
+#define MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS (1000u * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
 
 // Minimum and maximum bounds of execution parameters
 #define CONST_MAX_PEAK_PRESSURE 700u     // arbitrary [mmH2O]
@@ -34,7 +35,7 @@
 #define CONST_MAX_PLATEAU_PRESSURE 400u  // PP MAX ARDS = 300 [mmH2O]
 #define CONST_MIN_PLATEAU_PRESSURE 100u  // arbitrary [mmH2O]
 #define CONST_MAX_PEEP_PRESSURE 300u     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 0u      // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 0u       // arbitrary but > 0 [mmH2O]
 #define CONST_MIN_TRIGGER_OFFSET 0u      // [mmH2O]
 #define CONST_MAX_TRIGGER_OFFSET 100u    // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0    // [mmH2O]
@@ -147,7 +148,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define SCREEN_LINE_LENGTH 20
 
 /// Period between screen updates in microsecond. Should be a multiple of
-/// MAIN_CONTROLLER_COMPUTE_PERIOD_US
+/// MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS
 #define LCD_UPDATE_PERIOD_US 300000u
 
 /// Period between screen resets in minutes

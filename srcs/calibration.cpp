@@ -34,10 +34,6 @@ bool startButtonPressed = false;
 bool calibationStarted = false;
 bool calibrationValid = false;
 
-/**
- * Initialization of calibration process
- *
- */
 void Calibration_Init() {
     // Restart calibration process when invalid
     while (calibrationValid == false) {
@@ -70,7 +66,7 @@ void Calibration_Init() {
 
         inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
 
-        // Happens when patient is plugged at starting
+        // Happens when patient is plugged at startup
         if (((maxOffsetValue - minOffsetValue) >= 10)
             || (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET)) {
             // Invalid calibration
@@ -82,11 +78,11 @@ void Calibration_Init() {
             calibrationValid = true;
         }
 
-    #ifdef MASS_FLOW_METER_ENABLED
+#ifdef MASS_FLOW_METER_ENABLED
         int32_t flowMeterFlowAtStarting = MFM_read_airflow();
-    #else
+#else
         int32_t flowMeterFlowAtStarting = 0;
-    #endif
+#endif
         inspiratoryValve.open();
         inspiratoryValve.execute();
         expiratoryValve.open();
@@ -94,11 +90,11 @@ void Calibration_Init() {
         delay(500);
         blower.runSpeed(DEFAULT_BLOWER_SPEED);
         delay(1000);
-    #ifdef MASS_FLOW_METER_ENABLED
+#ifdef MASS_FLOW_METER_ENABLED
         int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
-    #else
+#else
         int32_t flowMeterFlowWithBlowerOn = 0;
-    #endif
+#endif
 
         blower.stop();
 
@@ -123,11 +119,6 @@ void Calibration_Init() {
     }
 }
 
-/**
- * Block execution for a given duration
- *
- * @param ms  Duration of the blocking in millisecond
- */
 void Calibration_Wait_Measure_Pressure(uint16_t ms) {
     uint16_t start = millis();
     minOffsetValue = inspiratoryPressureSensor.read();
@@ -154,9 +145,6 @@ void Calibration_Wait_Measure_Pressure(uint16_t ms) {
     }
 }
 
-/**
- * Read keyboard duing calibration process
- */
 void Calibration_Read_Keyboard() {
     while (startButtonPressed == false) {
         keyboardLoop();
@@ -164,16 +152,6 @@ void Calibration_Read_Keyboard() {
     }
 }
 
-/**
- * Restart calibration process
- */
-void Calibration_Restart() {
-    startButtonPressed = true;
-}
+void Calibration_Restart() { startButtonPressed = true; }
 
-/**
- * Check if calibration mode is started
- */
-bool Calibration_Started() {
-    return calibationStarted;
-}
+bool Calibration_Started() { return calibationStarted; }

@@ -134,7 +134,7 @@ void PC_CMV_Controller::calculateBlowerIncrement() {
 
     // Number of tick for the half ramp (120 ms)
     int32_t halfRampNumberfTick =
-        1000 * 120 / static_cast<int32_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_US);
+        1000 * 120 / static_cast<int32_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS);
 
     // Update blower only if patient is plugged on the machine
     if (mainController.peakPressureMeasure() > 20u) {
@@ -230,7 +230,8 @@ PC_CMV_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPress
     // In fast mode: everything is openned (open loop)
     if (m_inspiratoryPidFastMode) {
         // Ramp from 125 to 0 angle during 250 ms
-        int32_t increment = (5 * static_cast<int32_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_US)) / 10000;
+        int32_t increment =
+            (5 * static_cast<int32_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS)) / 10000;
         if (m_inspiratoryValveLastAperture >= abs(increment)) {
             inspiratoryValveAperture =
                 max(minAperture, min(maxAperture, m_inspiratoryValveLastAperture - increment));
@@ -335,7 +336,8 @@ PC_CMV_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressu
     // Fast mode: open loop with ramp
     if (m_expiratoryPidFastMode) {
         // Ramp from 125 to 0 angle during 250 ms
-        int32_t increment = 5 * ((int32_t)MAIN_CONTROLLER_COMPUTE_PERIOD_US) / 10000;
+        int32_t increment =
+            (5 * static_cast<int32_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS)) / 10000;
         if (m_expiratoryValveLastAperture >= abs(increment)) {
             expiratoryValveAperture =
                 max(minAperture, min(maxAperture, m_expiratoryValveLastAperture - increment));

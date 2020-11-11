@@ -56,14 +56,14 @@ class PressureValve {
     void open();
 
     /**
-     * Request opening of the Air Transistor with a given angle
+     * Request opening of the Pressure Valve with a given angle
      *
      * @param p_command The angle in degree
      */
     void open(uint16_t p_command);
 
     /**
-     * Request opening of the Air Transistor with a given angle with linearisation
+     * Request opening of the Pressure Valve with a given angle with linearization
      *
      * @param p_command The angle in degree
      */
