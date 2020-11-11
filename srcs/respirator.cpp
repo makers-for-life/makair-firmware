@@ -152,6 +152,81 @@ void setup(void) {
 }
 
 // cppcheck-suppress unusedFunction
-void loop(void) { COUNT_IDLE_CYCLE; }
+void loop(void) {
+
+    /*blower.runSpeed(MAX_BLOWER_SPEED);
+    inspiratoryValve.open();
+    inspiratoryValve.execute();
+    delay(5000);
+
+    for (int32_t i = 0; i <= 125; i += 5) {
+        expiratoryValve.openLinear(i);
+        expiratoryValve.execute();
+        inspiratoryValve.execute();
+        uint32_t lastMillis = millis();
+        while (millis()-lastMillis < 2000){
+            expiratoryValve.execute();
+        }
+        int32_t sumFlow = 0;
+        int32_t sumPressure = 0;
+        for (int32_t j = 0; j < 100; j++) {
+            expiratoryValve.execute();
+            inspiratoryValve.execute();
+            sumFlow += MFM_read_airflow();
+            sumPressure += inspiratoryPressureSensor.read();
+            delay(10);
+        }
+        Serial.print(i);
+        Serial.print("\t");
+        Serial.print(expiratoryValve.openLinear(i));
+        Serial.print("\t");
+        Serial.print(sumFlow/100);
+        Serial.print("\t");
+        Serial.print(sumPressure/100);
+        Serial.println();
+
+    }
+    blower.stop();
+    delay(1000000);
+*/
+    /*inspiratoryValve.open();
+    inspiratoryValve.execute();
+    delay(3000);
+
+    const int32_t length = 10;
+    int32_t expValue[length] = {0, 10, 30, 50, 60, 70, 80, 90, 100, 120};
+
+    for (int32_t k = 0; k < length; k++) {
+        for (int32_t i = MIN_BLOWER_SPEED; i <= MAX_BLOWER_SPEED; i += 100) {
+            blower.runSpeed(i);
+            expiratoryValve.open(expValue[k]);
+            expiratoryValve.execute();
+            inspiratoryValve.execute();
+            uint32_t lastMillis = millis();
+            while (millis() - lastMillis < 8000) {
+                expiratoryValve.execute();
+            }
+            int32_t sumFlow = 0;
+            int32_t sumPressure = 0;
+            for (int32_t j = 0; j < 100; j++) {
+                expiratoryValve.execute();
+                inspiratoryValve.execute();
+                sumFlow += MFM_read_airflow();
+                sumPressure += inspiratoryPressureSensor.read();
+                delay(10);
+            }
+            Serial.print(expValue[k]);
+            Serial.print("\t");
+            Serial.print(i);
+            Serial.print("\t");
+            Serial.print(sumFlow / 100);
+            Serial.print("\t");
+            Serial.print(sumPressure / 100);
+            Serial.println();
+        }
+    }
+    delay(100000);*/
+    COUNT_IDLE_CYCLE;
+}
 
 #endif

@@ -99,6 +99,7 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
         / 10u);
 
     return command;
+
 }
 
 uint16_t valveAngle2MicroSeconds(uint16_t value) {

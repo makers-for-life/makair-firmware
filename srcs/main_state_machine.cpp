@@ -148,6 +148,7 @@ void millisecondTimerMSM(void)
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
+                mainController.updateFakeExpiratoryFlow();
                 uint32_t currentMicro = micros();
                 mainController.updateCurrentDeliveredVolume(MFM_read_milliliters(false));
                 mainController.updateDt(currentMicro - lastMicro);

@@ -75,6 +75,12 @@ class MainController {
     void updateExpiratoryFlow(int32_t p_currentExpiratoryFlow);
 
     /**
+     * Calculate expiratory flow from pressure and valve angle
+     *
+     */
+    void updateFakeExpiratoryFlow();
+
+    /**
      * Perform the pressure control
      *
      * @param p_tick  Duration in hundredth of second from the begining of the cycle
@@ -306,6 +312,7 @@ class MainController {
     void printDebugValues();
 
  private:
+    int32_t m_expiratoryVolume;
     /// Actual tick number (given by the main state machine)
     uint32_t m_tick;
 
