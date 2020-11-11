@@ -29,7 +29,7 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.ticksPerInhalation() + 100u;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 1000u/MAIN_CONTROLLER_COMPUTE_PERIOD_MS;  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
@@ -62,7 +62,7 @@ void PC_BIPAP_Controller::setup() {
 void PC_BIPAP_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.ticksPerInhalation() + 140u;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation() + 1400u/MAIN_CONTROLLER_COMPUTE_PERIOD_MS;  // Possible to trigger 1.4s before end
 
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values

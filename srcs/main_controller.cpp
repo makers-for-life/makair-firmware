@@ -166,16 +166,22 @@ void MainController::compute() {
     }
 
     alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_cycleNb);
-    sendDataSnapshot(m_tick, m_pressure, m_phase, inspiratoryValve.position,
-                     expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
-                     m_inspiratoryFlow, m_expiratoryFlow);
+
+    // Send data snaphshot only every 10 ms
+    uint32_t moduloValue = max(1, (10u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS));
+    if (m_tick % moduloValue == 0) {
+        sendDataSnapshot(m_tick, m_pressure, m_phase, inspiratoryValve.position,
+                         expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
+                         m_inspiratoryFlow, m_expiratoryFlow);
+    }
 
     executeCommands();
 
 #ifdef MASS_FLOW_METER_ENABLED
     // Measure volume only during inspiration
     // Add 100 ms to allow valve to close completely
-    if ((m_tick > (m_ticksPerInhalation + 10u)) && !m_tidalVolumeAlreadyRead) {
+    if ((m_tick > (m_ticksPerInhalation + 100u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS))
+        && !m_tidalVolumeAlreadyRead) {
         m_tidalVolumeAlreadyRead = true;
         int32_t volume = m_currentDeliveredVolume;
         m_tidalVolumeMeasure =
@@ -214,7 +220,7 @@ void MainController::inhale() {
     }
 
     // Compute plateau at the end of the cycle
-    if (m_tick > (m_ticksPerInhalation - 20u)) {
+    if (m_tick > (m_ticksPerInhalation - 200u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)) {
         m_PlateauMeasureSum += m_pressure;
         m_PlateauMeasureCount += 1u;
     }

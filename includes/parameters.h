@@ -24,8 +24,9 @@
  */
 ///@{
 
-// Main controller compute period in microsecond
-#define MAIN_CONTROLLER_COMPUTE_PERIOD_US 10000u
+// Main controller compute period in millisecond
+#define MAIN_CONTROLLER_COMPUTE_PERIOD_MS 10u
+#define MAIN_CONTROLLER_COMPUTE_PERIOD_US (1000u*MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
 
 // Minimum and maximum bounds of execution parameters
 #define CONST_MAX_PEAK_PRESSURE 700u     // arbitrary [mmH2O]
