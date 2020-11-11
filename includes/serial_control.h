@@ -15,8 +15,12 @@ enum ControlSetting {
     /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value
     /// `DISABLE_RPI_WATCHDOG` which disables watchdog)
     Heartbeat = 0,
-    /// Peak pressure in mmH20 (value bounds must be between 0 and 700)
-    PeakPressure = 1,
+    /// Ventilation mode, must be one of the following:
+    /// - `1` → PC-CMV (default)
+    /// - `2` → PC-AC
+    /// - `3` → VC-CMV
+    /// - `4` → PC-BIPAP
+    VentilationMode = 1,
     /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
     PlateauPressure = 2,
     /// PEEP in mmH2O (value bounds must be between 0 and 300)
@@ -34,6 +38,32 @@ enum ControlSetting {
     RespirationEnabled = 8,
     /// Alarm snooze (value must be 1 to snooze and 0 to unsnooze)
     AlarmSnooze = 9,
+    /// Inspiratory trigger flow in percent
+    InspiratoryTriggerFlow = 10,
+    /// Expiratory trigger flow in percent
+    ExpiratoryTriggerFlow = 11,
+    /// Minimum duration of inhalation in ms (value bounds must be between 100 and 3000)
+    TiMin = 12,
+    /// Maximum duration of inhalation in ms (value bounds must be between 200 and 5000)
+    TiMax = 13,
+    /// Threshold for low inspiratory minute volume alarm in L/min (value bounds must be between 0
+    /// and 20)
+    LowInspiratoryMinuteVolumeAlarmThreshold = 14,
+    /// Threshold for high inspiratory minute volume alarm in L/min (value bounds must be between 10
+    /// and 40)
+    HighInspiratoryMinuteVolumeAlarmThreshold = 15,
+    /// Threshold for low expiratory minute volume alarm in L/min (value bounds must be between 0
+    /// and 20)
+    LowExpiratoryMinuteVolumeAlarmThreshold = 16,
+    /// Threshold for high expiratory minute volume alarm in L/min (value bounds must be between 10
+    /// and 40)
+    HighExpiratoryMinuteVolumeAlarmThreshold = 17,
+    /// Threshold for low expiratory rate alarm in cycle per minute (value bounds must be between 5
+    /// and 25)
+    LowExpiratoryRateAlarmThreshold = 18,
+    /// Threshold for high expiratory rate alarm in cycle per minute (value bounds must be between
+    /// 20 and 35)
+    HighExpiratoryRateAlarmThreshold = 19,
 };
 
 /**

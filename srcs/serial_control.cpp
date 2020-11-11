@@ -120,8 +120,8 @@ void serialControlLoop() {
                     }
                     break;
 
-                case PeakPressure:
-                    // This setting was removed
+                case VentilationMode:
+                    // TODO
                     break;
 
                 case PlateauPressure:
@@ -154,6 +154,46 @@ void serialControlLoop() {
 
                 case AlarmSnooze:
                     alarmController.snooze();
+                    break;
+
+                case InspiratoryTriggerFlow:
+                    // TODO
+                    break;
+
+                case ExpiratoryTriggerFlow:
+                    // TODO
+                    break;
+
+                case TiMin:
+                    // TODO
+                    break;
+
+                case TiMax:
+                    // TODO
+                    break;
+
+                case LowInspiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case HighInspiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case LowExpiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case HighExpiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case LowExpiratoryRateAlarmThreshold:
+                    // TODO
+                    break;
+
+                case HighExpiratoryRateAlarmThreshold:
+                    // TODO
                     break;
 
                 default:
