@@ -54,6 +54,16 @@ void PressureValve::close() { command = closeApertureAngle; }
 
 void PressureValve::open(uint16_t p_command) { command = p_command; }
 
+uint16_t PressureValve::openLinear(uint16_t p_command) {
+
+    uint32_t value = (uint32_t)((p_command * 70u / 125u + 30u)*10u);
+
+    command = (uint16_t) ((76u * value / 10u - (985u * value*value / 100000u ) + (((44u *value*value) /1000u) * value ) / 10000u -1140u)/10u);
+
+    return command;
+
+}
+
 uint16_t valveAngle2MicroSeconds(uint16_t value) {
     // Faulhaber motors works with PWM
     return map(value, 0, 125, FAULHABER_OPENED, FAULHABER_CLOSED);

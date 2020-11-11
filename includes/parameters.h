@@ -34,7 +34,7 @@
 #define CONST_MAX_PLATEAU_PRESSURE 400u  // PP MAX ARDS = 300 [mmH2O]
 #define CONST_MIN_PLATEAU_PRESSURE 100u  // arbitrary [mmH2O]
 #define CONST_MAX_PEEP_PRESSURE 300u     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 50u      // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 0u      // arbitrary but > 0 [mmH2O]
 #define CONST_MIN_TRIGGER_OFFSET 0u      // [mmH2O]
 #define CONST_MAX_TRIGGER_OFFSET 100u    // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0    // [mmH2O]
@@ -121,7 +121,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
  */
 ///@{
 
-#define MIN_BLOWER_SPEED 300u
+#define MIN_BLOWER_SPEED 00u
 #define MAX_BLOWER_SPEED 1800u
 #define DEFAULT_BLOWER_SPEED 900u
 

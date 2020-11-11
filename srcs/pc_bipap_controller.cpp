@@ -29,7 +29,8 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.ticksPerInhalation() + 1000u/MAIN_CONTROLLER_COMPUTE_PERIOD_MS;  // Possible to trigger 1s before end
+        mainController.ticksPerInhalation()
+        + 1000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
@@ -62,8 +63,9 @@ void PC_BIPAP_Controller::setup() {
 void PC_BIPAP_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow =
-        mainController.ticksPerInhalation() + 1400u/MAIN_CONTROLLER_COMPUTE_PERIOD_MS;  // Possible to trigger 1.4s before end
-
+        mainController.ticksPerInhalation()
+        + 1400u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;  // Possible to trigger 1.4s before end
+    m_maxInspiratoryFlow = 0;
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
     m_inspiratoryPidIntegral = 0;
@@ -112,7 +114,7 @@ void PC_BIPAP_Controller::inhale() {
 
     // Normally inspiratory valve is open, but at the end of the cycle it could be closed and
     // expiratory valve will open
-    inspiratoryValve.open(inspiratoryValveOpenningValue);
+    inspiratoryValve.openLinear(inspiratoryValveOpenningValue);
     expiratoryValve.close();
 
     m_expiratoryPidFastMode = true;
@@ -125,11 +127,12 @@ void PC_BIPAP_Controller::inhale() {
         m_plateauPressureReached = true;
     }
 
-    int32_t tiMinInTick = 200u/MAIN_CONTROLLER_COMPUTE_PERIOD_MS; 
+    int32_t tiMinInTick = 200u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
 
-    if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow){
+    if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
         m_maxInspiratoryFlow = mainController.inspiratoryFlow();
-    } else if (mainController.inspiratoryFlow() < 0.3 * m_maxInspiratoryFlow && mainController.tick() > tiMinInTick){
+    } else if (mainController.inspiratoryFlow() < 30 * m_maxInspiratoryFlow / 100
+               && mainController.tick() > tiMinInTick) {
         mainController.ticksPerInhalationSet(mainController.tick());
     }
 }
@@ -140,15 +143,15 @@ void PC_BIPAP_Controller::exhale() {
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
         mainController.pressureCommand(), mainController.pressure(), mainController.dt());
 
-    expiratoryValve.open(expiratoryValveOpenningValue);
+    expiratoryValve.openLinear(expiratoryValveOpenningValue);
 
-    int32_t inspiratoryValveOpenningValue =
+    /*int32_t inspiratoryValveOpenningValue =
         max(static_cast<int32_t>(70),
             125
                 - static_cast<int32_t>((mainController.tick() - mainController.ticksPerInhalation())
-                                       / 2u));
-    inspiratoryValve.open(inspiratoryValveOpenningValue);
-    m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
+                                       / 2u));*/
+    inspiratoryValve.close();
+    // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the machine
@@ -162,9 +165,10 @@ void PC_BIPAP_Controller::exhale() {
         }
     }
 
-
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    if (mainController.triggerModeEnabledCommand() && mainController.isPeepDetected()) {
+    if (mainController.triggerModeEnabledCommand()
+        && mainController.tick()
+               > mainController.ticksPerInhalation() + 500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
         // machine
         if (static_cast<int32_t>(mainController.pressure())
