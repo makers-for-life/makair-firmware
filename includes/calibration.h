@@ -21,3 +21,16 @@ void Calibration_Init(void);
  * @param ms  Duration of the blocking in millisecond
  */
 void Calibration_Wait_Measure_Pressure(uint16_t ms);
+
+///  Read keyboard duing calibration process
+void Calibration_Read_Keyboard(void);
+
+///  Restart calibration process
+void Calibration_Restart(void);
+
+/**
+ * Check if calibration mode is started
+ *
+ * @return True if calibration mode is started
+ */
+bool Calibration_Started(void);

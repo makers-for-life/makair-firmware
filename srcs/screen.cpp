@@ -206,7 +206,7 @@ void displayFlowMeterFail(int32_t p_flowMeterFlowAtStarting, int32_t p_flowMeter
     screen.setCursor(0, 2);
     screen.print("Flow meter fail");
     screen.setCursor(0, 3);
-    screen.print("Please reboot");
+    screen.print("Press start to retry");
 }
 
 void displayPressureOffsetUnstable(uint32_t p_minOffsetValue, uint32_t p_maxOffsetValue) {
@@ -223,7 +223,7 @@ void displayPressureOffsetUnstable(uint32_t p_minOffsetValue, uint32_t p_maxOffs
     screen.setCursor(0, 2);
     screen.print("Unplug patient and");
     screen.setCursor(0, 3);
-    screen.print("reboot");
+    screen.print("press start");
 }
 
 void displayPatientMustBeUnplugged() {

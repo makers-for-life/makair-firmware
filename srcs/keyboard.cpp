@@ -21,6 +21,7 @@
 // Internal
 #include "../includes/activation.h"
 #include "../includes/buzzer.h"
+#include "../includes/calibration.h"
 #include "../includes/debug.h"
 #include "../includes/main_controller.h"
 #include "../includes/parameters.h"
@@ -61,7 +62,15 @@ void onCycleDecrease() { mainController.onCycleDecrease(); }
 void onAlarmOff() { alarmController.snooze(); }
 
 /// Handler of the button to start
-void onStart() { activationController.onStartButton(); }
+void onStart() {
+    if (Calibration_Started()) {
+        // Restart calibration
+        Calibration_Restart();
+    } else {
+        // Or start the machine
+        activationController.onStartButton();
+    }
+}
 
 /// Handler of the button to stop
 void onStop() { activationController.onStopButton(); }
