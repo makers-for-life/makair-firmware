@@ -81,13 +81,19 @@ union {
 // FUNCTIONS ==================================================================
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
-void MFM_Timer_Callback(HardwareTimer*) {
-    if (!mfmInspiratoryFaultCondition) {
-#if MODE == MODE_MFM_TESTS
-        // cppcheck-suppress misra-c2012-12.3
-        digitalWrite(PIN_LED_START, HIGH);
-        // it takes typically 350 µs to read the value.
+// API update since version 1.9.0 of Arduino_Core_STM32
+#if (STM32_CORE_VERSION < 0x01090000)
+void MFM_Timer_Callback(HardwareTimer*)
+#else
+void MFM_Timer_Callback(void)
 #endif
+{
+#if MODE == MODE_MFM_TESTS
+    // cppcheck-suppress misra-c2012-12.3
+    digitalWrite(PIN_LED_START, HIGH);
+    // it takes typically 350 µs to read the value.
+#endif
+    if (!mfmInspiratoryFaultCondition) {
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
         Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
@@ -169,9 +175,6 @@ void MFM_Timer_Callback(HardwareTimer*) {
 
 #endif
 
-#if MODE == MODE_MFM_TESTS
-        digitalWrite(PIN_LED_START, LOW);
-#endif
     } else {
         if (mfmResetStateMachine == MFM_WAIT_RESET_PERIODS) {
             // Reset attempt
@@ -261,6 +264,10 @@ void MFM_Timer_Callback(HardwareTimer*) {
             }
         }
     }
+
+#if MODE == MODE_MFM_TESTS
+        digitalWrite(PIN_LED_START, LOW);
+#endif
 }
 
 bool MFM_init(void) {
@@ -283,12 +290,14 @@ bool MFM_init(void) {
 
     // Interrupt priority is documented here:
     // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
-    massFlowTimer->setInterruptPriority(2, 0);
+    // WARNING : since 1.9.0 lib, I2C is on level 2. must be under...
+    massFlowTimer->setInterruptPriority(3, 0);
 
 // I2C sensors
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D || MASS_FLOW_METER_SENSOR == MFM_SDP703_02             \
     || MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     // Detect if the sensor is connected
+    // default Wire instance is on PB8 BP9, anyway
     Wire.setSDA(PIN_I2C_SDA);
     Wire.setSCL(PIN_I2C_SCL);
 #endif

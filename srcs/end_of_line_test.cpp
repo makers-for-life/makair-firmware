@@ -134,7 +134,13 @@ char eolScreenBuffer[EOLSCREENSIZE + 1];
 int16_t eolMatrixCurrentColumn = 1;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
-void millisecondTimerEOL(HardwareTimer*) {
+// API update since version 1.9.0 of Arduino_Core_STM32
+#if (STM32_CORE_VERSION < 0x01090000)
+void millisecondTimerEOL(HardwareTimer*) 
+#else
+void millisecondTimerEOL(void) 
+#endif
+{
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
