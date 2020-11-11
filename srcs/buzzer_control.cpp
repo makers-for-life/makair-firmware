@@ -56,7 +56,7 @@ void BuzzerChangeFreq(uint32_t freq) {
 #endif
 }
 void BuzzerIncrementFreq(void) {
-    buzzerCurrentFreq += 250;
+    buzzerCurrentFreq += 25;
     if (buzzerCurrentFreq > 8000) {
         buzzerCurrentFreq = 8000;
     }
@@ -64,7 +64,7 @@ void BuzzerIncrementFreq(void) {
 }
 
 void BuzzerDecrementFreq(void) {
-    buzzerCurrentFreq -= 250;
+    buzzerCurrentFreq -= 25;
     if (buzzerCurrentFreq < 250) {
         buzzerCurrentFreq = 250;
     }
@@ -75,7 +75,11 @@ void BuzzerDecrementFreq(void) {
 void BuzzerControl_On(void) {
 #if HARDWARE_VERSION == 1 || defined(FORCEMALLORY)
     // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.
+    #ifdef FORCEMOLLORYINVERT
+    digitalWrite(PIN_BUZZER, LOW);
+    #else
     digitalWrite(PIN_BUZZER, HIGH);
+    #endif
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Buzzer_Hw_Timer->resume();
 #endif
@@ -84,7 +88,11 @@ void BuzzerControl_On(void) {
 void BuzzerControl_Off(void) {
 #if HARDWARE_VERSION == 1 || defined(FORCEMALLORY)
     // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.
+    #ifdef FORCEMOLLORYINVERT
+    digitalWrite(PIN_BUZZER, HIGH);
+    #else
     digitalWrite(PIN_BUZZER, LOW);
+    #endif
 #elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Buzzer_Hw_Timer->pause();
 #endif
