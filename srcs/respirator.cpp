@@ -23,6 +23,7 @@
 #include "../includes/blower.h"
 #include "../includes/buzzer.h"
 #include "../includes/buzzer_control.h"
+#include "../includes/calibration.h"
 #include "../includes/cpu_load.h"
 #include "../includes/debug.h"
 #include "../includes/end_of_line_test.h"
@@ -43,43 +44,7 @@
 HardwareTimer* hardwareTimer1;  // ESC command
 HardwareTimer* hardwareTimer3;  // valves command
 
-int32_t pressureOffsetSum;
-uint32_t pressureOffsetCount;
-int32_t minOffsetValue = 0;
-int32_t maxOffsetValue = 0;
-
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
-
-/**
- * Block execution for a given duration
- *
- * @param ms  Duration of the blocking in millisecond
- */
-void waitAndMeasurePressure(uint16_t ms) {
-    uint16_t start = millis();
-    minOffsetValue = inspiratoryPressureSensor.read();
-    maxOffsetValue = inspiratoryPressureSensor.read();
-    pressureOffsetSum = 0;
-    pressureOffsetCount = 0;
-
-    // Open valves
-    inspiratoryValve.close();
-    inspiratoryValve.execute();
-    expiratoryValve.open();
-    expiratoryValve.execute();
-
-    while ((millis() - start) < ms) {
-        // Measure 1 pressure per ms we wait
-        if ((millis() - start) > pressureOffsetCount) {
-            int32_t pressureValue = inspiratoryPressureSensor.read();
-            pressureOffsetSum += pressureValue;
-            minOffsetValue = min(pressureValue, minOffsetValue);
-            maxOffsetValue = max(pressureValue, maxOffsetValue);
-            pressureOffsetCount++;
-        }
-        continue;
-    }
-}
 
 void setup(void) {
     // Nothing should be sent to Serial in production, but this will avoid crashing the program if
@@ -173,74 +138,7 @@ void setup(void) {
     initKeyboard();
     BuzzerControl_Init();
     Buzzer_Init();
-
-    // RCM-SW-17 (Christmas tree at startup)
-    Buzzer_Boot_Start();
-    digitalWrite(PIN_LED_START, LED_START_ACTIVE);
-    digitalWrite(PIN_LED_GREEN, LED_GREEN_ACTIVE);
-    digitalWrite(PIN_LED_RED, LED_RED_ACTIVE);
-    digitalWrite(PIN_LED_YELLOW, LED_YELLOW_ACTIVE);
-    waitAndMeasurePressure(1000);
-    digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-    digitalWrite(PIN_LED_GREEN, LED_GREEN_INACTIVE);
-    digitalWrite(PIN_LED_RED, LED_RED_INACTIVE);
-    digitalWrite(PIN_LED_YELLOW, LED_YELLOW_INACTIVE);
-    waitAndMeasurePressure(1000);
-
-    displayPatientMustBeUnplugged();
-    waitAndMeasurePressure(2000);
-
-    int32_t inspiratoryPressureSensorOffset = 0;
-    resetScreen();
-    if (pressureOffsetCount != 0u) {
-        inspiratoryPressureSensorOffset =
-            pressureOffsetSum / static_cast<int32_t>(pressureOffsetCount);
-    } else {
-        inspiratoryPressureSensorOffset = 0;
-    }
-
-    inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
-
-    // Happens when patient is plugged at starting
-    if (((maxOffsetValue - minOffsetValue) >= 10)
-        || (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET)) {
-        displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
-        Buzzer_High_Prio_Start();
-        while (true) {
-        }
-    }
-
-#ifdef MASS_FLOW_METER_ENABLED
-    int32_t flowMeterFlowAtStarting = MFM_read_airflow();
-#else
-    int32_t flowMeterFlowAtStarting = 0;
-#endif
-    inspiratoryValve.open();
-    inspiratoryValve.execute();
-    expiratoryValve.open();
-    expiratoryValve.execute();
-    delay(500);
-    blower.runSpeed(DEFAULT_BLOWER_SPEED);
-    delay(1000);
-#ifdef MASS_FLOW_METER_ENABLED
-    int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
-#else
-    int32_t flowMeterFlowWithBlowerOn = 0;
-#endif
-
-    blower.stop();
-
-    // Happens when flow meter fails
-    if ((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)
-        || (flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000)) {
-        displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
-        Buzzer_High_Prio_Start();
-        while (true) {
-        }
-    }
-
-    displayPressureOffset(inspiratoryPressureSensorOffset);
-    delay(1000);
+    Calibration_Init();
 
     if (!eolTest.isRunning()) {
         mainStateMachine.setupAndStart();
