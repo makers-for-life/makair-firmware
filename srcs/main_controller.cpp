@@ -168,7 +168,7 @@ void MainController::compute() {
     alarmController.updateCoreData(m_tick, m_pressure, m_phase, m_cycleNb);
 
     // Send data snaphshot only every 10 ms
-    uint32_t moduloValue = max(1, (10u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS));
+    uint32_t moduloValue = max(1u, (10u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS));
     if (m_tick % moduloValue == 0) {
         sendDataSnapshot(m_tick, m_pressure, m_phase, inspiratoryValve.position,
                          expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),

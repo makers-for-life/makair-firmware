@@ -142,9 +142,9 @@ void millisecondTimerMSM(void)
     } else if (msmstep == BREATH) {
         // If breathing
         uint32_t currentMillis = millis();
-        tick = (currentMillis - lastMillis) / 10u;
+        tick = (currentMillis - lastMillis) / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
 
-        if ((currentMillis - lastMainControllerCall) > 10u) {
+        if ((currentMillis - lastMainControllerCall) > MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {

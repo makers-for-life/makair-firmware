@@ -24,7 +24,7 @@
  */
 ///@{
 
-// Main controller compute period in millisecond
+// Main controller compute period in millisecond : min 1 ms max 10 ms
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_MS 10u
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_US (1000u*MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
 
