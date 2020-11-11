@@ -208,6 +208,9 @@ class MainController {
     /// Get the duration of an inhalation in ticks
     inline uint32_t ticksPerInhalation() const { return m_ticksPerInhalation; }
 
+    /// Get the duration of an inhalation in ticks
+    inline void  ticksPerInhalationSet(uint32_t p_ticksPerInhalation) { m_ticksPerInhalation = p_ticksPerInhalation; }
+
     /// Get the current measured pressure
     inline uint16_t pressure() const { return m_pressure; }
 

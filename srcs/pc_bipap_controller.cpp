@@ -124,10 +124,17 @@ void PC_BIPAP_Controller::inhale() {
                              / (mainController.tick() - 0u);  // in mmH2O/s
         m_plateauPressureReached = true;
     }
+
+    int32_t tiMinInTick = 200u/MAIN_CONTROLLER_COMPUTE_PERIOD_MS; 
+
+    if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow){
+        m_maxInspiratoryFlow = mainController.inspiratoryFlow();
+    } else if (mainController.inspiratoryFlow() < 0.3 * m_maxInspiratoryFlow && mainController.tick() > tiMinInTick){
+        mainController.ticksPerInhalationSet(mainController.tick());
+    }
 }
 
 void PC_BIPAP_Controller::exhale() {
-    blower.runSpeed(m_blowerSpeed - 400u);
 
     // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
@@ -155,22 +162,16 @@ void PC_BIPAP_Controller::exhale() {
         }
     }
 
-    if (mainController.triggerModeEnabledCommand()) {
-        // triggering an inspiration is only possible within a time window
-        if (mainController.tick() >= m_triggerWindow) {
-            int32_t sum = 0;
-            for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
-                sum += m_inspiratoryFlowLastValues[i];
-            }
 
-            // cppcheck-suppress unreadVariable
-            int32_t meanFlow = sum / static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES);
-
-            if (mainController.inspiratoryFlow()
-                > ((280 * 100)
-                   + (100 * static_cast<int32_t>(mainController.pressureTriggerOffsetCommand())))) {
-                mainController.setTrigger(true);
-            }
+    // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
+    if (mainController.triggerModeEnabledCommand() && mainController.isPeepDetected()) {
+        // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
+        // machine
+        if (static_cast<int32_t>(mainController.pressure())
+                < (mainController.pressureCommand()
+                   - static_cast<int32_t>(mainController.pressureTriggerOffsetCommand()))
+            && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE)) {
+            mainController.setTrigger(true);
         }
     }
 }
