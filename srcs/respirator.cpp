@@ -153,7 +153,6 @@ void setup(void) {
 
 // cppcheck-suppress unusedFunction
 void loop(void) {
-
     /*blower.runSpeed(MAX_BLOWER_SPEED);
     inspiratoryValve.open();
     inspiratoryValve.execute();

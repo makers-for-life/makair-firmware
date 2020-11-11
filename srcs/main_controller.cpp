@@ -344,19 +344,18 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 void MainController::updateFakeExpiratoryFlow() {
     int32_t openning = expiratoryValve.position;
 
-    int32_t aMultiplyBy100 = -585 * openning*openning/100000 +118*openning/100 - 62;
-    int32_t bMultiplyBy100 = 195*openning*openning/100 - 489*openning + 33300;
-    int32_t cMultiplyBy100 = -2170*openning+279000;
+    int32_t aMultiplyBy100 = -585 * openning * openning / 100000 + 118 * openning / 100 - 62;
+    int32_t bMultiplyBy100 = 195 * openning * openning / 100 - 489 * openning + 33300;
+    int32_t cMultiplyBy100 = -2170 * openning + 279000;
 
     int32_t p = m_pressure;
-    m_expiratoryFlow = (aMultiplyBy100 * p * p + bMultiplyBy100* p +cMultiplyBy100)/100;
+    m_expiratoryFlow = (aMultiplyBy100 * p * p + bMultiplyBy100 * p + cMultiplyBy100) / 100;
 
-    m_expiratoryVolume += (m_expiratoryFlow/60) *m_dt/1000;
+    m_expiratoryVolume += (m_expiratoryFlow / 60) * m_dt / 1000;
     /*Serial.print(m_inspiratoryFlow);
     Serial.print(",");
     Serial.print(m_expiratoryFlow);
     Serial.println();*/
-
 }
 
 void MainController::updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume) {
@@ -630,16 +629,17 @@ void MainController::onPlateauPressureSet(uint16_t p_plateauPressure) {
 void MainController::onPeakPressureDecrease() {
     DBG_DO(Serial.println("Peak Pressure --");)
 #if DEBUG != 0
-    m_peakPressureNextCommand = 20; m_ventilationControllerNextCommand = &pcBipapController;
-#endif 
+    m_peakPressureNextCommand = 20;
+    m_ventilationControllerNextCommand = &pcBipapController;
+#endif
 }
 
 void MainController::onPeakPressureIncrease() {
     DBG_DO(Serial.println("Peak Pressure ++");)
 #if DEBUG != 0
-    m_ventilationControllerNextCommand = &pcCmvController; m_peakPressureNextCommand = 0;
-#endif 
-
+    m_ventilationControllerNextCommand = &pcCmvController;
+    m_peakPressureNextCommand = 0;
+#endif
 }
 
 // cppcheck-suppress unusedFunction

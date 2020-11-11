@@ -138,7 +138,6 @@ void PC_BIPAP_Controller::inhale() {
 }
 
 void PC_BIPAP_Controller::exhale() {
-
     // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
         mainController.pressureCommand(), mainController.pressure(), mainController.dt());
@@ -150,9 +149,9 @@ void PC_BIPAP_Controller::exhale() {
             125
                 - static_cast<int32_t>((mainController.tick() - mainController.ticksPerInhalation())
                                        / 2u));*/
-    //inspiratoryValve.openLinear(inspiratoryValveOpenningValue);
+    // inspiratoryValve.openLinear(inspiratoryValveOpenningValue);
     inspiratoryValve.close();
-    //m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
+    // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the machine
