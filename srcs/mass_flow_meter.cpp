@@ -50,11 +50,20 @@ uint32_t mfmHoneywellHafSerialNumber = 0;
 
 HardwareTimer* massFlowTimer;
 
-int32_t mfmInspiratoryCalibrationOffset = 0;
+// Calibration offset is substracted to MFM instant flow:
+// - before volume integral
+// - before sending MFM_read_airflow result
+volatile int32_t mfmInspiratoryCalibrationOffset = 0;
 
 volatile int32_t mfmInspiratoryAirVolumeSumMilliliters = 0;
 volatile int32_t mfmInspiratorySensorDetected = 0;
 volatile int32_t mfmInspiratoryInstantAirFlow = 0;
+
+// size of the table used to compute average
+#define MFM_MEAN_SAMPLES 40
+volatile bool mfmInspiratoryInstantAirFlowRecord = false;
+volatile int32_t mfmInspiratoryInstantAirFlowLastValues[MFM_MEAN_SAMPLES];
+volatile int16_t mfmInspiratoryInstantAirFlowLastValuesIndex = 0;
 
 volatile bool mfmInspiratoryFaultCondition = false;
 
@@ -162,7 +171,20 @@ void MFM_Timer_Callback(void)
         if (mfmInspiratoryLastValueFixedFloat < (MFM_RANGE * 1100)) {
             mfmInspiratoryInstantAirFlow = mfmInspiratoryLastValueFixedFloat;
             if (mfmInspiratoryLastValueFixedFloat > 500) {  // less than 0.5 SPLM is noise
-                mfmInspiratoryAirVolumeSumMilliliters += mfmInspiratoryLastValueFixedFloat;
+                mfmInspiratoryAirVolumeSumMilliliters +=
+                    (mfmInspiratoryLastValueFixedFloat - mfmInspiratoryCalibrationOffset);
+            }
+            // also fill the last values table used to compute average, and update the index
+            if (mfmInspiratoryInstantAirFlowRecord) {
+                mfmInspiratoryInstantAirFlowLastValues
+                    [mfmInspiratoryInstantAirFlowLastValuesIndex] =
+                        mfmInspiratoryLastValueFixedFloat;
+                mfmInspiratoryInstantAirFlowLastValuesIndex++;
+                if (MFM_MEAN_SAMPLES == mfmInspiratoryInstantAirFlowLastValuesIndex) {
+                    mfmInspiratoryInstantAirFlowLastValuesIndex = 0;
+                    // table full, stops
+                    mfmInspiratoryInstantAirFlowRecord = false;
+                }
             }
         }
 #endif
@@ -469,25 +491,38 @@ uint32_t MFM_read_serial_number(void) {
 /**
  *  If the massflow meter needs to be calibrated, this function will be usefull.
  */
-void MFM_calibrateZero(void) {
-    int32_t zeroFlow = 0;
-    int8_t i = 0;
-
-    while (i < 10) {
-        zeroFlow = zeroFlow + MFM_read_airflow();
-        delay(40);
-        i++;
+int8_t MFM_calibrateZero(void) {
+    int8_t ret = MFM_CALIBRATION_OK;
+    // activate table fill with last valid value
+    mfmInspiratoryInstantAirFlowLastValuesIndex = 0;
+    mfmInspiratoryInstantAirFlowRecord = true;
+    // wait for the table to fill in
+    delay(2 + MFM_MEAN_SAMPLES * (MASS_FLOW_PERIOD / 10));
+    // Check that table is full (record must be false).
+    // If it is not, there is a sensor problem
+    // in case of problem, do not update mfmInspiratoryCalibrationOffset
+    if (!mfmInspiratoryInstantAirFlowRecord) {
+        int32_t zeroFlow = 0;
+        for (int16_t i = 0; i < MFM_MEAN_SAMPLES; i++) {
+            zeroFlow += mfmInspiratoryInstantAirFlowLastValues[i];
+        }
+        zeroFlow /= MFM_MEAN_SAMPLES;
+        // check that value is credible: [-10 10] SLPM
+        if (zeroFlow < 10000 && zeroFlow > -10000) {
+            mfmInspiratoryCalibrationOffset = zeroFlow;
+        } else {
+            ret = MFM_CALIBRATION_OUT_OF_RANGE;
+        }
+    } else {
+        ret = MFM_CALIBRATION_IMPOSSIBLE;
     }
-
-    mfmInspiratoryCalibrationOffset = zeroFlow / 10;
+    return ret;
 }
 
 /**
  *  Get massflow meter offset
  */
-int32_t MFM_getOffset(void) {
-    return mfmInspiratoryCalibrationOffset;
-}
+int32_t MFM_getOffset(void) { return mfmInspiratoryCalibrationOffset; }
 
 int32_t MFM_read_milliliters(bool reset_after_read) {
     int32_t result;
@@ -517,14 +552,17 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 #if MODE == MODE_MFM_TESTS
 
 void onStartClick() { MFM_reset(); }
+void onPauseClick() { MFM_calibrateZero(); }
 char buffer[30];
 
-OneButton btn_stop(PIN_BTN_ALARM_OFF, false, false);
+OneButton btn_alarmoff(PIN_BTN_ALARM_OFF, false, false);
+OneButton btn_pause(PIN_BTN_STOP, false, false);
 
 void setup(void) {
     Serial.begin(115200);
     Serial.println("init mass flow meter");
     boolean ok = MFM_init();
+    int calib = MFM_calibrateZero();
 
     pinMode(PIN_LED_START, OUTPUT);
 
@@ -538,12 +576,21 @@ void setup(void) {
     screen.print("mass flow sensor");
     screen.setCursor(0, 2);
     screen.print(ok ? "sensor OK" : "sensor not OK");
+    screen.setCursor(0, 3);
+    screen.print(calib == MFM_CALIBRATION_OK ? "calib OK" : "calibration error");
 
     (void)snprintf(buffer, sizeof(buffer), "serial=%08x ", mfmHoneywellHafSerialNumber);
     Serial.println(buffer);
 
-    btn_stop.attachClick(onStartClick);
-    btn_stop.setDebounceTicks(0);
+    Serial.print("calibration status=");
+    Serial.println(calib);
+    Serial.print("offset calibration=");
+    Serial.println(mfmInspiratoryCalibrationOffset);
+
+    btn_alarmoff.attachClick(onStartClick);
+    btn_alarmoff.setDebounceTicks(0);
+    btn_pause.attachClick(onPauseClick);
+    btn_pause.setDebounceTicks(0);
     mfmInspiratoryAirVolumeSumMilliliters = 0;
     Serial.println("init done");
 }
@@ -583,7 +630,8 @@ void loop(void) {
         // Serial.print(volume);
         // Serial.println("mL");
     }
-    btn_stop.tick();
+    btn_alarmoff.tick();
+    btn_pause.tick();
 }
 #endif
 
