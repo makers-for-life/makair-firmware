@@ -445,7 +445,11 @@ bool MFM_init(void) {
  * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
  */
 int32_t MFM_read_airflow(void) {
-    return (mfmInspiratoryFaultCondition ? MASS_FLOW_ERROR_VALUE : mfmInspiratoryInstantAirFlow);
+    if (mfmInspiratoryFaultCondition) {
+        return MASS_FLOW_ERROR_VALUE;
+    } else {
+        return mfmInspiratoryInstantAirFlow - mfmInspiratoryCalibrationOffset;
+    }
 }
 
 void MFM_reset(void) { mfmInspiratoryAirVolumeSumMilliliters = 0; }
@@ -465,8 +469,25 @@ uint32_t MFM_read_serial_number(void) {
 /**
  *  If the massflow meter needs to be calibrated, this function will be usefull.
  */
-// cppcheck-suppress misra-c2012-2.2
-void MFM_calibrateZero(void) {}
+void MFM_calibrateZero(void) {
+    int32_t zeroFlow = 0;
+    int8_t i = 0;
+
+    while (i < 10) {
+        zeroFlow = zeroFlow + MFM_read_airflow();
+        delay(40);
+        i++;
+    }
+
+    mfmInspiratoryCalibrationOffset = zeroFlow / 10;
+}
+
+/**
+ *  Get massflow meter offset
+ */
+int32_t MFM_getOffset(void) {
+    return mfmInspiratoryCalibrationOffset;
+}
 
 int32_t MFM_read_milliliters(bool reset_after_read) {
     int32_t result;

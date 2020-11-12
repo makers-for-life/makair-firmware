@@ -37,6 +37,7 @@ bool calibrationValid = false;
 void Calibration_Init() {
     // Restart calibration process when invalid
     while (calibrationValid == false) {
+        delay(1000);
         resetScreen();
         calibationStarted = true;
         // RCM-SW-17 (Christmas tree at startup)
@@ -81,6 +82,7 @@ void Calibration_Init() {
         if (calibrationValid) {
 #ifdef MASS_FLOW_METER_ENABLED
             int32_t flowMeterFlowAtStarting = MFM_read_airflow();
+            MFM_calibrateZero();
 #else
             int32_t flowMeterFlowAtStarting = 0;
 #endif
@@ -112,6 +114,8 @@ void Calibration_Init() {
             }
 
             displayPressureOffset(inspiratoryPressureSensorOffset);
+            delay(1000);
+            displayFlowMeterOffset(MFM_getOffset());
             delay(1000);
         }
         // Reset values to default state

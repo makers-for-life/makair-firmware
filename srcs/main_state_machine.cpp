@@ -203,7 +203,7 @@ void MainStateMachine::setupAndStart() {
     ::msmTimer->setOverflow(10);
     // priority level :
     // https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-nvic-or-nested-vector-interrupt-controller/
-    ::msmTimer->setInterruptPriority(0, 0);
+    ::msmTimer->setInterruptPriority(6, 0);
     ::msmTimer->setMode(1, TIMER_OUTPUT_COMPARE, NC);
     ::msmTimer->attachInterrupt(millisecondTimerMSM);
     ::msmTimer->resume();
