@@ -40,6 +40,13 @@ void MFM_calibrateZero(void);
  */
 int32_t MFM_read_airflow(void);
 
+/**
+ * return the serial number of the inspiratory flow meter
+ *
+ * @note returns 0 before init, or if init failed.
+ */
+uint32_t MFM_read_serial_number(void);
+
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
 #define MFM_SENSOR_I2C_ADDRESS 0x40
 #endif
