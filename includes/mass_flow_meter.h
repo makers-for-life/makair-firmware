@@ -36,6 +36,11 @@ void MFM_reset(void);
 void MFM_calibrateZero(void);
 
 /**
+ *  Get massflow meter offset
+ */
+int32_t MFM_getOffset(void);
+
+/**
  * Read instant air flow
  */
 int32_t MFM_read_airflow(void);

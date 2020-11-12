@@ -102,6 +102,13 @@ void displayPressureOffset(int32_t p_inspiratoryPressureSensorOffset);
  */
 void displayFlowMeterFail(int32_t p_flowMeterFlowAtStarting, int32_t p_flowMeterFlowWithBlowerOn);
 
+/**
+ * Display flow meter offset
+ *
+ * @param p_flowMeterFlowOffset Measured flow offset value
+ */
+void displayFlowMeterOffset(int32_t p_flowMeterFlowOffset);
+
 /// Display the "calibration in progress" message
 void displayPatientMustBeUnplugged();
 
