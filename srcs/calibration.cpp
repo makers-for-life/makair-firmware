@@ -78,41 +78,42 @@ void Calibration_Init() {
             calibrationValid = true;
         }
 
+        if (calibrationValid) {
 #ifdef MASS_FLOW_METER_ENABLED
-        int32_t flowMeterFlowAtStarting = MFM_read_airflow();
+            int32_t flowMeterFlowAtStarting = MFM_read_airflow();
 #else
-        int32_t flowMeterFlowAtStarting = 0;
+            int32_t flowMeterFlowAtStarting = 0;
 #endif
-        inspiratoryValve.open();
-        inspiratoryValve.execute();
-        expiratoryValve.open();
-        expiratoryValve.execute();
-        delay(500);
-        blower.runSpeed(DEFAULT_BLOWER_SPEED);
-        delay(1000);
+            inspiratoryValve.open();
+            inspiratoryValve.execute();
+            expiratoryValve.open();
+            expiratoryValve.execute();
+            delay(500);
+            blower.runSpeed(DEFAULT_BLOWER_SPEED);
+            delay(1000);
 #ifdef MASS_FLOW_METER_ENABLED
-        int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
+            int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
 #else
-        int32_t flowMeterFlowWithBlowerOn = 0;
+            int32_t flowMeterFlowWithBlowerOn = 30000;
 #endif
 
-        blower.stop();
+            blower.stop();
 
-        // Happens when flow meter fails
-        if ((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)
-            || (flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000)) {
-            // Invalid calibration
-            calibrationValid = false;
-            displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
-            Buzzer_High_Prio_Start();
-            Calibration_Read_Keyboard();
-        } else {
-            calibrationValid = true;
+            // Happens when flow meter fails
+            if (((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)
+                 || (flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
+                // Invalid calibration
+                calibrationValid = false;
+                displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
+                Buzzer_High_Prio_Start();
+                Calibration_Read_Keyboard();
+            } else {
+                calibrationValid = true;
+            }
+
+            displayPressureOffset(inspiratoryPressureSensorOffset);
+            delay(1000);
         }
-
-        displayPressureOffset(inspiratoryPressureSensorOffset);
-        delay(1000);
-
         // Reset values to default state
         calibationStarted = false;
         startButtonPressed = false;
