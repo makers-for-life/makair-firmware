@@ -71,7 +71,7 @@ void millisecondTimerMSM(void)
 {
     IWatchdog.reload();
     clockMsmTimer++;
-    uint32_t pressure = inspiratoryPressureSensor.read();
+    int32_t pressure = inspiratoryPressureSensor.read();
     mainController.updatePressure(pressure);
     int32_t inspiratoryflow = MFM_read_airflow();
     mainController.updateInspiratoryFlow(inspiratoryflow);

@@ -172,7 +172,7 @@ void MainController::compute() {
     // Send data snaphshot only every 10 ms
     uint32_t moduloValue = max(1u, (10u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS));
     if ((m_tick % moduloValue) == 0u) {
-        sendDataSnapshot(m_tick, m_pressure, m_phase, inspiratoryValve.position,
+        sendDataSnapshot(m_tick, max((int16_t)0, m_pressure), m_phase, inspiratoryValve.position,
                          expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
                          m_inspiratoryFlow, m_expiratoryFlow);
     }
@@ -213,7 +213,7 @@ void MainController::inhale() {
 
     // Update peak pressure and rebounce peak pressure
     if (m_pressure > m_peakPressureMeasure) {
-        m_peakPressureMeasure = m_pressure;
+        m_peakPressureMeasure = max((int16_t)0,m_pressure);
         m_rebouncePeakPressureMeasure = m_pressure;
     } else if (m_pressure < m_rebouncePeakPressureMeasure) {
         m_rebouncePeakPressureMeasure = m_pressure;
@@ -233,9 +233,9 @@ void MainController::exhale() {
     m_ventilationController->exhale();
 
     // Compute the PEEP pressure
-    uint16_t minValue = m_lastPressureValues[0u];
-    uint16_t maxValue = m_lastPressureValues[0u];
-    uint16_t totalValues = m_lastPressureValues[0u];
+    int16_t minValue = m_lastPressureValues[0u];
+    int16_t maxValue = m_lastPressureValues[0u];
+    int16_t totalValues = m_lastPressureValues[0u];
     for (uint8_t index = 1u; index < MAX_PRESSURE_SAMPLES; index++) {
         minValue = min(minValue, m_lastPressureValues[index]);
         maxValue = max(maxValue, m_lastPressureValues[index]);
@@ -245,20 +245,20 @@ void MainController::exhale() {
     // Update PEEP value, when pressure is stable and close to target pressure
     if (((maxValue - minValue) < 5u) && (abs(m_pressure - m_peepCommand) < 30)) {
         m_isPeepDetected = true;
-        m_peepMeasure = totalValues / MAX_PRESSURE_SAMPLES;
+        m_peepMeasure = max((int)0, totalValues / MAX_PRESSURE_SAMPLES);
     }
 
     // This case is usefull when PEEP is never detected during the cycle
     if (!m_isPeepDetected) {
-        m_peepMeasure = m_pressure;
+        m_peepMeasure = max((int16_t)0, m_pressure);
     }
 }
 
 void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
 
-    Serial.print(m_expiratoryVolume/1000);
+    /*Serial.print(m_expiratoryVolume/1000);
     Serial.print(",");
-    Serial.println(m_tidalVolumeMeasure);
+    Serial.println(m_tidalVolumeMeasure);*/
     // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
     uint32_t currentMillis = p_currentMillis;
     m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] =
@@ -276,19 +276,12 @@ void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
     m_lastEndOfRespirationDateMs = currentMillis;
 
     // Plateau pressure is the mean pressure during plateau
-    m_plateauPressureMeasure = m_PlateauMeasureSum / m_PlateauMeasureCount;
+    m_plateauPressureMeasure = max((int64_t)0, m_PlateauMeasureSum / m_PlateauMeasureCount);
 
     checkCycleAlarm();
 
-    // If plateau is not detected or is too close to PEEP, mark it as "unknown"
-    if ((m_plateauPressureMeasure == 0u) || (abs(m_plateauPressureMeasure - m_peepMeasure) < 10)) {
-        m_plateauPressureMeasure = UINT16_MAX;
-    }
-
     m_plateauPressureToDisplay = m_plateauPressureMeasure;
-    if (m_plateauPressureToDisplay == UINT16_MAX) {
-        m_plateauPressureToDisplay = 0;
-    }
+   
 
     // Send telemetry machine state snapshot message
     sendMachineState();
@@ -354,8 +347,8 @@ void MainController::updateFakeExpiratoryFlow() {
     } else {
         int32_t aMultiplyBy100 =
             ((((-585 * openning) * openning) / 100000) + ((118 * openning) / 100)) - 62;
-        int32_t bMultiplyBy100 = ((((195 * openning) * openning) / 100) - (489 * openning)) + 33300;
-        int32_t cMultiplyBy100 = (-2170 * openning) + 279000;
+        int32_t bMultiplyBy100 = ((((195 * openning) * openning) / 100)  + 33300 - (489 * openning));
+        int32_t cMultiplyBy100 =  279000 -2170 * openning;
 
         int32_t p = m_pressure;
         m_expiratoryFlow =
@@ -363,7 +356,7 @@ void MainController::updateFakeExpiratoryFlow() {
     }
 
     m_expiratoryVolume += ((m_expiratoryFlow / 60) * m_dt) / 1000;
-    /*Serial.print(m_inspiratoryFlow);
+    /*Serial.print(openning);
     Serial.print(",");
     Serial.print(m_expiratoryFlow);
     Serial.print(",");
@@ -410,10 +403,10 @@ void MainController::executeCommands() {
 void MainController::checkCycleAlarm() {
 #if !SIMULATION
     // RCM-SW-1 + RCM-SW-14: check if plateau is reached
-    uint16_t minPlateauBeforeAlarm =
-        (m_plateauPressureCommand * (100u - ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100u;
-    uint16_t maxPlateauBeforeAlarm =
-        (m_plateauPressureCommand * (100u + ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100u;
+    int16_t minPlateauBeforeAlarm =
+        (m_plateauPressureCommand * (100 - ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100;
+    int16_t maxPlateauBeforeAlarm =
+        (m_plateauPressureCommand * (100 + ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100;
     if ((m_plateauPressureMeasure < minPlateauBeforeAlarm)
         || (m_plateauPressureMeasure > maxPlateauBeforeAlarm)) {
         alarmController.detectedAlarm(RCM_SW_1, m_cycleNb, m_plateauPressureCommand, m_pressure);
@@ -424,7 +417,7 @@ void MainController::checkCycleAlarm() {
     }
 
     // RCM-SW-2 + RCM-SW-19: check is mean pressure was < 2 cmH2O
-    uint16_t meanPressure = m_sumOfPressures / m_numberOfPressures;
+    int16_t meanPressure = m_sumOfPressures / m_numberOfPressures;
     if (meanPressure <= ALARM_THRESHOLD_MIN_PRESSURE) {
         alarmController.detectedAlarm(RCM_SW_2, m_cycleNb, ALARM_THRESHOLD_MIN_PRESSURE,
                                       m_pressure);
@@ -436,8 +429,8 @@ void MainController::checkCycleAlarm() {
     }
 
     // RCM-SW-3 + RCM-SW-15
-    uint16_t PeepBeforeAlarm = m_peepCommand - ALARM_THRESHOLD_DIFFERENCE_PRESSURE;
-    uint16_t maxPeepBeforeAlarm = m_peepCommand + ALARM_THRESHOLD_DIFFERENCE_PRESSURE;
+    int16_t PeepBeforeAlarm = m_peepCommand - ALARM_THRESHOLD_DIFFERENCE_PRESSURE;
+    int16_t maxPeepBeforeAlarm = m_peepCommand + ALARM_THRESHOLD_DIFFERENCE_PRESSURE;
     if ((m_peepMeasure < PeepBeforeAlarm) || (m_peepMeasure > maxPeepBeforeAlarm)) {
         alarmController.detectedAlarm(RCM_SW_3, m_cycleNb, m_peepCommand, m_pressure);
         alarmController.detectedAlarm(RCM_SW_15, m_cycleNb, m_peepCommand, m_pressure);
@@ -547,11 +540,10 @@ void MainController::onCycleSet(uint16_t p_cpm) {
 void MainController::onPeepPressureDecrease() {
     DBG_DO(Serial.println("Peep Pressure --");)
 
-    m_peepNextCommand = m_peepNextCommand - 10u;
-
-    // cppcheck-suppress unsignedLessThanZero ; CONST_MIN_PEEP_PRESSURE might not be equal to 0
-    if (m_peepNextCommand < CONST_MIN_PEEP_PRESSURE) {
-        m_peepNextCommand = CONST_MIN_PEEP_PRESSURE;
+    if (m_peepNextCommand >= 10) {
+        m_peepNextCommand = m_peepNextCommand - 10u;
+    } else {
+        m_peepNextCommand = m_peepNextCommand;
     }
 
 #if !SIMULATION
@@ -576,7 +568,7 @@ void MainController::onPeepPressureIncrease() {
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onPeepSet(uint16_t p_peep) {
+void MainController::onPeepSet(int16_t p_peep) {
     if (p_peep > CONST_MAX_PEEP_PRESSURE) {
         m_peepNextCommand = CONST_MAX_PEEP_PRESSURE;
         // cppcheck-suppress unsignedLessThanZero ; CONST_MIN_PEEP_PRESSURE might not be equal to 0
@@ -613,7 +605,7 @@ void MainController::onPlateauPressureIncrease() {
     m_plateauPressureNextCommand = m_plateauPressureNextCommand + 10u;
 
     m_plateauPressureNextCommand =
-        min(m_plateauPressureNextCommand, static_cast<uint16_t>(CONST_MAX_PLATEAU_PRESSURE));
+        min(m_plateauPressureNextCommand, static_cast<int16_t>(CONST_MAX_PLATEAU_PRESSURE));
 
     if (m_plateauPressureNextCommand > m_peakPressureNextCommand) {
         m_peakPressureNextCommand = m_plateauPressureNextCommand;
@@ -626,7 +618,7 @@ void MainController::onPlateauPressureIncrease() {
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onPlateauPressureSet(uint16_t p_plateauPressure) {
+void MainController::onPlateauPressureSet(int16_t p_plateauPressure) {
     if (p_plateauPressure > CONST_MAX_PLATEAU_PRESSURE) {
         m_plateauPressureNextCommand = CONST_MAX_PLATEAU_PRESSURE;
     } else if (p_plateauPressure < CONST_MIN_PLATEAU_PRESSURE) {

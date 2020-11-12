@@ -33,10 +33,12 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
         + (1000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);  // Possible to trigger 1s before end
 
     m_inspiratoryFlowLastValuesIndex = 0;
+    m_inspiratoryPressureLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
     m_expiratoryPidLastErrorsIndex = 0;
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
         m_inspiratoryFlowLastValues[i] = 0u;
+        m_inspiratoryPressureLastValues[i] = 0u;
     }
     for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
         m_inspiratoryPidLastErrors[i] = 0u;
@@ -84,8 +86,10 @@ void PC_BIPAP_Controller::initCycle() {
 
     for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
         m_inspiratoryFlowLastValues[i] = 0u;
+        m_inspiratoryPressureLastValues[i] = 0u;
     }
     m_inspiratoryFlowLastValuesIndex = 0;
+    m_inspiratoryPressureLastValuesIndex = 0;
 
     // Apply blower ramp-up
     if (m_blowerIncrement >= 0) {
@@ -129,11 +133,11 @@ void PC_BIPAP_Controller::inhale() {
         m_plateauPressureReached = true;
     }
 
-    int32_t tiMinInTick = 200u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
+    int32_t tiMinInTick = 400u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
 
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
         m_maxInspiratoryFlow = mainController.inspiratoryFlow();
-    } else if ((mainController.inspiratoryFlow() < ((30 * m_maxInspiratoryFlow) / 100))
+    } else if ((mainController.inspiratoryFlow() < ((50 * m_maxInspiratoryFlow) / 100))
                && (static_cast<int64_t>(mainController.tick())
                    > static_cast<int64_t>(tiMinInTick))) {
         mainController.ticksPerInhalationSet(mainController.tick());
@@ -158,15 +162,26 @@ void PC_BIPAP_Controller::exhale() {
     inspiratoryValve.close();
     // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
-    // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the machine
-    if (mainController.tick() < m_triggerWindow) {
-        m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
-            mainController.inspiratoryFlow();
-        m_inspiratoryFlowLastValuesIndex++;
-        if (m_inspiratoryFlowLastValuesIndex
-            >= static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES)) {
-            m_inspiratoryFlowLastValuesIndex = 0;
+    /*m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
+        mainController.inspiratoryFlow();
+    m_inspiratoryFlowLastValuesIndex++;
+    if (m_inspiratoryFlowLastValuesIndex
+        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES)) {
+        m_inspiratoryFlowLastValuesIndex = 0;
+    }*/
+
+    m_inspiratoryPressureLastValues[m_inspiratoryPressureLastValuesIndex] =
+        mainController.pressure();
+    m_inspiratoryPressureLastValuesIndex++;
+    if (m_inspiratoryPressureLastValuesIndex
+        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES)) {
+        m_inspiratoryPressureLastValuesIndex = 0;
+    }
+
+    int32_t maxPressureValue = m_inspiratoryPressureLastValues[0];
+    for (int32_t i = 0; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
+        if (m_inspiratoryPressureLastValues[i] > maxPressureValue) {
+            maxPressureValue = m_inspiratoryPressureLastValues[i];
         }
     }
 
@@ -176,10 +191,11 @@ void PC_BIPAP_Controller::exhale() {
             > (mainController.ticksPerInhalation() + (500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
         // machine
-        if (static_cast<int32_t>(mainController.pressure())
-                < (mainController.pressureCommand()
-                   - static_cast<int32_t>(mainController.pressureTriggerOffsetCommand()))
-            && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE)) {
+        if (((mainController.pressure())
+                 < (maxPressureValue - (mainController.pressureTriggerOffsetCommand()))
+             && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE))
+            || mainController.pressure() < -mainController.pressureTriggerOffsetCommand()) {
+
             mainController.setTrigger(true);
         }
     }
@@ -234,6 +250,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
             // Do nothing
         }
     }
+
     DBG_DO(Serial.print("BLOWER"));
     DBG_DO(Serial.println(m_blowerIncrement));
     DBG_DO(Serial.print("m_inspiratorySlope:");)

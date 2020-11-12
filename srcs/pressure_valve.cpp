@@ -62,7 +62,7 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
     // So lets make it between 30 and 100
     // A x10 multiplier is used here for better precision with integer calculations
     // The value of intermediateValue will consequently be in [300 ; 1000]
-    uint32_t intermediateValue = (((static_cast<uint32_t>(p_command) * 70u) / 125u) + 30u) * 10u;
+    uint32_t intermediateValue = (((static_cast<uint32_t>(p_command) * 75u) / 125u) + 30u) * 10u;
 
     /* An order 3 polynom is used to correct the non linearity of the valve.
     To find this polynom, the following experimental protocol was used:

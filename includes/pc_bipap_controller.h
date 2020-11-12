@@ -111,8 +111,14 @@ class PC_BIPAP_Controller final : public VentilationController {
     /// Last flow values
     int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_FLOW_LAST_VALUES];
 
+    /// Last pressure values
+    int32_t m_inspiratoryPressureLastValues[NUMBER_OF_SAMPLE_FLOW_LAST_VALUES];
+
     /// Last flow index
     int32_t m_inspiratoryFlowLastValuesIndex;
+
+    /// Last pressure index
+    int32_t m_inspiratoryPressureLastValuesIndex;
 
     /// Max flow during inspiration
     int32_t m_maxInspiratoryFlow;

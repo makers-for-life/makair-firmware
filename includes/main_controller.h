@@ -27,7 +27,7 @@
 #include "../includes/pressure_valve.h"
 
 /// Number of values to aggregate when computing plateau pressure
-#define MAX_PRESSURE_SAMPLES 10u
+#define MAX_PRESSURE_SAMPLES 10
 
 // CLASS ======================================================================
 
@@ -108,7 +108,7 @@ class MainController {
      *
      * @param p_peep Desired PEEP in mmH2O
      */
-    void onPeepSet(uint16_t p_peep);
+    void onPeepSet(int16_t p_peep);
 
     /// Decrease the desired plateau pressure
     void onPlateauPressureDecrease();
@@ -121,7 +121,7 @@ class MainController {
      *
      * @param p_plateauPressure Desired plateau pressure in mmH2O
      */
-    void onPlateauPressureSet(uint16_t p_plateauPressure);
+    void onPlateauPressureSet(int16_t p_plateauPressure);
 
     /**
      * Decrease the desired peak pressure
@@ -160,43 +160,43 @@ class MainController {
     void onTriggerOffsetSet(uint16_t p_triggerOffset);
 
     /// Get the desired max peak
-    inline uint16_t peakPressureCommand() const { return m_peakPressureCommand; }
+    inline int16_t peakPressureCommand() const { return m_peakPressureCommand; }
     /// Get the desired plateau pressure
-    inline uint16_t plateauPressureCommand() const { return m_plateauPressureCommand; }
+    inline int16_t plateauPressureCommand() const { return m_plateauPressureCommand; }
     /// Get the desired PEEP
-    inline uint16_t peepCommand() const { return m_peepNextCommand; }
+    inline int16_t peepCommand() const { return m_peepNextCommand; }
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteCommand; }
     /// Get the value of the inspiratory trigger pressure command
-    inline const uint16_t pressureTriggerOffsetCommand() const {
+    inline const int16_t pressureTriggerOffsetCommand() const {
         return m_pressureTriggerOffsetCommand;
     }
     /// Get the enabling state of trigger mode
     inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
 
     /// Get the desired max peak for the next cycle
-    inline uint16_t peakPressureNextCommand() const { return m_peakPressureNextCommand; }
+    inline int16_t peakPressureNextCommand() const { return m_peakPressureNextCommand; }
     /// Get the desired plateau pressure for the next cycle
-    inline uint16_t plateauPressureNextCommand() const { return m_plateauPressureNextCommand; }
+    inline int16_t plateauPressureNextCommand() const { return m_plateauPressureNextCommand; }
     /// Get the desired PEEP for the next cycle
-    inline uint16_t peepNextCommand() const { return m_peepNextCommand; }
+    inline int16_t peepNextCommand() const { return m_peepNextCommand; }
     /// Get the desired number of cycles per minute for the next cycle
     inline uint16_t cyclesPerMinuteNextCommand() const { return m_cyclesPerMinuteNextCommand; }
     /// Get the value of the inspiratory trigger pressure command for the next cycle
-    inline const uint16_t pressureTriggerOffsetNextCommand() const {
+    inline const int16_t pressureTriggerOffsetNextCommand() const {
         return m_pressureTriggerOffsetNextCommand;
     }
     /// Get the enabling state of trigger mode for the next cycle
     inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
 
     /// Get the measured peak pressure
-    inline uint16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
+    inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
     /// Get the measured rebounce peak pressure
-    inline uint16_t rebouncePeakPressureMeasure() const { return m_rebouncePeakPressureMeasure; }
+    inline int16_t rebouncePeakPressureMeasure() const { return m_rebouncePeakPressureMeasure; }
     /// Get the measured plateau pressure
-    inline uint16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
+    inline int16_t plateauPressureMeasure() const { return m_plateauPressureMeasure; }
     /// Get the measured PEEP
-    inline uint16_t peepMeasure() const { return m_peepMeasure; }
+    inline int16_t peepMeasure() const { return m_peepMeasure; }
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
     /// Get the measured Tidal Volume
@@ -217,7 +217,7 @@ class MainController {
     }
 
     /// Get the current measured pressure
-    inline uint16_t pressure() const { return m_pressure; }
+    inline int16_t pressure() const { return m_pressure; }
 
     /// Get the current inspiratoryFlow
     inline int32_t inspiratoryFlow() const { return m_inspiratoryFlow; }
@@ -333,32 +333,32 @@ class MainController {
     uint32_t m_lastEndOfRespirationDateMs;
 
     /// Actual desired peak pressure
-    uint16_t m_peakPressureCommand;
+    int16_t m_peakPressureCommand;
     /// Measured value of peak pressure
-    uint16_t m_peakPressureMeasure;
+    int16_t m_peakPressureMeasure;
     /// Measured value of rebounce peak pressure
-    uint16_t m_rebouncePeakPressureMeasure;
+    int16_t m_rebouncePeakPressureMeasure;
     /// Peak pressure desired by the operator for the next cycle
-    uint16_t m_peakPressureNextCommand;
+    int16_t m_peakPressureNextCommand;
 
     /// Actual desired plateau pressure
-    uint16_t m_plateauPressureCommand;
+    int16_t m_plateauPressureCommand;
     /// Plateau pressure desired by the operator for the next cycle
-    uint16_t m_plateauPressureNextCommand;
+    int16_t m_plateauPressureNextCommand;
     /**
      * Measured value of the plateau pressure
      *
      * @note Can sometimes have the special value of MAXINT
      */
-    uint16_t m_plateauPressureMeasure;
+    int16_t m_plateauPressureMeasure;
     /**
      * Measured value of the plateau pressure for display
      *
      * @note Special value of MAXINT in m_plateauPressureMeasure is replaced by 0
      */
-    uint16_t m_plateauPressureToDisplay;
+    int16_t m_plateauPressureToDisplay;
     /// Sum for calulating plateau value
-    uint64_t m_PlateauMeasureSum;
+    int64_t m_PlateauMeasureSum;
     /// Count for calulating plateau value
     uint16_t m_PlateauMeasureCount;
     /**
@@ -369,18 +369,18 @@ class MainController {
     uint32_t m_plateauDurationMs;
 
     /// Actual desired PEEP
-    uint16_t m_peepCommand;
+    int16_t m_peepCommand;
     /// Desired PEEP for the next cycle
-    uint16_t m_peepNextCommand;
+    int16_t m_peepNextCommand;
     /// Measured value of the PEEP
-    uint16_t m_peepMeasure;
+    int16_t m_peepMeasure;
     /// Is PEEP pressure detected in the cycle?
     bool m_isPeepDetected;
 
     /// Actual pressure trigger offset
-    uint16_t m_pressureTriggerOffsetCommand;
+    int16_t m_pressureTriggerOffsetCommand;
     /// Desired pressure trigger offset for the next cycle
-    uint16_t m_pressureTriggerOffsetNextCommand;
+    int16_t m_pressureTriggerOffsetNextCommand;
     /// Is inspiratory triggered or not?
     bool m_triggered;
 
@@ -416,7 +416,7 @@ class MainController {
     uint32_t m_ticksPerInhalation;
 
     /// Measured pressure
-    uint16_t m_pressure;
+    int16_t m_pressure;
 
     /// Measured expiratory flow
     int32_t m_inspiratoryFlow;
@@ -432,7 +432,7 @@ class MainController {
     int32_t m_currentDeliveredVolume;
 
     /// Last pressure of inhalation
-    uint16_t m_inhalationLastPressure;
+    int16_t m_inhalationLastPressure;
 
     /// Blower valve angle at peak
     uint32_t m_inspiratoryValveAngle;
@@ -450,7 +450,7 @@ class MainController {
     int32_t m_pressureCommand;
 
     /// Last pressure values
-    uint16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
+    int16_t m_lastPressureValues[MAX_PRESSURE_SAMPLES];
 
     /// Last pressure index
     uint16_t m_lastPressureValuesIndex;
