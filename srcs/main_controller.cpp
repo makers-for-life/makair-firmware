@@ -255,6 +255,10 @@ void MainController::exhale() {
 }
 
 void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
+
+    Serial.print(m_expiratoryVolume/1000);
+    Serial.print(",");
+    Serial.println(m_tidalVolumeMeasure);
     // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
     uint32_t currentMillis = p_currentMillis;
     m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] =
@@ -343,20 +347,27 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 
 // cppcheck-suppress unusedFunction
 void MainController::updateFakeExpiratoryFlow() {
-    int32_t openning = expiratoryValve.position;
+    int32_t openning = expiratoryValve.positionLinear;
 
-    int32_t aMultiplyBy100 =
-        ((((-585 * openning) * openning) / 100000) + ((118 * openning) / 100)) - 62;
-    int32_t bMultiplyBy100 = ((((195 * openning) * openning) / 100) - (489 * openning)) + 33300;
-    int32_t cMultiplyBy100 = (-2170 * openning) + 279000;
+    if (openning == 125) {
+        m_expiratoryFlow = 0;
+    } else {
+        int32_t aMultiplyBy100 =
+            ((((-585 * openning) * openning) / 100000) + ((118 * openning) / 100)) - 62;
+        int32_t bMultiplyBy100 = ((((195 * openning) * openning) / 100) - (489 * openning)) + 33300;
+        int32_t cMultiplyBy100 = (-2170 * openning) + 279000;
 
-    int32_t p = m_pressure;
-    m_expiratoryFlow = (((aMultiplyBy100 * p) * p) + (bMultiplyBy100 * p) + cMultiplyBy100) / 100;
+        int32_t p = m_pressure;
+        m_expiratoryFlow =
+            (((aMultiplyBy100 * p) * p) + (bMultiplyBy100 * p) + cMultiplyBy100) / 100;
+    }
 
     m_expiratoryVolume += ((m_expiratoryFlow / 60) * m_dt) / 1000;
     /*Serial.print(m_inspiratoryFlow);
     Serial.print(",");
     Serial.print(m_expiratoryFlow);
+    Serial.print(",");
+    Serial.print(m_pressure);
     Serial.println();*/
 }
 

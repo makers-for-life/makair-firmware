@@ -41,6 +41,7 @@ PressureValve::PressureValve(HardwareTimer* p_hardwareTimer,
     maxApertureAngle = max(p_closeApertureAngle, p_openApertureAngle);
     command = p_closeApertureAngle;
     position = -1;
+    positionLinear = -1;
 }
 
 void PressureValve::setup() {
@@ -56,6 +57,7 @@ void PressureValve::open(uint16_t p_command) { command = p_command; }
 
 // Linearization has been made experimentaly
 uint16_t PressureValve::openLinear(uint16_t p_command) {
+    positionLinear = p_command;
     // The p_command is in [ 0 ; 125 ], but the valve is only effective in [30; 100]
     // So lets make it between 30 and 100
     // A x10 multiplier is used here for better precision with integer calculations

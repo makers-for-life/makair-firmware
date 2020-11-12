@@ -105,6 +105,9 @@ class PressureValve {
     /// Current aperture
     uint16_t position;
 
+    /// Current aperture linear
+    uint16_t positionLinear;
+
  private:
     /// Minimum valve aperture angle in degrees
     uint16_t minApertureAngle;

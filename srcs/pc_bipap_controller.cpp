@@ -103,6 +103,8 @@ void PC_BIPAP_Controller::initCycle() {
     m_blowerIncrement = 0;
 
     m_reOpenInspiratoryValve = false;
+
+    m_inspiratorySlope = 0;
 }
 
 void PC_BIPAP_Controller::inhale() {
