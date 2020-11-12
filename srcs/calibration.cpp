@@ -65,7 +65,6 @@ void Calibration_Init() {
             inspiratoryPressureSensorOffset = 0;
         }
 
-        inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
 
         // Happens when patient is plugged at startup
         if (((maxOffsetValue - minOffsetValue) >= 10)
@@ -77,6 +76,7 @@ void Calibration_Init() {
             Calibration_Read_Keyboard();
         } else {
             calibrationValid = true;
+            inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
         }
 
         if (calibrationValid) {
