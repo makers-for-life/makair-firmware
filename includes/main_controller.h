@@ -32,6 +32,7 @@
 // CLASS ======================================================================
 
 /// Controls breathing cycle
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 class MainController {
  public:
     /// Default constructor

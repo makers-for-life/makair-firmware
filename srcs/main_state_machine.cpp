@@ -46,6 +46,7 @@ Step previousmsmstep = SETUP;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 MainStateMachine::MainStateMachine() { isMsmActive = false; }
 
 bool MainStateMachine::isRunning() { return isMsmActive; }

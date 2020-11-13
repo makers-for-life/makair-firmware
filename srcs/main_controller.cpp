@@ -480,14 +480,14 @@ void MainController::sendMachineState() {
 #if !SIMULATION
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)
-    sendMachineStateSnapshot(m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
-                             mmH2OtoCmH2O(m_plateauPressureNextCommand),
-                             mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand,
-                             m_peakPressureMeasure, m_plateauPressureToDisplay, m_peepMeasure,
-                             alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
-                             m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
-                             m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure,
-                             alarmController.isSnoozed(), readCpuLoadPercent());
+    sendMachineStateSnapshot(
+        m_cycleNb, mmH2OtoCmH2O(m_peakPressureNextCommand),
+        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
+        m_cyclesPerMinuteNextCommand, m_peakPressureMeasure, m_plateauPressureToDisplay,
+        m_peepMeasure, alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
+        m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
+        m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed(),
+        readCpuLoadPercent(), VentilationModes::PC_CMV, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
 #endif
 }
 

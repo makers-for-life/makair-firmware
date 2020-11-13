@@ -116,6 +116,7 @@ AlarmController::AlarmController()
       m_unsnooze(true),
       m_pressure(0u),
       m_phase(CyclePhases::INHALATION),
+      // cppcheck-suppress misra-c2012-5.2 ; false positive
       m_cycle_number(0u) {
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         m_snoozedAlarms[i] = false;

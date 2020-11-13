@@ -24,6 +24,7 @@ PC_BIPAP_Controller pcBipapController;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();

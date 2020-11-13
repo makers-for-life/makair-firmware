@@ -39,6 +39,7 @@ HardwareTimer* eolTimer;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 EolTest::EolTest() { testActive = 0; }
 
 // cppcheck-suppress unusedFunction

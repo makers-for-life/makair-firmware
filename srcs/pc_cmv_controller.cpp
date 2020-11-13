@@ -25,6 +25,7 @@ PC_CMV_Controller pcCmvController;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 PC_CMV_Controller::PC_CMV_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
