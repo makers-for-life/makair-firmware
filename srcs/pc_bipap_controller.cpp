@@ -157,12 +157,12 @@ void PC_BIPAP_Controller::exhale() {
     inspiratoryValve.close();
     // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
-    // m_inspiratoryFlowLastValues is not used by the controller, but will be in future improvements.
+    // m_inspiratoryFlowLastValues is not used by the controller, but will be in future
+    // improvements
     m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
         mainController.inspiratoryFlow();
     m_inspiratoryFlowLastValuesIndex++;
-    if (m_inspiratoryFlowLastValuesIndex
-        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_LAST_VALUES)) {
+    if (m_inspiratoryFlowLastValuesIndex >= static_cast<int32_t>(NUMBER_OF_SAMPLE_LAST_VALUES)) {
         m_inspiratoryFlowLastValuesIndex = 0;
     }
 

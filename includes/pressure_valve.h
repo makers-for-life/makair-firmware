@@ -66,7 +66,7 @@ class PressureValve {
      * Request opening of the Pressure Valve with a given angle with linearization
      *
      * @param p_command The angle in degree
-     * @return the linearized angle calculated by this function
+     * @return The linearized angle calculated by this function
      */
     uint16_t openLinear(uint16_t p_command);
 
