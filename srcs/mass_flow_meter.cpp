@@ -59,7 +59,7 @@ volatile int32_t mfmInspiratoryAirVolumeSumMilliliters = 0;
 volatile int32_t mfmInspiratorySensorDetected = 0;
 volatile int32_t mfmInspiratoryInstantAirFlow = 0;
 
-// size of the table used to compute average
+// Size of the table used to compute average
 #define MFM_MEAN_SAMPLES 40
 volatile bool mfmInspiratoryInstantAirFlowRecord = false;
 volatile int32_t mfmInspiratoryInstantAirFlowLastValues[MFM_MEAN_SAMPLES];
@@ -72,7 +72,7 @@ volatile int32_t mfmInspiratoryLastValueFixedFloat = 0;
 
 // Time to reset the sensor after I2C restart, in periods => 100 ms
 // the restart time is 50 ms (warm up time in the datasheet)
-// the power off time is 50 ms. enough to discharge capacitors.
+// the power off time is 50 ms. enough to discharge capacitors
 #define MFM_WAIT_RESET_PERIODS 13
 #define MFM_WAIT_WARMUP_PERIODS 8
 #define MFM_WAIT_SOFTRESET_PERIODS 3
@@ -498,9 +498,9 @@ int8_t MFM_calibrateZero(void) {
     mfmInspiratoryInstantAirFlowRecord = true;
     // wait for the table to fill in
     delay(2 + MFM_MEAN_SAMPLES * (MASS_FLOW_PERIOD / 10));
-    // Check that table is full (record must be false).
+    // Check that table is full (record must be false)
     // If it is not, there is a sensor problem
-    // in case of problem, do not update mfmInspiratoryCalibrationOffset
+    // In case of problem, do not update mfmInspiratoryCalibrationOffset
     if (!mfmInspiratoryInstantAirFlowRecord) {
         int32_t zeroFlow = 0;
         for (int16_t i = 0; i < MFM_MEAN_SAMPLES; i++) {
