@@ -65,7 +65,6 @@ void Calibration_Init() {
             inspiratoryPressureSensorOffset = 0;
         }
 
-
         // Happens when patient is plugged at startup
         if (((maxOffsetValue - minOffsetValue) >= 10)
             || (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET)) {
@@ -82,7 +81,7 @@ void Calibration_Init() {
         if (calibrationValid) {
 #ifdef MASS_FLOW_METER_ENABLED
             int32_t flowMeterFlowAtStarting = MFM_read_airflow();
-            MFM_calibrateZero();
+            (void)MFM_calibrateZero();
 #else
             int32_t flowMeterFlowAtStarting = 0;
 #endif

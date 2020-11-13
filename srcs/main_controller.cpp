@@ -83,8 +83,8 @@ MainController::MainController() {
     computeTickParameters();
 
     m_lastPressureValuesIndex = 0;
-    for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
-        m_lastPressureValues[i] = 0u;
+    for (int8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
+        m_lastPressureValues[i] = 0;
     }
 
     m_lastBreathPeriodsMsIndex = 0;
@@ -129,7 +129,7 @@ void MainController::initRespiratoryCycle() {
 
     computeTickParameters();
 
-    for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
+    for (int8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
         m_lastPressureValues[i] = 0;
     }
     m_lastPressureValuesIndex = 0;
@@ -148,7 +148,7 @@ void MainController::compute() {
     updatePhase();
 
     // Compute metrics for alarms
-    m_sumOfPressures += m_pressure;
+    m_sumOfPressures += static_cast<uint32_t>(m_pressure);
     m_numberOfPressures++;
 
     // Act accordingly
@@ -213,7 +213,7 @@ void MainController::inhale() {
 
     // Update peak pressure and rebounce peak pressure
     if (m_pressure > m_peakPressureMeasure) {
-        m_peakPressureMeasure = max((int16_t)0,m_pressure);
+        m_peakPressureMeasure = max((int16_t)0, m_pressure);
         m_rebouncePeakPressureMeasure = m_pressure;
     } else if (m_pressure < m_rebouncePeakPressureMeasure) {
         m_rebouncePeakPressureMeasure = m_pressure;
@@ -236,26 +236,25 @@ void MainController::exhale() {
     int16_t minValue = m_lastPressureValues[0u];
     int16_t maxValue = m_lastPressureValues[0u];
     int16_t totalValues = m_lastPressureValues[0u];
-    for (uint8_t index = 1u; index < MAX_PRESSURE_SAMPLES; index++) {
+    for (int8_t index = 1u; index < MAX_PRESSURE_SAMPLES; index++) {
         minValue = min(minValue, m_lastPressureValues[index]);
         maxValue = max(maxValue, m_lastPressureValues[index]);
         totalValues += m_lastPressureValues[index];
     }
 
     // Update PEEP value, when pressure is stable and close to target pressure
-    if (((maxValue - minValue) < 5u) && (abs(m_pressure - m_peepCommand) < 30)) {
+    if (((maxValue - minValue) < 5) && (abs(m_pressure - m_peepCommand) < 30)) {
         m_isPeepDetected = true;
-        m_peepMeasure = max((int)0, totalValues / MAX_PRESSURE_SAMPLES);
+        m_peepMeasure = max(0, totalValues / MAX_PRESSURE_SAMPLES);
     }
 
     // This case is usefull when PEEP is never detected during the cycle
     if (!m_isPeepDetected) {
-        m_peepMeasure = max((int16_t)0, m_pressure);
+        m_peepMeasure = max(static_cast<int16_t>(0), m_pressure);
     }
 }
 
 void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
-
     /*Serial.print(m_expiratoryVolume/1000);
     Serial.print(",");
     Serial.println(m_tidalVolumeMeasure);*/
@@ -276,12 +275,12 @@ void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
     m_lastEndOfRespirationDateMs = currentMillis;
 
     // Plateau pressure is the mean pressure during plateau
-    m_plateauPressureMeasure = max((int64_t)0, m_PlateauMeasureSum / m_PlateauMeasureCount);
+    m_plateauPressureMeasure = max(0, static_cast<int16_t>(m_PlateauMeasureSum)
+                                          / static_cast<int16_t>(m_PlateauMeasureCount));
 
     checkCycleAlarm();
 
     m_plateauPressureToDisplay = m_plateauPressureMeasure;
-   
 
     // Send telemetry machine state snapshot message
     sendMachineState();
@@ -316,7 +315,7 @@ void MainController::updatePressure(int16_t p_currentPressure) {
     m_lastPressureValuesIndex++;
 
     // Start over if we reached the max samples number
-    if (m_lastPressureValuesIndex >= MAX_PRESSURE_SAMPLES) {
+    if (m_lastPressureValuesIndex >= static_cast<uint16_t>(MAX_PRESSURE_SAMPLES)) {
         m_lastPressureValuesIndex = 0;
     }
 }
@@ -347,8 +346,8 @@ void MainController::updateFakeExpiratoryFlow() {
     } else {
         int32_t aMultiplyBy100 =
             ((((-585 * openning) * openning) / 100000) + ((118 * openning) / 100)) - 62;
-        int32_t bMultiplyBy100 = ((((195 * openning) * openning) / 100)  + 33300 - (489 * openning));
-        int32_t cMultiplyBy100 =  279000 -2170 * openning;
+        int32_t bMultiplyBy100 = ((((195 * openning) * openning) / 100) + 33300 - (489 * openning));
+        int32_t cMultiplyBy100 = 279000 - (2170 * openning);
 
         int32_t p = m_pressure;
         m_expiratoryFlow =
@@ -541,9 +540,9 @@ void MainController::onPeepPressureDecrease() {
     DBG_DO(Serial.println("Peep Pressure --");)
 
     if (m_peepNextCommand >= 10) {
-        m_peepNextCommand = m_peepNextCommand - 10u;
+        m_peepNextCommand = m_peepNextCommand - 10;
     } else {
-        m_peepNextCommand = m_peepNextCommand;
+        // Do nothing
     }
 
 #if !SIMULATION
@@ -555,7 +554,7 @@ void MainController::onPeepPressureDecrease() {
 void MainController::onPeepPressureIncrease() {
     DBG_DO(Serial.println("Peep Pressure ++");)
 
-    m_peepNextCommand = m_peepNextCommand + 10u;
+    m_peepNextCommand = m_peepNextCommand + 10;
 
     if (m_peepNextCommand > CONST_MAX_PEEP_PRESSURE) {
         m_peepNextCommand = CONST_MAX_PEEP_PRESSURE;
@@ -587,7 +586,7 @@ void MainController::onPeepSet(int16_t p_peep) {
 void MainController::onPlateauPressureDecrease() {
     DBG_DO(Serial.println("Plateau Pressure --");)
 
-    m_plateauPressureNextCommand = m_plateauPressureNextCommand - 10u;
+    m_plateauPressureNextCommand = m_plateauPressureNextCommand - 10;
 
     if (m_plateauPressureNextCommand < CONST_MIN_PLATEAU_PRESSURE) {
         m_plateauPressureNextCommand = CONST_MIN_PLATEAU_PRESSURE;
@@ -602,7 +601,7 @@ void MainController::onPlateauPressureDecrease() {
 void MainController::onPlateauPressureIncrease() {
     DBG_DO(Serial.println("Plateau Pressure ++");)
 
-    m_plateauPressureNextCommand = m_plateauPressureNextCommand + 10u;
+    m_plateauPressureNextCommand = m_plateauPressureNextCommand + 10;
 
     m_plateauPressureNextCommand =
         min(m_plateauPressureNextCommand, static_cast<int16_t>(CONST_MAX_PLATEAU_PRESSURE));

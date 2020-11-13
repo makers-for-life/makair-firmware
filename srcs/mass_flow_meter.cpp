@@ -63,6 +63,7 @@ volatile int32_t mfmInspiratoryInstantAirFlow = 0;
 #define MFM_MEAN_SAMPLES 40
 volatile bool mfmInspiratoryInstantAirFlowRecord = false;
 volatile int32_t mfmInspiratoryInstantAirFlowLastValues[MFM_MEAN_SAMPLES];
+// cppcheck-suppress misra-c2012-5.1
 volatile int16_t mfmInspiratoryInstantAirFlowLastValuesIndex = 0;
 
 volatile bool mfmInspiratoryFaultCondition = false;
@@ -90,10 +91,10 @@ union {
 
 // FUNCTIONS ==================================================================
 
-// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 // API update since version 1.9.0 of Arduino_Core_STM32
 #if (STM32_CORE_VERSION < 0x01090000)
-void MFM_Timer_Callback(HardwareTimer*)
+// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
+void MFM_Timer_Callback(HardwareTimer*)  // NOLINT(readability/casting)
 #else
 void MFM_Timer_Callback(void)
 #endif
@@ -104,7 +105,6 @@ void MFM_Timer_Callback(void)
     // it takes typically 350 µs to read the value.
 #endif
     if (!mfmInspiratoryFaultCondition) {
-
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
         Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
         Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
@@ -196,7 +196,6 @@ void MFM_Timer_Callback(void)
             Serial.println(expi);
         }
 #endif
-
     } else {
         if (mfmResetStateMachine == MFM_WAIT_RESET_PERIODS) {
             // Reset attempt
@@ -439,7 +438,7 @@ bool MFM_init(void) {
     sn <<= 8;
     sn |= Wire.read();  // second transmission is serial number register 1
 
-    if (txOk != 0 || rxcount != 4) {  // If transmission failed
+    if ((txOk != 0u) || (rxcount != 4u)) {  // If transmission failed
         mfmInspiratoryFaultCondition = true;
         mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
     } else {
@@ -467,11 +466,11 @@ bool MFM_init(void) {
  * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
  */
 int32_t MFM_read_airflow(void) {
-    if (mfmInspiratoryFaultCondition) {
-        return MASS_FLOW_ERROR_VALUE;
-    } else {
-        return mfmInspiratoryInstantAirFlow - mfmInspiratoryCalibrationOffset;
+    int32_t result = MASS_FLOW_ERROR_VALUE;
+    if (!mfmInspiratoryFaultCondition) {
+        result = mfmInspiratoryInstantAirFlow - mfmInspiratoryCalibrationOffset;
     }
+    return result;
 }
 
 void MFM_reset(void) { mfmInspiratoryAirVolumeSumMilliliters = 0; }
@@ -481,6 +480,7 @@ void MFM_reset(void) { mfmInspiratoryAirVolumeSumMilliliters = 0; }
  *
  * @note returns 0 before init, or if init failed.
  */
+// cppcheck-suppress unusedFunction
 uint32_t MFM_read_serial_number(void) {
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     return mfmHoneywellHafSerialNumber;
@@ -497,7 +497,7 @@ int8_t MFM_calibrateZero(void) {
     mfmInspiratoryInstantAirFlowLastValuesIndex = 0;
     mfmInspiratoryInstantAirFlowRecord = true;
     // wait for the table to fill in
-    delay(2 + MFM_MEAN_SAMPLES * (MASS_FLOW_PERIOD / 10));
+    delay(2 + (MFM_MEAN_SAMPLES * (MASS_FLOW_PERIOD / 10)));
     // Check that table is full (record must be false)
     // If it is not, there is a sensor problem
     // In case of problem, do not update mfmInspiratoryCalibrationOffset
@@ -508,7 +508,7 @@ int8_t MFM_calibrateZero(void) {
         }
         zeroFlow /= MFM_MEAN_SAMPLES;
         // check that value is credible: [-10 10] SLPM
-        if (zeroFlow < 10000 && zeroFlow > -10000) {
+        if ((zeroFlow < 10000) && (zeroFlow > -10000)) {
             mfmInspiratoryCalibrationOffset = zeroFlow;
         } else {
             ret = MFM_CALIBRATION_OUT_OF_RANGE;

@@ -29,5 +29,5 @@ PressureSensor::PressureSensor() { m_PressureSensorOffset = 0; }
 int32_t PressureSensor::read() {
     int32_t withOffset =
         convertSensor2Pressure(analogRead(PIN_PRESSURE_SENSOR)) - m_PressureSensorOffset;
-    return  withOffset;
+    return withOffset;
 }

@@ -30,16 +30,16 @@
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS (1000u * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
 
 // Minimum and maximum bounds of execution parameters
-#define CONST_MAX_PEAK_PRESSURE 700u     // arbitrary [mmH2O]
-#define CONST_MIN_PEAK_PRESSURE 100u     // arbitrary [mmH2O]
-#define CONST_MAX_PLATEAU_PRESSURE 400u  // PP MAX ARDS = 300 [mmH2O]
-#define CONST_MIN_PLATEAU_PRESSURE 100u  // arbitrary [mmH2O]
-#define CONST_MAX_PEEP_PRESSURE 300u     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 0u       // arbitrary but > 0 [mmH2O]
-#define CONST_MIN_TRIGGER_OFFSET 0u      // [mmH2O]
-#define CONST_MAX_TRIGGER_OFFSET 100u    // [mmH2O]
-#define CONST_INITIAL_ZERO_PRESSURE 0    // [mmH2O]
-#define CONST_INITIAL_ZERO_VOLUME 0      // [mL]
+#define CONST_MAX_PEAK_PRESSURE 700     // arbitrary [mmH2O]
+#define CONST_MIN_PEAK_PRESSURE 100     // arbitrary [mmH2O]
+#define CONST_MAX_PLATEAU_PRESSURE 400  // PP MAX ARDS = 300 [mmH2O]
+#define CONST_MIN_PLATEAU_PRESSURE 100  // arbitrary [mmH2O]
+#define CONST_MAX_PEEP_PRESSURE 300     // PP MAX = 300, or PEEP < PP [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 0       // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_TRIGGER_OFFSET 0u     // [mmH2O]
+#define CONST_MAX_TRIGGER_OFFSET 100u   // [mmH2O]
+#define CONST_INITIAL_ZERO_PRESSURE 0   // [mmH2O]
+#define CONST_INITIAL_ZERO_VOLUME 0     // [mL]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
