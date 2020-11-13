@@ -33,7 +33,7 @@ void sendStoppedMessage(uint8_t peakCommand,
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
-                      uint16_t pressureValue,
+                      int16_t pressureValue,
                       CyclePhases phase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
@@ -63,7 +63,7 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
-                   uint16_t pressureValue,
+                   int16_t pressureValue,
                    CyclePhases phase,
                    uint32_t cycleValue,
                    uint8_t alarmCode,
