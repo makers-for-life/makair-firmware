@@ -312,7 +312,6 @@ class MainController {
     void printDebugValues();
 
  private:
-    int32_t m_expiratoryVolume;
     /// Actual tick number (given by the main state machine)
     uint32_t m_tick;
 
@@ -409,6 +408,9 @@ class MainController {
     /// Measured value of the Tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)
     uint16_t m_tidalVolumeMeasure;
+
+    /// Volume expired by the patient during the exhalation phase
+    int32_t m_expiratoryVolume;
 
     /// Number of hundredth of second per cycle
     uint16_t m_ticksPerCycle;

@@ -109,10 +109,10 @@ class PC_BIPAP_Controller final : public VentilationController {
     int32_t m_expiratoryPidLastErrorsIndex;
 
     /// Last flow values
-    int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_FLOW_LAST_VALUES];
+    int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_LAST_VALUES];
 
     /// Last pressure values
-    int32_t m_inspiratoryPressureLastValues[NUMBER_OF_SAMPLE_FLOW_LAST_VALUES];
+    int32_t m_inspiratoryPressureLastValues[NUMBER_OF_SAMPLE_LAST_VALUES];
 
     /// Last flow index
     int32_t m_inspiratoryFlowLastValuesIndex;

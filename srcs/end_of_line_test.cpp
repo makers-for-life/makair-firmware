@@ -442,8 +442,11 @@ void millisecondTimerEOL(void)
         expiratoryValve.open((expiratoryValve.minAperture() + expiratoryValve.maxAperture()) / 2u);
         expiratoryValve.execute();
         pressureValue = inspiratoryPressureSensor.read();
+#ifdef MASS_FLOW_METER_ENABLED
         flowValue = MFM_read_airflow();
-
+#else
+        flowValue = 0;
+#endif
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
                        pressureValue);
 
@@ -489,8 +492,8 @@ void millisecondTimerEOL(void)
         inspiratoryValve.execute();
         expiratoryValve.open();
         expiratoryValve.execute();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Flow non stable\nMax= %d SLM \nMin= %d SLM",
-                       maxFlowValue, minFlowValue);
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                       "Debit non stable\nMax= %d SLM \nMin= %d SLM", maxFlowValue, minFlowValue);
     } else if (eolstep == END_SUCCESS) {
         // SUCESS: end of the procedure
         blower.stop();

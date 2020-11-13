@@ -114,8 +114,10 @@ void Calibration_Init() {
 
             displayPressureOffset(inspiratoryPressureSensorOffset);
             delay(1000);
+#ifdef MASS_FLOW_METER_ENABLED
             displayFlowMeterOffset(MFM_getOffset());
             delay(1000);
+#endif
         }
         // Reset values to default state
         calibationStarted = false;

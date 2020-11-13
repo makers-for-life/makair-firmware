@@ -255,9 +255,6 @@ void MainController::exhale() {
 }
 
 void MainController::endRespiratoryCycle(uint32_t p_currentMillis) {
-    /*Serial.print(m_expiratoryVolume/1000);
-    Serial.print(",");
-    Serial.println(m_tidalVolumeMeasure);*/
     // Compute the respiratory rate: average on NUMBER_OF_BREATH_PERIOD breaths
     uint32_t currentMillis = p_currentMillis;
     m_lastBreathPeriodsMs[m_lastBreathPeriodsMsIndex] =
@@ -355,12 +352,6 @@ void MainController::updateFakeExpiratoryFlow() {
     }
 
     m_expiratoryVolume += ((m_expiratoryFlow / 60) * m_dt) / 1000;
-    /*Serial.print(openning);
-    Serial.print(",");
-    Serial.print(m_expiratoryFlow);
-    Serial.print(",");
-    Serial.print(m_pressure);
-    Serial.println();*/
 }
 
 void MainController::updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume) {
