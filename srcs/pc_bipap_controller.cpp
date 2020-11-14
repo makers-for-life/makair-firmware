@@ -60,7 +60,7 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
 }
 
 void PC_BIPAP_Controller::setup() {
-    // No specific setup code
+    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
 }
 
 void PC_BIPAP_Controller::initCycle() {
