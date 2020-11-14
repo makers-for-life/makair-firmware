@@ -546,7 +546,7 @@ void MainController::onPeepPressureIncrease() {
     DBG_DO(Serial.println("Peep Pressure ++");)
 
     // Peep target should be lower than plateau target
-    if (m_peepNextCommand + 10 < m_plateauPressureNextCommand) {
+    if ((m_peepNextCommand + 10) < m_plateauPressureNextCommand) {
         m_peepNextCommand = m_peepNextCommand + 10;
     }
 
@@ -580,7 +580,7 @@ void MainController::onPeepSet(int16_t p_peep) {
 void MainController::onPlateauPressureDecrease() {
     DBG_DO(Serial.println("Plateau Pressure --");)
 
-    if (m_plateauPressureNextCommand - 10 > m_peepNextCommand) {
+    if ((m_plateauPressureNextCommand - 10) > m_peepNextCommand) {
         m_plateauPressureNextCommand = m_plateauPressureNextCommand - 10;
     }
 
