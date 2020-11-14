@@ -35,7 +35,7 @@
 #define CONST_MAX_PLATEAU_PRESSURE 400  // PP MAX ARDS = 300 [mmH2O]
 #define CONST_MIN_PLATEAU_PRESSURE 100  // arbitrary [mmH2O]
 #define CONST_MAX_PEEP_PRESSURE 300     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 0       // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 50       // arbitrary but > 0 [mmH2O]
 #define CONST_MIN_TRIGGER_OFFSET 0u     // [mmH2O]
 #define CONST_MAX_TRIGGER_OFFSET 100u   // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0   // [mmH2O]
