@@ -24,7 +24,7 @@
  * When DEBUG = 1, additional code is added to send debug traces using serial
  * When DEBUG = 2, information are sent in serial for PID debug
  */
-#define DEBUG 3
+#define DEBUG 0
 
 /// Simulation mode allows to run main controller on a computer
 #define SIMULATION false
