@@ -26,6 +26,14 @@ ActivationController::ActivationController() : m_state(STOPPED), m_timeOfLastSto
 
 void ActivationController::onStartButton() { m_state = RUNNING; }
 
+void ActivationController::changeState(uint16_t state) {
+    if (state == 0u) {
+        m_state = STOPPED;
+    } else {
+        m_state = RUNNING;
+    }
+}
+
 void ActivationController::onStopButton() {
     if ((m_state == RUNNING_READY_TO_STOP)
         && ((millis() - m_timeOfLastStopPushed) < SECOND_STOP_MAX_DELAY_MS)) {

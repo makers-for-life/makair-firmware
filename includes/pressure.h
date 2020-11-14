@@ -2,19 +2,38 @@
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
  * @file pressure.h
- * @brief Pressure sensor related functions
+ * @brief Pressure sensor
  *****************************************************************************/
 
 #pragma once
 
 #include <stdint.h>
 
-/**
- * Get the measured or simulated pressure for the feedback control (in mmH2O)
- *
- * @param tick Duration in hundredth of second from the beginning of the current cycle (only
- * used when in simulation mode)
- * @param pressureOffset Pressure offset in mmH2O to apply to the measure
- * @return         The current pressure in mmH20
- */
-int16_t readPressureSensor(uint16_t tick, int16_t pressureOffset);
+/// Offset aware reading class for the pressure sensor
+class PressureSensor {
+ public:
+    /// Default constructor
+    PressureSensor();
+
+    /**
+     * Read the current pressure for the feedback control
+     *
+     * @return The current pressure in mmH2O
+     */
+    int32_t read();
+
+    /**
+     * Set the pressure sensor offset
+     *
+     * @param p_pressureSensorOffest Pressure offset in mmH2O
+     */
+    void setPressureSensorOffset(int32_t p_pressureSensorOffest) {
+        m_PressureSensorOffset = p_pressureSensorOffest;
+    }
+
+ private:
+    /// Pressure sensor offset in mmH2O
+    int32_t m_PressureSensorOffset;
+};
+
+extern PressureSensor inspiratoryPressureSensor;

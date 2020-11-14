@@ -10,6 +10,11 @@
 #include "../includes/blower.h"
 #include "../includes/pressure_valve.h"
 
+/**
+ * This an arbitrary value allowing to check if test mode is active. A variable is initialized at
+ * beginning of testMode with this value. Due to the fact this value is arbitrary and big, it is
+ * highly impossible that a memory corruption randomly gives this value
+ */
 #define EOL_TEST_ACTIVE 0xa240183a
 
 /// Controls the running of the embedded auto tests
@@ -36,11 +41,4 @@ class EolTest {
     uint32_t testActive;
 };
 
-extern HardwareTimer* eolTimer;
 extern EolTest eolTest;
-
-// These are defined and initialized in the main program
-extern PressureValve servoBlower;
-extern PressureValve servoPatient;
-extern Blower blower;
-extern int16_t pressureOffset;

@@ -5,25 +5,26 @@
  * @brief Abstraction to switch buzzer ON or OFF
  *****************************************************************************/
 
+// INCLUDES ===================================================================
+
 #include "../includes/buzzer_control.h"
 #include "../includes/config.h"
 #include "../includes/parameters.h"
 #include "Arduino.h"
+
+// INITIALISATION =============================================================
 
 /// Buzzer frequency in Hz
 #define BUZZER_FREQ 4000
 
 #define PERIOD_BUZZER_US (1000000 / BUZZER_FREQ)
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 HardwareTimer* Buzzer_Hw_Timer;
 uint32_t Buzzer_Timer_Channel;
-#endif
+
+// FUNCTIONS ==================================================================
 
 void BuzzerControl_Init(void) {
-#if HARDWARE_VERSION == 1
-    pinMode(PIN_BUZZER, OUTPUT);
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     TIM_TypeDef* Buzzer_Timer_Number = reinterpret_cast<TIM_TypeDef*>(
         pinmap_peripheral(digitalPinToPinName(PIN_BUZZER), PinMap_PWM));
     Buzzer_Timer_Channel =
@@ -36,23 +37,8 @@ void BuzzerControl_Init(void) {
     Buzzer_Hw_Timer->setOverflow(PERIOD_BUZZER_US, MICROSEC_FORMAT);
     Buzzer_Hw_Timer->setCaptureCompare(Buzzer_Timer_Channel, PERIOD_BUZZER_US / 2,
                                        MICROSEC_COMPARE_FORMAT);
-#endif
 }
 
-void BuzzerControl_On(void) {
-#if HARDWARE_VERSION == 1
-    // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.
-    digitalWrite(PIN_BUZZER, HIGH);
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
-    Buzzer_Hw_Timer->resume();
-#endif
-}
+void BuzzerControl_On(void) { Buzzer_Hw_Timer->resume(); }
 
-void BuzzerControl_Off(void) {
-#if HARDWARE_VERSION == 1
-    // Hardware 1: the buzzer has an internal oscillator. Just switch on the output.
-    digitalWrite(PIN_BUZZER, LOW);
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
-    Buzzer_Hw_Timer->pause();
-#endif
-}
+void BuzzerControl_Off(void) { Buzzer_Hw_Timer->pause(); }

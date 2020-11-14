@@ -5,9 +5,13 @@
  * @brief Pressure computing utility function
  *****************************************************************************/
 
+// INCLUDES ===================================================================
+
 #include <algorithm>
 
 #include "../includes/pressure_utl.h"
+
+// INITIALISATION =============================================================
 
 static int32_t filteredRawPressure = 0;
 
@@ -29,6 +33,8 @@ static const int16_t RAW_PRESSURE_TO_MMH20_CONSTANT = 45;
 static const int32_t RAW_PRESSURE_TO_MMH20_NUM = 8774;
 static const int32_t RAW_PRESSURE_TO_MMH20_DEN = 10000;
 
+// FUNCTIONS ==================================================================
+
 int16_t convertSensor2Pressure(uint32_t sensorValue) {
     int32_t rawPressure = static_cast<int32_t>(sensorValue);
     int32_t delta = rawPressure - filteredRawPressure;
@@ -42,7 +48,7 @@ int16_t convertSensor2Pressure(uint32_t sensorValue) {
 
     int16_t scaledRawPressure =
         filteredRawPressure * RAW_PRESSURE_TO_MMH20_NUM / RAW_PRESSURE_TO_MMH20_DEN;
-    return std::max(scaledRawPressure - RAW_PRESSURE_TO_MMH20_CONSTANT, 0);
+    return scaledRawPressure - RAW_PRESSURE_TO_MMH20_CONSTANT;
 }
 
 // cppcheck-suppress unusedFunction

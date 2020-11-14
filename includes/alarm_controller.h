@@ -32,6 +32,7 @@
 
 // CLASS =====================================================================
 
+/// Manage alarm features
 class AlarmController {
  public:
     /// Default constructor
@@ -43,6 +44,14 @@ class AlarmController {
      * There is no more buzzer during the alarm
      */
     void snooze();
+
+    /**
+     * Unsnooze alarms
+     */
+    void unsnooze();
+
+    /// Check if alarms are currently snoozed
+    bool isSnoozed() const { return !m_unsnooze; }
 
     /**
      * Mark a specific alarm as detected
@@ -75,7 +84,6 @@ class AlarmController {
     void updateCoreData(uint32_t p_tick,
                         uint16_t p_pressure,
                         CyclePhases p_phase,
-                        CycleSubPhases p_subphase,
                         uint32_t p_cycle_number);
 
     /// Get the alarms triggered during this cycle
@@ -106,11 +114,11 @@ class AlarmController {
     /// Current phase
     CyclePhases m_phase;
 
-    /// Current subphase
-    CycleSubPhases m_subphase;
-
     /// Current cycle number
     uint32_t m_cycle_number;
+
+    /// Is unsnoozed right now
+    bool m_unsnooze;
 };
 
 // INITIALISATION =============================================================

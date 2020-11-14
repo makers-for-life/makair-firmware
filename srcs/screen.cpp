@@ -183,7 +183,91 @@ void displayAlarmInformation(uint8_t p_alarmCodes[], uint8_t p_nbTriggeredAlarms
     }
 }
 
-void displayMachineStopped(void) {
+void displayPressureOffset(int32_t p_inspiratoryPressureSensorOffset) {
+    screen.setCursor(0, 3);
+    char message[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "P offset: %3d mmH2O",
+                   p_inspiratoryPressureSensorOffset);
+    screen.print(message);
+}
+
+void displayFlowMeterFail(int32_t p_flowMeterFlowAtStarting, int32_t p_flowMeterFlowWithBlowerOn) {
+    resetScreen();
+    screen.setCursor(0, 0);
+    char line1[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "Flow offset: %3d SLM",
+                   p_flowMeterFlowAtStarting / 1000);
+    screen.print(line1);
+    screen.setCursor(0, 1);
+    char line2[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "Max flow:  %-3d SLM",
+                   p_flowMeterFlowWithBlowerOn / 1000);
+    screen.print(line2);
+    screen.setCursor(0, 2);
+    screen.print("Flow meter fail");
+    screen.setCursor(0, 3);
+    screen.print("Press start to retry");
+}
+
+void displayFlowMeterOffset(int32_t p_flowMeterFlowOffset) {
+    screen.setCursor(0, 3);
+    char message[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "Flow offset: %3d SLM", p_flowMeterFlowOffset);
+    screen.print(message);
+}
+
+void displayPressureOffsetUnstable(uint32_t p_minOffsetValue, uint32_t p_maxOffsetValue) {
+    resetScreen();
+    screen.setCursor(0, 0);
+    char line1[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(line1, SCREEN_LINE_LENGTH + 1, "P offset is unstable");
+    screen.print(line1);
+    screen.setCursor(0, 1);
+    char line2[SCREEN_LINE_LENGTH + 1];
+    (void)snprintf(line2, SCREEN_LINE_LENGTH + 1, "Max-Min: %3u mmH2O",
+                   p_maxOffsetValue - p_minOffsetValue);
+    screen.print(line2);
+    screen.setCursor(0, 2);
+    screen.print("Unplug patient and");
+    screen.setCursor(0, 3);
+    screen.print("press start");
+}
+
+void displayPatientMustBeUnplugged() {
+    screen.setCursor(0, 0);
+    screen.print("Calibration");
+    screen.setCursor(0, 2);
+    screen.print("Patient must be");
+    screen.setCursor(0, 3);
+    screen.print("unplugged");
+}
+
+void displayEndOfLineTestMode() {
+    screen.clear();
+    screen.print("EOL Test Mode");
+}
+
+void displayWatchdogError() {
+    screen.clear();
+    screen.setCursor(0, 0);
+    screen.print("An error has occured");
+    screen.setCursor(0, 2);
+    screen.print("Check the machine");
+    screen.setCursor(0, 3);
+    screen.print("before re-using");
+}
+
+void displayBatteryDeepDischarge() {
+    screen.clear();
+    screen.setCursor(0, 0);
+    screen.print("Battery very low");
+    screen.setCursor(0, 2);
+    screen.print("Please charge");
+    screen.setCursor(0, 3);
+    screen.print("before running.");
+}
+
+void displayMachineStopped() {
     screen.setCursor(0, 3);
     screen.print("Press start to begin");
 }

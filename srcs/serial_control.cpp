@@ -15,15 +15,16 @@
 #include "../includes/serial_control.h"
 
 // Externals
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "Arduino.h"
 #include "CRC32.h"
-#endif
 
 /// Internals
-#include "../includes/pressure_controller.h"
+#include "../includes/activation.h"
+#include "../includes/alarm_controller.h"
+#include "../includes/main_controller.h"
+#include "../includes/rpi_watchdog.h"
 
-// GLOBAL ITEMS ==============================================================
+// INITIALISATION =============================================================
 
 #define CONTROL_HEADER_SIZE 2
 static const uint8_t header[CONTROL_HEADER_SIZE] = {0x05, 0x0A};
@@ -58,7 +59,6 @@ uint32_t toU32(byte bytes[]) {
 
 // cppcheck-suppress unusedFunction
 void serialControlLoop() {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     // Let's note this current time to avoid blocking too long here
     int time = millis();
 
@@ -112,32 +112,88 @@ void serialControlLoop() {
                 });
 
                 switch (setting) {
-                case 1:  // PeakPressure
-                    pController.onPeakPressureSet(value);
+                case Heartbeat:
+                    if (value == DISABLE_RPI_WATCHDOG) {
+                        rpiWatchdog.disable();
+                    } else {
+                        rpiWatchdog.resetCountDown();
+                    }
                     break;
 
-                case 2:  // PlateauPressure
-                    pController.onPlateauPressureSet(value);
+                case VentilationMode:
+                    // TODO
                     break;
 
-                case 3:  // PEEP
-                    pController.onPeepSet(value);
+                case PlateauPressure:
+                    mainController.onPlateauPressureSet(value);
                     break;
 
-                case 4:  // CyclesPerMinute
-                    pController.onCycleSet(value);
+                case PEEP:
+                    mainController.onPeepSet(value);
                     break;
 
-                case 5:  // ExpiratoryTerm
-                    pController.onExpiratoryTermSet(value);
+                case CyclesPerMinute:
+                    mainController.onCycleSet(value);
                     break;
 
-                case 6:  // TriggerEnabled
-                    pController.onTriggerEnabledSet(value);
+                case ExpiratoryTerm:
+                    mainController.onExpiratoryTermSet(value);
                     break;
 
-                case 7:  // TriggerOffset
-                    pController.onTriggerOffsetSet(value);
+                case TriggerEnabled:
+                    mainController.onTriggerModeEnabledSet(value);
+                    break;
+
+                case TriggerOffset:
+                    mainController.onTriggerOffsetSet(value);
+                    break;
+
+                case RespirationEnabled:
+                    activationController.changeState(value);
+                    break;
+
+                case AlarmSnooze:
+                    alarmController.snooze();
+                    break;
+
+                case InspiratoryTriggerFlow:
+                    // TODO
+                    break;
+
+                case ExpiratoryTriggerFlow:
+                    // TODO
+                    break;
+
+                case TiMin:
+                    // TODO
+                    break;
+
+                case TiMax:
+                    // TODO
+                    break;
+
+                case LowInspiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case HighInspiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case LowExpiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case HighExpiratoryMinuteVolumeAlarmThreshold:
+                    // TODO
+                    break;
+
+                case LowExpiratoryRateAlarmThreshold:
+                    // TODO
+                    break;
+
+                case HighExpiratoryRateAlarmThreshold:
+                    // TODO
                     break;
 
                 default:
@@ -159,5 +215,4 @@ void serialControlLoop() {
             DBG_DO(Serial.println("Invalid header for control message; discarding a byte"));
         }
     }
-#endif
 }

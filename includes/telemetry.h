@@ -12,6 +12,9 @@
 #include "../includes/alarm_controller.h"
 #include "../includes/cycle.h"
 
+/// Current version of the telemetry protocol
+#define PROTOCOL_VERSION 2u
+
 /// Prepare Serial6 to send telemetry data
 void initTelemetry(void);
 
@@ -19,17 +22,25 @@ void initTelemetry(void);
 void sendBootMessage(void);
 
 /// Send a "stopped" message
-void sendStoppedMessage(void);
+void sendStoppedMessage(uint8_t peakCommand,
+                        uint8_t plateauCommand,
+                        uint8_t peepCommand,
+                        uint8_t cpmCommand,
+                        uint8_t expiratoryTerm,
+                        bool triggerEnabled,
+                        uint8_t triggerOffset,
+                        bool alarmSnoozed);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
-                      uint16_t pressureValue,
+                      int16_t pressureValue,
                       CyclePhases phase,
-                      CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
-                      uint8_t batteryLevel);
+                      uint8_t batteryLevel,
+                      int16_t inspiratoryFlowValue,
+                      int16_t expiratoryFlowValue);
 
 /// Send a "machine state snapshot" message
 // cppcheck-suppress misra-c2012-2.7
@@ -45,13 +56,26 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t volumeValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
-                              uint8_t triggerOffset);
+                              uint8_t triggerOffset,
+                              uint8_t previouscpmValue,
+                              bool alarmSnoozed,
+                              uint8_t cpuLoad,
+                              VentilationModes ventilationMode,
+                              uint8_t inspiratoryTriggerFlow,
+                              uint8_t expiratoryTriggerFlow,
+                              uint16_t tiMinValue,
+                              uint16_t tiMaxValue,
+                              uint8_t lowInspiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t lowExpiratoryRateAlarmThreshold,
+                              uint8_t highExpiratoryRateAlarmThreshold);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
-                   uint16_t pressureValue,
+                   int16_t pressureValue,
                    CyclePhases phase,
-                   CycleSubPhases subPhase,
                    uint32_t cycleValue,
                    uint8_t alarmCode,
                    AlarmPriority alarmPriority,

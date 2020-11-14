@@ -32,6 +32,13 @@ class ActivationController {
     bool isRunning() const { return m_state != STOPPED; }
 
     /**
+     * Change the current state
+     *
+     * @param state New state: 0 = STOPPED, 1 = RUNNING
+     */
+    void changeState(uint16_t state);
+
+    /**
      * Callback to call each time the start button is pushed
      */
     void onStartButton();
@@ -43,12 +50,16 @@ class ActivationController {
 
  private:
     enum State {
-        STOPPED = 0,            // Breathing is OFF
-        RUNNING,                // Breathing is ON
-        RUNNING_READY_TO_STOP,  // Breathing is ON, waiting for a second push
+        /// Breathing is OFF
+        STOPPED = 0,
+
+        /// Breathing is ON
+        RUNNING,
+
+        /// Breathing is ON, waiting for a second push to stop
+        RUNNING_READY_TO_STOP,
     };
 
- private:
     /// Activation status
     State m_state;
 

@@ -7,16 +7,18 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
 #include "../includes/config.h"
 #include "Arduino.h"
 
-#if HARDWARE_VERSION == 3
+// FUNCTIONS ==================================================================
 
 /**
- * @brief  System Clock Configuration, for hardware v3 and later on. 
+ * @brief  System Clock Configuration, for hardware v3 and later on.
  * @note   SYSCLK = 100000000 Hz for STM32F411xE
  */
-
+// cppcheck-suppress unusedFunction
 extern "C" void SystemClock_Config(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -51,5 +53,3 @@ extern "C" void SystemClock_Config(void) {
         Error_Handler();
     }
 }
-
-#endif

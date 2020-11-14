@@ -2,8 +2,30 @@
 
 ## unreleased
 
+- drop support of electronic hardware v1 and v2
+  (_from now on, minimum compatibility is from v3_)
+- refactor main loop and breathing control
+  (_breathing-related computations are now triggered by a hardware timer_)
+- support several breathing modes
+  (_PC-CMV stays the default mode, PC-BIPAP was added_)
+- telemetry protocol v2 was introduced
+  (_basically, this means sending more data_)
+- drop support of useless "qualification" and "integration test" modes
+  (_both are superseded by the EOL test feature_)
+- add a watchdog for the Raspberry Pi
+  (_RPi power supply will be restarted if UI misses sending heartbeats_)
+- allow to set any setting (current or added) using the serial control protocol
+  (_new settings were added, and they can all be changed from UI software_)
+- improve breathing control algorithms
+- remove ability to set peak pressure
+- allow to snooze alarms or start/stop breathing using the serial control protocol
+- drop support of old valves and pneumatic systems
+- make mass flow meter more reliable
 - turn the green LED on when alarms are snoozed
 - display a special message on LCD screen when watchdog reset was triggered
+- allow to retry pressure calibration when it fails
+- increase the size of the hardware buffer used by telemetry
+- improve Doxygen documentation
 
 ## v3.0.1
 

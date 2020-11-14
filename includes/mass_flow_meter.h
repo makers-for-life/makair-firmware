@@ -31,13 +31,35 @@ void MFM_reset(void);
 /**
  * Calibrate the zero of the sensor
  *
+ * @return One of:
+ * - MFM_CALIBRATION_OK: all right
+ * - MFM_CALIBRATION_IMPOSSIBLE: communication problem
+ * - MFM_CALIBRATION_OUT_OF_RANGE: unbelievable 10SLPM sensor drift; time to change it?
+ *
  * @note This uses the mean of 10 samples
  */
-void MFM_calibrateZero(void);
+int8_t MFM_calibrateZero(void);
 
-extern int32_t mfmLastValue;
+#define MFM_CALIBRATION_OK 0
+#define MFM_CALIBRATION_IMPOSSIBLE 1
+#define MFM_CALIBRATION_OUT_OF_RANGE 2
 
-#define MASS_FLOW_ERROR_VALUE 999999
+/**
+ *  Get massflow meter offset
+ */
+int32_t MFM_getOffset(void);
+
+/**
+ * Read instant air flow
+ */
+int32_t MFM_read_airflow(void);
+
+/**
+ * Get the serial number of the inspiratory flow meter
+ *
+ * @return The serial number, or `0` if before init or if init failed
+ */
+uint32_t MFM_read_serial_number(void);
 
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
 #define MFM_SENSOR_I2C_ADDRESS 0x40

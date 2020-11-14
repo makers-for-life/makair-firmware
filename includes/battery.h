@@ -10,44 +10,59 @@
 #include "Arduino.h"
 
 /**
- * Expected voltage in volts when power cord is plugged.
- * Calculated by analogRead(PIN) * 0,0296484375 = 27,6 => 27,6 / 0,0296484375 = 930,9
+ * The divider between real battery voltage and STM32 input is 8.2K-1k resistors
+ * So, the multiplier is 1/(1+8.2)=0.1087
+ * Considering 0.1% precision resistances, multiplier is between 0,108502 and 0,108889
+ * The reference is 3.348V (measured on 53 HW V3 boards)
+ * RawValue = (Vbat*0.1087)*1024/3.348
+ * So, Vbat = RawValue * (3.348/(1024*0.1087))
+ *
+ * 1 bit = 3.348/(1024*0.1087) = 30.07mV
  */
-#define RAW_VOLTAGE_MAINS 931
+#define RAW_BATTERY_MULTIPLIER 0.0300784843606
+
+/**
+ * Expected voltage in volts when power cord is plugged
+ * 27,4 V => 27,4 / RAW_BATTERY_MULTIPLIER
+ */
+#define RAW_VOLTAGE_MAINS 907
 
 /**
  * RCM_SW_16
- * Expected voltage in volts when power cord is unplugged.
- * Calculated by analogRead(PIN) * 0,0296484375 = 27 => 27 / 0,0296484375 = 911
+ * Expected voltage in volts when power cord is unplugged
+ *  = 27 => 27 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_HIGH 911u
+#define RAW_VOLTAGE_ON_BATTERY_HIGH 897u
 
-// analogRead(PIN) * 0,0296484375 = 0,1 => 0,1 / 0,0296484375 = 3
+/**
+ * Hysteresis is used to prevent fast switching when voltage is at the limit of 2 states
+ *  analogRead(PIN) * RAW_BATTERY_MULTIPLIER = 0,1 => 0,1 / RAW_BATTERY_MULTIPLIER = 3
+ */
 #define RAW_VOLTAGE_HYSTERESIS 3u
 
 /**
  * RCM_SW_11
- * Calculated by analogRead(PIN) * 0,0296484375 = 24,6 => 24,6 / 0,0296484375 = 829,7
+ *  = 24,6 => 24,6 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY 830u
+#define RAW_VOLTAGE_ON_BATTERY 817u
 
 /**
  * RCM_SW_12
- * Calculated by analogRead(PIN) * 0,0296484375 = 24 => 24 / 0,0296484375 = 809,4
+ *  = 24 => 24 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_LOW 809u
+#define RAW_VOLTAGE_ON_BATTERY_LOW 797u
 
 /**
  * Below this value, the machine wont start
- * Calculated by analogRead(PIN) * 0,0296484375 = 22 => 22 / 0,0296484375 = 742
+ *  = 22 => 22 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 742u
+#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 731u
 
 /**
  * Below this value, the machine will stop immediately
- * Calculated by analogRead(PIN) * 0,0296484375 = 20 => 20 / 0,0296484375 = 675
+ *  = 20 => 20 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 675u
+#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 664u
 
 /// Number of samples of the moving average
 #define BATTERY_MAX_SAMPLES 20u
@@ -91,6 +106,18 @@ uint32_t getBatteryLevel();
  */
 uint32_t getBatteryLevelX10();
 
+/**
+ * Returns battery level x100 for better accuracy
+ *
+ * @return Battery level in volts x100
+ */
+uint32_t getBatteryLevelX100();
+
+/// Check if battery level is very low
 bool isBatteryVeryLow();
 
+/// Check if battery is deeply discharged
 bool isBatteryDeepDischarged();
+
+/// Check if mains are connected
+bool isMainsConnected();

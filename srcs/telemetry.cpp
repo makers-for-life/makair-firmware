@@ -7,29 +7,23 @@
 
 #pragma once
 
-#include "../includes/config.h"
-
 // INCLUDES ===================================================================
 
 // Associated header
 #include "../includes/telemetry.h"
 
 // Externals
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 #include "Arduino.h"
 #include "CRC32.h"
 #include "LL/stm32yyxx_ll_utils.h"
-#endif
 
 /// Internals
-#include "../includes/pressure_controller.h"
+#include "../includes/main_controller.h"
 
-// GLOBAL ITEMS ==============================================================
+// INITIALISATION =============================================================
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 /// The device ID to be joined with telemetry messages
 static byte deviceId[12];  // 3 * 32 bits = 96 bits
-#endif
 
 #define FIRST_BYTE (uint8_t)0xFF
 
@@ -47,7 +41,6 @@ static const uint8_t footer[FOOTER_SIZE] = {0x30, 0xC0};
  * @param data Input number
  * @return Array of 2 bytes
  */
-// cppcheck-suppress unusedFunction
 void toBytes16(byte bytes[], uint16_t data) {
     bytes[0] = (data >> 8) & FIRST_BYTE;
     bytes[1] = data & FIRST_BYTE;
@@ -59,7 +52,6 @@ void toBytes16(byte bytes[], uint16_t data) {
  * @param bytes Empty array of 4 elements
  * @param data Input number
  */
-// cppcheck-suppress unusedFunction
 void toBytes32(byte bytes[], uint32_t data) {
     bytes[0] = (data >> 24) & FIRST_BYTE;
     bytes[1] = (data >> 16) & FIRST_BYTE;
@@ -73,7 +65,6 @@ void toBytes32(byte bytes[], uint32_t data) {
  * @param bytes Empty array of 8 elements
  * @param data Input number
  */
-// cppcheck-suppress unusedFunction
 void toBytes64(byte bytes[], uint64_t data) {
     bytes[0] = (data >> 56) & FIRST_BYTE;
     bytes[1] = (data >> 48) & FIRST_BYTE;
@@ -85,14 +76,12 @@ void toBytes64(byte bytes[], uint64_t data) {
     bytes[7] = data & FIRST_BYTE;
 }
 
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
 /**
  * Compute device ID
  *
  * @warning This requires (and mutates) a static deviceId variable (which must be an array of 12
  * elements)
  */
-// cppcheck-suppress unusedFunction
 void computeDeviceId(void) {
     deviceId[0] = (LL_GetUID_Word0() >> 24) & FIRST_BYTE;
     deviceId[1] = (LL_GetUID_Word0() >> 16) & FIRST_BYTE;
@@ -113,31 +102,24 @@ void computeDeviceId(void) {
  *
  * @return Systick in microseconds
  */
-// cppcheck-suppress unusedFunction
 uint64_t computeSystick(void) {
     return (static_cast<uint64_t>(millis()) * 1000u) + (micros() % 1000u);
 }
-#endif
 
-// cppcheck-suppress unusedFunction
 void initTelemetry(void) {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.begin(115200);
     computeDeviceId();
-#endif
 }
 
-// cppcheck-suppress unusedFunction
 void sendBootMessage() {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t value128 = 128u;
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("B:");
     crc32.update("B:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -150,6 +132,7 @@ void sendBootMessage() {
     crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
     crc32.update(systick, 8);
@@ -173,18 +156,22 @@ void sendBootMessage() {
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
-// cppcheck-suppress unusedFunction
-void sendStoppedMessage() {
-#if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+void sendStoppedMessage(uint8_t peakCommand,
+                        uint8_t plateauCommand,
+                        uint8_t peepCommand,
+                        uint8_t cpmCommand,
+                        uint8_t expiratoryTerm,
+                        bool triggerEnabled,
+                        uint8_t triggerOffset,
+                        bool alarmSnoozed) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
     crc32.update("O:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -201,6 +188,54 @@ void sendStoppedMessage() {
     Serial6.write(systick, 8);
     crc32.update(systick, 8);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(peakCommand);
+    crc32.update(peakCommand);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(plateauCommand);
+    crc32.update(plateauCommand);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(peepCommand);
+    crc32.update(peepCommand);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(cpmCommand);
+    crc32.update(cpmCommand);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTerm);
+    crc32.update(expiratoryTerm);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggerEnabled);
+    crc32.update(triggerEnabled);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(triggerOffset);
+    crc32.update(triggerOffset);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmSnoozed);
+    crc32.update(alarmSnoozed);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -208,35 +243,21 @@ void sendStoppedMessage() {
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
-// cppcheck-suppress unusedFunction
 void sendDataSnapshot(uint16_t centileValue,
-                      uint16_t pressureValue,
+                      int16_t pressureValue,
                       CyclePhases phase,
-                      CycleSubPhases subPhase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
-                      uint8_t batteryLevel) {
-#if HARDWARE_VERSION == 1
-    (void)centileValue;
-    (void)pressureValue;
-    (void)phase;
-    (void)subPhase;
-    (void)blowerValvePosition;
-    (void)patientValvePosition;
-    (void)blowerRpm;
-    (void)batteryLevel;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+                      uint8_t batteryLevel,
+                      int16_t inspiratoryFlowValue,
+                      int16_t expiratoryFlowValue) {
     uint8_t phaseValue;
-    if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
+    if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001
-    } else if ((phase == CyclePhases::INHALATION)
-               && (subPhase == CycleSubPhases::HOLD_INSPIRATION)) {
-        phaseValue = 18u;  // 00010010
-    } else if ((phase == CyclePhases::EXHALATION) && (subPhase == CycleSubPhases::EXHALE)) {
+    } else if (phase == CyclePhases::EXHALATION) {
         phaseValue = 68u;  // 01000100
     } else {
         phaseValue = 0u;
@@ -246,8 +267,8 @@ void sendDataSnapshot(uint16_t centileValue,
     CRC32 crc32;
     Serial6.write("D:");
     crc32.update("D:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -310,6 +331,22 @@ void sendDataSnapshot(uint16_t centileValue,
     Serial6.write(batteryLevel);
     crc32.update(batteryLevel);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte inspiratoryFlow[2];  // 16 bits
+    toBytes16(inspiratoryFlow, inspiratoryFlowValue);
+    Serial6.write(inspiratoryFlow, 2);
+    crc32.update(inspiratoryFlow, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte expiratoryFlow[2];  // 16 bits
+    toBytes16(expiratoryFlow, expiratoryFlowValue);
+    Serial6.write(expiratoryFlow, 2);
+    crc32.update(expiratoryFlow, 2);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -317,10 +354,8 @@ void sendDataSnapshot(uint16_t centileValue,
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
-// cppcheck-suppress unusedFunction
 void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t peakCommand,
                               uint8_t plateauCommand,
@@ -333,22 +368,21 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t volumeValue,
                               uint8_t expiratoryTerm,
                               bool triggerEnabled,
-                              uint8_t triggerOffset) {
-#if HARDWARE_VERSION == 1
-    (void)cycleValue;
-    (void)peakCommand;
-    (void)plateauCommand;
-    (void)peepCommand;
-    (void)cpmCommand;
-    (void)previousPeakPressureValue;
-    (void)previousPlateauPressureValue;
-    (void)previousPeepPressureValue;
-    (void)currentAlarmCodes;
-    (void)volumeValue;
-    (void)expiratoryTerm;
-    (void)triggerEnabled;
-    (void)triggerOffset;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
+                              uint8_t triggerOffset,
+                              uint8_t previouscpmValue,
+                              bool alarmSnoozed,
+                              uint8_t cpuLoad,
+                              VentilationModes ventilationMode,
+                              uint8_t inspiratoryTriggerFlow,
+                              uint8_t expiratoryTriggerFlow,
+                              uint16_t tiMinValue,
+                              uint16_t tiMaxValue,
+                              uint8_t lowInspiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t lowExpiratoryRateAlarmThreshold,
+                              uint8_t highExpiratoryRateAlarmThreshold) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -358,12 +392,31 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
         }
     }
 
+    uint8_t ventilationModeValue;
+    switch (ventilationMode) {
+    case PC_CMV:
+        ventilationModeValue = 1u;
+        break;
+    case PC_AC:
+        ventilationModeValue = 2u;
+        break;
+    case VC_CMV:
+        ventilationModeValue = 3u;
+        break;
+    case PC_BIPAP:
+        ventilationModeValue = 4u;
+        break;
+    default:
+        ventilationModeValue = 0u;
+        break;
+    }
+
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("S:");
     crc32.update("S:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -470,6 +523,94 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(triggerOffset);
     crc32.update(triggerOffset);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(previouscpmValue);
+    crc32.update(previouscpmValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(alarmSnoozed);
+    crc32.update(alarmSnoozed);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(cpuLoad);
+    crc32.update(cpuLoad);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(ventilationModeValue);
+    crc32.update(ventilationModeValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(inspiratoryTriggerFlow);
+    crc32.update(inspiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTriggerFlow);
+    crc32.update(expiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMin[2];  // 16 bits
+    toBytes16(tiMin, tiMinValue);
+    Serial6.write(tiMin, 2);
+    crc32.update(tiMin, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMax[2];  // 16 bits
+    toBytes16(tiMax, tiMaxValue);
+    Serial6.write(tiMax, 2);
+    crc32.update(tiMax, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryRateAlarmThreshold);
+    crc32.update(lowExpiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryRateAlarmThreshold);
+    crc32.update(highExpiratoryRateAlarmThreshold);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -477,14 +618,11 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
-// cppcheck-suppress unusedFunction
 void sendAlarmTrap(uint16_t centileValue,
-                   uint16_t pressureValue,
+                   int16_t pressureValue,
                    CyclePhases phase,
-                   CycleSubPhases subPhase,
                    uint32_t cycleValue,
                    uint8_t alarmCode,
                    AlarmPriority alarmPriority,
@@ -492,26 +630,10 @@ void sendAlarmTrap(uint16_t centileValue,
                    uint32_t expectedValue,
                    uint32_t measuredValue,
                    uint32_t cyclesSinceTriggerValue) {
-#if HARDWARE_VERSION == 1
-    (void)centileValue;
-    (void)pressureValue;
-    (void)phase;
-    (void)subPhase;
-    (void)cycleValue;
-    (void)alarmCode;
-    (void)alarmPriority;
-    (void)triggered;
-    (void)expectedValue;
-    (void)measuredValue;
-    (void)cyclesSinceTriggerValue;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     uint8_t phaseValue;
-    if ((phase == CyclePhases::INHALATION) && (subPhase == CycleSubPhases::INSPIRATION)) {
+    if (phase == CyclePhases::INHALATION) {
         phaseValue = 17u;  // 00010001
-    } else if ((phase == CyclePhases::INHALATION)
-               && (subPhase == CycleSubPhases::HOLD_INSPIRATION)) {
-        phaseValue = 18u;  // 00010010
-    } else if ((phase == CyclePhases::EXHALATION) && (subPhase == CycleSubPhases::EXHALE)) {
+    } else if (phase == CyclePhases::EXHALATION) {
         phaseValue = 68u;  // 01000100
     } else {
         phaseValue = 0u;
@@ -539,8 +661,8 @@ void sendAlarmTrap(uint16_t centileValue,
     CRC32 crc32;
     Serial6.write("T:");
     crc32.update("T:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -636,21 +758,15 @@ void sendAlarmTrap(uint16_t centileValue,
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
-// cppcheck-suppress unusedFunction
 void sendControlAck(uint8_t setting, uint16_t valueValue) {
-#if HARDWARE_VERSION == 1
-    (void)setting;
-    (void)valueValue;
-#elif HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("A:");
     crc32.update("A:", 2);
-    Serial6.write((uint8_t)1u);
-    crc32.update((uint8_t)1u);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
@@ -688,10 +804,8 @@ void sendControlAck(uint8_t setting, uint16_t valueValue) {
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
-#endif
 }
 
-// cppcheck-suppress unusedFunction
 uint8_t mmH2OtoCmH2O(uint16_t pressure) {
     uint8_t result;
     uint16_t lastDigit = pressure % 10u;
