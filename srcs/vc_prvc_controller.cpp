@@ -41,6 +41,7 @@ VC_PRVC_Controller::VC_PRVC_Controller() {
 
     m_blowerSpeed = DEFAULT_BLOWER_SPEED;
     m_blowerIncrement = 0;
+    m_blowerTicks = 0;
     m_expiratoryPidFastMode = true;
     m_expiratoryPidIntegral = 0;
     m_expiratoryPidLastError = 0;
@@ -116,16 +117,37 @@ void VC_PRVC_Controller::exhale() {
 void VC_PRVC_Controller::endCycle() { calculateBlowerIncrement(); }
 
 void VC_PRVC_Controller::calculateBlowerIncrement() {
-    m_blowerIncrement = 0;
-    int32_t difference = 300 - mainController.tidalVolumeMeasure(); 
+    bool needUpdate = false;
+    int32_t targetVolume = 300;
+    int32_t difference = abs(targetVolume - mainController.tidalVolumeMeasure()); 
+    int32_t blowerTheoricalSpeed = 0;
 
-    if (difference > 30) {
-        m_blowerIncrement = 40;
-    } else if (difference < 0) {
-        m_blowerIncrement = -40;
+    if (difference > 5) {
+        needUpdate = true;
+        m_blowerTicks++;
+
+        if (m_blowerTicks > 4) {
+            m_blowerTicks = 0;
+        }
     }
 
-    Serial.println(mainController.tidalVolumeMeasure());
+    if (needUpdate && m_blowerTicks == 2) {
+        blowerTheoricalSpeed = (m_blowerSpeed * targetVolume) / mainController.tidalVolumeMeasure();
+        
+        if (blowerTheoricalSpeed >= MAX_BLOWER_SPEED) {
+            blowerTheoricalSpeed = MAX_BLOWER_SPEED;
+        }
+
+        if (blowerTheoricalSpeed < 0) {
+            blowerTheoricalSpeed = 0;
+        }
+
+        Serial.println(blowerTheoricalSpeed);
+
+        m_blowerIncrement = blowerTheoricalSpeed - m_blowerSpeed;
+
+        m_blowerTicks = 0;
+    }
 }
 
 int32_t

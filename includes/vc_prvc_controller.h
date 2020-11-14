@@ -88,6 +88,9 @@ class VC_PRVC_Controller final : public VentilationController {
 
     /// Max flow during inspiration
     int32_t m_maxInspiratoryFlow;
+
+    /// Blower ticks
+    int32_t m_blowerTicks;
 };
 
 extern VC_PRVC_Controller vcPRVCController;
