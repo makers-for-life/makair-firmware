@@ -16,7 +16,7 @@
 ///@}
 
 /// Defines the current mode
-#define MODE MODE_MFM_TESTS
+#define MODE MODE_PROD
 
 /**
  * Activates debug traces
