@@ -41,7 +41,6 @@ static const uint8_t footer[FOOTER_SIZE] = {0x30, 0xC0};
  * @param data Input number
  * @return Array of 2 bytes
  */
-// cppcheck-suppress unusedFunction
 void toBytes16(byte bytes[], uint16_t data) {
     bytes[0] = (data >> 8) & FIRST_BYTE;
     bytes[1] = data & FIRST_BYTE;
@@ -53,7 +52,6 @@ void toBytes16(byte bytes[], uint16_t data) {
  * @param bytes Empty array of 4 elements
  * @param data Input number
  */
-// cppcheck-suppress unusedFunction
 void toBytes32(byte bytes[], uint32_t data) {
     bytes[0] = (data >> 24) & FIRST_BYTE;
     bytes[1] = (data >> 16) & FIRST_BYTE;
@@ -67,7 +65,6 @@ void toBytes32(byte bytes[], uint32_t data) {
  * @param bytes Empty array of 8 elements
  * @param data Input number
  */
-// cppcheck-suppress unusedFunction
 void toBytes64(byte bytes[], uint64_t data) {
     bytes[0] = (data >> 56) & FIRST_BYTE;
     bytes[1] = (data >> 48) & FIRST_BYTE;
@@ -85,7 +82,6 @@ void toBytes64(byte bytes[], uint64_t data) {
  * @warning This requires (and mutates) a static deviceId variable (which must be an array of 12
  * elements)
  */
-// cppcheck-suppress unusedFunction
 void computeDeviceId(void) {
     deviceId[0] = (LL_GetUID_Word0() >> 24) & FIRST_BYTE;
     deviceId[1] = (LL_GetUID_Word0() >> 16) & FIRST_BYTE;
@@ -106,18 +102,15 @@ void computeDeviceId(void) {
  *
  * @return Systick in microseconds
  */
-// cppcheck-suppress unusedFunction
 uint64_t computeSystick(void) {
     return (static_cast<uint64_t>(millis()) * 1000u) + (micros() % 1000u);
 }
 
-// cppcheck-suppress unusedFunction
 void initTelemetry(void) {
     Serial6.begin(115200);
     computeDeviceId();
 }
 
-// cppcheck-suppress unusedFunction
 void sendBootMessage() {
     uint8_t value128 = 128u;
 
@@ -139,6 +132,7 @@ void sendBootMessage() {
     crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     toBytes64(systick, computeSystick());
     Serial6.write(systick, 8);
     crc32.update(systick, 8);
@@ -164,7 +158,6 @@ void sendBootMessage() {
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// cppcheck-suppress unusedFunction
 void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t plateauCommand,
                         uint8_t peepCommand,
@@ -252,9 +245,8 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// cppcheck-suppress unusedFunction
 void sendDataSnapshot(uint16_t centileValue,
-                      uint16_t pressureValue,
+                      int16_t pressureValue,
                       CyclePhases phase,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
@@ -364,7 +356,6 @@ void sendDataSnapshot(uint16_t centileValue,
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// cppcheck-suppress unusedFunction
 void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t peakCommand,
                               uint8_t plateauCommand,
@@ -380,7 +371,18 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t triggerOffset,
                               uint8_t previouscpmValue,
                               bool alarmSnoozed,
-                              uint8_t cpuLoad) {
+                              uint8_t cpuLoad,
+                              VentilationModes ventilationMode,
+                              uint8_t inspiratoryTriggerFlow,
+                              uint8_t expiratoryTriggerFlow,
+                              uint16_t tiMinValue,
+                              uint16_t tiMaxValue,
+                              uint8_t lowInspiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
+                              uint8_t lowExpiratoryRateAlarmThreshold,
+                              uint8_t highExpiratoryRateAlarmThreshold) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -388,6 +390,25 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
         } else {
             break;
         }
+    }
+
+    uint8_t ventilationModeValue;
+    switch (ventilationMode) {
+    case PC_CMV:
+        ventilationModeValue = 1u;
+        break;
+    case PC_AC:
+        ventilationModeValue = 2u;
+        break;
+    case VC_CMV:
+        ventilationModeValue = 3u;
+        break;
+    case PC_BIPAP:
+        ventilationModeValue = 4u;
+        break;
+    default:
+        ventilationModeValue = 0u;
+        break;
     }
 
     Serial6.write(header, HEADER_SIZE);
@@ -520,6 +541,76 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(cpuLoad);
     crc32.update(cpuLoad);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(ventilationModeValue);
+    crc32.update(ventilationModeValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(inspiratoryTriggerFlow);
+    crc32.update(inspiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTriggerFlow);
+    crc32.update(expiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMin[2];  // 16 bits
+    toBytes16(tiMin, tiMinValue);
+    Serial6.write(tiMin, 2);
+    crc32.update(tiMin, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMax[2];  // 16 bits
+    toBytes16(tiMax, tiMaxValue);
+    Serial6.write(tiMax, 2);
+    crc32.update(tiMax, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryRateAlarmThreshold);
+    crc32.update(lowExpiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryRateAlarmThreshold);
+    crc32.update(highExpiratoryRateAlarmThreshold);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -529,9 +620,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// cppcheck-suppress unusedFunction
 void sendAlarmTrap(uint16_t centileValue,
-                   uint16_t pressureValue,
+                   int16_t pressureValue,
                    CyclePhases phase,
                    uint32_t cycleValue,
                    uint8_t alarmCode,
@@ -670,7 +760,6 @@ void sendAlarmTrap(uint16_t centileValue,
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// cppcheck-suppress unusedFunction
 void sendControlAck(uint8_t setting, uint16_t valueValue) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
@@ -717,7 +806,6 @@ void sendControlAck(uint8_t setting, uint16_t valueValue) {
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// cppcheck-suppress unusedFunction
 uint8_t mmH2OtoCmH2O(uint16_t pressure) {
     uint8_t result;
     uint16_t lastDigit = pressure % 10u;

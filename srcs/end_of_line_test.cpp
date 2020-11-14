@@ -39,6 +39,7 @@ HardwareTimer* eolTimer;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 EolTest::EolTest() { testActive = 0; }
 
 // cppcheck-suppress unusedFunction
@@ -133,12 +134,12 @@ char eolScreenBuffer[EOLSCREENSIZE + 1];
 #define EOL_TOTALBUTTONS 11
 int16_t eolMatrixCurrentColumn = 1;
 
-// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
 // API update since version 1.9.0 of Arduino_Core_STM32
 #if (STM32_CORE_VERSION < 0x01090000)
-void millisecondTimerEOL(HardwareTimer*) 
+// cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
+void millisecondTimerEOL(HardwareTimer*)  // NOLINT(readability/casting)
 #else
-void millisecondTimerEOL(void) 
+void millisecondTimerEOL(void)
 #endif
 {
     clockEOLTimer++;
@@ -441,8 +442,11 @@ void millisecondTimerEOL(void)
         expiratoryValve.open((expiratoryValve.minAperture() + expiratoryValve.maxAperture()) / 2u);
         expiratoryValve.execute();
         pressureValue = inspiratoryPressureSensor.read();
+#ifdef MASS_FLOW_METER_ENABLED
         flowValue = MFM_read_airflow();
-
+#else
+        flowValue = 0;
+#endif
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Stabilite\nblower \n\n P= %d mmH2O",
                        pressureValue);
 
@@ -488,8 +492,8 @@ void millisecondTimerEOL(void)
         inspiratoryValve.execute();
         expiratoryValve.open();
         expiratoryValve.execute();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Flow non stable\nMax= %d SLM \nMin= %d SLM",
-                       maxFlowValue, minFlowValue);
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                       "Debit non stable\nMax= %d SLM \nMin= %d SLM", maxFlowValue, minFlowValue);
     } else if (eolstep == END_SUCCESS) {
         // SUCESS: end of the procedure
         blower.stop();

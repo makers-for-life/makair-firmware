@@ -212,8 +212,7 @@ void displayFlowMeterFail(int32_t p_flowMeterFlowAtStarting, int32_t p_flowMeter
 void displayFlowMeterOffset(int32_t p_flowMeterFlowOffset) {
     screen.setCursor(0, 3);
     char message[SCREEN_LINE_LENGTH + 1];
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "Flow offset: %3d SLM",
-                   p_flowMeterFlowOffset);
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "Flow offset: %3d SLM", p_flowMeterFlowOffset);
     screen.print(message);
 }
 

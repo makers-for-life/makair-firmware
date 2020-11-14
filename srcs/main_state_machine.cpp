@@ -46,6 +46,7 @@ Step previousmsmstep = SETUP;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 MainStateMachine::MainStateMachine() { isMsmActive = false; }
 
 bool MainStateMachine::isRunning() { return isMsmActive; }
@@ -73,7 +74,11 @@ void millisecondTimerMSM(void)
     clockMsmTimer++;
     int32_t pressure = inspiratoryPressureSensor.read();
     mainController.updatePressure(pressure);
-    int32_t inspiratoryflow = MFM_read_airflow();
+    int32_t inspiratoryflow = 0;
+#ifdef MASS_FLOW_METER_ENABLED
+    inspiratoryflow = MFM_read_airflow();
+#endif
+
     mainController.updateInspiratoryFlow(inspiratoryflow);
 
     if ((clockMsmTimer % 10u) == 0u) {
@@ -138,7 +143,10 @@ void millisecondTimerMSM(void)
         lastMainControllerCall = millis();
         tick = 0;
         msmstep = BREATH;
+#ifdef MASS_FLOW_METER_ENABLED
         (void)MFM_read_milliliters(true);  // Reset volume integral
+#endif
+
     } else if (msmstep == BREATH) {
         // If breathing
         uint32_t currentMillis = millis();
@@ -150,7 +158,9 @@ void millisecondTimerMSM(void)
             } else {
                 mainController.updateFakeExpiratoryFlow();
                 uint32_t currentMicro = micros();
+#ifdef MASS_FLOW_METER_ENABLED
                 mainController.updateCurrentDeliveredVolume(MFM_read_milliliters(false));
+#endif
                 mainController.updateDt(currentMicro - lastMicro);
                 lastMicro = currentMicro;
                 mainController.updateTick(tick);

@@ -25,6 +25,7 @@ PC_CMV_Controller pcCmvController;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 PC_CMV_Controller::PC_CMV_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
@@ -98,7 +99,7 @@ void PC_CMV_Controller::inhale() {
     expiratoryValve.close();
 
     // m_plateauStartTime is used for blower regulations, -5 is added to help blower convergence
-    if (mainController.pressure() > mainController.plateauPressureCommand() - 5u
+    if ((mainController.pressure() > (mainController.plateauPressureCommand() - 5))
         && !m_plateauPressureReached) {
         m_plateauStartTime = mainController.tick();
         m_plateauPressureReached = true;
@@ -137,7 +138,7 @@ void PC_CMV_Controller::calculateBlowerIncrement() {
         1000 * 120 / static_cast<int32_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS);
 
     // Update blower only if patient is plugged on the machine
-    if (mainController.peakPressureMeasure() > 20u) {
+    if (mainController.peakPressureMeasure() > 20) {
         if (m_plateauStartTime < ((mainController.ticksPerInhalation() * 30u) / 100u)) {
             // Only case for decreasing the blower: ramping is too fast or overshooting is too high
             if ((m_plateauStartTime < static_cast<uint32_t>(abs(halfRampNumberfTick)))
@@ -310,7 +311,7 @@ PC_CMV_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressu
         // For a high PEEP, a lower KI is required
         // For PEEP = 100 mmH2O, KI = 120
         // For PEEP = 50 mmH2O, KI = 250
-        if (mainController.peepCommand() > 100u) {
+        if (mainController.peepCommand() > 100) {
             coefficientI = 120;
         } else {
             coefficientI = ((-130 * ((int32_t)mainController.peepCommand())) / 50) + 380;

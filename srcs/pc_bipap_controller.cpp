@@ -24,6 +24,7 @@ PC_BIPAP_Controller pcBipapController;
 
 // FUNCTIONS ==================================================================
 
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
@@ -36,7 +37,7 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_inspiratoryPressureLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
     m_expiratoryPidLastErrorsIndex = 0;
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
+    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_LAST_VALUES; i++) {
         m_inspiratoryFlowLastValues[i] = 0u;
         m_inspiratoryPressureLastValues[i] = 0u;
     }
@@ -84,7 +85,7 @@ void PC_BIPAP_Controller::initCycle() {
             mainController.peepCommand() - mainController.plateauPressureCommand();
     }
 
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
+    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_LAST_VALUES; i++) {
         m_inspiratoryFlowLastValues[i] = 0u;
         m_inspiratoryPressureLastValues[i] = 0u;
     }
@@ -126,10 +127,10 @@ void PC_BIPAP_Controller::inhale() {
     m_expiratoryPidFastMode = true;
 
     // m_inspiratorySlope is used for blower regulations, -20 corresponds to open loop openning
-    if ((mainController.pressure() > (mainController.plateauPressureCommand() - 20u))
+    if ((mainController.pressure() > (mainController.plateauPressureCommand() - 20))
         && !m_plateauPressureReached) {
-        m_inspiratorySlope = ((mainController.pressure() - mainController.peepMeasure()) * 100u)
-                             / (mainController.tick() - 0u);  // in mmH2O/s
+        m_inspiratorySlope = ((mainController.pressure() - mainController.peepMeasure()) * 100)
+                             / static_cast<int32_t>(mainController.tick());  // in mmH2O/s
         m_plateauPressureReached = true;
     }
 
@@ -153,33 +154,29 @@ void PC_BIPAP_Controller::exhale() {
 
     (void)expiratoryValve.openLinear(expiratoryValveOpenningValue);
 
-    /*int32_t inspiratoryValveOpenningValue =
-        max(static_cast<int32_t>(100),
-            125
-                - static_cast<int32_t>((mainController.tick() - mainController.ticksPerInhalation())
-                                       / 2u));*/
-    // inspiratoryValve.openLinear(inspiratoryValveOpenningValue);
     inspiratoryValve.close();
     // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
-    /*m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
+    // m_inspiratoryFlowLastValues is not used by the controller, but will be in future
+    // improvements
+    m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
         mainController.inspiratoryFlow();
     m_inspiratoryFlowLastValuesIndex++;
-    if (m_inspiratoryFlowLastValuesIndex
-        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES)) {
+    if (m_inspiratoryFlowLastValuesIndex >= static_cast<int32_t>(NUMBER_OF_SAMPLE_LAST_VALUES)) {
         m_inspiratoryFlowLastValuesIndex = 0;
-    }*/
+    }
 
+    // Update a table with last pressure values
     m_inspiratoryPressureLastValues[m_inspiratoryPressureLastValuesIndex] =
         mainController.pressure();
     m_inspiratoryPressureLastValuesIndex++;
     if (m_inspiratoryPressureLastValuesIndex
-        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_FLOW_LAST_VALUES)) {
+        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_LAST_VALUES)) {
         m_inspiratoryPressureLastValuesIndex = 0;
     }
 
     int32_t maxPressureValue = m_inspiratoryPressureLastValues[0];
-    for (int32_t i = 0; i < NUMBER_OF_SAMPLE_FLOW_LAST_VALUES; i++) {
+    for (uint8_t i = 0; i < NUMBER_OF_SAMPLE_LAST_VALUES; i++) {
         if (m_inspiratoryPressureLastValues[i] > maxPressureValue) {
             maxPressureValue = m_inspiratoryPressureLastValues[i];
         }
@@ -195,7 +192,6 @@ void PC_BIPAP_Controller::exhale() {
                  < (maxPressureValue - (mainController.pressureTriggerOffsetCommand()))
              && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE))
             || mainController.pressure() < -mainController.pressureTriggerOffsetCommand()) {
-
             mainController.setTrigger(true);
         }
     }
@@ -222,7 +218,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
     bool veryLowRebounce = (peakDelta > 10) || ((rebouncePeakDelta < -10) && (peakDelta >= 0));
 
     // Update blower only if patient is plugged on the machine
-    if (mainController.peakPressureMeasure() > 20u) {
+    if (mainController.peakPressureMeasure() > 20) {
         // Safety condition: a too high peak (4 cmH2O) should decrease the blower
         if (veryHighRebounce) {
             m_blowerIncrement = -100;
@@ -400,7 +396,7 @@ PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPres
         // For a high PEEP, a lower KI is required
         // For PEEP = 100 mmH2O, KI = 120
         // For PEEP = 50 mmH2O, KI = 250
-        if (mainController.peepCommand() > 100u) {
+        if (mainController.peepCommand() > 100) {
             coefficientI = 120;
         } else {
             coefficientI = ((-130 * ((int32_t)mainController.peepCommand())) / 50) + 380;

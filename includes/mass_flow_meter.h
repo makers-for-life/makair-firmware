@@ -36,10 +36,12 @@ int32_t MFM_expi_read_milliliters(bool reset_after_read);
 void MFM_reset(void);
 
 /**
- * Calibrate the zero of the sensor. Returns:
- * MFM_CALIBRATION_OK: all right
- * MFM_CALIBRATION_IMPOSSIBLE: communication problem
- * MFM_CALIBRATION_OUT_OF_RANGE: unbelievable 10SLPM sensor drift. time to change it ?
+ * Calibrate the zero of the sensor
+ *
+ * @return One of:
+ * - MFM_CALIBRATION_OK: all right
+ * - MFM_CALIBRATION_IMPOSSIBLE: communication problem
+ * - MFM_CALIBRATION_OUT_OF_RANGE: unbelievable 10SLPM sensor drift; time to change it?
  *
  * @note This uses the mean of 10 samples
  */
@@ -68,7 +70,7 @@ int32_t MFM_expi_read_airflow(void);
 /**
  * return the serial number of the inspiratory flow meter
  *
- * @note returns 0 before init, or if init failed.
+ * @return The serial number, or `0` if before init or if init failed
  */
 uint32_t MFM_read_serial_number(void);
 
