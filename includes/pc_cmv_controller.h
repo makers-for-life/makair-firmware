@@ -59,6 +59,9 @@ class PC_CMV_Controller final : public VentilationController {
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
+    /// Current blower speed
+    uint16_t m_blowerSpeed;
+
     /// Current blower speed increment (to apply at the beginning of the next cycle)
     int32_t m_blowerIncrement;
 

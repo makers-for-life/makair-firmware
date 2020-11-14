@@ -177,13 +177,13 @@ void millisecondTimerMSM(void)
         // Check if machine has been paused
         activationController.refreshState();
         if (!activationController.isRunning()) {
-            msmstep = STOPPED;
+            msmstep = SETUP;
         }
     } else if (msmstep == TRIGGER_RAISED) {
         if (activationController.isRunning()) {
             msmstep = END_CYCLE;
         } else {
-            msmstep = STOPPED;
+            msmstep = SETUP;
         }
     } else if (msmstep == END_CYCLE) {
         mainController.endRespiratoryCycle(millis());
@@ -193,7 +193,7 @@ void millisecondTimerMSM(void)
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         } else {
-            msmstep = STOPPED;
+            msmstep = SETUP;
         }
     } else {
         // Do nothing

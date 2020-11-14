@@ -39,6 +39,7 @@ PC_CMV_Controller::PC_CMV_Controller() {
         m_expiratoryPidLastErrors[i] = 0u;
     }
 
+    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
     m_blowerIncrement = 0;
     m_inspiratoryPidIntegral = 0;
     m_inspiratoryPidLastError = 0;
@@ -49,7 +50,7 @@ PC_CMV_Controller::PC_CMV_Controller() {
 }
 
 void PC_CMV_Controller::setup() {
-    // No specific setup code
+    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
 }
 
 void PC_CMV_Controller::initCycle() {
@@ -77,16 +78,17 @@ void PC_CMV_Controller::initCycle() {
 
     // Apply blower ramp-up
     if (m_blowerIncrement >= 0) {
-        blower.runSpeed(blower.getSpeed() + static_cast<uint16_t>(abs(m_blowerIncrement)));
+        blower.runSpeed(m_blowerSpeed + static_cast<uint16_t>(abs(m_blowerIncrement)));
     } else {
         // When blower increment is negative, we need to check that it is less than current speed
         // If not, it would result in an overflow
-        if (static_cast<uint16_t>(abs(m_blowerIncrement)) < blower.getSpeed()) {
-            blower.runSpeed(blower.getSpeed() - static_cast<uint16_t>(abs(m_blowerIncrement)));
+        if (static_cast<uint16_t>(abs(m_blowerIncrement)) < m_blowerSpeed) {
+            blower.runSpeed(m_blowerSpeed - static_cast<uint16_t>(abs(m_blowerIncrement)));
         } else {
             blower.runSpeed(MIN_BLOWER_SPEED);
         }
     }
+    m_blowerSpeed = blower.getSpeed();
     m_blowerIncrement = 0;
 }
 
