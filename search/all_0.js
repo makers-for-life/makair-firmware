@@ -28,5 +28,5 @@ var searchData=
   ['alarmpriority_25',['AlarmPriority',['../alarm_8h.html#a5a708c1a1540361a33a030066a7c321b',1,'alarm.h']]],
   ['alarms_5fcode_5fpos_26',['ALARMS_CODE_POS',['../screen_8cpp.html#a3778fafff6b03a84285651cf2928cafe',1,'screen.cpp']]],
   ['alarms_5fsize_27',['ALARMS_SIZE',['../alarm__controller_8h.html#ac4707f9e5fae63a64a4fe478080ee79a',1,'alarm_controller.h']]],
-  ['analogbuttons_28',['analogButtons',['../keyboard_8cpp.html#a349c8d8389e41f6633f2ee178b8434c3',1,'keyboard.cpp']]]
+  ['alarmsnooze_28',['AlarmSnooze',['../serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffadfa98aea518acae69589759cec9ea72a',1,'serial_control.h']]]
 ];

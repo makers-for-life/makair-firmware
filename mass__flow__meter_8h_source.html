@@ -90,36 +90,44 @@ $(document).ready(function(){initNavTree('mass__flow__meter_8h_source.html','');
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#af5cf7a9a29193209b4063ff77d2b85b0">   17</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="mass__flow__meter_8h.html#af5cf7a9a29193209b4063ff77d2b85b0">MFM_init</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="mass__flow__meter_8h.html#af5cf7a9a29193209b4063ff77d2b85b0">MFM_init</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">   24</a></span>&#160;int32_t <a class="code" href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">MFM_read_milliliters</a>(<span class="keywordtype">bool</span> reset_after_read);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;int32_t <a class="code" href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">MFM_read_milliliters</a>(<span class="keywordtype">bool</span> reset_after_read);</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a035e38e560133d12eae5960a625cd22c">   29</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="mass__flow__meter_8h.html#a035e38e560133d12eae5960a625cd22c">MFM_reset</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mass__flow__meter_8h.html#a035e38e560133d12eae5960a625cd22c">MFM_reset</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a7855177703c852ce6e4a3a7c79cba304">   36</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="mass__flow__meter_8h.html#a7855177703c852ce6e4a3a7c79cba304">MFM_calibrateZero</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">extern</span> int32_t <a class="code" href="mass__flow__meter_8h.html#a792d7f4c559f76b39db3a70db0959b68">mfmLastValue</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#ab20e01566a244682b26e17617ca9841c">   40</a></span>&#160;<span class="preprocessor">#define MASS_FLOW_ERROR_VALUE 999999</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#define MFM_SENSOR_I2C_ADDRESS 0x40</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#if MASS_FLOW_METER_SENSOR == MFM_SDP703_02</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define MFM_SENSOR_I2C_ADDRESS 0x40</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a70d3f85e0db489b5a9b00846b85277d0">   51</a></span>&#160;<span class="preprocessor">#define MFM_SENSOR_I2C_ADDRESS 0x49</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;int8_t <a class="code" href="mass__flow__meter_8h.html#a7efa544160dce7564d2eb3a55e4a88f1">MFM_calibrateZero</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a5107a6437fc1aa476a32a0c2582fdd44">   43</a></span>&#160;<span class="preprocessor">#define MFM_CALIBRATION_OK 0</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a000015e745158ce746b2d7cccc11dcb4">   44</a></span>&#160;<span class="preprocessor">#define MFM_CALIBRATION_IMPOSSIBLE 1</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a399112e2f80104949fc543d159dbfd9e">   45</a></span>&#160;<span class="preprocessor">#define MFM_CALIBRATION_OUT_OF_RANGE 2</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;int32_t <a class="code" href="mass__flow__meter_8h.html#a10f72542756fbf92f84b7adfe9d1e1dc">MFM_getOffset</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;int32_t <a class="code" href="mass__flow__meter_8h.html#a8c57538fafa739a68c0bffa50409ca37">MFM_read_airflow</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;uint32_t <a class="code" href="mass__flow__meter_8h.html#a913f4074e9815121d547ffae0f81f720">MFM_read_serial_number</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define MFM_SENSOR_I2C_ADDRESS 0x40</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#if MASS_FLOW_METER_SENSOR == MFM_SDP703_02</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#define MFM_SENSOR_I2C_ADDRESS 0x40</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="mass__flow__meter_8h.html#a70d3f85e0db489b5a9b00846b85277d0">   73</a></span>&#160;<span class="preprocessor">#define MFM_SENSOR_I2C_ADDRESS 0x49</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="amass__flow__meter_8h_html_af5cf7a9a29193209b4063ff77d2b85b0"><div class="ttname"><a href="mass__flow__meter_8h.html#af5cf7a9a29193209b4063ff77d2b85b0">MFM_init</a></div><div class="ttdeci">bool MFM_init(void)</div><div class="ttdoc">Initialize Mass Flow Meter.</div></div>
-<div class="ttc" id="amass__flow__meter_8h_html_aa5e55b8a3eb4cecd480dd5297afb8526"><div class="ttname"><a href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">MFM_read_milliliters</a></div><div class="ttdeci">int32_t MFM_read_milliliters(bool reset_after_read)</div><div class="ttdoc">Returns the number of milliliters since last reset.</div></div>
-<div class="ttc" id="amass__flow__meter_8h_html_a035e38e560133d12eae5960a625cd22c"><div class="ttname"><a href="mass__flow__meter_8h.html#a035e38e560133d12eae5960a625cd22c">MFM_reset</a></div><div class="ttdeci">void MFM_reset(void)</div><div class="ttdoc">Reset the volume counter.</div></div>
-<div class="ttc" id="amass__flow__meter_8h_html_a792d7f4c559f76b39db3a70db0959b68"><div class="ttname"><a href="mass__flow__meter_8h.html#a792d7f4c559f76b39db3a70db0959b68">mfmLastValue</a></div><div class="ttdeci">int32_t mfmLastValue</div></div>
-<div class="ttc" id="amass__flow__meter_8h_html_a7855177703c852ce6e4a3a7c79cba304"><div class="ttname"><a href="mass__flow__meter_8h.html#a7855177703c852ce6e4a3a7c79cba304">MFM_calibrateZero</a></div><div class="ttdeci">void MFM_calibrateZero(void)</div><div class="ttdoc">Calibrate the zero of the sensor.</div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_af5cf7a9a29193209b4063ff77d2b85b0"><div class="ttname"><a href="mass__flow__meter_8h.html#af5cf7a9a29193209b4063ff77d2b85b0">MFM_init</a></div><div class="ttdeci">bool MFM_init(void)</div><div class="ttdoc">Initialize Mass Flow Meter.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00276">mass_flow_meter.cpp:276</a></div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_aa5e55b8a3eb4cecd480dd5297afb8526"><div class="ttname"><a href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">MFM_read_milliliters</a></div><div class="ttdeci">int32_t MFM_read_milliliters(bool reset_after_read)</div><div class="ttdoc">Returns the number of milliliters since last reset.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00527">mass_flow_meter.cpp:527</a></div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_a8c57538fafa739a68c0bffa50409ca37"><div class="ttname"><a href="mass__flow__meter_8h.html#a8c57538fafa739a68c0bffa50409ca37">MFM_read_airflow</a></div><div class="ttdeci">int32_t MFM_read_airflow(void)</div><div class="ttdoc">Read instant air flow.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00468">mass_flow_meter.cpp:468</a></div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_a035e38e560133d12eae5960a625cd22c"><div class="ttname"><a href="mass__flow__meter_8h.html#a035e38e560133d12eae5960a625cd22c">MFM_reset</a></div><div class="ttdeci">void MFM_reset(void)</div><div class="ttdoc">Reset the volume counter.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00476">mass_flow_meter.cpp:476</a></div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_a7efa544160dce7564d2eb3a55e4a88f1"><div class="ttname"><a href="mass__flow__meter_8h.html#a7efa544160dce7564d2eb3a55e4a88f1">MFM_calibrateZero</a></div><div class="ttdeci">int8_t MFM_calibrateZero(void)</div><div class="ttdoc">Calibrate the zero of the sensor.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00494">mass_flow_meter.cpp:494</a></div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_a10f72542756fbf92f84b7adfe9d1e1dc"><div class="ttname"><a href="mass__flow__meter_8h.html#a10f72542756fbf92f84b7adfe9d1e1dc">MFM_getOffset</a></div><div class="ttdeci">int32_t MFM_getOffset(void)</div><div class="ttdoc">Get massflow meter offset.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00525">mass_flow_meter.cpp:525</a></div></div>
+<div class="ttc" id="amass__flow__meter_8h_html_a913f4074e9815121d547ffae0f81f720"><div class="ttname"><a href="mass__flow__meter_8h.html#a913f4074e9815121d547ffae0f81f720">MFM_read_serial_number</a></div><div class="ttdeci">uint32_t MFM_read_serial_number(void)</div><div class="ttdoc">Get the serial number of the inspiratory flow meter.</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00484">mass_flow_meter.cpp:484</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

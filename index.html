@@ -90,8 +90,23 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md8"></a>
 unreleased</h1>
 <ul>
+<li>drop support of electronic hardware v1 and v2 (<em>from now on, minimum compatibility is from v3</em>)</li>
+<li>refactor main loop and breathing control (<em>breathing-related computations are now triggered by a hardware timer</em>)</li>
+<li>support several breathing modes (<em>PC-CMV stays the default mode, PC-BIPAP was added</em>)</li>
+<li>telemetry protocol v2 was introduced (<em>basically, this means sending more data</em>)</li>
+<li>drop support of useless "qualification" and "integration test" modes (<em>both are superseded by the EOL test feature</em>)</li>
+<li>add a watchdog for the Raspberry Pi (<em>RPi power supply will be restarted if UI misses sending heartbeats</em>)</li>
+<li>allow to set any setting (current or added) using the serial control protocol (<em>new settings were added, and they can all be changed from UI software</em>)</li>
+<li>improve breathing control algorithms</li>
+<li>remove ability to set peak pressure</li>
+<li>allow to snooze alarms or start/stop breathing using the serial control protocol</li>
+<li>drop support of old valves and pneumatic systems</li>
+<li>make mass flow meter more reliable</li>
 <li>turn the green LED on when alarms are snoozed</li>
 <li>display a special message on LCD screen when watchdog reset was triggered</li>
+<li>allow to retry pressure calibration when it fails</li>
+<li>increase the size of the hardware buffer used by telemetry</li>
+<li>improve Doxygen documentation</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md9"></a>
 v3.0.1</h1>

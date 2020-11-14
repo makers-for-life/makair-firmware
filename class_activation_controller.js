@@ -6,6 +6,7 @@ var class_activation_controller =
       [ "RUNNING_READY_TO_STOP", "class_activation_controller.html#af432ef3c7ddde2aeb68a42b16013d032a25f66c8b48881a48e4fac8d6ed3132c6", null ]
     ] ],
     [ "ActivationController", "class_activation_controller.html#a1819c9a2e7dc03f24f58c01c326f21ae", null ],
+    [ "changeState", "class_activation_controller.html#aa3f20edcd2cf6468ff4a38d402904468", null ],
     [ "isRunning", "class_activation_controller.html#a6150ca0b4b114c9ea416cb9ac7461415", null ],
     [ "onStartButton", "class_activation_controller.html#ab3f1c9e1e985c21f8f34d7e1461ba6f1", null ],
     [ "onStopButton", "class_activation_controller.html#a9bc6cfb4211165303d9b69c79d33f388", null ],

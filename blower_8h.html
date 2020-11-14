@@ -84,7 +84,8 @@ $(document).ready(function(){initNavTree('blower_8h.html',''); initResizable(); 
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">blower.h File Reference</div>  </div>
 </div><!--header-->
@@ -106,7 +107,13 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a68bd79c1576a038b2004077c7e027cca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blower_8h.html#a68bd79c1576a038b2004077c7e027cca">BlowerSpeed2MicroSeconds</a>(value)&#160;&#160;&#160;map(value, 0, 1800, 1000, 1950)</td></tr>
+<tr class="memdesc:a68bd79c1576a038b2004077c7e027cca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a speed to a value in microseconds for the blower controller.  <a href="blower_8h.html#a68bd79c1576a038b2004077c7e027cca">More...</a><br /></td></tr>
 <tr class="separator:a68bd79c1576a038b2004077c7e027cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a178ba5bcb45305131ee9a9bb86e8e32c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_blower.html">Blower</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blower_8h.html#a178ba5bcb45305131ee9a9bb86e8e32c">blower</a></td></tr>
+<tr class="separator:a178ba5bcb45305131ee9a9bb86e8e32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tools to control the blower. </p>
@@ -131,7 +138,35 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="blower_8h_source.html#l00019">19</a> of file <a class="el" href="blower_8h_source.html">blower.h</a>.</p>
+<p>Convert a speed to a value in microseconds for the blower controller. </p>
+<dl class="section note"><dt>Note</dt><dd>There is an error margin on the max ppm, because the blower do not handle values greater than 2.01 ms, and there is no quartz anywhere </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="blower_8h_source.html#l00022">22</a> of file <a class="el" href="blower_8h_source.html">blower.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a178ba5bcb45305131ee9a9bb86e8e32c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a178ba5bcb45305131ee9a9bb86e8e32c">&#9670;&nbsp;</a></span>blower</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_blower.html">Blower</a> blower</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="blower_8cpp_source.html#l00020">20</a> of file <a class="el" href="blower_8cpp_source.html">blower.cpp</a>.</p>
 
 </div>
 </div>

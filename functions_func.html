@@ -104,36 +104,41 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>Blower()
 : <a class="el" href="class_blower.html#af94bdfcc26cc33e19e36cca6b20a4cec">Blower</a>
 </li>
-<li>blower_valve()
-: <a class="el" href="class_pressure_controller.html#a5782c3b6c4663f3ac5f694659cab435e">PressureController</a>
-</li>
 </ul>
 
 
 <h3><a id="index_c"></a>- c -</h3><ul>
+<li>calculateBlowerIncrement()
+: <a class="el" href="class_main_controller.html#ab47db7dca0db0e1cb6945ec107bcf771">MainController</a>
+, <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a020a56e9bfcd2240915b0051b9302340">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#afdd3651614330c78710fcfdfdb6e7792">PC_CMV_Controller</a>
+</li>
+<li>changeState()
+: <a class="el" href="class_activation_controller.html#aa3f20edcd2cf6468ff4a38d402904468">ActivationController</a>
+</li>
 <li>checkCycleAlarm()
-: <a class="el" href="class_pressure_controller.html#a76cc29aa4768d04fba3a272c292a7a23">PressureController</a>
+: <a class="el" href="class_main_controller.html#a29b95d37c31bbfb74edf5c9ec5bfa03a">MainController</a>
 </li>
 <li>close()
 : <a class="el" href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">PressureValve</a>
 </li>
 <li>compute()
-: <a class="el" href="class_pressure_controller.html#aabb9ee7ea33a38a087b955c8cca46215">PressureController</a>
-</li>
-<li>computePlateau()
-: <a class="el" href="class_pressure_controller.html#a3b703296e7abd63fa47bee3a655852ca">PressureController</a>
+: <a class="el" href="class_main_controller.html#add0cd4b91f8bd041d62726a2c2fa509f">MainController</a>
 </li>
 <li>computeTickParameters()
-: <a class="el" href="class_pressure_controller.html#a5a75938a831ee86ad5de5f7c78907cc9">PressureController</a>
+: <a class="el" href="class_main_controller.html#aa44b8d1f6901181828773fdcac004d14">MainController</a>
 </li>
 <li>cycleNumber()
-: <a class="el" href="class_pressure_controller.html#afe70f5073fe91a4ae906d0b0f1c74d2b">PressureController</a>
-</li>
-<li>cyclesPerMinute()
-: <a class="el" href="class_pressure_controller.html#aed5cf0642c29aee13a76f798fcc65de8">PressureController</a>
+: <a class="el" href="class_main_controller.html#afda7b184cc74f4c9bfc4f9a5e725c214">MainController</a>
 </li>
 <li>cyclesPerMinuteCommand()
-: <a class="el" href="class_pressure_controller.html#a99d6c920553304b6c28d159c30ca3bba">PressureController</a>
+: <a class="el" href="class_main_controller.html#acee18fd93dd828eec934e85345926d37">MainController</a>
+</li>
+<li>cyclesPerMinuteMeasure()
+: <a class="el" href="class_main_controller.html#a3ea4d9ba7230bf93217cf9efc36187be">MainController</a>
+</li>
+<li>cyclesPerMinuteNextCommand()
+: <a class="el" href="class_main_controller.html#a619cb91bbd96331d5348d0fc47b7e965">MainController</a>
 </li>
 </ul>
 
@@ -145,12 +150,23 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>detectedAlarm()
 : <a class="el" href="class_alarm_controller.html#a569c8bc1f402d4ec2cdf320c08c8eb4a">AlarmController</a>
 </li>
+<li>disable()
+: <a class="el" href="class_rpi_watchdog.html#a8a8b66d3863a6050a80ff27f7788f30a">RpiWatchdog</a>
+</li>
+<li>dt()
+: <a class="el" href="class_main_controller.html#a05f6872bcd6f611b4a7d644e49331b54">MainController</a>
+</li>
 </ul>
 
 
 <h3><a id="index_e"></a>- e -</h3><ul>
+<li>endCycle()
+: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ab22df4ff241658718e4772b262df0f7e">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#afaa4c4fd5da0002293b21308b58f47fd">PC_CMV_Controller</a>
+, <a class="el" href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">VentilationController</a>
+</li>
 <li>endRespiratoryCycle()
-: <a class="el" href="class_pressure_controller.html#abd35b0ec32e0eaa72d49930c261c447d">PressureController</a>
+: <a class="el" href="class_main_controller.html#a51c3a5682bf47b69465d42cf7aab3428">MainController</a>
 </li>
 <li>EolTest()
 : <a class="el" href="class_eol_test.html#aef077d9f967d29b14bd4b363983e4784">EolTest</a>
@@ -159,10 +175,16 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 : <a class="el" href="class_pressure_valve.html#a95cc22d9a5422382adff84ee55f5c01c">PressureValve</a>
 </li>
 <li>executeCommands()
-: <a class="el" href="class_pressure_controller.html#a37111dcc07226fd1bb988d739553836e">PressureController</a>
+: <a class="el" href="class_main_controller.html#a0e585153a13a0af11eee4a6ba766b58f">MainController</a>
 </li>
 <li>exhale()
-: <a class="el" href="class_pressure_controller.html#aea084adbc5a1f3075dffcd45ddf4b7e8">PressureController</a>
+: <a class="el" href="class_main_controller.html#aa4612b7505667678f9c2408d06b1a045">MainController</a>
+, <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a1568a3afeffc1156abb6f08686f67c5b">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#aac8b62c14e841fd33840086245e9b28e">PC_CMV_Controller</a>
+, <a class="el" href="class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d">VentilationController</a>
+</li>
+<li>expiratoryFlow()
+: <a class="el" href="class_main_controller.html#a71345147a9a2de7e1d567d6bee62cb8f">MainController</a>
 </li>
 </ul>
 
@@ -185,14 +207,32 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 <h3><a id="index_i"></a>- i -</h3><ul>
 <li>inhale()
-: <a class="el" href="class_pressure_controller.html#a54b778e5ab8651b487c2675e28edf8b9">PressureController</a>
+: <a class="el" href="class_main_controller.html#ae397b33c742af76d59564dbeac8b3dc1">MainController</a>
+, <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a251d34a3a52db08d8f6929016adbfff1">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#a835109bc10dd46b32be1df136efa57ed">PC_CMV_Controller</a>
+, <a class="el" href="class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4">VentilationController</a>
+</li>
+<li>initCycle()
+: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a599c5ab574f288001754f7e6f6991e43">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#a5eae2207ec3b755384b1b0c58a9e9ef1">PC_CMV_Controller</a>
+, <a class="el" href="class_ventilation_controller.html#abe6c44ce183edca775acd823fa1022cd">VentilationController</a>
 </li>
 <li>initRespiratoryCycle()
-: <a class="el" href="class_pressure_controller.html#a19bba75b8bed523c0ec51f95a1e590fe">PressureController</a>
+: <a class="el" href="class_main_controller.html#ab48465d964c58baa0d134b97851368af">MainController</a>
+</li>
+<li>inspiratoryFlow()
+: <a class="el" href="class_main_controller.html#ac7465fe8354c78a0899474a7efba103d">MainController</a>
+</li>
+<li>isPeepDetected()
+: <a class="el" href="class_main_controller.html#a5edf368748ba3a010edb04a1897cab1b">MainController</a>
 </li>
 <li>isRunning()
 : <a class="el" href="class_activation_controller.html#a6150ca0b4b114c9ea416cb9ac7461415">ActivationController</a>
 , <a class="el" href="class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6">EolTest</a>
+, <a class="el" href="class_main_state_machine.html#aaa0fb97418ee17022fb59e74b1370893">MainStateMachine</a>
+</li>
+<li>isSnoozed()
+: <a class="el" href="class_alarm_controller.html#a1d63f78e1e4b6bd4bd5c6fcc8bea9ffa">AlarmController</a>
 </li>
 <li>isTriggered()
 : <a class="el" href="class_alarm.html#a1a1bf095ca11d9fa35b48cb08b72a03d">Alarm</a>
@@ -201,23 +241,17 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 
 <h3><a id="index_m"></a>- m -</h3><ul>
+<li>MainController()
+: <a class="el" href="class_main_controller.html#afc816e394f59614efba13d0657a0a351">MainController</a>
+</li>
+<li>MainStateMachine()
+: <a class="el" href="class_main_state_machine.html#a505594a91a0ba5709ddbe1d36c111176">MainStateMachine</a>
+</li>
 <li>maxAperture()
 : <a class="el" href="class_pressure_valve.html#abce6dd9d0c01d24f0b65a7057e1997ca">PressureValve</a>
 </li>
-<li>maxPeakPressureCommand()
-: <a class="el" href="class_pressure_controller.html#abe955d86205567a8caf915b5770c2419">PressureController</a>
-</li>
-<li>maxPlateauPressureCommand()
-: <a class="el" href="class_pressure_controller.html#a4a311293f3bfc61f0a636283e2052485">PressureController</a>
-</li>
-<li>measuredCyclesPerMinute()
-: <a class="el" href="class_pressure_controller.html#ab5db83815e2e20519a603a70eb32f3de">PressureController</a>
-</li>
 <li>minAperture()
 : <a class="el" href="class_pressure_valve.html#a62c53895701feb0fff8e72a105b2fc2a">PressureValve</a>
-</li>
-<li>minPeepCommand()
-: <a class="el" href="class_pressure_controller.html#ad98ed00f1c58b864578a8399794f0834">PressureController</a>
 </li>
 </ul>
 
@@ -234,43 +268,40 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 <h3><a id="index_o"></a>- o -</h3><ul>
 <li>onCycleDecrease()
-: <a class="el" href="class_pressure_controller.html#a3018c939a86c9723a5f2fb9cf35b25a2">PressureController</a>
+: <a class="el" href="class_main_controller.html#a7b694bf9ea900c4d76c49c7df39c73e0">MainController</a>
 </li>
 <li>onCycleIncrease()
-: <a class="el" href="class_pressure_controller.html#a2bd235ff70e4f6ed5444c0b835600bca">PressureController</a>
+: <a class="el" href="class_main_controller.html#a35cf905b3f1f00983a37a16b6ef4c607">MainController</a>
 </li>
 <li>onCycleSet()
-: <a class="el" href="class_pressure_controller.html#a5c7d475c92b3c3d4683ac7aa0a469e42">PressureController</a>
+: <a class="el" href="class_main_controller.html#a22213e7e669c38c722d7c3504ff0ecd6">MainController</a>
 </li>
 <li>onExpiratoryTermSet()
-: <a class="el" href="class_pressure_controller.html#ada5f87b6a72eea316352c79a9d868644">PressureController</a>
+: <a class="el" href="class_main_controller.html#a41381c51835b07e8a1e68d2e9196f2d6">MainController</a>
 </li>
 <li>onPeakPressureDecrease()
-: <a class="el" href="class_pressure_controller.html#a315144490c6db075d87a8652bd9e731d">PressureController</a>
+: <a class="el" href="class_main_controller.html#a312c12ea6c5a655ceaaf08eda74ca799">MainController</a>
 </li>
 <li>onPeakPressureIncrease()
-: <a class="el" href="class_pressure_controller.html#a16a89fa23b2193cca0fcead8f86e88b8">PressureController</a>
-</li>
-<li>onPeakPressureSet()
-: <a class="el" href="class_pressure_controller.html#a96a2b4c614c28978b8bc2b95bcf53a64">PressureController</a>
+: <a class="el" href="class_main_controller.html#a11ea116e4f578dbd170434779c46664e">MainController</a>
 </li>
 <li>onPeepPressureDecrease()
-: <a class="el" href="class_pressure_controller.html#ae8cc7a99380b07742774295ddbb9dbd2">PressureController</a>
+: <a class="el" href="class_main_controller.html#a8a7c45c2b3de93b1e91f590467724397">MainController</a>
 </li>
 <li>onPeepPressureIncrease()
-: <a class="el" href="class_pressure_controller.html#a3c9808b0c660a95911fcbdd8d054173d">PressureController</a>
+: <a class="el" href="class_main_controller.html#a7f6eeacab8baf2a1097d45edbae0f59e">MainController</a>
 </li>
 <li>onPeepSet()
-: <a class="el" href="class_pressure_controller.html#a90e42d960611b161adf656c01f45ddff">PressureController</a>
+: <a class="el" href="class_main_controller.html#a84a304abed8272e4dd6f2709a93dd85e">MainController</a>
 </li>
 <li>onPlateauPressureDecrease()
-: <a class="el" href="class_pressure_controller.html#a8a77a5d93a0c1a901b78234953cd1016">PressureController</a>
+: <a class="el" href="class_main_controller.html#acbfc577d5f165ebafbe63d0060f0d60b">MainController</a>
 </li>
 <li>onPlateauPressureIncrease()
-: <a class="el" href="class_pressure_controller.html#a1dfd4e330094fd4bbb102adf6acbeed3">PressureController</a>
+: <a class="el" href="class_main_controller.html#a690a5d53dc62bdde273febe7a3d6671c">MainController</a>
 </li>
 <li>onPlateauPressureSet()
-: <a class="el" href="class_pressure_controller.html#acf430f2c1d1652115339de70f267aa98">PressureController</a>
+: <a class="el" href="class_main_controller.html#ab05a03bf40d3c270d64913dbc80e18d0">MainController</a>
 </li>
 <li>onStartButton()
 : <a class="el" href="class_activation_controller.html#ab3f1c9e1e985c21f8f34d7e1461ba6f1">ActivationController</a>
@@ -278,67 +309,111 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>onStopButton()
 : <a class="el" href="class_activation_controller.html#a9bc6cfb4211165303d9b69c79d33f388">ActivationController</a>
 </li>
-<li>onTriggerEnabledSet()
-: <a class="el" href="class_pressure_controller.html#a760034d84077b18cb5f0a9ce411ed13b">PressureController</a>
+<li>onTriggerModeEnabledSet()
+: <a class="el" href="class_main_controller.html#afb82656460325665cd2febabdaa4756a">MainController</a>
 </li>
 <li>onTriggerOffsetSet()
-: <a class="el" href="class_pressure_controller.html#abb9cb04fa1d6b9c8bba3d67e336af7ba">PressureController</a>
+: <a class="el" href="class_main_controller.html#a060e7354e6e5c4c241c4a9a9d4a3657d">MainController</a>
 </li>
 <li>open()
-: <a class="el" href="class_pressure_valve.html#a9a411fb7dda2f8df75b9d5396aa58c55">PressureValve</a>
+: <a class="el" href="class_pressure_valve.html#ad69a9c9ea1c573351e62df5625b3883d">PressureValve</a>
+</li>
+<li>openLinear()
+: <a class="el" href="class_pressure_valve.html#aff4497f24435896a81e2efb1df9c7442">PressureValve</a>
 </li>
 </ul>
 
 
 <h3><a id="index_p"></a>- p -</h3><ul>
-<li>patient_valve()
-: <a class="el" href="class_pressure_controller.html#a033084f9e7e3f011951fcb46e86ba019">PressureController</a>
+<li>PC_BIPAP_Controller()
+: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ace4bd2a01eb939937fa97225a6836966">PC_BIPAP_Controller</a>
 </li>
-<li>peakPressure()
-: <a class="el" href="class_pressure_controller.html#a1d61120a1845ebd77f98fecd596cd537">PressureController</a>
+<li>PC_CMV_Controller()
+: <a class="el" href="class_p_c___c_m_v___controller.html#a31cff1f242801ceb49c5ee626cfcaf5f">PC_CMV_Controller</a>
 </li>
-<li>peep()
-: <a class="el" href="class_pressure_controller.html#ab436d043433e677698779c8fa111365e">PressureController</a>
+<li>PCexpiratoryPID()
+: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ac59518d186e063b5cead24b33df48aac">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#acf8d1efea5b22a61125e326ea5a74abf">PC_CMV_Controller</a>
+</li>
+<li>PCinspiratoryPID()
+: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ad226be5f303410b153215e09e6af0461">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#af229afd6ef55b2bbc8f64ca3bbb09c40">PC_CMV_Controller</a>
+</li>
+<li>peakPressureCommand()
+: <a class="el" href="class_main_controller.html#aef8b4d5c593d85a5fc6b7bf7284bf0ac">MainController</a>
+</li>
+<li>peakPressureMeasure()
+: <a class="el" href="class_main_controller.html#a8366ac86a4a18c570554d82838c516f7">MainController</a>
+</li>
+<li>peakPressureNextCommand()
+: <a class="el" href="class_main_controller.html#a4cdb3f48055d31439e9916cf974b1190">MainController</a>
+</li>
+<li>peepCommand()
+: <a class="el" href="class_main_controller.html#a8f7a021a834acaea29735eb170e19d28">MainController</a>
+</li>
+<li>peepMeasure()
+: <a class="el" href="class_main_controller.html#aa5c0d387933598cb701c25a5236ccde6">MainController</a>
+</li>
+<li>peepNextCommand()
+: <a class="el" href="class_main_controller.html#a20548d43acdf75b88378f26510bca302">MainController</a>
 </li>
 <li>phase()
-: <a class="el" href="class_pressure_controller.html#ab7bceebb6d6df50331ee5c0a3e1d5cbb">PressureController</a>
+: <a class="el" href="class_main_controller.html#a5516111c3046a59dc1ddfcf44500c5ed">MainController</a>
 </li>
-<li>pidBlower()
-: <a class="el" href="class_pressure_controller.html#a0e1a0329356e8a69e0bb45d91bfc2efa">PressureController</a>
+<li>plateauPressureCommand()
+: <a class="el" href="class_main_controller.html#ab1828295d2f8a088c557bebbd9e677a7">MainController</a>
 </li>
-<li>pidPatient()
-: <a class="el" href="class_pressure_controller.html#a354fe08d03a5021223551ceca19d3739">PressureController</a>
+<li>plateauPressureMeasure()
+: <a class="el" href="class_main_controller.html#aeb59020f4486d12c8f1b704a0a1ba9c7">MainController</a>
 </li>
-<li>plateau()
-: <a class="el" href="class_pressure_controller.html#a3c87527db7275a0474f4f7afff1b79bf">PressureController</a>
-</li>
-<li>plateauPressure()
-: <a class="el" href="class_pressure_controller.html#a3a1a582bea8f502812b9932da5eab217">PressureController</a>
+<li>plateauPressureNextCommand()
+: <a class="el" href="class_main_controller.html#a35ffa394cf21cb654c3d02d8d079b199">MainController</a>
 </li>
 <li>PressionTest()
 : <a class="el" href="class_pression_test.html#afde1bf265ffc967ceac19d0bc37c442e">PressionTest</a>
 </li>
 <li>pressure()
-: <a class="el" href="class_pressure_controller.html#a61ee4afea7c585f5582ad85a0b47da7a">PressureController</a>
+: <a class="el" href="class_main_controller.html#a63e93e9eff092104c23170fbadf5fb5e">MainController</a>
 </li>
-<li>PressureController()
-: <a class="el" href="class_pressure_controller.html#afda41b9a5a4f14ef31df017722b2d1ca">PressureController</a>
+<li>pressureCommand()
+: <a class="el" href="class_main_controller.html#ae63062cbe27a40ce1b95fce9fa8694de">MainController</a>
 </li>
-<li>pressureTrigger()
-: <a class="el" href="class_pressure_controller.html#a074cfc1f0534f6e5989c3cbde6e5fc23">PressureController</a>
+<li>PressureSensor()
+: <a class="el" href="class_pressure_sensor.html#a70516927762b142a112367245ccc69fe">PressureSensor</a>
+</li>
+<li>pressureTriggerOffsetCommand()
+: <a class="el" href="class_main_controller.html#a88463b82b696d581ef105c079b9e625e">MainController</a>
+</li>
+<li>pressureTriggerOffsetNextCommand()
+: <a class="el" href="class_main_controller.html#a8d6016d999dc12de660fba3c14eb00ba">MainController</a>
 </li>
 <li>PressureValve()
-: <a class="el" href="class_pressure_valve.html#aaf6e881fe589d8c04a284f69eea0ea1d">PressureValve</a>
+: <a class="el" href="class_pressure_valve.html#a1332b021d589b338c2c8a143030e4ac2">PressureValve</a>
+</li>
+<li>printDebugValues()
+: <a class="el" href="class_main_controller.html#aaa81a134efe2ac18dd12e1bd3d47f889">MainController</a>
 </li>
 </ul>
 
 
 <h3><a id="index_r"></a>- r -</h3><ul>
 <li>reachSafetyPosition()
-: <a class="el" href="class_pressure_controller.html#a96a7b9192d6efbe8bf8d694934f5901d">PressureController</a>
+: <a class="el" href="class_main_controller.html#ad2cb9cf87231db1c48cd585e05f4765f">MainController</a>
+</li>
+<li>read()
+: <a class="el" href="class_pressure_sensor.html#a34b1d5146492b71d2c5791c77cda987c">PressureSensor</a>
+</li>
+<li>rebouncePeakPressureMeasure()
+: <a class="el" href="class_main_controller.html#a70660534f49aa8009b92d0e313b0b035">MainController</a>
 </li>
 <li>refreshState()
 : <a class="el" href="class_activation_controller.html#aa256dedc1eb1472010208c413db03798">ActivationController</a>
+</li>
+<li>resetCountDown()
+: <a class="el" href="class_rpi_watchdog.html#a9ee4f65097fb9dcde259a8b678f253cd">RpiWatchdog</a>
+</li>
+<li>RpiWatchdog()
+: <a class="el" href="class_rpi_watchdog.html#a6dfa8efb5820724dece28a6ee5267582">RpiWatchdog</a>
 </li>
 <li>runAlarmEffects()
 : <a class="el" href="class_alarm_controller.html#ad141921047b9df22873fe983e7fd1530">AlarmController</a>
@@ -350,65 +425,112 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
-<li>setSubPhase()
-: <a class="el" href="class_pressure_controller.html#a3397188b394447dc976aea088c4a56a5">PressureController</a>
+<li>ScreenUpdate()
+: <a class="el" href="class_main_state_machine.html#a75edcf4194281fb6b6366dcacc7f4fdd">MainStateMachine</a>
+</li>
+<li>sendMachineState()
+: <a class="el" href="class_main_controller.html#a9e150764f575f22bf3b6f91d5973224f">MainController</a>
+</li>
+<li>sendStopMessageToUi()
+: <a class="el" href="class_main_controller.html#a04592f8a13cbfdc8be872064174caded">MainController</a>
+</li>
+<li>setPressureSensorOffset()
+: <a class="el" href="class_pressure_sensor.html#a69485b52b2e5b76a319d853b3dda0098">PressureSensor</a>
+</li>
+<li>setTrigger()
+: <a class="el" href="class_main_controller.html#aee01a3756a8fb2e4d1d75c883460182a">MainController</a>
 </li>
 <li>setup()
 : <a class="el" href="class_blower.html#a3e124c8a70abb893efea331c80fceb57">Blower</a>
+, <a class="el" href="class_main_controller.html#aafa8ee151c5b50678cffb541f9cf0e35">MainController</a>
+, <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ab292e1c207ee63359361a9036a349da9">PC_BIPAP_Controller</a>
+, <a class="el" href="class_p_c___c_m_v___controller.html#a9043abae6e27276d7f47d2d0a260e65a">PC_CMV_Controller</a>
 </li>
 <li>SetUp()
 : <a class="el" href="class_pression_test.html#adb6634b310d029b640e7400e999116ad">PressionTest</a>
 </li>
 <li>setup()
-: <a class="el" href="class_pressure_controller.html#ae30a9ffc7ddd71bf17d0e6bccced181a">PressureController</a>
-, <a class="el" href="class_pressure_valve.html#a4554c626fa35ad603fa1aea47b064b07">PressureValve</a>
+: <a class="el" href="class_pressure_valve.html#a4554c626fa35ad603fa1aea47b064b07">PressureValve</a>
+, <a class="el" href="class_ventilation_controller.html#ad11fb8bf9512fe144a3e61f288be2cfd">VentilationController</a>
 </li>
 <li>setupAndStart()
 : <a class="el" href="class_eol_test.html#a3d6e78d6306154d1b69cff46dab9a6a5">EolTest</a>
+, <a class="el" href="class_main_state_machine.html#a0c5a4091b5db38c48e249f853dc5afe4">MainStateMachine</a>
 </li>
 <li>snooze()
 : <a class="el" href="class_alarm_controller.html#a8a0f2489deb09fe5070d8f2cec07e581">AlarmController</a>
 </li>
 <li>stop()
 : <a class="el" href="class_blower.html#aa8d7ed93ae09574c4a402e79f75eabc8">Blower</a>
-</li>
-<li>subPhase()
-: <a class="el" href="class_pressure_controller.html#ae3bdcb8cfea8a4e896e2503e59333a38">PressureController</a>
+, <a class="el" href="class_main_controller.html#ac3361496ce994af5a2d0fc2925d83232">MainController</a>
 </li>
 </ul>
 
 
 <h3><a id="index_t"></a>- t -</h3><ul>
-<li>tickPerCycle()
-: <a class="el" href="class_pressure_controller.html#a82db1f1a93c7e7a9e470e23f7d595c9d">PressureController</a>
+<li>tick()
+: <a class="el" href="class_main_controller.html#a5ae0b96ad5db192370c456354473aba9">MainController</a>
 </li>
-<li>tickPerInhalation()
-: <a class="el" href="class_pressure_controller.html#ac85b39dccea07f003c0558c6a6566de3">PressureController</a>
+<li>ticksPerCycle()
+: <a class="el" href="class_main_controller.html#a5e0e42951cbd3fca09c947a1eeb4c3ca">MainController</a>
+</li>
+<li>ticksPerInhalation()
+: <a class="el" href="class_main_controller.html#ae33fbf946ae27bb27677ee85a839ce3f">MainController</a>
+</li>
+<li>ticksPerInhalationSet()
+: <a class="el" href="class_main_controller.html#ad6b021581d5e6fe5385fd43404db35ad">MainController</a>
+</li>
+<li>tidalVolumeMeasure()
+: <a class="el" href="class_main_controller.html#a1cf8a9de562e0651f3903755ec9f7860">MainController</a>
 </li>
 <li>triggered()
-: <a class="el" href="class_pressure_controller.html#a7399e1bdd655545f61069fe62531e51c">PressureController</a>
+: <a class="el" href="class_main_controller.html#a08a0af83770b2af937e2e0cc37795045">MainController</a>
 </li>
 <li>triggeredAlarms()
 : <a class="el" href="class_alarm_controller.html#a6c7b9386cfef61fee8901a869259cfc2">AlarmController</a>
+</li>
+<li>triggerModeEnabledCommand()
+: <a class="el" href="class_main_controller.html#ac2c685533680266d02a8d5e32e2d1a18">MainController</a>
+</li>
+<li>triggerModeEnabledNextCommand()
+: <a class="el" href="class_main_controller.html#ae0328e5b1e8cf525a1c752f5397182d1">MainController</a>
 </li>
 </ul>
 
 
 <h3><a id="index_u"></a>- u -</h3><ul>
+<li>unsnooze()
+: <a class="el" href="class_alarm_controller.html#ab8c7e9176331c8ea0a4c15162a7197c4">AlarmController</a>
+</li>
+<li>update()
+: <a class="el" href="class_rpi_watchdog.html#a7662b8502fe2841d0113031ad1fa2cd7">RpiWatchdog</a>
+</li>
 <li>updateCoreData()
-: <a class="el" href="class_alarm_controller.html#acb3858e852e3e95b29a207303f00de22">AlarmController</a>
+: <a class="el" href="class_alarm_controller.html#a339afbe676ec0622e4b4fa449bb4b763">AlarmController</a>
+</li>
+<li>updateCurrentDeliveredVolume()
+: <a class="el" href="class_main_controller.html#a82fd2b7c4ca821a00c5d989438e71e0f">MainController</a>
 </li>
 <li>updateDt()
-: <a class="el" href="class_pressure_controller.html#a7722b0a5c8fe849dd1298f4405e8fed5">PressureController</a>
+: <a class="el" href="class_main_controller.html#a6ba2c3412b82fe309c8c528e97831e64">MainController</a>
 </li>
-<li>updatePeakPressure()
-: <a class="el" href="class_pressure_controller.html#a61500d6af56ad42f6a7b70f3417b8bcf">PressureController</a>
+<li>updateExpiratoryFlow()
+: <a class="el" href="class_main_controller.html#a6c16a9daae9717d573b241133928fab8">MainController</a>
+</li>
+<li>updateFakeExpiratoryFlow()
+: <a class="el" href="class_main_controller.html#a18052c85000a37e6882bf02e910f73b6">MainController</a>
+</li>
+<li>updateInspiratoryFlow()
+: <a class="el" href="class_main_controller.html#af158e5fc422c52a1b42ca4ecd150b082">MainController</a>
 </li>
 <li>updatePhase()
-: <a class="el" href="class_pressure_controller.html#a32f3fdb74f66cf9ef2499e6098bc00ce">PressureController</a>
+: <a class="el" href="class_main_controller.html#a10720c34589741266bfce6de6a7504ac">MainController</a>
 </li>
 <li>updatePressure()
-: <a class="el" href="class_pressure_controller.html#a50a1318f5caee5603941dfcfed9d8cf2">PressureController</a>
+: <a class="el" href="class_main_controller.html#aa119754fbc886c2a09c7109928147121">MainController</a>
+</li>
+<li>updateTick()
+: <a class="el" href="class_main_controller.html#aefe206f7d57938b27a8383342cb1a0b9">MainController</a>
 </li>
 </ul>
 </div><!-- contents -->

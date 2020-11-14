@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['cyclephases_963',['CyclePhases',['../cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88',1,'cycle.h']]],
-  ['cyclesubphases_964',['CycleSubPhases',['../cycle_8h.html#acd1b2c60ec414ec28999de4906364b94',1,'cycle.h']]]
+  ['controlsetting_1287',['ControlSetting',['../serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ff',1,'serial_control.h']]],
+  ['cyclephases_1288',['CyclePhases',['../cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88',1,'cycle.h']]]
 ];

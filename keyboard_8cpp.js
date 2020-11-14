@@ -1,15 +1,9 @@
 var keyboard_8cpp =
 [
-    [ "analogButtons", "keyboard_8cpp.html#a349c8d8389e41f6633f2ee178b8434c3", null ],
+    [ "SM_DEBOUNCE", "keyboard_8cpp.html#aedd59c52bfa75ffd332c23c6f99bc489", null ],
+    [ "SM_PERIOD", "keyboard_8cpp.html#a5d87459785d333b884b8759ec8da6194", null ],
+    [ "SM_REPEAT", "keyboard_8cpp.html#a663d259ac32339929873aa7017688478", null ],
     [ "buttonAlarmOff", "keyboard_8cpp.html#a30b6018f3521dda15a9a97377a27e965", null ],
-    [ "buttonCycleDecrease", "keyboard_8cpp.html#ac4d23108332c5104a44e853e6717665e", null ],
-    [ "buttonCycleIncrease", "keyboard_8cpp.html#a00beaed4207b8bc9fd0f355c4b2ae6f0", null ],
-    [ "buttonPeakPressureDecrease", "keyboard_8cpp.html#a810cee6767d1f533d605662bc773b785", null ],
-    [ "buttonPeakPressureIncrease", "keyboard_8cpp.html#aa6c4642b42eb06e9390fe7b5e8e6ba69", null ],
-    [ "buttonPeepPressureDecrease", "keyboard_8cpp.html#a82e296e6f54af7e14f91cd4aec64d101", null ],
-    [ "buttonPeepPressureIncrease", "keyboard_8cpp.html#a060f45d746fb7673f1fb75e59e13271c", null ],
-    [ "buttonPlateauPressureDecrease", "keyboard_8cpp.html#a487109f6a24dea50af1c693b67874870", null ],
-    [ "buttonPlateauPressureIncrease", "keyboard_8cpp.html#a8050700d797399aa3248c71f95d4b073", null ],
     [ "buttonStart", "keyboard_8cpp.html#a8adf492668c6ce5e6b167d073909d074", null ],
     [ "buttonStop", "keyboard_8cpp.html#a8fe94765c59a035ac0ab3c5b5b83c17a", null ],
     [ "calibrateButtons", "keyboard_8cpp.html#a88c1367f7277a9a7d16a2b8f5a7805ce", null ],
@@ -25,5 +19,16 @@ var keyboard_8cpp =
     [ "onPlateauPressureDecrease", "keyboard_8cpp.html#a4b5e2bc9a166bafaeff01afa7aec3120", null ],
     [ "onPlateauPressureIncrease", "keyboard_8cpp.html#ad191a1d68301eb9a6ecf97462ba83088", null ],
     [ "onStart", "keyboard_8cpp.html#a11bcf4e3177fdb549350a4aa149e9e67", null ],
-    [ "onStop", "keyboard_8cpp.html#a458397229d0b2076a739955b1cb8be35", null ]
+    [ "onStop", "keyboard_8cpp.html#a458397229d0b2076a739955b1cb8be35", null ],
+    [ "scanMatrixLoop", "keyboard_8cpp.html#a892e4fa4660daffc711070e2544c5464", null ],
+    [ "scanMatrixCounterC1R1", "keyboard_8cpp.html#af54a1e8241243a22c4eca886709ccb58", null ],
+    [ "scanMatrixCounterC1R2", "keyboard_8cpp.html#abc658832f20890ca7c8066aa2b455615", null ],
+    [ "scanMatrixCounterC1R3", "keyboard_8cpp.html#a3a3a46e62363c7a1bc728c542ceb1411", null ],
+    [ "scanMatrixCounterC2R1", "keyboard_8cpp.html#ac604597b8c9c767f04ddd093731aa229", null ],
+    [ "scanMatrixCounterC2R2", "keyboard_8cpp.html#a16d3fac835223c398473341a810c6997", null ],
+    [ "scanMatrixCounterC2R3", "keyboard_8cpp.html#aba9365b5d8de6629a40a9d6d2dda76c2", null ],
+    [ "scanMatrixCounterC3R1", "keyboard_8cpp.html#ae8cec7d12072d676d2f23112484d56d2", null ],
+    [ "scanMatrixCounterC3R2", "keyboard_8cpp.html#a7121c089239188157dd755c791bd9786", null ],
+    [ "scanMatrixCounterC3R3", "keyboard_8cpp.html#a78ff7ad6423a5e7d03fcdaabb519a96d", null ],
+    [ "scanMatrixCurrentColumn", "keyboard_8cpp.html#a1de51b1fe269c73014d4a04fa5e027bd", null ]
 ];

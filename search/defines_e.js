@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['screen_5fline_5flength_1138',['SCREEN_LINE_LENGTH',['../parameters_8h.html#a5a5ed10b5050dd70fd32ca7cbae79441',1,'parameters.h']]],
-  ['screen_5fline_5fnumber_1139',['SCREEN_LINE_NUMBER',['../parameters_8h.html#a6b3caa1717db9c927845ec22a737c1bb',1,'parameters.h']]],
-  ['servo_5fvalve_5fperiod_1140',['SERVO_VALVE_PERIOD',['../parameters_8h.html#a8be02f382c2460e178684735aebc008f',1,'parameters.h']]],
-  ['simulation_1141',['SIMULATION',['../config_8h.html#afd29c78cd36d8946cf1202e8e684f7a5',1,'config.h']]]
+  ['tim_5fchannel_5fesc_5fblower_1534',['TIM_CHANNEL_ESC_BLOWER',['../parameters_8h.html#a57aecd78099a5a92e57cf20db38002d4',1,'parameters.h']]],
+  ['tim_5fchannel_5fexpiratory_5fvalve_1535',['TIM_CHANNEL_EXPIRATORY_VALVE',['../parameters_8h.html#ab2524d80101248ad84dbdded6c9ed7c2',1,'parameters.h']]],
+  ['tim_5fchannel_5finspiratory_5fvalve_1536',['TIM_CHANNEL_INSPIRATORY_VALVE',['../parameters_8h.html#aba66e993ecdad95999ea8d6c5b35ed90',1,'parameters.h']]],
+  ['time_5fcpu_5fcycle_5freset_1537',['TIME_CPU_CYCLE_RESET',['../cpu__load_8h.html#a85a6146fc4e31744b2c96637b49a7570',1,'cpu_load.h']]],
+  ['timer_5ftick_5fper_5fms_1538',['TIMER_TICK_PER_MS',['../buzzer_8cpp.html#ac9cf4ce69bec86b52f8a4485de22dbb2',1,'buzzer.cpp']]],
+  ['trigger_5fmode_5fenabled_5fby_5fdefault_1539',['TRIGGER_MODE_ENABLED_BY_DEFAULT',['../parameters_8h.html#a18c05583946e0bdf6e30760c6efae626',1,'parameters.h']]]
 ];

@@ -52,12 +52,13 @@ var NAVTREE =
         [ "Add the test source file to CMakeLists.txt", "md_test__r_e_a_d_m_e.html#autotoc_md6", null ]
       ] ]
     ] ],
+    [ "Deprecated List", "deprecated.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
@@ -81,9 +82,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "activation_8cpp.html",
-"class_pressure_controller.html#a5c7d475c92b3c3d4683ac7aa0a469e42",
-"keyboard_8cpp.html#a6e101a2b57f253e108dd99475e37db29",
-"telemetry_8cpp.html#a8a52623e1220d2f1941f75525a3cbe16"
+"class_main_controller.html#a1cf8a9de562e0651f3903755ec9f7860",
+"cycle_8h.html",
+"mass__flow__meter_8h.html#a913f4074e9815121d547ffae0f81f720",
+"serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffa7c38fab8411ed12edc16c6e544b036cb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

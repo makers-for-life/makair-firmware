@@ -156,6 +156,9 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>CONST_INITIAL_ZERO_PRESSURE
 : <a class="el" href="parameters_8h.html#ae40a069871060b9e0136e1d127e0436e">parameters.h</a>
 </li>
+<li>CONST_INITIAL_ZERO_VOLUME
+: <a class="el" href="parameters_8h.html#ac605d836e03a1d333643996682cc196e">parameters.h</a>
+</li>
 <li>CONST_MAX_CYCLE
 : <a class="el" href="parameters_8h.html#aa24738c128b9fa7c48cab15790e7280b">parameters.h</a>
 </li>
@@ -198,30 +201,21 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>CONTROL_HEADER_SIZE
 : <a class="el" href="serial__control_8cpp.html#a30c1f44c79505de8e228e7685f3571f1">serial_control.cpp</a>
 </li>
+<li>COUNT_IDLE_CYCLE
+: <a class="el" href="cpu__load_8h.html#a85932c3074da7100778fcf1dca12ea44">cpu_load.h</a>
+</li>
+<li>COUNTDOWN_IN_S
+: <a class="el" href="rpi__watchdog_8h.html#a69099d361aeddb5e17d14f40c670e834">rpi_watchdog.h</a>
+</li>
+<li>CPU_MAX_LOOP_PER_SECOND
+: <a class="el" href="cpu__load_8cpp.html#a581cbd09a356681bb2fd139c054fb2d5">cpu_load.cpp</a>
+</li>
 </ul>
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
-<li>DBG_AFFICHE_CONSIGNES
-: <a class="el" href="debug_8h.html#a1fce5db04dcbdc8fccc7a9608a885aa7">debug.h</a>
-</li>
-<li>DBG_AFFICHE_CSPCYCLE_CSPINSPI
-: <a class="el" href="debug_8h.html#a14aaacf7f7627afb892875da919a29ec">debug.h</a>
-</li>
 <li>DBG_DO
 : <a class="el" href="debug_8h.html#a32bcd1c3e450a86dd238d44a94629e2d">debug.h</a>
-</li>
-<li>DBG_PHASE_PRESSION
-: <a class="el" href="debug_8h.html#ad5605de1af04a2763aae3c86f74f1b9d">debug.h</a>
-</li>
-<li>DBG_PRESSION_CRETE
-: <a class="el" href="debug_8h.html#a002163da0e44c2007237677b67ab1f3b">debug.h</a>
-</li>
-<li>DBG_PRESSION_PEP
-: <a class="el" href="debug_8h.html#acae36aa3b2ce5d7a4a461b60ae110855">debug.h</a>
-</li>
-<li>DBG_PRESSION_PLATEAU
-: <a class="el" href="debug_8h.html#a58794ec155cc8a9be08633eab1f129dd">debug.h</a>
 </li>
 <li>DEBUG
 : <a class="el" href="config_8h.html#ad72dbcf6d0153db1b8d8a58001feed83">config.h</a>
@@ -229,23 +223,29 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>DEFAULT_BLOWER_SPEED
 : <a class="el" href="parameters_8h.html#a46c6bca2d6cf1361c017137e809e41fc">parameters.h</a>
 </li>
+<li>DEFAULT_CYCLE_PER_MINUTE_COMMAND
+: <a class="el" href="parameters_8h.html#a8d2417817645f6463f780c1127c6a112">parameters.h</a>
+</li>
 <li>DEFAULT_EXPIRATORY_TERM_COMMAND
 : <a class="el" href="parameters_8h.html#aa009824368472837d3a5e3a19a7d9582">parameters.h</a>
 </li>
-<li>DEFAULT_MAX_PEAK_PRESSURE_COMMAND
-: <a class="el" href="parameters_8h.html#acd21b850c31e8e644d02462a46389c1e">parameters.h</a>
-</li>
-<li>DEFAULT_MAX_PLATEAU_COMMAND
-: <a class="el" href="parameters_8h.html#a548cb9b058d3c6b735c4b19a879fba36">parameters.h</a>
-</li>
-<li>DEFAULT_MIN_PEEP_COMMAND
-: <a class="el" href="parameters_8h.html#a341d8dc42507e5f8b9a262b70be47b7b">parameters.h</a>
+<li>DEFAULT_PEAK_PRESSURE_COMMAND
+: <a class="el" href="parameters_8h.html#ac668cfe0d7480a92558c79ef31615182">parameters.h</a>
 </li>
 <li>DEFAULT_PEAK_PRESSURE_DELTA
 : <a class="el" href="parameters_8h.html#a4728dd3c8f35e7888081467736e75147">parameters.h</a>
 </li>
+<li>DEFAULT_PEEP_COMMAND
+: <a class="el" href="parameters_8h.html#aa1644856c6fbd420e096b7ac9ea16d1c">parameters.h</a>
+</li>
+<li>DEFAULT_PLATEAU_COMMAND
+: <a class="el" href="parameters_8h.html#a8a62a927e85b98a61eb191cc0dd5a7fd">parameters.h</a>
+</li>
 <li>DEFAULT_TRIGGER_OFFSET
 : <a class="el" href="parameters_8h.html#ae6f06b6e2a3b577fbf6453707d03a3d1">parameters.h</a>
+</li>
+<li>DISABLE_RPI_WATCHDOG
+: <a class="el" href="serial__control_8h.html#aeb8427961b5caf58b96b97e006f4f07e">serial_control.h</a>
 </li>
 </ul>
 
@@ -260,10 +260,19 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>EOLSCREENSIZE
 : <a class="el" href="end__of__line__test_8cpp.html#ae6924331bca33084e43c2468dddfcf0f">end_of_line_test.cpp</a>
 </li>
+<li>ESC_PPM_PERIOD
+: <a class="el" href="parameters_8h.html#a20a4460ee37165a7dd902d34959fb003">parameters.h</a>
+</li>
 </ul>
 
 
 <h3><a id="index_f"></a>- f -</h3><ul>
+<li>FAULHABER_CLOSED
+: <a class="el" href="parameters_8h.html#a12800883231e26855d4f520ff3ab7ef9">parameters.h</a>
+</li>
+<li>FAULHABER_OPENED
+: <a class="el" href="parameters_8h.html#a93c1fe731aacff0426ba616398cb2c9a">parameters.h</a>
+</li>
 <li>FIRST_BYTE
 : <a class="el" href="telemetry_8cpp.html#a73d6572224ad0ac84a8587615cef947c">telemetry.cpp</a>
 </li>
@@ -274,18 +283,8 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 
 
 <h3><a id="index_h"></a>- h -</h3><ul>
-<li>HARDWARE_VERSION
-: <a class="el" href="config_8h.html#a7c770e481dd85c7ffb40e3b3edb0beb5">config.h</a>
-</li>
 <li>HEADER_SIZE
 : <a class="el" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">telemetry.cpp</a>
-</li>
-</ul>
-
-
-<h3><a id="index_i"></a>- i -</h3><ul>
-<li>INITIAL_CYCLE_NUMBER
-: <a class="el" href="parameters_8h.html#a3323cc40b9955ffd3073a97f7eb62edc">parameters.h</a>
 </li>
 </ul>
 
@@ -332,11 +331,32 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 
 
 <h3><a id="index_m"></a>- m -</h3><ul>
+<li>MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS
+: <a class="el" href="parameters_8h.html#a78ba5180ea2628b3f2367d2fb5eeed5a">parameters.h</a>
+</li>
+<li>MAIN_CONTROLLER_COMPUTE_PERIOD_MS
+: <a class="el" href="parameters_8h.html#a5d9ac0bc9a0a989e1b748a5dc575467e">parameters.h</a>
+</li>
+<li>MASS_FLOW_CHANNEL
+: <a class="el" href="parameters_8h.html#a4b8cbcab1b910ed49ce07a6b10c33a9d">parameters.h</a>
+</li>
 <li>MASS_FLOW_ERROR_VALUE
-: <a class="el" href="mass__flow__meter_8h.html#ab20e01566a244682b26e17617ca9841c">mass_flow_meter.h</a>
+: <a class="el" href="parameters_8h.html#ab20e01566a244682b26e17617ca9841c">parameters.h</a>
+</li>
+<li>MASS_FLOW_METER_ENABLED
+: <a class="el" href="config_8h.html#a53ea367986885104c5218496470d1f5d">config.h</a>
 </li>
 <li>MASS_FLOW_METER_SENSOR
 : <a class="el" href="config_8h.html#a0c9c70a3531afcd41a02fed9165a101d">config.h</a>
+</li>
+<li>MASS_FLOW_PERIOD
+: <a class="el" href="mass__flow__meter_8cpp.html#a8482f3a8ee3451c8d00021fcaee69bdd">mass_flow_meter.cpp</a>
+</li>
+<li>MASS_FLOW_TIMER
+: <a class="el" href="parameters_8h.html#a6886263cde1f02d666cbb55723d8dbf0">parameters.h</a>
+</li>
+<li>MASS_FLOW_TIMER_FREQ
+: <a class="el" href="mass__flow__meter_8cpp.html#a922bc6e4e4456ff658374569d2b9f3cf">mass_flow_meter.cpp</a>
 </li>
 <li>MAX_BLOWER_SPEED
 : <a class="el" href="parameters_8h.html#a3ffa4d83d65bee55efc0a43440e9db2e">parameters.h</a>
@@ -345,13 +365,34 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 : <a class="el" href="parameters_8h.html#af1c21e6533ef5528bd6aa463be29180d">parameters.h</a>
 </li>
 <li>MAX_PRESSURE_SAMPLES
-: <a class="el" href="pressure__controller_8h.html#a9031fac8a40d276c6ca360fe4b8df8ca">pressure_controller.h</a>
+: <a class="el" href="main__controller_8h.html#a9031fac8a40d276c6ca360fe4b8df8ca">main_controller.h</a>
+</li>
+<li>MFM_ANALOG_INPUT
+: <a class="el" href="parameters_8h.html#a1553dd2d9cec0fe98d552592925b59ca">parameters.h</a>
+</li>
+<li>MFM_CALIBRATION_IMPOSSIBLE
+: <a class="el" href="mass__flow__meter_8h.html#a000015e745158ce746b2d7cccc11dcb4">mass_flow_meter.h</a>
+</li>
+<li>MFM_CALIBRATION_OK
+: <a class="el" href="mass__flow__meter_8h.html#a5107a6437fc1aa476a32a0c2582fdd44">mass_flow_meter.h</a>
+</li>
+<li>MFM_CALIBRATION_OUT_OF_RANGE
+: <a class="el" href="mass__flow__meter_8h.html#a399112e2f80104949fc543d159dbfd9e">mass_flow_meter.h</a>
 </li>
 <li>MFM_HONEYWELL_HAF
 : <a class="el" href="config_8h.html#ad294719730c4f75b42255ff5a8b11cdb">config.h</a>
 </li>
-<li>MFM_OMRON_D6F
-: <a class="el" href="config_8h.html#ab668e31117412d188a0d1ecb3c819b8a">config.h</a>
+<li>MFM_MEAN_SAMPLES
+: <a class="el" href="mass__flow__meter_8cpp.html#ade2b43b0f46066d4c5fc49a73a409af1">mass_flow_meter.cpp</a>
+</li>
+<li>MFM_POWER_CONTROL
+: <a class="el" href="parameters_8h.html#a9e458624fca9fb32afe30db3a8c88545">parameters.h</a>
+</li>
+<li>MFM_POWER_OFF
+: <a class="el" href="parameters_8h.html#adf8bcc98006008ad7acfc8ec0346fea6">parameters.h</a>
+</li>
+<li>MFM_POWER_ON
+: <a class="el" href="parameters_8h.html#a7f7683182ea8ddfe2869658bc978bac8">parameters.h</a>
 </li>
 <li>MFM_RANGE
 : <a class="el" href="config_8h.html#a25b56b88ac96c68eb97d474afee5043f">config.h</a>
@@ -365,23 +406,29 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>MFM_SFM_3300D
 : <a class="el" href="config_8h.html#a079b6f0d2ee5af8c7b99e949222a3696">config.h</a>
 </li>
+<li>MFM_WAIT_READSERIALR1_PERIODS
+: <a class="el" href="mass__flow__meter_8cpp.html#af3b2ce3fcf66feaf0560d2dfdfa9ab4f">mass_flow_meter.cpp</a>
+</li>
+<li>MFM_WAIT_RESET_PERIODS
+: <a class="el" href="mass__flow__meter_8cpp.html#ab5e883d2440e5f52aafd6468e7fab80a">mass_flow_meter.cpp</a>
+</li>
+<li>MFM_WAIT_SOFTRESET_PERIODS
+: <a class="el" href="mass__flow__meter_8cpp.html#a3a5316c7b7d8212d3d1db7afbf62bcaa">mass_flow_meter.cpp</a>
+</li>
+<li>MFM_WAIT_WARMUP_PERIODS
+: <a class="el" href="mass__flow__meter_8cpp.html#ad48f73b7a3cb9c28ebd8bf162417e649">mass_flow_meter.cpp</a>
+</li>
 <li>MIN_BLOWER_SPEED
 : <a class="el" href="parameters_8h.html#a9d2b8b8d0ab40857c2d65732708b8782">parameters.h</a>
 </li>
 <li>MODE
 : <a class="el" href="config_8h.html#ab8c52c1b4c021ed3e6b6b677bd2ac019">config.h</a>
 </li>
-<li>MODE_INTEGRATION_TEST
-: <a class="el" href="config_8h.html#a9363dcca5d8c4f76232849c974b94ba8">config.h</a>
-</li>
 <li>MODE_MFM_TESTS
 : <a class="el" href="config_8h.html#a0fec857defd0b46275e44f0aa506997f">config.h</a>
 </li>
 <li>MODE_PROD
 : <a class="el" href="config_8h.html#a0411b2098b68e25eee2e6e12e260ca98">config.h</a>
-</li>
-<li>MODE_QUALIFICATION
-: <a class="el" href="config_8h.html#af3c748d47bde01edbd190cebc5033ad6">config.h</a>
 </li>
 </ul>
 
@@ -393,8 +440,8 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>NUMBER_OF_BREATH_PERIOD
 : <a class="el" href="parameters_8h.html#ab506ed2d19169a4e0d0fa85bae2394db">parameters.h</a>
 </li>
-<li>NUMBER_OF_SAMPLE_BLOWER_DERIVATIVE_MOVING_MEAN
-: <a class="el" href="parameters_8h.html#ab28961f9db88958c2530533e0c08a8c3">parameters.h</a>
+<li>NUMBER_OF_SAMPLE_LAST_VALUES
+: <a class="el" href="parameters_8h.html#a2796e688bb77ec96657a9b537d3fce64">parameters.h</a>
 </li>
 </ul>
 
@@ -412,20 +459,11 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>PAUSE_20S
 : <a class="el" href="buzzer_8cpp.html#a5868427da2e18f74de72d70ff08576bf">buzzer.cpp</a>
 </li>
-<li>PCONTROLLER_COMPUTE_PERIOD_US
-: <a class="el" href="parameters_8h.html#a6c8f5d4c0af38b1c286576d40fceb334">parameters.h</a>
+<li>PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN
+: <a class="el" href="parameters_8h.html#a3431ad56e81d1e9984e36867e4da07dd">parameters.h</a>
 </li>
 <li>PERIOD_BUZZER_US
 : <a class="el" href="buzzer__control_8cpp.html#a94700ae2369cfd1bea1b654d9cb6f71f">buzzer_control.cpp</a>
-</li>
-<li>PHW_CHU
-: <a class="el" href="config_8h.html#acce73259f986d697a4dcb168fa3328e0">config.h</a>
-</li>
-<li>PHW_FAULHABER
-: <a class="el" href="config_8h.html#ad212715cd844118d7df93a460cb57ddf">config.h</a>
-</li>
-<li>PHW_PIGGY
-: <a class="el" href="config_8h.html#a69d4593c02247efa7743800d8d134222">config.h</a>
 </li>
 <li>PIN_BATTERY
 : <a class="el" href="parameters_8h.html#adb925a5f9d18b6b2bc2b80357d94e5a1">parameters.h</a>
@@ -442,11 +480,35 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>PIN_BUZZER
 : <a class="el" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">parameters.h</a>
 </li>
-<li>PIN_CONTROL_BUTTONS
-: <a class="el" href="parameters_8h.html#ae573cc1f24e5893add0b33a1432c3ea6">parameters.h</a>
+<li>PIN_ENABLE_PWR_RASP
+: <a class="el" href="parameters_8h.html#a91e842f079229afa74679549bee6d132">parameters.h</a>
 </li>
 <li>PIN_ESC_BLOWER
 : <a class="el" href="parameters_8h.html#aa78cdbbd159fcb3df64764fd5cbfc232">parameters.h</a>
+</li>
+<li>PIN_EXPIRATORY_VALVE
+: <a class="el" href="parameters_8h.html#adf4d2c11a8636713069d17837e68a33d">parameters.h</a>
+</li>
+<li>PIN_I2C_SCL
+: <a class="el" href="parameters_8h.html#a6b5cc0023af0923f5e57d107bdd8f985">parameters.h</a>
+</li>
+<li>PIN_I2C_SDA
+: <a class="el" href="parameters_8h.html#afd84f048502b749115c9e05262ed6753">parameters.h</a>
+</li>
+<li>PIN_IN_MAINS_CONNECTED
+: <a class="el" href="parameters_8h.html#ad07b58cf00b950b7f4935e5bd4c1fc28">parameters.h</a>
+</li>
+<li>PIN_IN_ROW1
+: <a class="el" href="parameters_8h.html#a89667550975324236d5d452a966eb17b">parameters.h</a>
+</li>
+<li>PIN_IN_ROW2
+: <a class="el" href="parameters_8h.html#af58cba84e6cc23719e693ef01182841e">parameters.h</a>
+</li>
+<li>PIN_IN_ROW3
+: <a class="el" href="parameters_8h.html#a68283df3216e525608f482b0a31e4222">parameters.h</a>
+</li>
+<li>PIN_INSPIRATORY_VALVE
+: <a class="el" href="parameters_8h.html#acf9de90e07bb76d9ef98fb3a2d0f72bb">parameters.h</a>
 </li>
 <li>PIN_LCD_D4
 : <a class="el" href="parameters_8h.html#a3b068b254b46cbf74d72233a12d897b4">parameters.h</a>
@@ -481,17 +543,35 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>PIN_LED_YELLOW
 : <a class="el" href="parameters_8h.html#a2c7fc5f1676244aec880a14836d75109">parameters.h</a>
 </li>
+<li>PIN_OUT_COL1
+: <a class="el" href="parameters_8h.html#a8ac4a9275869e3b0df021f4b48f701ba">parameters.h</a>
+</li>
+<li>PIN_OUT_COL2
+: <a class="el" href="parameters_8h.html#a4a9ed4bcc15b0f059d45d99250bfb034">parameters.h</a>
+</li>
+<li>PIN_OUT_COL3
+: <a class="el" href="parameters_8h.html#afa96c5ab5d67237eba2ea792f97012ab">parameters.h</a>
+</li>
 <li>PIN_PRESSURE_SENSOR
 : <a class="el" href="parameters_8h.html#a499c5087d06d6128d28540802fc59872">parameters.h</a>
 </li>
-<li>PIN_SERVO_BLOWER
-: <a class="el" href="parameters_8h.html#a44bdbd2d7fe8384be37affc559e47754">parameters.h</a>
+<li>PIN_TELEMETRY_SERIAL_RX
+: <a class="el" href="parameters_8h.html#a63a7d68e4a7cc7b575bf5f82b4b12f9f">parameters.h</a>
 </li>
-<li>PIN_SERVO_PATIENT
-: <a class="el" href="parameters_8h.html#a951095e6d8b64e5de5267f6737788ca3">parameters.h</a>
+<li>PIN_TELEMETRY_SERIAL_TX
+: <a class="el" href="parameters_8h.html#a29f23048fd7ab04a3e94526f7388e701">parameters.h</a>
 </li>
-<li>PNEUMATIC_HARDWARE_VERSION
-: <a class="el" href="config_8h.html#a299b8eba7e0de82975c4df2f08b727ff">config.h</a>
+<li>PIN_TEMP_BLOWER
+: <a class="el" href="parameters_8h.html#ac8c0d740508dce0962ba3b40834003cf">parameters.h</a>
+</li>
+<li>PROTOCOL_VERSION
+: <a class="el" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">telemetry.h</a>
+</li>
+<li>PWR_RASP_ACTIVE
+: <a class="el" href="parameters_8h.html#ac9bd78dbd4f172db6ae7441a823232d7">parameters.h</a>
+</li>
+<li>PWR_RASP_INACTIVE
+: <a class="el" href="parameters_8h.html#a9852ce29273299ee5c0288d2e32a8f94">parameters.h</a>
 </li>
 </ul>
 
@@ -499,6 +579,9 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <h3><a id="index_r"></a>- r -</h3><ul>
 <li>RATIO_VOLTAGE_DIVIDER
 : <a class="el" href="test__pressure_8cpp.html#aa834b7a0ca82445d8d9b2283c9c22e27">test_pressure.cpp</a>
+</li>
+<li>RAW_BATTERY_MULTIPLIER
+: <a class="el" href="battery_8h.html#a273fd8c5fc1132f59be82995d0963677">battery.h</a>
 </li>
 <li>RAW_VOLTAGE_HYSTERESIS
 : <a class="el" href="battery_8h.html#adc656ab0dd95060e5609bfd05393a95c">battery.h</a>
@@ -561,11 +644,17 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>SCREEN_LINE_NUMBER
 : <a class="el" href="parameters_8h.html#a6b3caa1717db9c927845ec22a737c1bb">parameters.h</a>
 </li>
-<li>SERVO_VALVE_PERIOD
-: <a class="el" href="parameters_8h.html#a8be02f382c2460e178684735aebc008f">parameters.h</a>
-</li>
 <li>SIMULATION
 : <a class="el" href="config_8h.html#afd29c78cd36d8946cf1202e8e684f7a5">config.h</a>
+</li>
+<li>SM_DEBOUNCE
+: <a class="el" href="keyboard_8cpp.html#aedd59c52bfa75ffd332c23c6f99bc489">keyboard.cpp</a>
+</li>
+<li>SM_PERIOD
+: <a class="el" href="keyboard_8cpp.html#a5d87459785d333b884b8759ec8da6194">keyboard.cpp</a>
+</li>
+<li>SM_REPEAT
+: <a class="el" href="keyboard_8cpp.html#a663d259ac32339929873aa7017688478">keyboard.cpp</a>
 </li>
 </ul>
 
@@ -574,11 +663,14 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>TIM_CHANNEL_ESC_BLOWER
 : <a class="el" href="parameters_8h.html#a57aecd78099a5a92e57cf20db38002d4">parameters.h</a>
 </li>
-<li>TIM_CHANNEL_SERVO_VALVE_BLOWER
-: <a class="el" href="parameters_8h.html#a254afde0780098451e96d7ff49ea4346">parameters.h</a>
+<li>TIM_CHANNEL_EXPIRATORY_VALVE
+: <a class="el" href="parameters_8h.html#ab2524d80101248ad84dbdded6c9ed7c2">parameters.h</a>
 </li>
-<li>TIM_CHANNEL_SERVO_VALVE_PATIENT
-: <a class="el" href="parameters_8h.html#a7eabcbe3320c09d9e402bb7e5d11d37e">parameters.h</a>
+<li>TIM_CHANNEL_INSPIRATORY_VALVE
+: <a class="el" href="parameters_8h.html#aba66e993ecdad95999ea8d6c5b35ed90">parameters.h</a>
+</li>
+<li>TIME_CPU_CYCLE_RESET
+: <a class="el" href="cpu__load_8h.html#a85a6146fc4e31744b2c96637b49a7570">cpu_load.h</a>
 </li>
 <li>TIMER_TICK_PER_MS
 : <a class="el" href="buzzer_8cpp.html#ac9cf4ce69bec86b52f8a4485de22dbb2">buzzer.cpp</a>
@@ -599,44 +691,11 @@ $(document).ready(function(){initNavTree('globals_defs.html',''); initResizable(
 <li>VALVE_OPEN_STATE
 : <a class="el" href="parameters_8h.html#a9e02d15f3a04d23fd31b7e3cd304d032">parameters.h</a>
 </li>
-<li>VALVE_TYPE
-: <a class="el" href="config_8h.html#a814487cd904f0eccb0162d1bc5e3c42b">config.h</a>
+<li>VALVE_PERIOD
+: <a class="el" href="parameters_8h.html#a4e4727590dd46279bc6434b6570ece20">parameters.h</a>
 </li>
 <li>VERSION
 : <a class="el" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_CYCLE_DECREASE
-: <a class="el" href="parameters_8h.html#a33f86d9855cae9fc56138960386b626e">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_CYCLE_INCREASE
-: <a class="el" href="parameters_8h.html#af48e6338385c2064a4aeb350eab1151a">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_PEAK_PRESSURE_DECREASE
-: <a class="el" href="parameters_8h.html#a79a49f95163ccce9d54a349292aa3894">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_PEAK_PRESSURE_INCREASE
-: <a class="el" href="parameters_8h.html#a2743c87cfd1ed2f7435c2213dc6f89b2">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_PEEP_PRESSURE_DECREASE
-: <a class="el" href="parameters_8h.html#aa233874ba94509ae90cd56b84b9e32bc">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_PEEP_PRESSURE_INCREASE
-: <a class="el" href="parameters_8h.html#aa0530e0fe41bdde9f82071ea36419bef">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_PLATEAU_PRESSURE_DECREASE
-: <a class="el" href="parameters_8h.html#aa80ad6b4d4aded0f144d944f59f036d5">parameters.h</a>
-</li>
-<li>VOLTAGE_BUTTON_PLATEAU_PRESSURE_INCREASE
-: <a class="el" href="parameters_8h.html#a351a50f861a7c6efbf52b38b15c18f9d">parameters.h</a>
-</li>
-<li>VT_EMERSON_ASCO
-: <a class="el" href="config_8h.html#ad52c15c77cfe47ed02af6b0c55f790d6">config.h</a>
-</li>
-<li>VT_FAULHABER
-: <a class="el" href="config_8h.html#a78ef47cba1b6ba9cc95dff37056eb051">config.h</a>
-</li>
-<li>VT_SERVO_V1
-: <a class="el" href="config_8h.html#a6d5976e789947b3defb26d33ddc70763">config.h</a>
 </li>
 </ul>
 

@@ -1,4 +1,5 @@
 var pressure_8h =
 [
-    [ "readPressureSensor", "pressure_8h.html#a2a6a6bad7998e55f89cced9f8833e9dd", null ]
+    [ "PressureSensor", "class_pressure_sensor.html", "class_pressure_sensor" ],
+    [ "inspiratoryPressureSensor", "pressure_8h.html#ac6831d1131dfc906382b2f5a4c2d43cf", null ]
 ];

@@ -96,17 +96,18 @@ $(document).ready(function(){initNavTree('cycle_8h.html',''); initResizable(); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:acd1b2c60ec414ec28999de4906364b94"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94">CycleSubPhases</a> { <a class="el" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31">INSPIRATION</a>, 
-<a class="el" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088">HOLD_INSPIRATION</a>, 
-<a class="el" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94ab109db6438d5529aecb9206f7c375aa4">EXHALE</a>
- }</td></tr>
-<tr class="memdesc:acd1b2c60ec414ec28999de4906364b94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the 4 phases of the respiratory cycle.  <a href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94">More...</a><br /></td></tr>
-<tr class="separator:acd1b2c60ec414ec28999de4906364b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff4abe7cc03a1c634e5583d338448b88"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88">CyclePhases</a> { <a class="el" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a>, 
 <a class="el" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a>
  }</td></tr>
 <tr class="memdesc:aff4abe7cc03a1c634e5583d338448b88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the 2 main phases of the respiratory cycle.  <a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88">More...</a><br /></td></tr>
 <tr class="separator:aff4abe7cc03a1c634e5583d338448b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c445c108915d03f8a5dee565b7457c6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6">VentilationModes</a> { <a class="el" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a0fec94cd404d094c50c906703e478275">PC_CMV</a> = 1, 
+<a class="el" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a6baf5d09a2e54dbefa4f3508a25284ef">PC_AC</a> = 2, 
+<a class="el" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a32dfdcd61f9e654df222e58cdca08669">VC_CMV</a> = 3, 
+<a class="el" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a0c4907a2307d3ed432dae467c3d29c45">PC_BIPAP</a> = 4
+ }</td></tr>
+<tr class="memdesc:a7c445c108915d03f8a5dee565b7457c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported ventilation modes.  <a href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6">More...</a><br /></td></tr>
+<tr class="separator:a7c445c108915d03f8a5dee565b7457c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Static data linked to the breathing cycle. </p>
@@ -135,63 +136,56 @@ Enumerations</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="cycle_8h_source.html#l00035">35</a> of file <a class="el" href="cycle_8h_source.html">cycle.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                 {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a>,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
+<p class="definition">Definition at line <a class="el" href="cycle_8h_source.html#l00013">13</a> of file <a class="el" href="cycle_8h_source.html">cycle.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                 {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a>,</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;};</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="acd1b2c60ec414ec28999de4906364b94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd1b2c60ec414ec28999de4906364b94">&#9670;&nbsp;</a></span>CycleSubPhases</h2>
+<a id="a7c445c108915d03f8a5dee565b7457c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c445c108915d03f8a5dee565b7457c6">&#9670;&nbsp;</a></span>VentilationModes</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94">CycleSubPhases</a></td>
+          <td class="memname">enum <a class="el" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6">VentilationModes</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the 4 phases of the respiratory cycle. </p>
+<p>Supported ventilation modes. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31"></a>INSPIRATION&#160;</td><td class="fielddoc"><p>Push inhalation: </p>
-<ul>
-<li>Send air until the peak pressure is reached</li>
-<li>The blower valve is open so the air stream goes to the patient's lungs </li>
-</ul>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7c445c108915d03f8a5dee565b7457c6a0fec94cd404d094c50c906703e478275"></a>PC_CMV&#160;</td><td class="fielddoc"><p>PC-CMV (default) </p>
 </td></tr>
-<tr><td class="fieldname"><a id="acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088"></a>HOLD_INSPIRATION&#160;</td><td class="fielddoc"><p>Hold inhalation: </p>
-<ul>
-<li>Once the peak pressure is reached, the pressure is hold to the plateau pressure The pressure has been decreasing for more than 0.1 s.</li>
-<li>The 2 valves are hold closed </li>
-</ul>
+<tr><td class="fieldname"><a id="a7c445c108915d03f8a5dee565b7457c6a6baf5d09a2e54dbefa4f3508a25284ef"></a>PC_AC&#160;</td><td class="fielddoc"><p>PC-AC. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="acd1b2c60ec414ec28999de4906364b94ab109db6438d5529aecb9206f7c375aa4"></a>EXHALE&#160;</td><td class="fielddoc"><p>Exhalation: </p>
-<ul>
-<li>The patient exhales </li>
-</ul>
+<tr><td class="fieldname"><a id="a7c445c108915d03f8a5dee565b7457c6a32dfdcd61f9e654df222e58cdca08669"></a>VC_CMV&#160;</td><td class="fielddoc"><p>VC-CMV. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a7c445c108915d03f8a5dee565b7457c6a0c4907a2307d3ed432dae467c3d29c45"></a>PC_BIPAP&#160;</td><td class="fielddoc"><p>PC-BIPAP. </p>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="cycle_8h_source.html#l00013">13</a> of file <a class="el" href="cycle_8h_source.html">cycle.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                    {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31">INSPIRATION</a>,</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088">HOLD_INSPIRATION</a>,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94ab109db6438d5529aecb9206f7c375aa4">EXHALE</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
+<p class="definition">Definition at line <a class="el" href="cycle_8h_source.html#l00021">21</a> of file <a class="el" href="cycle_8h_source.html">cycle.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                      {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a0fec94cd404d094c50c906703e478275">PC_CMV</a> = 1,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a6baf5d09a2e54dbefa4f3508a25284ef">PC_AC</a> = 2,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a32dfdcd61f9e654df222e58cdca08669">VC_CMV</a> = 3,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a0c4907a2307d3ed432dae467c3d29c45">PC_BIPAP</a> = 4,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
 </div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a></div><div class="ttdeci">@ INHALATION</div><div class="ttdoc">Inspiration and inspiration holding.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00037">cycle.h:37</a></div></div>
-<div class="ttc" id="acycle_8h_html_acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088"><div class="ttname"><a href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94a179bf51a5c69425fa7177eaedb8b1088">HOLD_INSPIRATION</a></div><div class="ttdeci">@ HOLD_INSPIRATION</div><div class="ttdoc">Hold inhalation:</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00026">cycle.h:26</a></div></div>
-<div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a></div><div class="ttdeci">@ EXHALATION</div><div class="ttdoc">Exhalation and pause.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00040">cycle.h:39</a></div></div>
-<div class="ttc" id="acycle_8h_html_acd1b2c60ec414ec28999de4906364b94ab109db6438d5529aecb9206f7c375aa4"><div class="ttname"><a href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94ab109db6438d5529aecb9206f7c375aa4">EXHALE</a></div><div class="ttdeci">@ EXHALE</div><div class="ttdoc">Exhalation:</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00032">cycle.h:31</a></div></div>
-<div class="ttc" id="acycle_8h_html_acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31"><div class="ttname"><a href="cycle_8h.html#acd1b2c60ec414ec28999de4906364b94aec24253de23c0b2d1a08f946f5ca9d31">INSPIRATION</a></div><div class="ttdeci">@ INSPIRATION</div><div class="ttdoc">Push inhalation:</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00019">cycle.h:19</a></div></div>
+<div class="ttc" id="acycle_8h_html_a7c445c108915d03f8a5dee565b7457c6a6baf5d09a2e54dbefa4f3508a25284ef"><div class="ttname"><a href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a6baf5d09a2e54dbefa4f3508a25284ef">PC_AC</a></div><div class="ttdeci">@ PC_AC</div><div class="ttdoc">PC-AC.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00025">cycle.h:25</a></div></div>
+<div class="ttc" id="acycle_8h_html_a7c445c108915d03f8a5dee565b7457c6a0c4907a2307d3ed432dae467c3d29c45"><div class="ttname"><a href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a0c4907a2307d3ed432dae467c3d29c45">PC_BIPAP</a></div><div class="ttdeci">@ PC_BIPAP</div><div class="ttdoc">PC-BIPAP.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00029">cycle.h:29</a></div></div>
+<div class="ttc" id="acycle_8h_html_a7c445c108915d03f8a5dee565b7457c6a0fec94cd404d094c50c906703e478275"><div class="ttname"><a href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a0fec94cd404d094c50c906703e478275">PC_CMV</a></div><div class="ttdeci">@ PC_CMV</div><div class="ttdoc">PC-CMV (default)</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00023">cycle.h:23</a></div></div>
+<div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a></div><div class="ttdeci">@ INHALATION</div><div class="ttdoc">Inspiration and inspiration holding.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00015">cycle.h:15</a></div></div>
+<div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a></div><div class="ttdeci">@ EXHALATION</div><div class="ttdoc">Exhalation and pause.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00018">cycle.h:17</a></div></div>
+<div class="ttc" id="acycle_8h_html_a7c445c108915d03f8a5dee565b7457c6a32dfdcd61f9e654df222e58cdca08669"><div class="ttname"><a href="cycle_8h.html#a7c445c108915d03f8a5dee565b7457c6a32dfdcd61f9e654df222e58cdca08669">VC_CMV</a></div><div class="ttdeci">@ VC_CMV</div><div class="ttdoc">VC-CMV.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00027">cycle.h:27</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

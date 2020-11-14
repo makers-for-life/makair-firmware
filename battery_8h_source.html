@@ -91,48 +91,55 @@ $(document).ready(function(){initNavTree('battery_8h_source.html',''); initResiz
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;Arduino.h&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="battery_8h.html#aa4d04392add38d8d8427f75967b35683">   16</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_MAINS 931</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="battery_8h.html#a111644d22326b658ab677f708ca5f1d2">   23</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_HIGH 911u</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// analogRead(PIN) * 0,0296484375 = 0,1 =&gt; 0,1 / 0,0296484375 = 3</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="battery_8h.html#adc656ab0dd95060e5609bfd05393a95c">   26</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_HYSTERESIS 3u</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="battery_8h.html#ae0a4069cd5f24621150bf0fdc88bde1f">   32</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY 830u</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="battery_8h.html#a4598de344b220acdf5565841e817c351">   38</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_LOW 809u</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="battery_8h.html#a347168956a6250fe9c10b0d612ba723f">   44</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 742u</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="battery_8h.html#aad046186f983499e663c96dddc443c8b">   50</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 675u</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="battery_8h.html#a216384132a8739114132f6254995eda6">   53</a></span>&#160;<span class="preprocessor">#define BATTERY_MAX_SAMPLES 20u</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="battery_8h.html#a273fd8c5fc1132f59be82995d0963677">   22</a></span>&#160;<span class="preprocessor">#define RAW_BATTERY_MULTIPLIER 0.0300784843606</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="battery_8h.html#aa4d04392add38d8d8427f75967b35683">   28</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_MAINS 907</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="battery_8h.html#a111644d22326b658ab677f708ca5f1d2">   35</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_HIGH 897u</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="battery_8h.html#adc656ab0dd95060e5609bfd05393a95c">   41</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_HYSTERESIS 3u</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="battery_8h.html#ae0a4069cd5f24621150bf0fdc88bde1f">   47</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY 817u</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="battery_8h.html#a4598de344b220acdf5565841e817c351">   53</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_LOW 797u</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#af1cb6090825d3e387191264c221e898a">initBattery</a>();</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#afd4a9e033e9ae6ed54a354650969f914">batteryLoop</a>(uint32_t p_cycleNumber);</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="battery_8h.html#a347168956a6250fe9c10b0d612ba723f">   59</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 731u</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="battery_8h.html#aad046186f983499e663c96dddc443c8b">   65</a></span>&#160;<span class="preprocessor">#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 664u</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="battery_8h.html#a216384132a8739114132f6254995eda6">   68</a></span>&#160;<span class="preprocessor">#define BATTERY_MAX_SAMPLES 20u</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#a9ffac32955710f7a3aefe1fb7120b263">updateBatterySample</a>();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#a55106fffceca7b7e552f55c0a1efb471">updateBatteryState</a>(uint32_t p_cycleNumber);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;uint32_t <a class="code" href="battery_8h.html#a6bcb1af204a68c17e23c0c0262cb1fab">getBatteryLevel</a>();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;uint32_t <a class="code" href="battery_8h.html#a29614bbbfb2b660c087260efed859c00">getBatteryLevelX10</a>();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb">isBatteryVeryLow</a>();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de">isBatteryDeepDischarged</a>();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#af1cb6090825d3e387191264c221e898a">initBattery</a>();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#afd4a9e033e9ae6ed54a354650969f914">batteryLoop</a>(uint32_t p_cycleNumber);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#a9ffac32955710f7a3aefe1fb7120b263">updateBatterySample</a>();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keywordtype">void</span> <a class="code" href="battery_8h.html#a55106fffceca7b7e552f55c0a1efb471">updateBatteryState</a>(uint32_t p_cycleNumber);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;uint32_t <a class="code" href="battery_8h.html#a6bcb1af204a68c17e23c0c0262cb1fab">getBatteryLevel</a>();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;uint32_t <a class="code" href="battery_8h.html#a29614bbbfb2b660c087260efed859c00">getBatteryLevelX10</a>();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;uint32_t <a class="code" href="battery_8h.html#a144403a1b7eb3bbcc994526910c30022">getBatteryLevelX100</a>();</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb">isBatteryVeryLow</a>();</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de">isBatteryDeepDischarged</a>();</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="battery_8h.html#ae81c65af32e2384dfc62ef5289a57f2b">isMainsConnected</a>();</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="abattery_8h_html_a55106fffceca7b7e552f55c0a1efb471"><div class="ttname"><a href="battery_8h.html#a55106fffceca7b7e552f55c0a1efb471">updateBatteryState</a></div><div class="ttdeci">void updateBatteryState(uint32_t p_cycleNumber)</div><div class="ttdoc">Updates battery states.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00066">battery.cpp:66</a></div></div>
-<div class="ttc" id="abattery_8h_html_a9ffac32955710f7a3aefe1fb7120b263"><div class="ttname"><a href="battery_8h.html#a9ffac32955710f7a3aefe1fb7120b263">updateBatterySample</a></div><div class="ttdeci">void updateBatterySample()</div><div class="ttdoc">Handle battery voltage calculation.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00042">battery.cpp:42</a></div></div>
-<div class="ttc" id="abattery_8h_html_a29614bbbfb2b660c087260efed859c00"><div class="ttname"><a href="battery_8h.html#a29614bbbfb2b660c087260efed859c00">getBatteryLevelX10</a></div><div class="ttdeci">uint32_t getBatteryLevelX10()</div><div class="ttdoc">Returns battery level x10 for better accuracy.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00109">battery.cpp:109</a></div></div>
-<div class="ttc" id="abattery_8h_html_a61ffb38eac6c3cf6564c38fe4de592de"><div class="ttname"><a href="battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de">isBatteryDeepDischarged</a></div><div class="ttdeci">bool isBatteryDeepDischarged()</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00116">battery.cpp:116</a></div></div>
-<div class="ttc" id="abattery_8h_html_ac6ae9ca27f164634892964bbbfc77ccb"><div class="ttname"><a href="battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb">isBatteryVeryLow</a></div><div class="ttdeci">bool isBatteryVeryLow()</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00112">battery.cpp:112</a></div></div>
-<div class="ttc" id="abattery_8h_html_afd4a9e033e9ae6ed54a354650969f914"><div class="ttname"><a href="battery_8h.html#afd4a9e033e9ae6ed54a354650969f914">batteryLoop</a></div><div class="ttdeci">void batteryLoop(uint32_t p_cycleNumber)</div><div class="ttdoc">Handle battery events.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00100">battery.cpp:100</a></div></div>
-<div class="ttc" id="abattery_8h_html_a6bcb1af204a68c17e23c0c0262cb1fab"><div class="ttname"><a href="battery_8h.html#a6bcb1af204a68c17e23c0c0262cb1fab">getBatteryLevel</a></div><div class="ttdeci">uint32_t getBatteryLevel()</div><div class="ttdoc">Returns battery level.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00106">battery.cpp:106</a></div></div>
-<div class="ttc" id="abattery_8h_html_af1cb6090825d3e387191264c221e898a"><div class="ttname"><a href="battery_8h.html#af1cb6090825d3e387191264c221e898a">initBattery</a></div><div class="ttdeci">void initBattery()</div><div class="ttdoc">Initialize battery abstraction.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00031">battery.cpp:31</a></div></div>
+<div class="ttc" id="abattery_8h_html_a55106fffceca7b7e552f55c0a1efb471"><div class="ttname"><a href="battery_8h.html#a55106fffceca7b7e552f55c0a1efb471">updateBatteryState</a></div><div class="ttdeci">void updateBatteryState(uint32_t p_cycleNumber)</div><div class="ttdoc">Updates battery states.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00065">battery.cpp:65</a></div></div>
+<div class="ttc" id="abattery_8h_html_a9ffac32955710f7a3aefe1fb7120b263"><div class="ttname"><a href="battery_8h.html#a9ffac32955710f7a3aefe1fb7120b263">updateBatterySample</a></div><div class="ttdeci">void updateBatterySample()</div><div class="ttdoc">Handle battery voltage calculation.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00043">battery.cpp:43</a></div></div>
+<div class="ttc" id="abattery_8h_html_a29614bbbfb2b660c087260efed859c00"><div class="ttname"><a href="battery_8h.html#a29614bbbfb2b660c087260efed859c00">getBatteryLevelX10</a></div><div class="ttdeci">uint32_t getBatteryLevelX10()</div><div class="ttdoc">Returns battery level x10 for better accuracy.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00115">battery.cpp:115</a></div></div>
+<div class="ttc" id="abattery_8h_html_ae81c65af32e2384dfc62ef5289a57f2b"><div class="ttname"><a href="battery_8h.html#ae81c65af32e2384dfc62ef5289a57f2b">isMainsConnected</a></div><div class="ttdeci">bool isMainsConnected()</div><div class="ttdoc">Check if mains are connected.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00130">battery.cpp:130</a></div></div>
+<div class="ttc" id="abattery_8h_html_a144403a1b7eb3bbcc994526910c30022"><div class="ttname"><a href="battery_8h.html#a144403a1b7eb3bbcc994526910c30022">getBatteryLevelX100</a></div><div class="ttdeci">uint32_t getBatteryLevelX100()</div><div class="ttdoc">Returns battery level x100 for better accuracy.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00118">battery.cpp:118</a></div></div>
+<div class="ttc" id="abattery_8h_html_a61ffb38eac6c3cf6564c38fe4de592de"><div class="ttname"><a href="battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de">isBatteryDeepDischarged</a></div><div class="ttdeci">bool isBatteryDeepDischarged()</div><div class="ttdoc">Check if battery is deeply discharged.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00125">battery.cpp:125</a></div></div>
+<div class="ttc" id="abattery_8h_html_ac6ae9ca27f164634892964bbbfc77ccb"><div class="ttname"><a href="battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb">isBatteryVeryLow</a></div><div class="ttdeci">bool isBatteryVeryLow()</div><div class="ttdoc">Check if battery level is very low.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00121">battery.cpp:121</a></div></div>
+<div class="ttc" id="abattery_8h_html_afd4a9e033e9ae6ed54a354650969f914"><div class="ttname"><a href="battery_8h.html#afd4a9e033e9ae6ed54a354650969f914">batteryLoop</a></div><div class="ttdeci">void batteryLoop(uint32_t p_cycleNumber)</div><div class="ttdoc">Handle battery events.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00106">battery.cpp:106</a></div></div>
+<div class="ttc" id="abattery_8h_html_a6bcb1af204a68c17e23c0c0262cb1fab"><div class="ttname"><a href="battery_8h.html#a6bcb1af204a68c17e23c0c0262cb1fab">getBatteryLevel</a></div><div class="ttdeci">uint32_t getBatteryLevel()</div><div class="ttdoc">Returns battery level.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00112">battery.cpp:112</a></div></div>
+<div class="ttc" id="abattery_8h_html_af1cb6090825d3e387191264c221e898a"><div class="ttname"><a href="battery_8h.html#af1cb6090825d3e387191264c221e898a">initBattery</a></div><div class="ttdeci">void initBattery()</div><div class="ttdoc">Initialize battery abstraction.</div><div class="ttdef"><b>Definition:</b> <a href="battery_8cpp_source.html#l00032">battery.cpp:32</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
