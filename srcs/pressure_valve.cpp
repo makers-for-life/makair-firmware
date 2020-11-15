@@ -41,7 +41,7 @@ PressureValve::PressureValve(HardwareTimer* p_hardwareTimer,
     maxApertureAngle = max(p_closeApertureAngle, p_openApertureAngle);
     command = p_closeApertureAngle;
     position = -1;
-    positionLinear = -1;
+    positionLinear = 0;
 }
 
 void PressureValve::setup() {

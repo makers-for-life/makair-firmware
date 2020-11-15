@@ -162,6 +162,10 @@ class MainController {
      */
     void onTriggerOffsetSet(uint16_t p_triggerOffset);
 
+    // Get the desired tidalVolue
+    inline int16_t tidalVolumeCommand() const { return m_tidalVolumeCommand; }
+    // Get the desired plateau duration (in VC modes)
+    inline int16_t plateauDurationCommand() const { return m_plateauDurationCommand; }
     /// Get the desired max peak
     inline int16_t peakPressureCommand() const { return m_peakPressureCommand; }
     /// Get the desired plateau pressure
@@ -177,6 +181,10 @@ class MainController {
     /// Get the enabling state of trigger mode
     inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
 
+    /// Get the desired tidal Volume for the next cycle (used in VC modes)
+    inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
+    // Get the desired plateau duration for the next cycle (used in VC modes)
+    inline int16_t plateauDurationNextCommand() const { return m_plateauDurationNextCommand; }
     /// Get the desired max peak for the next cycle
     inline int16_t peakPressureNextCommand() const { return m_peakPressureNextCommand; }
     /// Get the desired plateau pressure for the next cycle
@@ -202,8 +210,10 @@ class MainController {
     inline int16_t peepMeasure() const { return m_peepMeasure; }
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
-    /// Get the measured Tidal Volume
+    /// Get the measured Tidal Volume. Updated only at the end of inspiration
     inline uint16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
+    ///Get the measured Tidal Volume. Updated in real time
+    inline uint32_t currentDeliveredVolume() const { return m_currentDeliveredVolume; }
 
     /// Get the number of past cycles since the beginning
     inline uint32_t cycleNumber() const { return m_cycleNb; }
@@ -420,7 +430,17 @@ class MainController {
 
     /// Measured value of the Tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)
-    uint16_t m_tidalVolumeMeasure;
+    int16_t m_tidalVolumeMeasure;
+
+    /// Tidal volume command (used in VC modes)
+    int16_t m_tidalVolumeCommand;
+    /// Tidal volume command for next cycle
+    int16_t m_tidalVolumeNextCommand;
+
+    /// Plateau duration command (used in VC modes)
+    int16_t m_plateauDurationCommand;
+    /// Plateau duration command for next cycle
+    int16_t m_plateauDurationNextCommand;
 
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;
