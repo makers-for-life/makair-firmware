@@ -213,7 +213,7 @@ class MainController {
     /// Get the measured Tidal Volume. Updated only at the end of inspiration
     inline uint16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
     ///Get the measured Tidal Volume. Updated in real time
-    inline uint32_t currentDeliveredVolume() const { return m_currentDeliveredVolume; }
+    inline int32_t currentDeliveredVolume() const { return m_currentDeliveredVolume; }
 
     /// Get the number of past cycles since the beginning
     inline uint32_t cycleNumber() const { return m_cycleNb; }
