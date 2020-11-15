@@ -25,6 +25,7 @@
 #include "../includes/pc_ac_controller.h"
 #include "../includes/pc_bipap_controller.h"
 #include "../includes/pc_cmv_controller.h"
+#include "../includes/vc_cmv_controller.h"
 #include "../includes/pressure_valve.h"
 
 /// Number of values to aggregate when computing plateau pressure
