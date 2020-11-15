@@ -424,8 +424,8 @@ bool MFM_init(void) {
     Wire.write(0xAE);
     errorCount += Wire.endTransmission();
 
-    errorCount += (6u == Wire.requestFrom(MFM_SENSOR_EXPI_I2C_ADDRESS, 6) ? 0 : 1);
-    if (errorCount == 0) {
+    errorCount += ((6u == Wire.requestFrom(MFM_SENSOR_EXPI_I2C_ADDRESS, 6)) ? 0u : 1u);
+    if (errorCount == 0u) {
         u_int32_t sn_expi = 0;
         sn_expi = Wire.read();
         sn_expi <<= 8;
