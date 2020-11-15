@@ -91,7 +91,7 @@ void VC_CMV_Controller::inhale() {
 
     expiratoryValve.close();
 
-    if (mainController.tick() < mainController.ticksPerInhalation() * 0.33) {
+    if (mainController.tick() < mainController.ticksPerInhalation() * 0.6) {
         inspiratoryValve.open();
     } else {
         inspiratoryValve.close();
@@ -122,7 +122,7 @@ void VC_CMV_Controller::calculateBlowerIncrement() {
     int32_t difference = abs(targetVolume - mainController.tidalVolumeMeasure()); 
     int32_t blowerTheoricalSpeed = 0;
 
-    if (difference > 5) {
+    if (difference > 10) {
         needUpdate = true;
         m_blowerTicks++;
 
@@ -132,7 +132,7 @@ void VC_CMV_Controller::calculateBlowerIncrement() {
     }
 
     if (needUpdate && m_blowerTicks == 2) {
-        blowerTheoricalSpeed = (m_blowerSpeed * targetVolume) / mainController.tidalVolumeMeasure();
+        blowerTheoricalSpeed = ((m_blowerSpeed * targetVolume) / mainController.tidalVolumeMeasure());
         
         if (blowerTheoricalSpeed >= MAX_BLOWER_SPEED) {
             blowerTheoricalSpeed = MAX_BLOWER_SPEED;
