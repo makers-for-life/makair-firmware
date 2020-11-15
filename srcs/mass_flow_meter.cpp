@@ -416,7 +416,7 @@ bool MFM_init(void) {
     Wire.beginTransmission(MFM_SENSOR_EXPI_I2C_ADDRESS);
     Wire.write(0x20);  // 0x2000 soft reset
     Wire.write(0x00);
-    int8_t errorCount = Wire.endTransmission();
+    uint32_t errorCount = Wire.endTransmission();
     delay(5);  // end of reset
 
     Wire.beginTransmission(MFM_SENSOR_EXPI_I2C_ADDRESS);
@@ -424,7 +424,7 @@ bool MFM_init(void) {
     Wire.write(0xAE);
     errorCount += Wire.endTransmission();
 
-    errorCount += (6 == Wire.requestFrom(MFM_SENSOR_EXPI_I2C_ADDRESS, 6) ? 0 : 1);
+    errorCount += (6u == Wire.requestFrom(MFM_SENSOR_EXPI_I2C_ADDRESS, 6) ? 0 : 1);
     if (errorCount == 0) {
         u_int32_t sn_expi = 0;
         sn_expi = Wire.read();
