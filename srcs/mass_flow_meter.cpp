@@ -113,7 +113,6 @@ void MFM_Timer_Callback(void)
     // it takes typically 350 µs to read the value.
 #endif
     if (!mfmFaultCondition) {
-
 #if MASS_FLOW_METER_SENSOR == MFM_SFM3019
         Wire.begin();
         uint8_t readCountbis = Wire.requestFrom(0x2E, 3);
@@ -122,7 +121,6 @@ void MFM_Timer_Callback(void)
         Wire.end();
         int32_t expi = (1000 * (mfmLastData.si + 24576)) / 200;
 #endif
-
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 
         // begin() and end() everytime you read... the lib never free buffers if you don't do this.
@@ -523,7 +521,6 @@ int32_t MFM_read_airflow(void) {
     } else {
         return mfmInspiratoryInstantAirFlow - mfmInspiratoryCalibrationOffset;
     }
-    return result;
 }
 
 /**
@@ -532,6 +529,7 @@ int32_t MFM_read_airflow(void) {
  * @note This is the latest value in the last 10ms, no filter.
  * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
  */
+// cppcheck-suppress unusedFunction
 int32_t MFM_expi_read_airflow(void) {
     if (mfmFaultCondition) {
         return MASS_FLOW_ERROR_VALUE;
@@ -563,6 +561,7 @@ uint32_t MFM_read_serial_number(void) {
  *
  * @note returns 0 before init, or if init failed.
  */
+// cppcheck-suppress unusedFunction
 uint32_t MFM_expi_read_serial_number(void) { return mfmSfm3300SerialNumberExpi; }
 
 #endif
@@ -619,7 +618,7 @@ int32_t MFM_read_milliliters(bool reset_after_read) {
 
     return result;
 }
-
+// cppcheck-suppress unusedFunction
 int32_t MFM_expi_read_milliliters(bool reset_after_read) {
     int32_t result = MASS_FLOW_ERROR_VALUE;
 
