@@ -22,6 +22,7 @@
 #include "../includes/cycle.h"
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
+#include "../includes/pc_ac_controller.h"
 #include "../includes/pc_bipap_controller.h"
 #include "../includes/pc_cmv_controller.h"
 #include "../includes/pressure_valve.h"
@@ -247,6 +248,9 @@ class MainController {
     /// Get if the PEEP has been detected during this cycle
     inline const bool isPeepDetected() { return m_isPeepDetected; }
 
+    /// Get last pressure values
+    inline int16_t* lastPressureValues() { return m_lastPressureValues; }
+
     /**
      * Input the real duration since the last pressure controller computation
      *
@@ -275,6 +279,9 @@ class MainController {
     void sendMachineState();
 
  private:
+    /// List of ventilation modes
+    enum VentilationMode { PC_CMV = 0, PC_AC = 1, VC_CMV = 2, PC_BIPAP = 3 };
+
     /**
      * Update the cycle phase
      *
@@ -404,6 +411,11 @@ class MainController {
     VentilationController* m_ventilationController;
     /// Ventilation controller for the next cycle
     VentilationController* m_ventilationControllerNextCommand;
+
+    /// Array containing pointers to different ventilation controllers
+    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES];
+
+    VentilationMode m_ventilationControllerMode;
 
     /// Measured value of the Tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)

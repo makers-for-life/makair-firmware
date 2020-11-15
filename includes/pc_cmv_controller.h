@@ -11,7 +11,7 @@
 #include "../includes/ventilation_controller.h"
 
 /// Controller for the CMV mode
-class PC_CMV_Controller final : public VentilationController {
+class PC_CMV_Controller : public VentilationController {
  public:
     /// Default constructor
     PC_CMV_Controller();

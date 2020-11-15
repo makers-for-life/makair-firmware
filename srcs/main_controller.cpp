@@ -48,8 +48,15 @@ MainController::MainController() {
     m_expiratoryTermCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
     m_expiratoryTermNextCommand = DEFAULT_EXPIRATORY_TERM_COMMAND;
 
-    m_ventilationController = &pcCmvController;
-    m_ventilationControllerNextCommand = &pcCmvController;
+    m_ventilationControllersTable[PC_CMV] = &pcCmvController;
+    m_ventilationControllersTable[PC_AC] = &pcAcController;
+    m_ventilationControllersTable[VC_CMV] = &pcCmvController;
+    m_ventilationControllersTable[PC_BIPAP] = &pcBipapController;
+
+    m_ventilationControllerMode = PC_CMV;
+
+    m_ventilationController = m_ventilationControllersTable[m_ventilationControllerMode];
+    m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
 
     m_lastEndOfRespirationDateMs = 0;
     m_peakPressureMeasure = CONST_INITIAL_ZERO_PRESSURE;
@@ -151,6 +158,19 @@ void MainController::compute() {
     m_sumOfPressures += static_cast<uint32_t>(m_pressure);
     m_numberOfPressures++;
 
+    // Store last pressure values only every 10ms
+    uint32_t moduloValue = max(1u, (10u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS));
+    if (m_tick % moduloValue == 0) {
+        // Store the current pressure to compute aggregates
+        m_lastPressureValues[m_lastPressureValuesIndex] = m_pressure;
+        m_lastPressureValuesIndex++;
+
+        // Start over if we reached the max samples number
+        if (m_lastPressureValuesIndex >= static_cast<uint16_t>(MAX_PRESSURE_SAMPLES)) {
+            m_lastPressureValuesIndex = 0;
+        }
+    }
+
     // Act accordingly
     switch (m_phase) {
     case CyclePhases::INHALATION:
@@ -193,6 +213,12 @@ void MainController::compute() {
     m_tidalVolumeMeasure = UINT16_MAX;
 #endif
     printDebugValues();
+
+    Serial.print(m_inspiratoryFlow);
+    Serial.print(",");
+    Serial.print(m_expiratoryFlow);
+
+    Serial.println();
 }
 
 void MainController::updatePhase() {
@@ -303,18 +329,7 @@ void MainController::printDebugValues() {
 #endif
 }
 
-void MainController::updatePressure(int16_t p_currentPressure) {
-    m_pressure = p_currentPressure;
-
-    // Store the current pressure to compute aggregates
-    m_lastPressureValues[m_lastPressureValuesIndex] = p_currentPressure;
-    m_lastPressureValuesIndex++;
-
-    // Start over if we reached the max samples number
-    if (m_lastPressureValuesIndex >= static_cast<uint16_t>(MAX_PRESSURE_SAMPLES)) {
-        m_lastPressureValuesIndex = 0;
-    }
-}
+void MainController::updatePressure(int16_t p_currentPressure) { m_pressure = p_currentPressure; }
 
 void MainController::updateDt(int32_t p_dt) { m_dt = p_dt; }
 
@@ -601,10 +616,6 @@ void MainController::onPlateauPressureIncrease() {
     m_plateauPressureNextCommand =
         min(m_plateauPressureNextCommand, static_cast<int16_t>(CONST_MAX_PLATEAU_PRESSURE));
 
-    if (m_plateauPressureNextCommand > m_peakPressureNextCommand) {
-        m_peakPressureNextCommand = m_plateauPressureNextCommand;
-    }
-
 #if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
@@ -630,16 +641,30 @@ void MainController::onPlateauPressureSet(int16_t p_plateauPressure) {
 void MainController::onPeakPressureDecrease() {
     DBG_DO(Serial.println("Peak Pressure --");)
 #if DEBUG != 0
-    m_peakPressureNextCommand = 20;
-    m_ventilationControllerNextCommand = &pcBipapController;
+    switch(m_ventilationControllerMode){
+        case PC_CMV : m_ventilationControllerMode = PC_CMV; break;
+        case PC_AC : m_ventilationControllerMode = PC_CMV; break;
+        case VC_CMV : m_ventilationControllerMode = PC_AC; break;
+        case PC_BIPAP : m_ventilationControllerMode = VC_CMV; break;
+    }
+    m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
+
+    m_peakPressureNextCommand = m_ventilationControllerMode*10;
 #endif
 }
 
 void MainController::onPeakPressureIncrease() {
     DBG_DO(Serial.println("Peak Pressure ++");)
 #if DEBUG != 0
-    m_ventilationControllerNextCommand = &pcCmvController;
-    m_peakPressureNextCommand = 0;
+    switch(m_ventilationControllerMode){
+        case PC_CMV : m_ventilationControllerMode = PC_AC; break;
+        case PC_AC : m_ventilationControllerMode = VC_CMV; break;
+        case VC_CMV : m_ventilationControllerMode = PC_BIPAP; break;
+        case PC_BIPAP : m_ventilationControllerMode = PC_BIPAP; break;
+    }
+    m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
+
+    m_peakPressureNextCommand = m_ventilationControllerMode*10;
 #endif
 }
 
