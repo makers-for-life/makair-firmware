@@ -40,6 +40,11 @@ MainController::MainController() {
     m_plateauPressureNextCommand = DEFAULT_PLATEAU_COMMAND;
     m_peepCommand = DEFAULT_PEEP_COMMAND;
     m_peepNextCommand = DEFAULT_PEEP_COMMAND;
+    m_tidalVolumeCommand = DEFAULT_TIDAL_VOLUME_COMMAND;
+    m_tidalVolumeNextCommand = DEFAULT_TIDAL_VOLUME_COMMAND;
+    m_plateauDurationCommand = DEFAULT_PLATEAU_DURATION_COMMAND;
+    m_plateauDurationNextCommand = DEFAULT_PLATEAU_DURATION_COMMAND;
+
 
     m_pressureTriggerOffsetCommand = DEFAULT_TRIGGER_OFFSET;
     m_pressureTriggerOffsetNextCommand = DEFAULT_TRIGGER_OFFSET;
@@ -120,6 +125,10 @@ void MainController::initRespiratoryCycle() {
     m_isPeepDetected = false;
     m_tidalVolumeAlreadyRead = false;
 
+
+    //todo remove
+    m_tidalVolumeNextCommand = m_pressureTriggerOffsetNextCommand *10;
+
     // Update new settings at the beginning of the respiratory cycle
     m_cyclesPerMinuteCommand = m_cyclesPerMinuteNextCommand;
     m_peepCommand = m_peepNextCommand;
@@ -127,6 +136,8 @@ void MainController::initRespiratoryCycle() {
     m_triggerModeEnabledCommand = m_triggerModeEnabledNextCommand;
     m_pressureTriggerOffsetCommand = m_pressureTriggerOffsetNextCommand;
     m_expiratoryTermCommand = m_expiratoryTermNextCommand;
+    m_tidalVolumeCommand = m_tidalVolumeNextCommand;
+    m_plateauDurationCommand = m_plateauDurationNextCommand;
 
     // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
@@ -193,7 +204,8 @@ void MainController::compute() {
     if ((m_tick % moduloValue) == 0u) {
         sendDataSnapshot(m_tick, max((int16_t)0, m_pressure), m_phase, inspiratoryValve.position,
                          expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
-                         m_inspiratoryFlow / 10, m_expiratoryFlow / 10);
+                         max(int32_t(0), m_inspiratoryFlow / 10),
+                         max(int32_t(0), m_expiratoryFlow / 10));
     }
 
     executeCommands();
@@ -214,11 +226,6 @@ void MainController::compute() {
 #endif
     printDebugValues();
 
-    Serial.print(m_inspiratoryFlow);
-    Serial.print(",");
-    Serial.print(m_expiratoryFlow);
-
-    Serial.println();
 }
 
 void MainController::updatePhase() {
@@ -350,7 +357,12 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 
 // cppcheck-suppress unusedFunction
 void MainController::updateFakeExpiratoryFlow() {
-    int32_t openning = expiratoryValve.positionLinear;
+    int32_t openning;
+    if (m_ventilationControllerMode == PC_BIPAP) {
+        openning = expiratoryValve.positionLinear;
+    } else {
+        openning = expiratoryValve.position;
+    }
 
     if (openning == 125) {
         m_expiratoryFlow = 0;
@@ -641,30 +653,46 @@ void MainController::onPlateauPressureSet(int16_t p_plateauPressure) {
 void MainController::onPeakPressureDecrease() {
     DBG_DO(Serial.println("Peak Pressure --");)
 #if DEBUG != 0
-    switch(m_ventilationControllerMode){
-        case PC_CMV : m_ventilationControllerMode = PC_CMV; break;
-        case PC_AC : m_ventilationControllerMode = PC_CMV; break;
-        case VC_CMV : m_ventilationControllerMode = PC_AC; break;
-        case PC_BIPAP : m_ventilationControllerMode = VC_CMV; break;
+    switch (m_ventilationControllerMode) {
+    case PC_CMV:
+        m_ventilationControllerMode = PC_CMV;
+        break;
+    case PC_AC:
+        m_ventilationControllerMode = PC_CMV;
+        break;
+    case VC_CMV:
+        m_ventilationControllerMode = PC_AC;
+        break;
+    case PC_BIPAP:
+        m_ventilationControllerMode = VC_CMV;
+        break;
     }
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
 
-    m_peakPressureNextCommand = m_ventilationControllerMode*10;
+    m_peakPressureNextCommand = m_ventilationControllerMode * 10;
 #endif
 }
 
 void MainController::onPeakPressureIncrease() {
     DBG_DO(Serial.println("Peak Pressure ++");)
 #if DEBUG != 0
-    switch(m_ventilationControllerMode){
-        case PC_CMV : m_ventilationControllerMode = PC_AC; break;
-        case PC_AC : m_ventilationControllerMode = VC_CMV; break;
-        case VC_CMV : m_ventilationControllerMode = PC_BIPAP; break;
-        case PC_BIPAP : m_ventilationControllerMode = PC_BIPAP; break;
+    switch (m_ventilationControllerMode) {
+    case PC_CMV:
+        m_ventilationControllerMode = PC_AC;
+        break;
+    case PC_AC:
+        m_ventilationControllerMode = VC_CMV;
+        break;
+    case VC_CMV:
+        m_ventilationControllerMode = PC_BIPAP;
+        break;
+    case PC_BIPAP:
+        m_ventilationControllerMode = PC_BIPAP;
+        break;
     }
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
 
-    m_peakPressureNextCommand = m_ventilationControllerMode*10;
+    m_peakPressureNextCommand = m_ventilationControllerMode * 10;
 #endif
 }
 

@@ -68,9 +68,6 @@ class PC_CMV_Controller : public VentilationController {
     /// Error of the last computation of the blower PID
     int32_t m_inspiratoryPidIntegral;
 
-    /// Error of the last computation of the blower PID
-    int32_t m_inspiratoryPidLastError;
-
     /// Fast mode at start of expiration
     bool m_expiratoryPidFastMode;
 
@@ -86,20 +83,19 @@ class PC_CMV_Controller : public VentilationController {
     /// Last aperture of the blower valve
     int32_t m_expiratoryValveLastAperture;
 
-    /// Error of the last computation of the patient PID
+    /// Error of the last computation of the expiratory PID
     int32_t m_expiratoryPidLastError;
-
-    /// Last errors in inspiratory PID
-    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-
-    /// Last error index in inspiratory PID
-    int32_t m_inspiratoryPidLastErrorsIndex;
-
     /// Last errors in expiratory PID
     int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-
-    /// Last error index in expiratory PID
+    /// Last error index in inspiratory PID
     int32_t m_expiratoryPidLastErrorsIndex;
+
+    /// Error of the last computation of the expiratory PID
+    int32_t m_inspiratoryPidLastError;
+    /// Last errors in inspiratory PID
+    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    /// Last error index in inspiratory PID
+    int32_t m_inspiratoryPidLastErrorsIndex;
 };
 
 extern PC_CMV_Controller pcCmvController;

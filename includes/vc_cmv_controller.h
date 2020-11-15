@@ -33,7 +33,7 @@ class VC_CMV_Controller : public VentilationController {
 
  private:
     /// Determine the blower speed to adopt for next cycle
-    void calculateBlowerIncrement();
+    void calculateBlower();
 
     /**
      * PID to control the patient valve during some specific steps of the cycle
@@ -44,22 +44,27 @@ class VC_CMV_Controller : public VentilationController {
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
+    int32_t VCinspiratoryPID(int32_t targetFlow, int32_t currentFlow, int32_t dt);
+
+    int32_t m_volume;
     /// Current blower speed
     uint16_t m_blowerSpeed;
+
+    int32_t m_targetFlowMultiplyBy1000;
 
     /// Slope of the inspiration open loop (in mmH2O/s)
     int32_t m_inspiratorySlope;
 
-    /// Current blower speed increment (to apply at the beginning of the next cycle)
-    int32_t m_blowerIncrement;
-
     /// Fast mode at start of expiration
     bool m_expiratoryPidFastMode;
 
-    /// Integral gain of the patient PID
+    /// Integral gain of the expiratory PID
     int32_t m_expiratoryPidIntegral;
 
-    /// Last aperture of the blower valve
+    /// Integral gain of the inspiratory PID
+    int32_t m_inspiratoryPidIntegral;
+
+    /// Last aperture of the inspiratory valve
     int32_t m_inspiratoryValveLastAperture;
 
     /// Last aperture of the blower valve
@@ -67,12 +72,17 @@ class VC_CMV_Controller : public VentilationController {
 
     /// Error of the last computation of the PID
     int32_t m_expiratoryPidLastError;
-
     /// Last errors in expiratory PID
     int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-
     /// Last error index in expiratory PID
     int32_t m_expiratoryPidLastErrorsIndex;
+
+    /// Error of the last computation of the expiratory PID
+    int32_t m_inspiratoryPidLastError;
+    /// Last errors in inspiratory PID
+    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    /// Last error index in inspiratory PID
+    int32_t m_inspiratoryPidLastErrorsIndex;
 
     /// Last flow values
     int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_LAST_VALUES];
