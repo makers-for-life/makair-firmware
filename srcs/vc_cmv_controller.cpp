@@ -127,9 +127,9 @@ void VC_CMV_Controller::calculateBlower() {
 
 
     // 40L/min -> max blower (1800) ; 6L/min -> min blower (300)
-    m_blowerSpeed = (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
+    m_blowerSpeed = 1800;/* (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
                      + (MAX_BLOWER_SPEED - MIN_BLOWER_SPEED) * m_targetFlowMultiplyBy1000 / 100)
-                    / 340;
+                    / 340;*/
 }
 
 int32_t
