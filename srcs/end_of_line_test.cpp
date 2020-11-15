@@ -118,12 +118,15 @@ enum TestStep {
     START_O2_TEST,
     // cppcheck-suppress misra-c2012-12.3
     O2_PRESSURE_NOT_REACH,
+    WAIT_USER_BEFORE_LONG_RUN,
     // cppcheck-suppress misra-c2012-12.3
     START_LONG_RUN_BLOWER,
     // cppcheck-suppress misra-c2012-12.3
     PRESSURE_NOT_STABLE,
     FLOW_NOT_STABLE,
-    END_SUCCESS
+    END_SUCCESS,
+    DISPLAY_PRESSURE,
+    DISPLAY_FLOW
 };
 
 TestStep eolstep = START;
@@ -420,7 +423,7 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O",
                        pressureValue);
         if (pressureValue > 100) {
-            eolstep = START_LONG_RUN_BLOWER;
+            eolstep = WAIT_USER_BEFORE_LONG_RUN;
             eolTestNumber++;
             eolMSCount = 0;
         } else if (eolMSCount > 20000u) {
@@ -434,6 +437,19 @@ void millisecondTimerEOL(void)
         // FAIL: the pressure did not bo above 100 mmh2O during O2 test
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Tuyau O2\nBouche ! ");
+    } else if (eolstep == WAIT_USER_BEFORE_LONG_RUN) {
+        // Wait for user to press start before long run.
+        blower.stop();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                       "Fermer oxygene\npuis appuyer sur\nle bouton START");
+        if (digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
+            eolMSCount = 0;
+            eolTestNumber++;
+            eolstep = START_LONG_RUN_BLOWER;
+        }
     } else if (eolstep == START_LONG_RUN_BLOWER) {
         // Run the blower during 5 minutes and check stability
         blower.runSpeed(1790);
@@ -503,6 +519,46 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "********************\n**** SUCCESS !! ****\n********************");
+        if (digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
+            eolMSCount = 0;
+            eolstep = DISPLAY_PRESSURE;
+        }
+
+    } else if (eolstep == DISPLAY_PRESSURE) {
+        // SUCESS: end of the procedure
+        blower.stop();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
+        expiratoryValve.open();
+        expiratoryValve.execute();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pression \nMax= %d mmH2O \nMin= %d mmH2O",
+                       maxPressureValue, minPressureValue);
+        if (digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
+            eolstep = DISPLAY_FLOW;
+        }
+
+    } else if (eolstep == DISPLAY_FLOW) {
+        // SUCESS: end of the procedure
+        blower.stop();
+        inspiratoryValve.open();
+        inspiratoryValve.execute();
+        expiratoryValve.open();
+        expiratoryValve.execute();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Debit\nMax= %d SLM \nMin= %d SLM",
+                       maxFlowValue, minFlowValue);
+        if (digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
+            eolstep = DISPLAY_PRESSURE;
+        }
+
     } else {
         // Do nothing
     }
