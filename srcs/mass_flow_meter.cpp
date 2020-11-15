@@ -80,11 +80,6 @@ volatile int32_t mfmExpiratoryLastValueFixedFloat = 0;
 #define MFM_WAIT_SOFTRESET_PERIODS 3
 #define MFM_WAIT_READSERIALR1_PERIODS 1
 
-#define MFM_DELAY_5US                                                                              \
-    for (int j = 1000u; j != 0; j--) {                                                             \
-        __NOP();                                                                                   \
-    }
-
 int32_t mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
 
 uint16_t mfmExpiSFM3300FailCounter = 0;
@@ -193,11 +188,11 @@ void MFM_Timer_Callback(void)
         mfmExpiratoryLastValueFixedFloat =
             (((int32_t)(mfmLastData.i) - 32768) * 8) + (((int32_t)(mfmLastData.i) - 32768) / 3);
 
-        if (readCountExpi != 2) {
+        if (readCountExpi != 2u) {
             mfmExpiSFM3300FailCounter++;
             // sfm 3300d needs 100ms after start of measurement before sending data.
             // in case of bus failure, mfmFaultCondition is already true at this point
-            if (mfmExpiSFM3300FailCounter > 12u || mfmFaultCondition) {
+            if ((mfmExpiSFM3300FailCounter > 12u) || mfmFaultCondition) {
                 mfmFaultCondition = true;
                 mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
                 mfmExpiratoryAirVolumeSumMilliliters = 1000000000;  // 1e9
@@ -205,8 +200,8 @@ void MFM_Timer_Callback(void)
         } else {
             // valid data
             mfmExpiratoryInstantAirFlow = mfmExpiratoryLastValueFixedFloat;
-            if (mfmExpiratoryLastValueFixedFloat > 500
-                || mfmExpiratoryLastValueFixedFloat < -500) {  // less than 0.5 SPLM is noise
+            if ((mfmExpiratoryLastValueFixedFloat > 500)
+                || (mfmExpiratoryLastValueFixedFloat < -500)) {  // less than 0.5 SPLM is noise
                 mfmExpiratoryAirVolumeSumMilliliters +=
                     (mfmExpiratoryLastValueFixedFloat - mfmExpiratoryCalibrationOffset);
             }
@@ -451,7 +446,7 @@ bool MFM_init(void) {
     Wire.end();
     delay(100);  // wait 100ms before having available data.
 
-    if (errorCount != 0) {
+    if (errorCount != 0u) {
         mfmFaultCondition = true;
         mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
     }
@@ -488,7 +483,7 @@ bool MFM_init(void) {
     sn <<= 8;
     sn |= Wire.read();  // second transmission is serial number register 1
 
-    if (txOk != 0 || rxcount != 4u) {  // If transmission failed
+    if ((txOk != 0u) || (rxcount != 4u)) {  // If transmission failed
         mfmFaultCondition = true;
         mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
     } else {
@@ -516,11 +511,13 @@ bool MFM_init(void) {
  * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
  */
 int32_t MFM_read_airflow(void) {
+    int32_t r;
     if (mfmFaultCondition) {
-        return MASS_FLOW_ERROR_VALUE;
+        r = MASS_FLOW_ERROR_VALUE;
     } else {
-        return mfmInspiratoryInstantAirFlow - mfmInspiratoryCalibrationOffset;
+        r = mfmInspiratoryInstantAirFlow - mfmInspiratoryCalibrationOffset;
     }
+    return r;
 }
 
 /**
@@ -531,11 +528,13 @@ int32_t MFM_read_airflow(void) {
  */
 // cppcheck-suppress unusedFunction
 int32_t MFM_expi_read_airflow(void) {
+    int32_t r;
     if (mfmFaultCondition) {
-        return MASS_FLOW_ERROR_VALUE;
+        r = MASS_FLOW_ERROR_VALUE;
     } else {
-        return mfmExpiratoryInstantAirFlow - mfmExpiratoryCalibrationOffset;
+        r = mfmExpiratoryInstantAirFlow - mfmExpiratoryCalibrationOffset;
     }
+    return r;
 }
 
 void MFM_reset(void) { mfmInspiratoryAirVolumeSumMilliliters = 0; }
