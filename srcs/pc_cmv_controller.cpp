@@ -116,17 +116,6 @@ void PC_CMV_Controller::exhale() {
     expiratoryValve.open(PCexpiratoryPID(mainController.pressureCommand(),
                                          mainController.pressure(), mainController.dt()));
 
-    // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    if (mainController.triggerModeEnabledCommand() && mainController.isPeepDetected()) {
-        // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
-        // machine
-        if (static_cast<int32_t>(mainController.pressure())
-                < (mainController.pressureCommand()
-                   - static_cast<int32_t>(mainController.pressureTriggerOffsetCommand()))
-            && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE)) {
-            mainController.setTrigger(true);
-        }
-    }
 }
 
 void PC_CMV_Controller::endCycle() { calculateBlowerIncrement(); }

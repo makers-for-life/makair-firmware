@@ -33,14 +33,9 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
         mainController.ticksPerInhalation()
         + (1000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);  // Possible to trigger 1s before end
 
-    m_inspiratoryFlowLastValuesIndex = 0;
-    m_inspiratoryPressureLastValuesIndex = 0;
     m_inspiratoryPidLastErrorsIndex = 0;
     m_expiratoryPidLastErrorsIndex = 0;
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_LAST_VALUES; i++) {
-        m_inspiratoryFlowLastValues[i] = 0u;
-        m_inspiratoryPressureLastValues[i] = 0u;
-    }
+
     for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
         m_inspiratoryPidLastErrors[i] = 0u;
         m_expiratoryPidLastErrors[i] = 0u;
@@ -85,12 +80,6 @@ void PC_BIPAP_Controller::initCycle() {
             mainController.peepCommand() - mainController.plateauPressureCommand();
     }
 
-    for (uint8_t i = 0u; i < NUMBER_OF_SAMPLE_LAST_VALUES; i++) {
-        m_inspiratoryFlowLastValues[i] = 0u;
-        m_inspiratoryPressureLastValues[i] = 0u;
-    }
-    m_inspiratoryFlowLastValuesIndex = 0;
-    m_inspiratoryPressureLastValuesIndex = 0;
 
     // Apply blower ramp-up
     if (m_blowerIncrement >= 0) {
@@ -155,36 +144,18 @@ void PC_BIPAP_Controller::exhale() {
     (void)expiratoryValve.openLinear(expiratoryValveOpenningValue);
 
     inspiratoryValve.close();
-    // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
 
-    // m_inspiratoryFlowLastValues is not used by the controller, but will be in future
-    // improvements
-    m_inspiratoryFlowLastValues[m_inspiratoryFlowLastValuesIndex] =
-        mainController.inspiratoryFlow();
-    m_inspiratoryFlowLastValuesIndex++;
-    if (m_inspiratoryFlowLastValuesIndex >= static_cast<int32_t>(NUMBER_OF_SAMPLE_LAST_VALUES)) {
-        m_inspiratoryFlowLastValuesIndex = 0;
-    }
-
-    // Update a table with last pressure values
-    m_inspiratoryPressureLastValues[m_inspiratoryPressureLastValuesIndex] =
-        mainController.pressure();
-    m_inspiratoryPressureLastValuesIndex++;
-    if (m_inspiratoryPressureLastValuesIndex
-        >= static_cast<int32_t>(NUMBER_OF_SAMPLE_LAST_VALUES)) {
-        m_inspiratoryPressureLastValuesIndex = 0;
-    }
-
-    int32_t maxPressureValue = m_inspiratoryPressureLastValues[0];
-    for (uint8_t i = 0; i < NUMBER_OF_SAMPLE_LAST_VALUES; i++) {
-        if (m_inspiratoryPressureLastValues[i] > maxPressureValue) {
-            maxPressureValue = m_inspiratoryPressureLastValues[i];
+    
+    // Calculate max pressure for the last samples
+    int32_t maxPressureValue = mainController.lastPressureValues()[0];
+    for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
+        if (mainController.lastPressureValues()[i] > maxPressureValue) {
+            maxPressureValue = mainController.lastPressureValues()[i];
         }
     }
-
+    
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    if (mainController.triggerModeEnabledCommand()
-        && (mainController.tick()
+    if ((mainController.tick()
             > (mainController.ticksPerInhalation() + (500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
         // machine
