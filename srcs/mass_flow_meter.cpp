@@ -147,7 +147,7 @@ void MFM_Timer_Callback(void)
         mfmInspiratoryLastValueFixedFloat =
             (((10 * mfmInspiratoryLastValue) - 16384) * 1526) / 1000;
 
-        // 100 value per second, 100 slpm during 10 minutes : sum will be 1.2e9. it fits in a int32
+        // 100 value per second, 100 slpm during 10 minutes: sum will be 1.2e9. it fits in a int32
         // int32 max with milliliters = 2e6 liters.
 
         // The sensor (100 SPLM version anyway) tends to output spurrious values located at around
@@ -183,7 +183,7 @@ void MFM_Timer_Callback(void)
         mfmLastData.c[0] = Wire.read();
         Wire.end();
 
-        // conversion in milliter per minute flow : ((int32_t)(mfmLastData.i) - 32768) * 1000 / 120
+        // conversion in milliter per minute flow: ((int32_t)(mfmLastData.i) - 32768) * 1000 / 120
         // but 1000/120 = 8.333. So  *8 and *1/3
         mfmExpiratoryLastValueFixedFloat =
             (((int32_t)(mfmLastData.i) - 32768) * 8) + (((int32_t)(mfmLastData.i) - 32768) / 3);
@@ -504,12 +504,6 @@ bool MFM_init(void) {
     return !mfmFaultCondition;
 }
 
-/**
- * return the inspiratory airflow in milliliters per minute
- *
- * @note This is the latest value in the last 10ms, no filter.
- * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
- */
 int32_t MFM_read_airflow(void) {
     int32_t r;
     if (mfmFaultCondition) {
@@ -520,12 +514,6 @@ int32_t MFM_read_airflow(void) {
     return r;
 }
 
-/**
- * return the inspiratory airflow in milliliters per minute
- *
- * @note This is the latest value in the last 10ms, no filter.
- * @note It returns MASS_FLOW_ERROR_VALUE in case of sensor error.
- */
 // cppcheck-suppress unusedFunction
 int32_t MFM_expi_read_airflow(void) {
     int32_t r;
@@ -541,11 +529,6 @@ void MFM_reset(void) { mfmInspiratoryAirVolumeSumMilliliters = 0; }
 
 void MFM_expi_reset(void) { mfmExpiratoryAirVolumeSumMilliliters = 0; }
 
-/**
- * return the serial number of the inspiratory flow meter
- *
- * @note returns 0 before init, or if init failed.
- */
 // cppcheck-suppress unusedFunction
 uint32_t MFM_read_serial_number(void) {
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF

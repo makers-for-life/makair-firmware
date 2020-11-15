@@ -42,7 +42,6 @@
 #define MFM_SDP703_02 2
 #define MFM_HONEYWELL_HAF 4
 #define MFM_SFM3019 5
-
 ///@}
 
 /// Defines the type of each Mass Flow Meter

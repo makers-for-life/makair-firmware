@@ -17,22 +17,22 @@
 bool MFM_init(void);
 
 /**
- * Returns the number of milliliters since last reset
+ * Get the number of milliliters since last reset
  *
  * @param reset_after_read If true, performs the volume reset in the same atomic operation
+ * @return Volume of air that went through sensor since last reset in mL
  */
 int32_t MFM_read_milliliters(bool reset_after_read);
 
 /**
- * Returns the number of milliliters since last reset for expiratory sensor
+ * Get the number of milliliters since last reset for expiratory sensor
  *
  * @param reset_after_read If true, performs the volume reset in the same atomic operation
+ * @return Volume of air that went through sensor since last reset in mL
  */
 int32_t MFM_expi_read_milliliters(bool reset_after_read);
 
-/**
- * Reset the volume counter
- */
+/// Reset the volume counter
 void MFM_reset(void);
 
 /**
@@ -52,7 +52,7 @@ int8_t MFM_calibrateZero(void);
 #define MFM_CALIBRATION_OUT_OF_RANGE 2
 
 /**
- *  Get massflow meter offset
+ * Get massflow meter offset
  */
 int32_t MFM_getOffset(void);
 
@@ -66,18 +66,17 @@ int32_t MFM_read_airflow(void);
  */
 int32_t MFM_expi_read_airflow(void);
 
-
 /**
- * return the serial number of the inspiratory flow meter
+ * Get the serial number of the inspiratory flow meter
  *
  * @return The serial number, or `0` if before init or if init failed
  */
 uint32_t MFM_read_serial_number(void);
 
 /**
- * return the serial number of the expiratory flow meter
+ * Get the serial number of the expiratory flow meter
  *
- * @note returns 0 before init, or if init failed.
+ * @return The serial number, or `0` if before init or if init failed
  */
 uint32_t MFM_expi_read_serial_number(void);
 
