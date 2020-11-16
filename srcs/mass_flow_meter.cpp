@@ -79,7 +79,7 @@ union {
 } mfmLastData;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
-void MFM_Timer_Callback(HardwareTimer*) {
+void MFM_Timer_Callback(void) {
     if (!mfmFaultCondition) {
 #if MODE == MODE_MFM_TESTS
         // cppcheck-suppress misra-c2012-12.3

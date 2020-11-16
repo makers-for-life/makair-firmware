@@ -117,7 +117,7 @@ char eolScreenBuffer[EOLSCREENSIZE + 1];
 int16_t eolMatrixCurrentColumn = 1;
 
 // cppcheck-suppress misra-c2012-2.7 ; valid unused parameter
-void millisecondTimerEOL(HardwareTimer*) {
+void millisecondTimerEOL(void) {
 #if HARDWARE_VERSION == 2 || HARDWARE_VERSION == 3
     clockEOLTimer++;
     eolMSCount++;
