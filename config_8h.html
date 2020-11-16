@@ -109,7 +109,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:a53ea367986885104c5218496470d1f5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines if the device has a Mass Flow Meter or not.  <a href="config_8h.html#a53ea367986885104c5218496470d1f5d">More...</a><br /></td></tr>
 <tr class="separator:a53ea367986885104c5218496470d1f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c9c70a3531afcd41a02fed9165a101d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a0c9c70a3531afcd41a02fed9165a101d">MASS_FLOW_METER_SENSOR</a>&#160;&#160;&#160;<a class="el" href="config_8h.html#ad294719730c4f75b42255ff5a8b11cdb">MFM_HONEYWELL_HAF</a></td></tr>
-<tr class="memdesc:a0c9c70a3531afcd41a02fed9165a101d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the type of the Mass Flow Meter.  <a href="config_8h.html#a0c9c70a3531afcd41a02fed9165a101d">More...</a><br /></td></tr>
+<tr class="memdesc:a0c9c70a3531afcd41a02fed9165a101d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the type of each Mass Flow Meter.  <a href="config_8h.html#a0c9c70a3531afcd41a02fed9165a101d">More...</a><br /></td></tr>
 <tr class="separator:a0c9c70a3531afcd41a02fed9165a101d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25b56b88ac96c68eb97d474afee5043f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a25b56b88ac96c68eb97d474afee5043f">MFM_RANGE</a>&#160;&#160;&#160;200</td></tr>
 <tr class="memdesc:a25b56b88ac96c68eb97d474afee5043f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the range of the Mass Flow Meter in SLM (standard liter per minute)  <a href="config_8h.html#a25b56b88ac96c68eb97d474afee5043f">More...</a><br /></td></tr>
@@ -122,12 +122,16 @@ Macros</h2></td></tr>
 <tr class="memdesc:a0fec857defd0b46275e44f0aa506997f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass Flow Meter debugging mode.  <a href="config_8h.html#a0fec857defd0b46275e44f0aa506997f">More...</a><br /></td></tr>
 <tr class="separator:a0fec857defd0b46275e44f0aa506997f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Available Mass Flow Meters</div></td></tr>
+<tr class="memitem:a218a354c5e6f815009135eb6b75e8c21"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a218a354c5e6f815009135eb6b75e8c21">MFM_NONE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a218a354c5e6f815009135eb6b75e8c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a079b6f0d2ee5af8c7b99e949222a3696"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a079b6f0d2ee5af8c7b99e949222a3696">MFM_SFM_3300D</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a079b6f0d2ee5af8c7b99e949222a3696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6c0e1fb5b1a553e9b2a8225cd5d8486"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#ab6c0e1fb5b1a553e9b2a8225cd5d8486">MFM_SDP703_02</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ab6c0e1fb5b1a553e9b2a8225cd5d8486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad294719730c4f75b42255ff5a8b11cdb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#ad294719730c4f75b42255ff5a8b11cdb">MFM_HONEYWELL_HAF</a>&#160;&#160;&#160;4</td></tr>
 <tr class="separator:ad294719730c4f75b42255ff5a8b11cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a540e6b1321d4e8ca2d052f4ed62e52d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a540e6b1321d4e8ca2d052f4ed62e52d9">MFM_SFM3019</a>&#160;&#160;&#160;5</td></tr>
+<tr class="separator:a540e6b1321d4e8ca2d052f4ed62e52d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main configuration. </p>
@@ -185,9 +189,9 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the type of the Mass Flow Meter. </p>
+<p>Defines the type of each Mass Flow Meter. </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00046">46</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00048">48</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -203,7 +207,23 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00042">42</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00043">43</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+
+</div>
+</div>
+<a id="a218a354c5e6f815009135eb6b75e8c21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a218a354c5e6f815009135eb6b75e8c21">&#9670;&nbsp;</a></span>MFM_NONE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MFM_NONE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00040">40</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -221,7 +241,7 @@ Macros</h2></td></tr>
 
 <p>Defines the range of the Mass Flow Meter in SLM (standard liter per minute) </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00049">49</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00052">52</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -237,7 +257,23 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00041">41</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00042">42</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+
+</div>
+</div>
+<a id="a540e6b1321d4e8ca2d052f4ed62e52d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a540e6b1321d4e8ca2d052f4ed62e52d9">&#9670;&nbsp;</a></span>MFM_SFM3019</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MFM_SFM3019&#160;&#160;&#160;5</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00044">44</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +289,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00040">40</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00041">41</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
