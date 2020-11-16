@@ -37,13 +37,16 @@
  * @name Available Mass Flow Meters
  */
 ///@{
+#define MFM_NONE 0
 #define MFM_SFM_3300D 1
 #define MFM_SDP703_02 2
 #define MFM_HONEYWELL_HAF 4
+#define MFM_SFM3019 5
 ///@}
 
-/// Defines the type of the Mass Flow Meter
+/// Defines the type of each Mass Flow Meter
 #define MASS_FLOW_METER_SENSOR MFM_HONEYWELL_HAF
+// #define MASS_FLOW_METER_SENSOR_EXPI MFM_SFM_3300D
 
 /// Defines the range of the Mass Flow Meter in SLM (standard liter per minute)
 #define MFM_RANGE 200

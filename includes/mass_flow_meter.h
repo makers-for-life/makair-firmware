@@ -17,15 +17,22 @@
 bool MFM_init(void);
 
 /**
- * Returns the number of milliliters since last reset
+ * Get the number of milliliters since last reset
  *
  * @param reset_after_read If true, performs the volume reset in the same atomic operation
+ * @return Volume of air that went through sensor since last reset in mL
  */
 int32_t MFM_read_milliliters(bool reset_after_read);
 
 /**
- * Reset the volume counter
+ * Get the number of milliliters since last reset for expiratory sensor
+ *
+ * @param reset_after_read If true, performs the volume reset in the same atomic operation
+ * @return Volume of air that went through sensor since last reset in mL
  */
+int32_t MFM_expi_read_milliliters(bool reset_after_read);
+
+/// Reset the volume counter
 void MFM_reset(void);
 
 /**
@@ -45,7 +52,7 @@ int8_t MFM_calibrateZero(void);
 #define MFM_CALIBRATION_OUT_OF_RANGE 2
 
 /**
- *  Get massflow meter offset
+ * Get massflow meter offset
  */
 int32_t MFM_getOffset(void);
 
@@ -55,20 +62,40 @@ int32_t MFM_getOffset(void);
 int32_t MFM_read_airflow(void);
 
 /**
+ * Read instant air flow
+ */
+int32_t MFM_expi_read_airflow(void);
+
+/**
  * Get the serial number of the inspiratory flow meter
  *
  * @return The serial number, or `0` if before init or if init failed
  */
 uint32_t MFM_read_serial_number(void);
 
+/**
+ * Get the serial number of the expiratory flow meter
+ *
+ * @return The serial number, or `0` if before init or if init failed
+ */
+uint32_t MFM_expi_read_serial_number(void);
+
+#define MFM_SFM_3300D_I2C_ADDRESS 0x40
+#define MFM_HONEYWELL_HAF_I2C_ADDRESS 0x49
+#define MFM_SDP703_02_I2C_ADDRESS 0x40
+
 #if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
-#define MFM_SENSOR_I2C_ADDRESS 0x40
+#define MFM_SENSOR_I2C_ADDRESS MFM_SFM_3300D_I2C_ADDRESS
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_SDP703_02
-#define MFM_SENSOR_I2C_ADDRESS 0x40
+#define MFM_SENSOR_I2C_ADDRESS MFM_SDP703_02_I2C_ADDRESS
 #endif
 
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
-#define MFM_SENSOR_I2C_ADDRESS 0x49
+#define MFM_SENSOR_I2C_ADDRESS MFM_HONEYWELL_HAF_I2C_ADDRESS
+#endif
+
+#if MASS_FLOW_METER_SENSOR_EXPI == MFM_SFM_3300D
+#define MFM_SENSOR_EXPI_I2C_ADDRESS MFM_SFM_3300D_I2C_ADDRESS
 #endif
