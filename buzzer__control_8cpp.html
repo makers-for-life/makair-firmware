@@ -201,7 +201,8 @@ Variables</h2></td></tr>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="buzzer__control_8cpp.html#aceaa582c607037ba5e75f9ae5c173a40">Buzzer_Hw_Timer</a>-&gt;setOverflow(<a class="code" href="buzzer__control_8cpp.html#a94700ae2369cfd1bea1b654d9cb6f71f">PERIOD_BUZZER_US</a>, MICROSEC_FORMAT);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="buzzer__control_8cpp.html#aceaa582c607037ba5e75f9ae5c173a40">Buzzer_Hw_Timer</a>-&gt;setCaptureCompare(<a class="code" href="buzzer__control_8cpp.html#aef5cb7a5e40de8a868da86a94ddea0bd">Buzzer_Timer_Channel</a>, <a class="code" href="buzzer__control_8cpp.html#a94700ae2369cfd1bea1b654d9cb6f71f">PERIOD_BUZZER_US</a> / 2,</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                       MICROSEC_COMPARE_FORMAT);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a>, LOW);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -223,8 +224,11 @@ Variables</h2></td></tr>
 
 <p>Switch buzzer OFF. </p>
 
-<p class="definition">Definition at line <a class="el" href="buzzer__control_8cpp_source.html#l00044">44</a> of file <a class="el" href="buzzer__control_8cpp_source.html">buzzer_control.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{ <a class="code" href="buzzer__control_8cpp.html#aceaa582c607037ba5e75f9ae5c173a40">Buzzer_Hw_Timer</a>-&gt;pause(); }</div>
+<p class="definition">Definition at line <a class="el" href="buzzer__control_8cpp_source.html#l00045">45</a> of file <a class="el" href="buzzer__control_8cpp_source.html">buzzer_control.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                             {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="buzzer__control_8cpp.html#aceaa582c607037ba5e75f9ae5c173a40">Buzzer_Hw_Timer</a>-&gt;pause();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a192ea8eaba652d29bfc08675edebb6a2">PIN_BUZZER</a>, LOW);  <span class="comment">// Stops current consumption in the buzzer</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -246,8 +250,8 @@ Variables</h2></td></tr>
 
 <p>Switch buzzer ON. </p>
 
-<p class="definition">Definition at line <a class="el" href="buzzer__control_8cpp_source.html#l00042">42</a> of file <a class="el" href="buzzer__control_8cpp_source.html">buzzer_control.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{ <a class="code" href="buzzer__control_8cpp.html#aceaa582c607037ba5e75f9ae5c173a40">Buzzer_Hw_Timer</a>-&gt;resume(); }</div>
+<p class="definition">Definition at line <a class="el" href="buzzer__control_8cpp_source.html#l00043">43</a> of file <a class="el" href="buzzer__control_8cpp_source.html">buzzer_control.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{ <a class="code" href="buzzer__control_8cpp.html#aceaa582c607037ba5e75f9ae5c173a40">Buzzer_Hw_Timer</a>-&gt;resume(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
