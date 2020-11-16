@@ -37,8 +37,12 @@ void BuzzerControl_Init(void) {
     Buzzer_Hw_Timer->setOverflow(PERIOD_BUZZER_US, MICROSEC_FORMAT);
     Buzzer_Hw_Timer->setCaptureCompare(Buzzer_Timer_Channel, PERIOD_BUZZER_US / 2,
                                        MICROSEC_COMPARE_FORMAT);
+    digitalWrite(PIN_BUZZER, LOW);
 }
 
 void BuzzerControl_On(void) { Buzzer_Hw_Timer->resume(); }
 
-void BuzzerControl_Off(void) { Buzzer_Hw_Timer->pause(); }
+void BuzzerControl_Off(void) {
+    Buzzer_Hw_Timer->pause();
+    digitalWrite(PIN_BUZZER, LOW);  // Stops current consumption in the buzzer
+}
