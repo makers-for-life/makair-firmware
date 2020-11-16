@@ -238,7 +238,7 @@ int32_t VC_CMV_Controller::VCinspiratoryPID(int32_t targetFlow, int32_t currentF
     int32_t proportionnalWeight;
     int32_t derivativeWeight;
 
-    int32_t coefficientP = 30;
+    int32_t coefficientP = 15;
     int32_t coefficientI = 300;
     int32_t coefficientD = 750;//0.75
 
