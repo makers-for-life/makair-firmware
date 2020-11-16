@@ -134,6 +134,7 @@ void Buzzer_Init() {
     BuzzerTim->setPrescaleFactor((BuzzerTim->getTimerClkFreq() / (TIMER_TICK_PER_MS * 1000)));
     BuzzerTim->setOverflow(1);  // don't care right now, timer is not started in init
     BuzzerTim->setMode(BUZZER_TIM_CHANNEL, TIMER_OUTPUT_COMPARE, NC);
+    BuzzerTim->attachInterrupt(Update_IT_callback);
 }
 
 void Buzzer_Start(const uint32_t* Buzzer, uint32_t Size, bool RepeatBuzzer) {
@@ -145,8 +146,7 @@ void Buzzer_Start(const uint32_t* Buzzer, uint32_t Size, bool RepeatBuzzer) {
     Active_Buzzer_Has_Begun = false;
     Buzzer_Muted = false;
 
-    // Run interrupt callback soon to start playing pattern
-    BuzzerTim->attachInterrupt(Update_IT_callback);
+    BuzzerTim->setPreloadEnable(false);
     BuzzerTim->setOverflow(100, TICK_FORMAT);
 
     // Timer starts
