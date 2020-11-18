@@ -108,7 +108,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 /// Angle when closed
 #define VALVE_CLOSED_STATE 125u
 #define VALVE_PERIOD 1000     // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
-#define FAULHABER_OPENED 640  // PWM duty cycle 64% -> open
+#define FAULHABER_OPENED 660  // PWM duty cycle 64% -> open
 #define FAULHABER_CLOSED 900  // PWM duty cycle 90% -> closed
 
 #define PIN_INSPIRATORY_VALVE D5  // PB4 / TIM3_CH1
