@@ -49,9 +49,7 @@ PC_CMV_Controller::PC_CMV_Controller() {
     m_expiratoryPidLastError = 0;
 }
 
-void PC_CMV_Controller::setup() {
-    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
-}
+void PC_CMV_Controller::setup() { m_blowerSpeed = DEFAULT_BLOWER_SPEED; }
 
 void PC_CMV_Controller::initCycle() {
     m_plateauPressureReached = false;

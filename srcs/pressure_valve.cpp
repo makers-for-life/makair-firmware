@@ -55,6 +55,24 @@ void PressureValve::close() { command = closeApertureAngle; }
 
 void PressureValve::open(uint16_t p_command) { command = p_command; }
 
+/**
+ * Request opening of the Pressure Valve with a given section (in mm^2)
+ *
+ * @param p_section The section to open the valve (in mm^2 multiplied by 100)
+ */
+void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
+    int32_t tempCommand;
+    if (p_sectionMultiplyBy100 < 1960) {
+        tempCommand = 95 - 296 * p_sectionMultiplyBy100 / 10000;
+    } else {
+        tempCommand = 2626 - (36 * p_sectionMultiplyBy100) / 10 + 168 * ((p_sectionMultiplyBy100 * p_sectionMultiplyBy100 )/ 100) / 1000
+                      - 264 * (((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100) * (p_sectionMultiplyBy100)/100) / 100000;
+    }
+    command = min(max(int32_t(minApertureAngle), tempCommand), int32_t(maxApertureAngle));
+    Serial.print(command);
+    Serial.print(",");
+}
+
 // Linearization has been made experimentaly
 uint16_t PressureValve::openLinear(uint16_t p_command) {
     positionLinear = p_command;
@@ -85,9 +103,8 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
         ...
         125, 127, 0
 
-    Then we manually found for each openning value, the openning value that should have been used
-    to reach the targetFlow:
-        openningValue[0;125], flow (mL/min), targetFlow (mL/min),
+    Then we manually found for each openning value, the openning value that should have been
+    used to reach the targetFlow: openningValue[0;125], flow (mL/min), targetFlow (mL/min),
         correctedOpenningValue[0;125] 0, 48137,48137, 30 10, 47780, 44296, 55.2
         ...
         125, 127, 0, 100

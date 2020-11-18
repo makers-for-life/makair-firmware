@@ -87,14 +87,36 @@ void VC_CMV_Controller::inhale() {
     if (inspirationRemainingDurationMs > 20){
         m_targetFlowMultiplyBy1000 =
         (60 * 1000 * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume())) / inspirationRemainingDurationMs;  // in mL/min
+        m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);
     }
     
 
     if (mainController.tick()
         < mainController.ticksPerInhalation() - mainController.plateauDurationCommand()/MAIN_CONTROLLER_COMPUTE_PERIOD_MS ) {
-        int32_t expiratoryValveOpenningValue = VCinspiratoryPID(
+        /*int32_t expiratoryValveOpenningValue = VCinspiratoryPID(
             m_targetFlowMultiplyBy1000, mainController.inspiratoryFlow(), mainController.dt());
-        inspiratoryValve.openLinear(expiratoryValveOpenningValue);
+        inspiratoryValve.openLinear(expiratoryValveOpenningValue);*/
+        int32_t flow = mainController.inspiratoryFlow();
+        int32_t blowerPressure = blower.getBlowerPressure(flow);
+        int32_t patientPressure = mainController.pressure();
+
+        int32_t A1MultiplyBy100= 3318;
+        int32_t rhoMultiplyBy100 = 125;
+        int32_t twoA1SquareDotDeltaPressure = 2*(A1MultiplyBy100*A1MultiplyBy100/10000)*(98*(blowerPressure-patientPressure)/10);
+        int32_t sectionToOpen;
+        if (m_targetFlowMultiplyBy1000 == 0){
+            sectionToOpen = 0;
+         
+        } else {
+            sectionToOpen = 1000*(A1MultiplyBy100/sqrt(twoA1SquareDotDeltaPressure/(rhoMultiplyBy100*(m_targetFlowMultiplyBy1000/60)*(m_targetFlowMultiplyBy1000/60)/100) +1))/1000;
+        }
+        inspiratoryValve.openSection(sectionToOpen);
+        Serial.print(flow);
+        Serial.print(",");
+        Serial.print(m_targetFlowMultiplyBy1000);
+        Serial.println();
+
+
     } else {
         inspiratoryValve.close();
     }
