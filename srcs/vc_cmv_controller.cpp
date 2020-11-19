@@ -96,7 +96,7 @@ void VC_CMV_Controller::inhale() {
 
     if (mainController.tick()
         < mainController.ticksPerInhalation()
-              - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
+              - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS-50/MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
         /*int32_t expiratoryValveOpenningValue = VCinspiratoryPID(
             m_targetFlowMultiplyBy1000, mainController.inspiratoryFlow(), mainController.dt());
         inspiratoryValve.openLinear(expiratoryValveOpenningValue);*/
