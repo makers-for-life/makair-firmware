@@ -53,7 +53,7 @@ void VC_CMV_Controller::setup() {
 
 void VC_CMV_Controller::initCycle() {
     m_maxInspiratoryFlow = 0;
-    m_volume =0;
+    m_volume = 0;
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
     m_expiratoryPidIntegral = 0;
@@ -82,17 +82,21 @@ void VC_CMV_Controller::inhale() {
     expiratoryValve.close();
 
     int32_t inspirationRemainingDurationMs =
-        ((mainController.ticksPerInhalation()-mainController.tick())* MAIN_CONTROLLER_COMPUTE_PERIOD_MS - mainController.plateauDurationCommand());  // in ms
+        ((mainController.ticksPerInhalation() - mainController.tick())
+             * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
+         - mainController.plateauDurationCommand());  // in ms
 
-    if (inspirationRemainingDurationMs > 20){
+    if (inspirationRemainingDurationMs > 20) {
         m_targetFlowMultiplyBy1000 =
-        (60 * 1000 * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume())) / inspirationRemainingDurationMs;  // in mL/min
+            (60 * 1000
+             * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume()))
+            / inspirationRemainingDurationMs;  // in mL/min
         m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);
     }
-    
 
     if (mainController.tick()
-        < mainController.ticksPerInhalation() - mainController.plateauDurationCommand()/MAIN_CONTROLLER_COMPUTE_PERIOD_MS ) {
+        < mainController.ticksPerInhalation()
+              - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
         /*int32_t expiratoryValveOpenningValue = VCinspiratoryPID(
             m_targetFlowMultiplyBy1000, mainController.inspiratoryFlow(), mainController.dt());
         inspiratoryValve.openLinear(expiratoryValveOpenningValue);*/
@@ -142,16 +146,15 @@ void VC_CMV_Controller::endCycle() {}
 void VC_CMV_Controller::calculateBlower() {
 
     int32_t inspirationDurationMs =
-        (mainController.ticksPerInhalation()* MAIN_CONTROLLER_COMPUTE_PERIOD_MS - mainController.plateauDurationCommand())
-        ;  // in ms
+        (mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
+         - mainController.plateauDurationCommand());  // in ms
     m_targetFlowMultiplyBy1000 =
         (60 * 1000 * mainController.tidalVolumeCommand()) / inspirationDurationMs;  // in mL/min
 
-
     // 40L/min -> max blower (1800) ; 6L/min -> min blower (300)
-    m_blowerSpeed = 1800;/* (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
-                     + (MAX_BLOWER_SPEED - MIN_BLOWER_SPEED) * m_targetFlowMultiplyBy1000 / 100)
-                    / 340;*/
+    m_blowerSpeed = 1800; /* (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
+                      + (MAX_BLOWER_SPEED - MIN_BLOWER_SPEED) * m_targetFlowMultiplyBy1000 / 100)
+                     / 340;*/
 }
 
 int32_t
@@ -262,11 +265,10 @@ int32_t VC_CMV_Controller::VCinspiratoryPID(int32_t targetFlow, int32_t currentF
 
     int32_t coefficientP = 15;
     int32_t coefficientI = 300;
-    int32_t coefficientD = 750;//0.75
+    int32_t coefficientD = 750;  // 0.75
 
     // Compute error
     int32_t error = targetFlow - currentFlow;
-
 
     // Calculate the derivative part
     // Include a moving average on error for smoothing purpose
@@ -283,11 +285,11 @@ int32_t VC_CMV_Controller::VCinspiratoryPID(int32_t targetFlow, int32_t currentF
     smoothError = totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
     derivative = ((dt == 0)) ? 0 : ((1000000 * (m_inspiratoryPidLastError - smoothError)) / dt);
 
-    //Ca
+    // Ca
     temporaryInspiratoryPidIntegral =
-        m_inspiratoryPidIntegral + ((coefficientI * error * (dt/1000)) / 1000000);
-    temporaryInspiratoryPidIntegral = max(
-        int32_t(-1000), min(int32_t(1000), temporaryInspiratoryPidIntegral));
+        m_inspiratoryPidIntegral + ((coefficientI * error * (dt / 1000)) / 1000000);
+    temporaryInspiratoryPidIntegral =
+        max(int32_t(-1000), min(int32_t(1000), temporaryInspiratoryPidIntegral));
 
     proportionnalWeight = ((coefficientP * error) / 1000);
     int32_t integralWeight = temporaryInspiratoryPidIntegral;
@@ -296,8 +298,8 @@ int32_t VC_CMV_Controller::VCinspiratoryPID(int32_t targetFlow, int32_t currentF
     int32_t command = proportionnalWeight + integralWeight + derivativeWeight;
 
     inspiratoryValveAperture =
-        max(minAperture,
-            min(maxAperture, (maxAperture + minAperture)/2 + (minAperture - maxAperture) * command / 2000));
+        max(minAperture, min(maxAperture, (maxAperture + minAperture) / 2
+                                              + (minAperture - maxAperture) * command / 2000));
 
     // If the valve is completely open or completely closed, don't update integral part
     if ((inspiratoryValveAperture != minAperture) && (inspiratoryValveAperture != maxAperture)) {
@@ -308,7 +310,9 @@ int32_t VC_CMV_Controller::VCinspiratoryPID(int32_t targetFlow, int32_t currentF
     m_inspiratoryValveLastAperture = inspiratoryValveAperture;
 
     int32_t inspirationRemainingDurationMs =
-        ((mainController.ticksPerInhalation()-mainController.tick())* MAIN_CONTROLLER_COMPUTE_PERIOD_MS - mainController.plateauDurationCommand());  // in ms
+        ((mainController.ticksPerInhalation() - mainController.tick())
+             * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
+         - mainController.plateauDurationCommand());  // in ms
 
     Serial.print(inspirationRemainingDurationMs);
     Serial.print(",");
