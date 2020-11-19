@@ -104,25 +104,51 @@ void VC_CMV_Controller::inhale() {
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
 
-        int32_t A1MultiplyBy100= 3318;
-        int32_t rhoMultiplyBy100 = 125;
-        int32_t twoA1SquareDotDeltaPressure = 2*(A1MultiplyBy100*A1MultiplyBy100/10000)*(98*(blowerPressure-patientPressure)/10);
+        int32_t A1MultiplyBy100 = 3318;
+        int32_t rhoMultiplyBy100 = 120;
+        int32_t twoA1SquareDotDeltaPressureMultiplyBy100 =
+            100 * 2 * (A1MultiplyBy100 * A1MultiplyBy100 / 10000)
+            * (98 * (blowerPressure - patientPressure) / 10);
+        int32_t tempRatio = twoA1SquareDotDeltaPressureMultiplyBy100
+                            / (rhoMultiplyBy100 * (m_targetFlowMultiplyBy1000 / 60)
+                               * (m_targetFlowMultiplyBy1000 / 60) / 100);
         int32_t sectionToOpen;
-        if (m_targetFlowMultiplyBy1000 == 0){
+        if (m_targetFlowMultiplyBy1000 == 0) {
             sectionToOpen = 0;
-         
+
         } else {
-            sectionToOpen = 1000*(A1MultiplyBy100/sqrt(twoA1SquareDotDeltaPressure/(rhoMultiplyBy100*(m_targetFlowMultiplyBy1000/60)*(m_targetFlowMultiplyBy1000/60)/100) +1))/1000;
+            sectionToOpen = (A1MultiplyBy100 * 10 / sqrt(tempRatio + 100));
         }
         inspiratoryValve.openSection(sectionToOpen);
         Serial.print(flow);
         Serial.print(",");
         Serial.print(m_targetFlowMultiplyBy1000);
+        Serial.print(",");
+        Serial.print(mainController.currentDeliveredVolume() * 100);
+        Serial.print(",");
+        /*Serial.print(twoA1SquareDotDeltaPressureMultiplyBy100);
+        Serial.print(",");
+        Serial.print(tempRatio);
+        Serial.print(",");*/
+        Serial.print(sectionToOpen);
         Serial.println();
-
 
     } else {
         inspiratoryValve.close();
+        Serial.print(0);
+        Serial.print(",");
+        Serial.print(mainController.inspiratoryFlow());
+        Serial.print(",");
+        Serial.print(m_targetFlowMultiplyBy1000);
+        Serial.print(",");
+        Serial.print(mainController.currentDeliveredVolume() * 100);
+        Serial.print(",");
+        /*Serial.print(twoA1SquareDotDeltaPressureMultiplyBy100);
+        Serial.print(",");
+        Serial.print(tempRatio);
+        Serial.print(",");*/
+        Serial.print(0);
+        Serial.println();
     }
 
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {

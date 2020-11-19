@@ -63,14 +63,14 @@ void PressureValve::open(uint16_t p_command) { command = p_command; }
 void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
     int32_t tempCommand;
     if (p_sectionMultiplyBy100 < 1960) {
-        tempCommand = 95 - 296 * p_sectionMultiplyBy100 / 10000;
+        tempCommand = 98 - 318 * p_sectionMultiplyBy100 / 10000;
     } else {
         tempCommand = 2626 - (36 * p_sectionMultiplyBy100) / 10 + 168 * ((p_sectionMultiplyBy100 * p_sectionMultiplyBy100 )/ 100) / 1000
                       - 264 * (((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100) * (p_sectionMultiplyBy100)/100) / 100000;
     }
     command = min(max(int32_t(minApertureAngle), tempCommand), int32_t(maxApertureAngle));
-    Serial.print(command);
-    Serial.print(",");
+    /*Serial.print(command);
+    Serial.print(",");*/
 }
 
 // Linearization has been made experimentaly
