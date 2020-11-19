@@ -504,7 +504,7 @@ void MainController::sendMachineState() {
         m_peepMeasure, alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
         m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
         m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed(),
-        readCpuLoadPercent(), VentilationModes::PC_CMV, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
+        readCpuLoadPercent(), m_ventilationControllerMode, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
 #endif
 }
 

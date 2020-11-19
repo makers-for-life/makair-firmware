@@ -290,8 +290,6 @@ class MainController {
     void sendMachineState();
 
  private:
-    /// List of ventilation modes
-    enum VentilationMode { PC_CMV = 0, PC_AC = 1, VC_CMV = 2, PC_BIPAP = 3 };
 
     /**
      * Update the cycle phase
@@ -426,7 +424,7 @@ class MainController {
     /// Array containing pointers to different ventilation controllers
     VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES];
 
-    VentilationMode m_ventilationControllerMode;
+    VentilationModes m_ventilationControllerMode;
 
     /// Measured value of the Tidal volume (volume of air pushed in patient lungs in last
     /// inspiration)
