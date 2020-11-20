@@ -165,7 +165,39 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t expiratoryTerm,
                         bool triggerEnabled,
                         uint8_t triggerOffset,
-                        bool alarmSnoozed) {
+                        bool alarmSnoozed,
+                        uint8_t cpuLoad,
+                        VentilationModes ventilationMode,
+                        uint8_t inspiratoryTriggerFlow,
+                        uint8_t expiratoryTriggerFlow,
+                        uint16_t tiMinValue,
+                        uint16_t tiMaxValue,
+                        uint8_t lowInspiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t lowExpiratoryRateAlarmThreshold,
+                        uint8_t highExpiratoryRateAlarmThreshold) {
+
+    uint8_t ventilationModeValue;
+    switch (ventilationMode) {
+    case PC_CMV:
+        ventilationModeValue = 1u;
+        break;
+    case PC_AC:
+        ventilationModeValue = 2u;
+        break;
+    case VC_CMV:
+        ventilationModeValue = 3u;
+        break;
+    case PC_BIPAP:
+        ventilationModeValue = 4u;
+        break;
+    default:
+        ventilationModeValue = 0u;
+        break;
+    }
+    
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
@@ -235,6 +267,82 @@ void sendStoppedMessage(uint8_t peakCommand,
 
     Serial6.write(alarmSnoozed);
     crc32.update(alarmSnoozed);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(cpuLoad);
+    crc32.update(cpuLoad);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(ventilationModeValue);
+    crc32.update(ventilationModeValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(inspiratoryTriggerFlow);
+    crc32.update(inspiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTriggerFlow);
+    crc32.update(expiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMin[2];  // 16 bits
+    toBytes16(tiMin, tiMinValue);
+    Serial6.write(tiMin, 2);
+    crc32.update(tiMin, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMax[2];  // 16 bits
+    toBytes16(tiMax, tiMaxValue);
+    Serial6.write(tiMax, 2);
+    crc32.update(tiMax, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryRateAlarmThreshold);
+    crc32.update(lowExpiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryRateAlarmThreshold);
+    crc32.update(highExpiratoryRateAlarmThreshold);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

@@ -29,7 +29,19 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t expiratoryTerm,
                         bool triggerEnabled,
                         uint8_t triggerOffset,
-                        bool alarmSnoozed);
+                        bool alarmSnoozed,
+                        uint8_t cpuLoad,
+                        VentilationModes ventilationMode,
+                        uint8_t inspiratoryTriggerFlow,
+                        uint8_t expiratoryTriggerFlow,
+                        uint16_t tiMinValue,
+                        uint16_t tiMaxValue,
+                        uint8_t lowInspiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t lowExpiratoryRateAlarmThreshold,
+                        uint8_t highExpiratoryRateAlarmThreshold);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,

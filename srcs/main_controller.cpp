@@ -469,7 +469,8 @@ void MainController::sendStopMessageToUi() {
                        mmH2OtoCmH2O(m_plateauPressureNextCommand), mmH2OtoCmH2O(m_peepNextCommand),
                        m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
                        m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand,
-                       alarmController.isSnoozed());
+                       alarmController.isSnoozed(), readCpuLoadPercent(),
+                       m_ventilationControllerMode, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
 #endif
 }
 
