@@ -24,8 +24,6 @@
  */
 ///@{
 
-#define NUMBER_OF_VENTILATION_MODES 4
-
 // Main controller computes period in millisecond: minimum 1 ms, maximum 10 ms
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_MS 10u
 // cppcheck-suppress misra-c2012-5.4

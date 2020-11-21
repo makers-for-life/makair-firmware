@@ -509,6 +509,18 @@ void MainController::sendMachineState() {
 #endif
 }
 
+
+void MainController::onVentilationModeSet(uint16_t p_ventilationControllerMode) {
+
+    if (m_ventilationControllerMode >=1 && m_ventilationControllerMode<=NUMBER_OF_VENTILATION_MODES) {
+        m_ventilationControllerMode = static_cast<VentilationModes>(p_ventilationControllerMode);
+    }
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(0, m_ventilationControllerMode);
+#endif
+}
+
 void MainController::onCycleDecrease() {
     DBG_DO(Serial.println("Cycle --");)
 
@@ -740,3 +752,104 @@ void MainController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
     sendControlAck(7, m_pressureTriggerOffsetNextCommand);
 #endif
 }
+
+// cppcheck-suppress unusedFunction
+void MainController::onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlowSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(10, p_inspiratoryTriggerFlowSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlowSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(11, p_expiratoryTriggerFlowSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onTiMinSet(uint16_t p_tiMin) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(12, p_tiMin);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onTiMaxSet(uint16_t p_tiMax) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(13, p_tiMax);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowInspiratoryMinuteVolumeAlarmThresholdSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(14, p_lowInspiratoryMinuteVolumeAlarmThresholdSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onHighInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highInspiratoryMinuteVolumeAlarmThresholdSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(15, p_highInspiratoryMinuteVolumeAlarmThresholdSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onLowExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowExpiratoryMinuteVolumeAlarmThresholdSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(16, p_lowExpiratoryMinuteVolumeAlarmThresholdSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onHighExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highExpiratoryMinuteVolumeAlarmThresholdSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(17, p_highExpiratoryMinuteVolumeAlarmThresholdSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onLowExpiratoryRateAlarmThresholdSet(uint16_t p_lowExpiratoryRateAlarmThresholdSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(18, p_lowExpiratoryRateAlarmThresholdSet);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThresholdSet) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(18, p_highExpiratoryRateAlarmThresholdSet);
+#endif
+}
+

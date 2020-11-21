@@ -87,6 +87,39 @@ class MainController {
      */
     void compute();
 
+    /// Set ventilation mode
+    void onVentilationModeSet(uint16_t p_ventilationControllerMode);
+
+    /// Set inspiratory trigger flow
+    void onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlowSet);
+
+    /// Set expiratory trigger flow
+    void onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlowSet);
+
+    /// Set min inspiratory time
+    void onTiMinSet(uint16_t p_tiMin);
+
+    /// Set max inspiratory time
+    void onTiMaxSet(uint16_t p_tiMax);
+
+    /// Set alarm threshold for low inspiratory minute volume 
+    void onLowInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowInspiratoryMinuteVolumeAlarmThresholdSet);
+
+    /// Set alarm threshold for high inspiratory minute volume 
+    void onHighInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highInspiratoryMinuteVolumeAlarmThresholdSet);
+
+    /// Set alarm threshold for low expiratory minute volume
+    void onLowExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowExpiratoryMinuteVolumeAlarmThresholdSet);
+
+    /// Set alarm threshold for high expiratory minute volume
+    void onHighExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highExpiratoryMinuteVolumeAlarmThresholdSet);
+
+    /// Set alarm threshold for low respiratory rate
+    void onLowExpiratoryRateAlarmThresholdSet(uint16_t p_lowExpiratoryRateAlarmThresholdSet);
+
+    /// Set alarm threshold for high respiratory rate
+    void onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThresholdSet);
+
     /// Decrease the desired number of cycles per minute
     void onCycleDecrease();
 

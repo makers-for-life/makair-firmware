@@ -121,7 +121,7 @@ void serialControlLoop() {
                     break;
 
                 case VentilationMode:
-                    // TODO
+                    mainController.onVentilationModeSet(value);
                     break;
 
                 case PlateauPressure:
@@ -157,53 +157,43 @@ void serialControlLoop() {
                     break;
 
                 case InspiratoryTriggerFlow:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onInspiratoryTriggerFlowSet(value);
                     break;
 
                 case ExpiratoryTriggerFlow:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onExpiratoryTriggerFlowSet(value);
                     break;
 
                 case TiMin:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onTiMinSet(value);
                     break;
 
                 case TiMax:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onTiMaxSet(value);
                     break;
 
                 case LowInspiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onLowInspiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case HighInspiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onHighInspiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case LowExpiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onLowExpiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case HighExpiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onHighExpiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case LowExpiratoryRateAlarmThreshold:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onLowExpiratoryRateAlarmThresholdSet(value);
                     break;
 
                 case HighExpiratoryRateAlarmThreshold:
-                    // TODO
-                    sendControlAck(setting, value);
+                    mainController.onHighExpiratoryRateAlarmThresholdSet(value);
                     break;
 
                 default:
