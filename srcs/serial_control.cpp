@@ -197,23 +197,23 @@ void serialControlLoop() {
                     break;
 
                 case TargetTidalVolume:
-                    // TODO
+                    mainController.onTargetTidalVolumeSet(value);
                     break;
 
                 case LowTidalVolumeAlarmTreshold:
-                    // TODO
+                    mainController.onLowTidalVolumeAlarmTresholdSet(value);
                     break;
 
                 case HighTidalVolumeAlarmTreshold:
-                    // TODO
+                    mainController.onHighTidalVolumeAlarmTresholdSet(value);
                     break;
 
                 case PlateauDuration:
-                    // TODO
+                    mainController.onPlateauDurationSet(value);
                     break;
 
                 case LeakAlarmThreshold:
-                    // TODO
+                    mainController.onLeakAlarmThresholdSet(value);
                     break;
 
                 default:

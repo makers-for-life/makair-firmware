@@ -25,8 +25,8 @@
 #include "../includes/pc_ac_controller.h"
 #include "../includes/pc_bipap_controller.h"
 #include "../includes/pc_cmv_controller.h"
-#include "../includes/vc_cmv_controller.h"
 #include "../includes/pressure_valve.h"
+#include "../includes/vc_cmv_controller.h"
 
 /// Number of values to aggregate when computing plateau pressure
 #define MAX_PRESSURE_SAMPLES 10
@@ -91,10 +91,10 @@ class MainController {
     void onVentilationModeSet(uint16_t p_ventilationControllerMode);
 
     /// Set inspiratory trigger flow
-    void onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlowSet);
+    void onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlow);
 
     /// Set expiratory trigger flow
-    void onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlowSet);
+    void onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlow);
 
     /// Set min inspiratory time
     void onTiMinSet(uint16_t p_tiMin);
@@ -102,23 +102,37 @@ class MainController {
     /// Set max inspiratory time
     void onTiMaxSet(uint16_t p_tiMax);
 
-    /// Set alarm threshold for low inspiratory minute volume 
-    void onLowInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowInspiratoryMinuteVolumeAlarmThresholdSet);
+    /// Set alarm threshold for low inspiratory minute volume
+    void onLowInspiratoryMinuteVolumeAlarmThresholdSet(
+        uint16_t p_lowInspiratoryMinuteVolumeAlarmThreshold);
 
-    /// Set alarm threshold for high inspiratory minute volume 
-    void onHighInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highInspiratoryMinuteVolumeAlarmThresholdSet);
+    /// Set alarm threshold for high inspiratory minute volume
+    void onHighInspiratoryMinuteVolumeAlarmThresholdSet(
+        uint16_t p_highInspiratoryMinuteVolumeAlarmThreshold);
 
     /// Set alarm threshold for low expiratory minute volume
-    void onLowExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowExpiratoryMinuteVolumeAlarmThresholdSet);
+    void onLowExpiratoryMinuteVolumeAlarmThresholdSet(
+        uint16_t p_lowExpiratoryMinuteVolumeAlarmThreshold);
 
     /// Set alarm threshold for high expiratory minute volume
-    void onHighExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highExpiratoryMinuteVolumeAlarmThresholdSet);
+    void onHighExpiratoryMinuteVolumeAlarmThresholdSet(
+        uint16_t p_highExpiratoryMinuteVolumeAlarmThreshold);
 
     /// Set alarm threshold for low respiratory rate
-    void onLowExpiratoryRateAlarmThresholdSet(uint16_t p_lowExpiratoryRateAlarmThresholdSet);
+    void onLowExpiratoryRateAlarmThresholdSet(uint16_t p_lowExpiratoryRateAlarmThreshold);
 
     /// Set alarm threshold for high respiratory rate
-    void onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThresholdSet);
+    void onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThreshold);
+
+    void onTargetTidalVolumeSet(uint16_t p_targetTidalVolume);
+
+    void onLowTidalVolumeAlarmTresholdSet(uint16_t p_lowTidalVolumeAlarmTreshold);
+
+    void onHighTidalVolumeAlarmTresholdSet(uint16_t p_highTidalVolumeAlarmTreshold);
+
+    void onPlateauDurationSet(uint16_t p_plateauDuration);
+
+    void onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold);
 
     /// Decrease the desired number of cycles per minute
     void onCycleDecrease();
@@ -213,6 +227,14 @@ class MainController {
     }
     /// Get the enabling state of trigger mode
     inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
+    /// Get the value of the inspiratory trigger flow command
+    inline const int16_t inspiratoryTriggerFlowCommand() const {
+        return m_inspiratoryTriggerFlowCommand;
+    }
+    /// Get the value of the expiratory trigger flow command
+    inline const int16_t expiratoryTriggerFlowCommand() const {
+        return m_expiratoryTriggerFlowCommand;
+    }
 
     /// Get the desired tidal Volume for the next cycle (used in VC modes)
     inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
@@ -232,6 +254,14 @@ class MainController {
     }
     /// Get the enabling state of trigger mode for the next cycle
     inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
+    /// Get the value of the inspiratory trigger flow command
+    inline const int16_t inspiratoryTriggerFlowNextCommand() const {
+        return m_inspiratoryTriggerFlowNextCommand;
+    }
+    /// Get the value of the expiratory trigger flow command
+    inline const int16_t expiratoryTriggerFlowNextCommand() const {
+        return m_expiratoryTriggerFlowNextCommand;
+    }
 
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
@@ -245,7 +275,7 @@ class MainController {
     inline uint16_t cyclesPerMinuteMeasure() const { return m_cyclesPerMinuteMeasure; }
     /// Get the measured Tidal Volume. Updated only at the end of inspiration
     inline uint16_t tidalVolumeMeasure() const { return m_tidalVolumeMeasure; }
-    ///Get the measured Tidal Volume. Updated in real time
+    /// Get the measured Tidal Volume. Updated in real time
     inline int32_t currentDeliveredVolume() const { return m_currentDeliveredVolume; }
 
     /// Get the number of past cycles since the beginning
@@ -323,7 +353,6 @@ class MainController {
     void sendMachineState();
 
  private:
-
     /**
      * Update the cycle phase
      *
@@ -448,6 +477,16 @@ class MainController {
     uint16_t m_expiratoryTermCommand;
     /// Desired expiratory term for the next cycle
     uint16_t m_expiratoryTermNextCommand;
+
+    /// Desired inspiratory trigger flow
+    int16_t m_inspiratoryTriggerFlowCommand;
+    /// Desired inspiratory trigger flow for next cycle
+    int16_t m_inspiratoryTriggerFlowNextCommand;
+
+    /// Desired expiratory trigger flow (in percent of max flow)
+    int16_t m_expiratoryTriggerFlowCommand;
+    /// Desired expiratory trigger flow for next cycle (in percent of max flow)
+    int16_t m_expiratoryTriggerFlowNextCommand;
 
     /// Ventilation controller in use (for everything related to breathing control)
     VentilationController* m_ventilationController;

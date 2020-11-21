@@ -44,6 +44,10 @@ MainController::MainController() {
     m_tidalVolumeNextCommand = DEFAULT_TIDAL_VOLUME_COMMAND;
     m_plateauDurationCommand = DEFAULT_PLATEAU_DURATION_COMMAND;
     m_plateauDurationNextCommand = DEFAULT_PLATEAU_DURATION_COMMAND;
+    m_inspiratoryTriggerFlowCommand = DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND;
+    m_inspiratoryTriggerFlowNextCommand = DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND;
+    m_expiratoryTriggerFlowCommand = DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND;
+    m_expiratoryTriggerFlowNextCommand = DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND;
 
     m_pressureTriggerOffsetCommand = DEFAULT_TRIGGER_OFFSET;
     m_pressureTriggerOffsetNextCommand = DEFAULT_TRIGGER_OFFSET;
@@ -57,7 +61,7 @@ MainController::MainController() {
     m_ventilationControllersTable[VC_CMV] = &vcCmvController;
     m_ventilationControllersTable[PC_VSAI] = &pcBipapController;
 
-    m_ventilationControllerMode = PC_CMV;
+    m_ventilationControllerMode = VC_CMV;
 
     m_ventilationController = m_ventilationControllersTable[m_ventilationControllerMode];
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
@@ -136,6 +140,8 @@ void MainController::initRespiratoryCycle() {
     m_expiratoryTermCommand = m_expiratoryTermNextCommand;
     m_tidalVolumeCommand = m_tidalVolumeNextCommand;
     m_plateauDurationCommand = m_plateauDurationNextCommand;
+    m_inspiratoryTriggerFlowCommand = m_inspiratoryTriggerFlowNextCommand;
+    m_expiratoryTriggerFlowCommand = m_expiratoryTriggerFlowNextCommand;
 
     // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
@@ -515,7 +521,7 @@ void MainController::onVentilationModeSet(uint16_t p_ventilationControllerMode) 
     }
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(0, m_ventilationControllerMode);
+    sendControlAck(1, m_ventilationControllerMode);
 #endif
 }
 
@@ -752,22 +758,27 @@ void MainController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlowSet) {
-    // TODO
+void MainController::onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlow) {
+    if (p_inspiratoryTriggerFlow >= 0 && p_inspiratoryTriggerFlow <=100){
+        m_inspiratoryTriggerFlowNextCommand = p_inspiratoryTriggerFlow;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(10, p_inspiratoryTriggerFlowSet);
+    sendControlAck(10, m_inspiratoryTriggerFlowNextCommand);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlowSet) {
-    // TODO
+void MainController::onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlow) {
+    // Todo percentage as constant
+    if (p_expiratoryTriggerFlow >= 0 && p_expiratoryTriggerFlow <=100){
+        m_expiratoryTriggerFlowNextCommand = p_expiratoryTriggerFlow;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(11, p_expiratoryTriggerFlowSet);
+    sendControlAck(11, m_expiratoryTriggerFlowNextCommand);
 #endif
 }
 
@@ -792,67 +803,112 @@ void MainController::onTiMaxSet(uint16_t p_tiMax) {
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(
-    uint16_t p_lowInspiratoryMinuteVolumeAlarmThresholdSet) {
-    // TODO
+
+void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowInspiratoryMinuteVolumeAlarmThreshold) {
+    //TODO
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(14, p_lowInspiratoryMinuteVolumeAlarmThresholdSet);
+    sendControlAck(14, p_lowInspiratoryMinuteVolumeAlarmThreshold);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onHighInspiratoryMinuteVolumeAlarmThresholdSet(
-    uint16_t p_highInspiratoryMinuteVolumeAlarmThresholdSet) {
-    // TODO
+void MainController::onHighInspiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highInspiratoryMinuteVolumeAlarmThreshold) {
+    //TODO
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(15, p_highInspiratoryMinuteVolumeAlarmThresholdSet);
+    sendControlAck(15, p_highInspiratoryMinuteVolumeAlarmThreshold);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onLowExpiratoryMinuteVolumeAlarmThresholdSet(
-    uint16_t p_lowExpiratoryMinuteVolumeAlarmThresholdSet) {
-    // TODO
+void MainController::onLowExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_lowExpiratoryMinuteVolumeAlarmThreshold) {
+    //TODO
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(16, p_lowExpiratoryMinuteVolumeAlarmThresholdSet);
+    sendControlAck(16, p_lowExpiratoryMinuteVolumeAlarmThreshold);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onHighExpiratoryMinuteVolumeAlarmThresholdSet(
-    uint16_t p_highExpiratoryMinuteVolumeAlarmThresholdSet) {
-    // TODO
+void MainController::onHighExpiratoryMinuteVolumeAlarmThresholdSet(uint16_t p_highExpiratoryMinuteVolumeAlarmThreshold) {
+    //TODO
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(17, p_highExpiratoryMinuteVolumeAlarmThresholdSet);
+    sendControlAck(17, p_highExpiratoryMinuteVolumeAlarmThreshold);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onLowExpiratoryRateAlarmThresholdSet(
-    uint16_t p_lowExpiratoryRateAlarmThresholdSet) {
-    // TODO
+void MainController::onLowExpiratoryRateAlarmThresholdSet(uint16_t p_lowExpiratoryRateAlarmThreshold) {
+    //TODO
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(18, p_lowExpiratoryRateAlarmThresholdSet);
+    sendControlAck(18, p_lowExpiratoryRateAlarmThreshold);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onHighExpiratoryRateAlarmThresholdSet(
-    uint16_t p_highExpiratoryRateAlarmThresholdSet) {
-    // TODO
+void MainController::onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThreshold) {
+    //TODO
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(18, p_highExpiratoryRateAlarmThresholdSet);
+    sendControlAck(19, p_highExpiratoryRateAlarmThreshold);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onTargetTidalVolumeSet(uint16_t p_targetTidalVolume) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(20, p_targetTidalVolume);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onLowTidalVolumeAlarmTresholdSet(uint16_t p_lowTidalVolumeAlarmTreshold) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(21, p_lowTidalVolumeAlarmTreshold);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onHighTidalVolumeAlarmTresholdSet(uint16_t p_highTidalVolumeAlarmTreshold) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(22, p_highTidalVolumeAlarmTreshold);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onPlateauDurationSet(uint16_t p_plateauDuration) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(23, p_plateauDuration);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold) {
+    //TODO
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(24, p_leakAlarmThreshold);
 #endif
 }
