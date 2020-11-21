@@ -177,7 +177,12 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
                         uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
                         uint8_t lowExpiratoryRateAlarmThreshold,
-                        uint8_t highExpiratoryRateAlarmThreshold) {
+                        uint8_t highExpiratoryRateAlarmThreshold,
+                        uint16_t targetTidalVolumeValue,
+                        uint16_t lowTidalVolumeAlarmTresholdValue,
+                        uint16_t highTidalVolumeAlarmTresholdValue,
+                        uint16_t plateauDurationValue,
+                        uint16_t leakAlarmThresholdValue) {
 
     uint8_t ventilationModeValue;
     switch (ventilationMode) {
@@ -190,14 +195,17 @@ void sendStoppedMessage(uint8_t peakCommand,
     case VC_CMV:
         ventilationModeValue = 3u;
         break;
-    case PC_BIPAP:
+    case PC_VSAI:
         ventilationModeValue = 4u;
+        break;
+    case VC_AC:
+        ventilationModeValue = 5u;
         break;
     default:
         ventilationModeValue = 0u;
         break;
     }
-    
+
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("O:");
@@ -343,6 +351,46 @@ void sendStoppedMessage(uint8_t peakCommand,
 
     Serial6.write(highExpiratoryRateAlarmThreshold);
     crc32.update(highExpiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte targetTidalVolume[2];  // 16 bits
+    toBytes16(targetTidalVolume, targetTidalVolumeValue);
+    Serial6.write(targetTidalVolume, 2);
+    crc32.update(targetTidalVolume, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte lowTidalVolumeAlarmTreshold[2];  // 16 bits
+    toBytes16(lowTidalVolumeAlarmTreshold, lowTidalVolumeAlarmTresholdValue);
+    Serial6.write(lowTidalVolumeAlarmTreshold, 2);
+    crc32.update(lowTidalVolumeAlarmTreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte highTidalVolumeAlarmTreshold[2];  // 16 bits
+    toBytes16(highTidalVolumeAlarmTreshold, highTidalVolumeAlarmTresholdValue);
+    Serial6.write(highTidalVolumeAlarmTreshold, 2);
+    crc32.update(highTidalVolumeAlarmTreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte plateauDuration[2];  // 16 bits
+    toBytes16(plateauDuration, plateauDurationValue);
+    Serial6.write(plateauDuration, 2);
+    crc32.update(plateauDuration, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte leakAlarmThreshold[2];  // 16 bits
+    toBytes16(leakAlarmThreshold, leakAlarmThresholdValue);
+    Serial6.write(leakAlarmThreshold, 2);
+    crc32.update(leakAlarmThreshold, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
@@ -490,7 +538,12 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
                               uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
                               uint8_t lowExpiratoryRateAlarmThreshold,
-                              uint8_t highExpiratoryRateAlarmThreshold) {
+                              uint8_t highExpiratoryRateAlarmThreshold,
+                              uint16_t targetTidalVolumeValue,
+                              uint16_t lowTidalVolumeAlarmTresholdValue,
+                              uint16_t highTidalVolumeAlarmTresholdValue,
+                              uint16_t plateauDurationValue,
+                              uint16_t leakAlarmThresholdValue) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -511,8 +564,11 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     case VC_CMV:
         ventilationModeValue = 3u;
         break;
-    case PC_BIPAP:
+    case PC_VSAI:
         ventilationModeValue = 4u;
+        break;
+    case VC_AC:
+        ventilationModeValue = 5u;
         break;
     default:
         ventilationModeValue = 0u;
@@ -718,6 +774,46 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
 
     Serial6.write(highExpiratoryRateAlarmThreshold);
     crc32.update(highExpiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte targetTidalVolume[2];  // 16 bits
+    toBytes16(targetTidalVolume, targetTidalVolumeValue);
+    Serial6.write(targetTidalVolume, 2);
+    crc32.update(targetTidalVolume, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte lowTidalVolumeAlarmTreshold[2];  // 16 bits
+    toBytes16(lowTidalVolumeAlarmTreshold, lowTidalVolumeAlarmTresholdValue);
+    Serial6.write(lowTidalVolumeAlarmTreshold, 2);
+    crc32.update(lowTidalVolumeAlarmTreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte highTidalVolumeAlarmTreshold[2];  // 16 bits
+    toBytes16(highTidalVolumeAlarmTreshold, highTidalVolumeAlarmTresholdValue);
+    Serial6.write(highTidalVolumeAlarmTreshold, 2);
+    crc32.update(highTidalVolumeAlarmTreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte plateauDuration[2];  // 16 bits
+    toBytes16(plateauDuration, plateauDurationValue);
+    Serial6.write(plateauDuration, 2);
+    crc32.update(plateauDuration, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte leakAlarmThreshold[2];  // 16 bits
+    toBytes16(leakAlarmThreshold, leakAlarmThresholdValue);
+    Serial6.write(leakAlarmThreshold, 2);
+    crc32.update(leakAlarmThreshold, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

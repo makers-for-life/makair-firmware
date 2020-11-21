@@ -196,6 +196,26 @@ void serialControlLoop() {
                     mainController.onHighExpiratoryRateAlarmThresholdSet(value);
                     break;
 
+                case TargetTidalVolume:
+                    // TODO
+                    break;
+
+                case LowTidalVolumeAlarmTreshold:
+                    // TODO
+                    break;
+
+                case HighTidalVolumeAlarmTreshold:
+                    // TODO
+                    break;
+
+                case PlateauDuration:
+                    // TODO
+                    break;
+
+                case LeakAlarmThreshold:
+                    // TODO
+                    break;
+
                 default:
                     DBG_DO({
                         Serial.print("Unknown control setting: ");

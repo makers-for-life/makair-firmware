@@ -19,7 +19,8 @@ enum ControlSetting {
     /// - `1` → PC-CMV (default)
     /// - `2` → PC-AC
     /// - `3` → VC-CMV
-    /// - `4` → PC-BIPAP
+    /// - `4` → PC-VSAI
+    /// - `5` → VC-AC
     VentilationMode = 1,
     /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
     PlateauPressure = 2,
@@ -64,6 +65,17 @@ enum ControlSetting {
     /// Threshold for high expiratory rate alarm in cycle per minute (value bounds must be between
     /// 20 and 35)
     HighExpiratoryRateAlarmThreshold = 19,
+    /// Target tidal volume in mL (value bounds must be between 50 and 2000)
+    TargetTidalVolume = 20,
+    /// Threshold for low tidal volume in mL (value bounds must be between 0 and 1000)
+    LowTidalVolumeAlarmTreshold = 21,
+    /// Threshold for high tidal volume in mL (value bounds must be between 50 and 2000)
+    HighTidalVolumeAlarmTreshold = 22,
+    /// Duration in ms of closing both valves to effectively measure plateau pressure in volume
+    /// control modes (value bounds must be between 100 and 1000)
+    PlateauDuration = 23,
+    /// Threshold for leak alarm in cL/min (value bounds must be between 0 and 10000)
+    LeakAlarmThreshold = 24,
 };
 
 /**
