@@ -158,42 +158,52 @@ void serialControlLoop() {
 
                 case InspiratoryTriggerFlow:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case ExpiratoryTriggerFlow:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case TiMin:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case TiMax:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case LowInspiratoryMinuteVolumeAlarmThreshold:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case HighInspiratoryMinuteVolumeAlarmThreshold:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case LowExpiratoryMinuteVolumeAlarmThreshold:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case HighExpiratoryMinuteVolumeAlarmThreshold:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case LowExpiratoryRateAlarmThreshold:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 case HighExpiratoryRateAlarmThreshold:
                     // TODO
+                    sendControlAck(setting, value);
                     break;
 
                 default:
