@@ -183,7 +183,6 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t highTidalVolumeAlarmTresholdValue,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue) {
-
     uint8_t ventilationModeValue;
     switch (ventilationMode) {
     case PC_CMV:

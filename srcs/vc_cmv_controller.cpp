@@ -171,7 +171,6 @@ void VC_CMV_Controller::exhale() {
 void VC_CMV_Controller::endCycle() {}
 
 void VC_CMV_Controller::calculateBlower() {
-
     int32_t inspirationDurationMs =
         (mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
          - mainController.plateauDurationCommand());  // in ms
@@ -179,9 +178,10 @@ void VC_CMV_Controller::calculateBlower() {
         (60 * 1000 * mainController.tidalVolumeCommand()) / inspirationDurationMs;  // in mL/min
 
     // 40L/min -> max blower (1800) ; 6L/min -> min blower (300)
-    m_blowerSpeed = 1800; /* (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
-                      + (MAX_BLOWER_SPEED - MIN_BLOWER_SPEED) * m_targetFlowMultiplyBy1000 / 100)
-                     / 340;*/
+    m_blowerSpeed = 1800;
+    // * (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
+    // + (MAX_BLOWER_SPEED - MIN_BLOWER_SPEED) * m_targetFlowMultiplyBy1000 / 100)
+    // / 340;
 }
 
 int32_t

@@ -8,7 +8,7 @@
 // INCLUDES ==================================================================
 
 // Associated header
-#include "../includes/PC_AC_Controller.h"
+#include "../includes/pc_ac_controller.h"
 
 // External
 #include "Arduino.h"
@@ -26,7 +26,6 @@ PC_AC_Controller pcAcController;
 // FUNCTIONS ==================================================================
 
 void PC_AC_Controller::exhale() {
-
     PC_CMV_Controller::exhale();
 
     // Calculate max pressure for the last samples

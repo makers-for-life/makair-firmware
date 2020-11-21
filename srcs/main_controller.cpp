@@ -514,7 +514,6 @@ void MainController::sendMachineState() {
 }
 
 void MainController::onVentilationModeSet(uint16_t p_ventilationControllerMode) {
-
     if (m_ventilationControllerMode >= 1
         && m_ventilationControllerMode <= NUMBER_OF_VENTILATION_MODES) {
         m_ventilationControllerMode = static_cast<VentilationModes>(p_ventilationControllerMode);
