@@ -59,7 +59,7 @@ MainController::MainController() {
     m_ventilationControllersTable[PC_CMV] = &pcCmvController;
     m_ventilationControllersTable[PC_AC] = &pcAcController;
     m_ventilationControllersTable[VC_CMV] = &vcCmvController;
-    m_ventilationControllersTable[PC_VSAI] = &pcBipapController;
+    m_ventilationControllersTable[PC_VSAI] = &pcVsaiController;
 
     m_ventilationControllerMode = VC_CMV;
 

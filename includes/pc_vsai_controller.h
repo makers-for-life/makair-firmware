@@ -1,8 +1,8 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pc_bipap_controller.h
- * @brief PID for BIPAP pressure control
+ * @file pc_vsai_controller.h
+ * @brief PID for VSAI pressure control
  *****************************************************************************/
 
 #pragma once
@@ -10,11 +10,11 @@
 #include "../includes/parameters.h"
 #include "../includes/ventilation_controller.h"
 
-/// Controller for the BIPAP mode
-class PC_BIPAP_Controller final : public VentilationController {
+/// Controller for the VSAI mode
+class PC_VSAI_Controller final : public VentilationController {
  public:
     /// Default constructor
-    PC_BIPAP_Controller();
+    PC_VSAI_Controller();
 
     /// Initialize controller
     void setup() override;
@@ -112,4 +112,4 @@ class PC_BIPAP_Controller final : public VentilationController {
     int32_t m_maxInspiratoryFlow;
 };
 
-extern PC_BIPAP_Controller pcBipapController;
+extern PC_VSAI_Controller pcVsaiController;

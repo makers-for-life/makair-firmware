@@ -23,8 +23,8 @@
 #include "../includes/debug.h"
 #include "../includes/parameters.h"
 #include "../includes/pc_ac_controller.h"
-#include "../includes/pc_bipap_controller.h"
 #include "../includes/pc_cmv_controller.h"
+#include "../includes/pc_vsai_controller.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/vc_cmv_controller.h"
 

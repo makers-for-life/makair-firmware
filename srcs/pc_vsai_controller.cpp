@@ -1,14 +1,14 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pc_bipap_controller.cpp
- * @brief PID for BIPAP pressure control
+ * @file pc_vsai_controller.cpp
+ * @brief PID for VSAI pressure control
  *****************************************************************************/
 
 // INCLUDES ==================================================================
 
 // Associated header
-#include "../includes/pc_bipap_controller.h"
+#include "../includes/pc_vsai_controller.h"
 
 // External
 #include "Arduino.h"
@@ -20,12 +20,12 @@
 
 // INITIALISATION =============================================================
 
-PC_BIPAP_Controller pcBipapController;
+PC_VSAI_Controller pcVsaiController;
 
 // FUNCTIONS ==================================================================
 
 // cppcheck-suppress misra-c2012-5.2 ; false positive
-PC_BIPAP_Controller::PC_BIPAP_Controller() {
+PC_VSAI_Controller::PC_VSAI_Controller() {
     m_inspiratoryValveLastAperture = inspiratoryValve.maxAperture();
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     m_plateauPressureReached = false;
@@ -54,11 +54,11 @@ PC_BIPAP_Controller::PC_BIPAP_Controller() {
     m_maxInspiratoryFlow = 0;
 }
 
-void PC_BIPAP_Controller::setup() {
+void PC_VSAI_Controller::setup() {
     m_blowerSpeed = DEFAULT_BLOWER_SPEED;
 }
 
-void PC_BIPAP_Controller::initCycle() {
+void PC_VSAI_Controller::initCycle() {
     m_plateauPressureReached = false;
     m_triggerWindow =
         mainController.ticksPerInhalation()
@@ -101,7 +101,7 @@ void PC_BIPAP_Controller::initCycle() {
     m_inspiratorySlope = 0;
 }
 
-void PC_BIPAP_Controller::inhale() {
+void PC_VSAI_Controller::inhale() {
     m_expiratoryPidFastMode = false;
 
     // Keep the inspiratory valve open using a PID
@@ -136,7 +136,7 @@ void PC_BIPAP_Controller::inhale() {
     }
 }
 
-void PC_BIPAP_Controller::exhale() {
+void PC_VSAI_Controller::exhale() {
     // Open the expiration valve so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
         mainController.pressureCommand(), mainController.pressure(), mainController.dt());
@@ -145,7 +145,7 @@ void PC_BIPAP_Controller::exhale() {
 
     inspiratoryValve.close();
 
-    
+
     // Calculate max pressure for the last samples
     int32_t maxPressureValue = mainController.lastPressureValues()[0];
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -153,7 +153,7 @@ void PC_BIPAP_Controller::exhale() {
             maxPressureValue = mainController.lastPressureValues()[i];
         }
     }
-    
+
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     if ((mainController.tick()
             > (mainController.ticksPerInhalation() + (500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
@@ -168,9 +168,9 @@ void PC_BIPAP_Controller::exhale() {
     }
 }
 
-void PC_BIPAP_Controller::endCycle() { calculateBlowerIncrement(); }
+void PC_VSAI_Controller::endCycle() { calculateBlowerIncrement(); }
 
-void PC_BIPAP_Controller::calculateBlowerIncrement() {
+void PC_VSAI_Controller::calculateBlowerIncrement() {
     int16_t peakDelta =
         mainController.peakPressureMeasure() - mainController.plateauPressureCommand();
     int16_t rebouncePeakDelta =
@@ -225,7 +225,7 @@ void PC_BIPAP_Controller::calculateBlowerIncrement() {
 }
 
 int32_t
-PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
+PC_VSAI_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
     int32_t minAperture = inspiratoryValve.minAperture();
     int32_t maxAperture = inspiratoryValve.maxAperture();
     int32_t inspiratoryValveAperture;
@@ -326,7 +326,7 @@ PC_BIPAP_Controller::PCinspiratoryPID(int32_t targetPressure, int32_t currentPre
 }
 
 int32_t
-PC_BIPAP_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
+PC_VSAI_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt) {
     int32_t minAperture = expiratoryValve.minAperture();
     int32_t maxAperture = expiratoryValve.maxAperture();
     int32_t expiratoryValveAperture;
