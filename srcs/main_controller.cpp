@@ -871,7 +871,8 @@ void MainController::onHighExpiratoryRateAlarmThresholdSet(
 
 // cppcheck-suppress unusedFunction
 void MainController::onTargetTidalVolumeSet(uint16_t p_targetTidalVolume) {
-    if (p_targetTidalVolume>= CONST_MIN_TIDAL_VOLUME && p_targetTidalVolume <=CONST_MAX_TIDAL_VOLUME)
+    if (p_targetTidalVolume >= CONST_MIN_TIDAL_VOLUME
+        && p_targetTidalVolume <= CONST_MAX_TIDAL_VOLUME)
         m_tidalVolumeNextCommand = p_targetTidalVolume;
 #if !SIMULATION
     // Send acknowledgment to the UI

@@ -54,9 +54,7 @@ PC_VSAI_Controller::PC_VSAI_Controller() {
     m_maxInspiratoryFlow = 0;
 }
 
-void PC_VSAI_Controller::setup() {
-    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
-}
+void PC_VSAI_Controller::setup() { m_blowerSpeed = DEFAULT_BLOWER_SPEED; }
 
 void PC_VSAI_Controller::initCycle() {
     m_plateauPressureReached = false;
@@ -79,7 +77,6 @@ void PC_VSAI_Controller::initCycle() {
         m_expiratoryPidLastErrors[i] =
             mainController.peepCommand() - mainController.plateauPressureCommand();
     }
-
 
     // Apply blower ramp-up
     if (m_blowerIncrement >= 0) {
@@ -145,7 +142,6 @@ void PC_VSAI_Controller::exhale() {
 
     inspiratoryValve.close();
 
-
     // Calculate max pressure for the last samples
     int32_t maxPressureValue = mainController.lastPressureValues()[0];
     for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
@@ -156,7 +152,7 @@ void PC_VSAI_Controller::exhale() {
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     if ((mainController.tick()
-            > (mainController.ticksPerInhalation() + (500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
+         > (mainController.ticksPerInhalation() + (500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
         // machine
         if (((mainController.pressure())

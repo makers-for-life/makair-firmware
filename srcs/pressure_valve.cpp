@@ -65,8 +65,12 @@ void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
     if (p_sectionMultiplyBy100 < 1960) {
         tempCommand = 98 - 318 * p_sectionMultiplyBy100 / 10000;
     } else {
-        tempCommand = 2626 - (36 * p_sectionMultiplyBy100) / 10 + 168 * ((p_sectionMultiplyBy100 * p_sectionMultiplyBy100 )/ 100) / 1000
-                      - 264 * (((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100) * (p_sectionMultiplyBy100)/100) / 100000;
+        tempCommand = 2626 - (36 * p_sectionMultiplyBy100) / 10
+                      + 168 * ((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100) / 1000
+                      - 264
+                            * (((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100)
+                               * (p_sectionMultiplyBy100) / 100)
+                            / 100000;
     }
     command = min(max(int32_t(minApertureAngle), tempCommand), int32_t(maxApertureAngle));
     /*Serial.print(command);

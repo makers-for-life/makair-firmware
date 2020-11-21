@@ -15,7 +15,6 @@ class PC_AC_Controller final : public PC_CMV_Controller {
  public:
     /// Control the exhalation
     void exhale() override;
-
 };
 
 extern PC_AC_Controller pcAcController;

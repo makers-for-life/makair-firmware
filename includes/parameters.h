@@ -35,27 +35,27 @@
 #define CONST_MAX_PLATEAU_PRESSURE 400  // PP MAX ARDS = 300 [mmH2O]
 #define CONST_MIN_PLATEAU_PRESSURE 100  // arbitrary [mmH2O]
 #define CONST_MAX_PEEP_PRESSURE 300     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 50       // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 50      // arbitrary but > 0 [mmH2O]
 #define CONST_MIN_TRIGGER_OFFSET 0u     // [mmH2O]
 #define CONST_MAX_TRIGGER_OFFSET 100u   // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0   // [mmH2O]
 #define CONST_INITIAL_ZERO_VOLUME 0     // [mL]
-#define CONST_MIN_TIDAL_VOLUME 50 // [mL]
-#define CONST_MAX_TIDAL_VOLUME 2000 // [mL]
+#define CONST_MIN_TIDAL_VOLUME 50       // [mL]
+#define CONST_MAX_TIDAL_VOLUME 2000     // [mL]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
 #define CONST_MAX_EXPIRATORY_TERM 60u
 
-#define DEFAULT_PEEP_COMMAND 100 // in mmH2O
-#define DEFAULT_PLATEAU_COMMAND 200 // in mmH2O
-#define DEFAULT_PEAK_PRESSURE_COMMAND 200 // in mmH2O
-#define DEFAULT_EXPIRATORY_TERM_COMMAND 20 // 20 means I:E = 10:20 = 1:2
-#define DEFAULT_TIDAL_VOLUME_COMMAND 400 // in mL
-#define DEFAULT_PLATEAU_DURATION_COMMAND 300 // in ms
-#define DEFAULT_TRIGGER_OFFSET 20 // in mmH2O
-#define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND 10 // in percent of current flow
-#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 25 // in percent of max inspirated flow
+#define DEFAULT_PEEP_COMMAND 100                     // in mmH2O
+#define DEFAULT_PLATEAU_COMMAND 200                  // in mmH2O
+#define DEFAULT_PEAK_PRESSURE_COMMAND 200            // in mmH2O
+#define DEFAULT_EXPIRATORY_TERM_COMMAND 20           // 20 means I:E = 10:20 = 1:2
+#define DEFAULT_TIDAL_VOLUME_COMMAND 400             // in mL
+#define DEFAULT_PLATEAU_DURATION_COMMAND 300         // in ms
+#define DEFAULT_TRIGGER_OFFSET 20                    // in mmH2O
+#define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND 10  // in percent of current flow
+#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 25   // in percent of max inspirated flow
 
 #define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20
 #define CONST_MAX_CYCLE 35u
