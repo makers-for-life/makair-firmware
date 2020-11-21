@@ -40,6 +40,8 @@
 #define CONST_MAX_TRIGGER_OFFSET 100u   // [mmH2O]
 #define CONST_INITIAL_ZERO_PRESSURE 0   // [mmH2O]
 #define CONST_INITIAL_ZERO_VOLUME 0     // [mL]
+#define CONST_MIN_TIDAL_VOLUME 50 // [mL]
+#define CONST_MAX_TIDAL_VOLUME 2000 // [mL]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
