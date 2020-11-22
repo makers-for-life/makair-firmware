@@ -479,7 +479,7 @@ void MainController::sendStopMessageToUi() {
         alarmController.isSnoozed(), readCpuLoadPercent(), m_ventilationControllerMode,
         m_inspiratoryTriggerFlowNextCommand, m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand,
         m_tiMaxNextCommand, 0u, 0u, 0u, 0u, 0u, 0u, m_tidalVolumeNextCommand, 0u, 0u,
-        m_plateauDurationNextCommand, 0u);
+        m_plateauDurationNextCommand, 0u, 0u, 0u);
 #endif
 }
 
@@ -516,7 +516,7 @@ void MainController::sendMachineState() {
         m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed(),
         readCpuLoadPercent(), m_ventilationControllerMode, m_inspiratoryTriggerFlowNextCommand,
         m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand, m_tiMaxNextCommand, 0u, 0u, 0u, 0u,
-        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u);
+        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u, 0u, 0u);
 #endif
 }
 

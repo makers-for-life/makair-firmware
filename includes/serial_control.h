@@ -72,10 +72,14 @@ enum ControlSetting {
     /// Threshold for high tidal volume in mL (value bounds must be between 50 and 2000)
     HighTidalVolumeAlarmTreshold = 22,
     /// Duration in ms of closing both valves to effectively measure plateau pressure in volume
-    /// control modes (value bounds must be between 100 and 1000)
+    /// control modes (value bounds must be between 100 and 2000)
     PlateauDuration = 23,
     /// Threshold for leak alarm in cL/min (value bounds must be between 0 and 10000)
     LeakAlarmThreshold = 24,
+    /// Target flow during inspiration in L/min (value bounds must be between 5 and 80)
+    TargetInspiratoryFlow = 25,
+    /// Duration of inspiration in ms (value bounds must be between 200 and 3000)
+    InspiratoryDuration = 26,
 };
 
 /**

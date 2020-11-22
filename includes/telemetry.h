@@ -46,7 +46,9 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t lowTidalVolumeAlarmTresholdValue,
                         uint16_t highTidalVolumeAlarmTresholdValue,
                         uint16_t plateauDurationValue,
-                        uint16_t leakAlarmThresholdValue);
+                        uint16_t leakAlarmThresholdValue,
+                        uint8_t targetInspiratoryFlow,
+                        uint16_t inspiratoryDurationValue);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
@@ -92,7 +94,9 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t lowTidalVolumeAlarmTresholdValue,
                               uint16_t highTidalVolumeAlarmTresholdValue,
                               uint16_t plateauDurationValue,
-                              uint16_t leakAlarmThresholdValue);
+                              uint16_t leakAlarmThresholdValue,
+                              uint8_t targetInspiratoryFlow,
+                              uint16_t inspiratoryDurationValue);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,

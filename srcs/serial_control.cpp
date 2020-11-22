@@ -216,6 +216,14 @@ void serialControlLoop() {
                     mainController.onLeakAlarmThresholdSet(value);
                     break;
 
+                case TargetInspiratoryFlow:
+                    // TODO
+                    break;
+
+                case InspiratoryDuration:
+                    // TODO
+                    break;
+
                 default:
                     DBG_DO({
                         Serial.print("Unknown control setting: ");
