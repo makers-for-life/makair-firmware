@@ -28,8 +28,12 @@ static uint32_t batteryTotalSamples = 0;                // Battery total samples
 static uint32_t rawBatteryMeanVoltage = RAW_VOLTAGE_MAINS;  // Mean battery voltage in volts
 static bool isRunningOnBattery = false;
 static bool mainsConnected = false;
+static bool mainsConnectedAvailable = false;
 
 void initBattery() {
+    // hardware v3 expander is connected to AC ON relay. that remains an optionnal wiring.
+    pinMode(PIN_IN_MAINS_CONNECTED, INPUT_PULLUP);
+    pinMode(PIN_IN_CONNECTION_TO_SUPPLY_OK, INPUT_PULLUP);
     for (uint8_t i = 0; i < BATTERY_MAX_SAMPLES; i++) {
         rawBatterySample[i] = 0;
     }
@@ -63,17 +67,22 @@ void updateBatterySample() {
 }
 
 void updateBatteryState(uint32_t p_cycleNumber) {
-    // hardware v3 expander is connected to AC ON relay. that remains an optionnal wiring.
-    pinMode(PIN_IN_MAINS_CONNECTED, INPUT_PULLUP);
+    // The connector includes a small wire between gnd and PIN_IN_CONNECTION_TO_SUPPLY_OK.
+    // If this is not detected, there may be a end of line connection problem,
+    // and there is a fallback to Vbat value
+    mainsConnectedAvailable = (LOW == digitalRead(PIN_IN_CONNECTION_TO_SUPPLY_OK));
     mainsConnected = (LOW == digitalRead(PIN_IN_MAINS_CONNECTED));
 
-    if (!mainsConnected
-        && (rawBatteryMeanVoltage < (RAW_VOLTAGE_ON_BATTERY_HIGH - RAW_VOLTAGE_HYSTERESIS))) {
+    if ((mainsConnectedAvailable && !mainsConnected)
+        || (!mainsConnectedAvailable
+            && (rawBatteryMeanVoltage < (RAW_VOLTAGE_ON_BATTERY_HIGH - RAW_VOLTAGE_HYSTERESIS)))) {
         alarmController.detectedAlarm(RCM_SW_16, p_cycleNumber,
                                       (RAW_VOLTAGE_ON_BATTERY_HIGH - RAW_VOLTAGE_HYSTERESIS),
                                       rawBatteryMeanVoltage);
         isRunningOnBattery = true;
-    } else if (mainsConnected || (rawBatteryMeanVoltage > RAW_VOLTAGE_ON_BATTERY_HIGH)) {
+    } else if ((mainsConnectedAvailable && mainsConnected)
+               || (!mainsConnectedAvailable
+                   && (rawBatteryMeanVoltage > RAW_VOLTAGE_ON_BATTERY_HIGH))) {
         alarmController.notDetectedAlarm(RCM_SW_16);
         isRunningOnBattery = false;
     } else {
@@ -128,3 +137,6 @@ bool isBatteryDeepDischarged() {
 
 // cppcheck-suppress unusedFunction
 bool isMainsConnected() { return (!isRunningOnBattery); }
+
+// cppcheck-suppress unusedFunction
+bool isMainsAvailable() { return mainsConnectedAvailable; }
