@@ -16,6 +16,7 @@ var battery_8h =
     [ "initBattery", "battery_8h.html#af1cb6090825d3e387191264c221e898a", null ],
     [ "isBatteryDeepDischarged", "battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de", null ],
     [ "isBatteryVeryLow", "battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb", null ],
+    [ "isMainsAvailable", "battery_8h.html#abb94d6c1f1b2f60bc97d6f71dc0b68e1", null ],
     [ "isMainsConnected", "battery_8h.html#ae81c65af32e2384dfc62ef5289a57f2b", null ],
     [ "updateBatterySample", "battery_8h.html#a9ffac32955710f7a3aefe1fb7120b263", null ],
     [ "updateBatteryState", "battery_8h.html#a55106fffceca7b7e552f55c0a1efb471", null ]

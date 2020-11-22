@@ -64,6 +64,7 @@ var parameters_8h =
     [ "PIN_EXPIRATORY_VALVE", "parameters_8h.html#adf4d2c11a8636713069d17837e68a33d", null ],
     [ "PIN_I2C_SCL", "parameters_8h.html#a6b5cc0023af0923f5e57d107bdd8f985", null ],
     [ "PIN_I2C_SDA", "parameters_8h.html#afd84f048502b749115c9e05262ed6753", null ],
+    [ "PIN_IN_CONNECTION_TO_SUPPLY_OK", "parameters_8h.html#ae1f73cb12c84eb96bc699bf578315c2c", null ],
     [ "PIN_IN_MAINS_CONNECTED", "parameters_8h.html#ad07b58cf00b950b7f4935e5bd4c1fc28", null ],
     [ "PIN_IN_ROW1", "parameters_8h.html#a89667550975324236d5d452a966eb17b", null ],
     [ "PIN_IN_ROW2", "parameters_8h.html#af58cba84e6cc23719e693ef01182841e", null ],

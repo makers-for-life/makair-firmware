@@ -4,6 +4,7 @@ var end__of__line__test_8cpp =
     [ "EOLSCREENSIZE", "end__of__line__test_8cpp.html#ae6924331bca33084e43c2468dddfcf0f", null ],
     [ "TestStep", "end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5", [
       [ "START", "end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a13d000b4d7dc70d90239b7430d1eb6b2", null ],
+      [ "SUPPLY_TO_EXPANDER_NOT_CONNECTED", "end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a3adec0336f255987464071049fa89b80", null ],
       [ "CHECK_FAN", "end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a70c6d2e3becfe11bd9e813d72afccc82", null ],
       [ "TEST_BAT_DEAD", "end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a7681a15bb213a7aa0136e39a0392a77a", null ],
       [ "BATTERY_DEEP_DISCHARGE", "end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a741bfa0192fd05befb6cc263cc9e78cc", null ],

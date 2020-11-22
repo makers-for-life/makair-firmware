@@ -7,6 +7,7 @@ var battery_8cpp =
     [ "initBattery", "battery_8cpp.html#af1cb6090825d3e387191264c221e898a", null ],
     [ "isBatteryDeepDischarged", "battery_8cpp.html#a61ffb38eac6c3cf6564c38fe4de592de", null ],
     [ "isBatteryVeryLow", "battery_8cpp.html#ac6ae9ca27f164634892964bbbfc77ccb", null ],
+    [ "isMainsAvailable", "battery_8cpp.html#abb94d6c1f1b2f60bc97d6f71dc0b68e1", null ],
     [ "isMainsConnected", "battery_8cpp.html#ae81c65af32e2384dfc62ef5289a57f2b", null ],
     [ "updateBatterySample", "battery_8cpp.html#a9ffac32955710f7a3aefe1fb7120b263", null ],
     [ "updateBatteryState", "battery_8cpp.html#a55106fffceca7b7e552f55c0a1efb471", null ],
@@ -14,6 +15,7 @@ var battery_8cpp =
     [ "batteryTotalSamples", "battery_8cpp.html#a89f0774b305112c43fe1fcdc59e8082b", null ],
     [ "isRunningOnBattery", "battery_8cpp.html#a59059e9ff84265ce4c9c088250fc13fd", null ],
     [ "mainsConnected", "battery_8cpp.html#ae915fc5b0f301f76b5a52c3c2de9d01c", null ],
+    [ "mainsConnectedAvailable", "battery_8cpp.html#aef1af3ea16cea28529a5ab9df35d90ee", null ],
     [ "rawBatteryMeanVoltage", "battery_8cpp.html#a7dfc5b6e6faefb5ec33041075a7e83c0", null ],
     [ "rawBatterySample", "battery_8cpp.html#aeb31efb579bcb97a4d2121023cb86323", null ]
 ];

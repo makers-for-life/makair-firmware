@@ -18,11 +18,12 @@ var searchData=
   ['invalid_5ferror_5fmarker_258',['INVALID_ERROR_MARKER',['../main__controller_8cpp.html#a602fa4a2a92de0da954dcab814e946f0',1,'main_controller.cpp']]],
   ['isbatterydeepdischarged_259',['isBatteryDeepDischarged',['../battery_8cpp.html#a61ffb38eac6c3cf6564c38fe4de592de',1,'isBatteryDeepDischarged():&#160;battery.cpp'],['../battery_8h.html#a61ffb38eac6c3cf6564c38fe4de592de',1,'isBatteryDeepDischarged():&#160;battery.cpp']]],
   ['isbatteryverylow_260',['isBatteryVeryLow',['../battery_8cpp.html#ac6ae9ca27f164634892964bbbfc77ccb',1,'isBatteryVeryLow():&#160;battery.cpp'],['../battery_8h.html#ac6ae9ca27f164634892964bbbfc77ccb',1,'isBatteryVeryLow():&#160;battery.cpp']]],
-  ['ismainsconnected_261',['isMainsConnected',['../battery_8cpp.html#ae81c65af32e2384dfc62ef5289a57f2b',1,'isMainsConnected():&#160;battery.cpp'],['../battery_8h.html#ae81c65af32e2384dfc62ef5289a57f2b',1,'isMainsConnected():&#160;battery.cpp']]],
-  ['ismsmactive_262',['isMsmActive',['../class_main_state_machine.html#acf64c140a4c98a35bba0b26d061ef295',1,'MainStateMachine']]],
-  ['ispeepdetected_263',['isPeepDetected',['../class_main_controller.html#a5edf368748ba3a010edb04a1897cab1b',1,'MainController']]],
-  ['isrunning_264',['isRunning',['../class_activation_controller.html#a6150ca0b4b114c9ea416cb9ac7461415',1,'ActivationController::isRunning()'],['../class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6',1,'EolTest::isRunning()'],['../class_main_state_machine.html#aaa0fb97418ee17022fb59e74b1370893',1,'MainStateMachine::isRunning()']]],
-  ['isrunningonbattery_265',['isRunningOnBattery',['../battery_8cpp.html#a59059e9ff84265ce4c9c088250fc13fd',1,'battery.cpp']]],
-  ['issnoozed_266',['isSnoozed',['../class_alarm_controller.html#a1d63f78e1e4b6bd4bd5c6fcc8bea9ffa',1,'AlarmController']]],
-  ['istriggered_267',['isTriggered',['../class_alarm.html#a1a1bf095ca11d9fa35b48cb08b72a03d',1,'Alarm']]]
+  ['ismainsavailable_261',['isMainsAvailable',['../battery_8cpp.html#abb94d6c1f1b2f60bc97d6f71dc0b68e1',1,'isMainsAvailable():&#160;battery.cpp'],['../battery_8h.html#abb94d6c1f1b2f60bc97d6f71dc0b68e1',1,'isMainsAvailable():&#160;battery.cpp']]],
+  ['ismainsconnected_262',['isMainsConnected',['../battery_8cpp.html#ae81c65af32e2384dfc62ef5289a57f2b',1,'isMainsConnected():&#160;battery.cpp'],['../battery_8h.html#ae81c65af32e2384dfc62ef5289a57f2b',1,'isMainsConnected():&#160;battery.cpp']]],
+  ['ismsmactive_263',['isMsmActive',['../class_main_state_machine.html#acf64c140a4c98a35bba0b26d061ef295',1,'MainStateMachine']]],
+  ['ispeepdetected_264',['isPeepDetected',['../class_main_controller.html#a5edf368748ba3a010edb04a1897cab1b',1,'MainController']]],
+  ['isrunning_265',['isRunning',['../class_activation_controller.html#a6150ca0b4b114c9ea416cb9ac7461415',1,'ActivationController::isRunning()'],['../class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6',1,'EolTest::isRunning()'],['../class_main_state_machine.html#aaa0fb97418ee17022fb59e74b1370893',1,'MainStateMachine::isRunning()']]],
+  ['isrunningonbattery_266',['isRunningOnBattery',['../battery_8cpp.html#a59059e9ff84265ce4c9c088250fc13fd',1,'battery.cpp']]],
+  ['issnoozed_267',['isSnoozed',['../class_alarm_controller.html#a1d63f78e1e4b6bd4bd5c6fcc8bea9ffa',1,'AlarmController']]],
+  ['istriggered_268',['isTriggered',['../class_alarm.html#a1a1bf095ca11d9fa35b48cb08b72a03d',1,'Alarm']]]
 ];
