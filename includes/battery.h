@@ -121,3 +121,6 @@ bool isBatteryDeepDischarged();
 
 /// Check if mains are connected
 bool isMainsConnected();
+
+/// Check if the cable between power supply and expander input is connected
+bool isMainsAvailable();

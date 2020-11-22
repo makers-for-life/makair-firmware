@@ -88,6 +88,7 @@ void eolScreenMessage(char* message, bool isFailed) {
 
 enum TestStep {
     START,
+    SUPPLY_TO_EXPANDER_NOT_CONNECTED,
     CHECK_FAN,
     TEST_BAT_DEAD,
     BATTERY_DEEP_DISCHARGE,
@@ -160,9 +161,20 @@ void millisecondTimerEOL(void)
 
     // First step: reset the step count
     if (eolstep == START) {
-        eolstep = CHECK_FAN;
-        eolMSCount = 0;
-        mainController.setup();
+        if (!isMainsAvailable()) {
+            eolstep = SUPPLY_TO_EXPANDER_NOT_CONNECTED;
+        } else {
+            eolstep = CHECK_FAN;
+            eolMSCount = 0;
+            mainController.setup();
+        }
+    } else if (eolstep == SUPPLY_TO_EXPANDER_NOT_CONNECTED) {
+        eolFail = true;
+        // The operator should carefuly check the wire between power supply and the expander
+        // connector.
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+                       "Verifier cable alim\nvers carte mere,\n et recommencer test");
+
     } else if (eolstep == CHECK_FAN) {
         // The operator should check that both fans are running, and hit "start" to confirm
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
@@ -226,7 +238,7 @@ void millisecondTimerEOL(void)
     } else if (eolstep == CHECK_BUZZER) {
         // Run the buzzer (previous step) and ask the operator to hit the STOP button
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Verifier Buzzer\npuis appuyer sur\nle bouton STOP");
+                       "Verifier Buzzer\npuis appuyer sur\nle bouton PAUSE");
         if (digitalRead(PIN_BTN_STOP) == HIGH) {
             BuzzerControl_Off();
             eolTestNumber++;
