@@ -30,32 +30,45 @@
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS (1000u * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
 
 // Minimum and maximum bounds of execution parameters
-#define CONST_MAX_PEAK_PRESSURE 700     // arbitrary [mmH2O]
-#define CONST_MIN_PEAK_PRESSURE 100     // arbitrary [mmH2O]
-#define CONST_MAX_PLATEAU_PRESSURE 400  // PP MAX ARDS = 300 [mmH2O]
-#define CONST_MIN_PLATEAU_PRESSURE 100  // arbitrary [mmH2O]
-#define CONST_MAX_PEEP_PRESSURE 300     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 50      // arbitrary but > 0 [mmH2O]
-#define CONST_MIN_TRIGGER_OFFSET 0u     // [mmH2O]
-#define CONST_MAX_TRIGGER_OFFSET 100u   // [mmH2O]
-#define CONST_INITIAL_ZERO_PRESSURE 0   // [mmH2O]
-#define CONST_INITIAL_ZERO_VOLUME 0     // [mL]
-#define CONST_MIN_TIDAL_VOLUME 50       // [mL]
-#define CONST_MAX_TIDAL_VOLUME 2000     // [mL]
+#define CONST_MAX_PEAK_PRESSURE 700              // arbitrary [mmH2O]
+#define CONST_MIN_PEAK_PRESSURE 100              // arbitrary [mmH2O]
+#define CONST_MAX_PLATEAU_PRESSURE 400           // PP MAX ARDS = 300 [mmH2O]
+#define CONST_MIN_PLATEAU_PRESSURE 100           // arbitrary [mmH2O]
+#define CONST_MAX_PEEP_PRESSURE 300              // PP MAX = 300, or PEEP < PP [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 50               // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_TRIGGER_OFFSET 0u              // [mmH2O]
+#define CONST_MAX_TRIGGER_OFFSET 100u            // [mmH2O]
+#define CONST_INITIAL_ZERO_PRESSURE 0            // [mmH2O]
+#define CONST_INITIAL_ZERO_VOLUME 0              // [mL]
+#define CONST_MIN_TIDAL_VOLUME 50                // [mL]
+#define CONST_MAX_TIDAL_VOLUME 2000              // [mL]
+#define CONST_MAX_INSPIRATORY_TRIGGER_FLOW 100   // [%]
+#define CONST_MIN_INSPIRATORY_TRIGGER_FLOW 0     // [%]
+#define CONST_MAX_EXPIRATORY_TRIGGER_FLOW 100    // [%]
+#define CONST_MIN_EXPIRATORY_TRIGGER_FLOW 0      // [%]
+#define CONST_MIN_MIN_INSPIRATION_DURATION 100   // [in ms]
+#define CONST_MAX_MIN_INSPIRATION_DURATION 2000  // [in ms]
+#define CONST_MIN_MAX_INSPIRATION_DURATION 300   // [in ms]
+#define CONST_MAX_MAX_INSPIRATION_DURATION 3000  // [in ms]
+#define CONST_MAX_MAX_INSPIRATION_DURATION 3000  // [in ms]
+#define CONST_MIN_PLATEAU_DURATION 0             // [in ms]
+#define CONST_MAX_PLATEAU_DURATION 2000          // [in ms]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
 #define CONST_MAX_EXPIRATORY_TERM 60u
 
-#define DEFAULT_PEEP_COMMAND 100                     // in mmH2O
-#define DEFAULT_PLATEAU_COMMAND 200                  // in mmH2O
-#define DEFAULT_PEAK_PRESSURE_COMMAND 200            // in mmH2O
-#define DEFAULT_EXPIRATORY_TERM_COMMAND 20           // 20 means I:E = 10:20 = 1:2
-#define DEFAULT_TIDAL_VOLUME_COMMAND 400             // in mL
-#define DEFAULT_PLATEAU_DURATION_COMMAND 300         // in ms
-#define DEFAULT_TRIGGER_OFFSET 20                    // in mmH2O
-#define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND 10  // in percent of current flow
-#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 25   // in percent of max inspirated flow
+#define DEFAULT_PEEP_COMMAND 100                       // in mmH2O
+#define DEFAULT_PLATEAU_COMMAND 200                    // in mmH2O
+#define DEFAULT_PEAK_PRESSURE_COMMAND 200              // in mmH2O
+#define DEFAULT_EXPIRATORY_TERM_COMMAND 20             // 20 means I:E = 10:20 = 1:2
+#define DEFAULT_TIDAL_VOLUME_COMMAND 400               // in mL
+#define DEFAULT_PLATEAU_DURATION_COMMAND 300           // in ms
+#define DEFAULT_TRIGGER_OFFSET 20                      // in mmH2O
+#define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND 10    // in percent of current flow
+#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 25     // in percent of max inspirated flow
+#define DEFAULT_MIN_INSPIRATION_DURATION_COMMAND 100   // in ms
+#define DEFAULT_MAX_INSPIRATION_DURATION_COMMAND 1000  // in ms
 
 #define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20
 #define CONST_MAX_CYCLE 35u
@@ -112,6 +125,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define VALVE_PERIOD 1000     // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
 #define FAULHABER_OPENED 660  // PWM duty cycle 64% -> open
 #define FAULHABER_CLOSED 900  // PWM duty cycle 90% -> closed
+
+#define VALVE_RESPONSE_TIME_MS 50  // estimated response time for going to open state to close
+                                   // state.
 
 #define PIN_INSPIRATORY_VALVE D5  // PB4 / TIM3_CH1
 #define PIN_EXPIRATORY_VALVE D4   // PB5 / TIM3_CH2

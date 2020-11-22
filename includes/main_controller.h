@@ -26,6 +26,7 @@
 #include "../includes/pc_cmv_controller.h"
 #include "../includes/pc_vsai_controller.h"
 #include "../includes/pressure_valve.h"
+#include "../includes/vc_ac_controller.h"
 #include "../includes/vc_cmv_controller.h"
 
 /// Number of values to aggregate when computing plateau pressure
@@ -124,14 +125,19 @@ class MainController {
     /// Set alarm threshold for high respiratory rate
     void onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThreshold);
 
+    /// Set target tidal volume (used in VC modes)
     void onTargetTidalVolumeSet(uint16_t p_targetTidalVolume);
 
+    /// Set threshold on tidal volume below which an alarm is raised
     void onLowTidalVolumeAlarmTresholdSet(uint16_t p_lowTidalVolumeAlarmTreshold);
 
+    /// Set threshold on tidal volume for which an alarm is raised
     void onHighTidalVolumeAlarmTresholdSet(uint16_t p_highTidalVolumeAlarmTreshold);
 
+    /// Set the duration of Pause at the end of expiration in VC modes
     void onPlateauDurationSet(uint16_t p_plateauDuration);
 
+    /// Set the threshold for leak that raise the alarm
     void onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold);
 
     /// Decrease the desired number of cycles per minute
@@ -235,6 +241,10 @@ class MainController {
     inline const int16_t expiratoryTriggerFlowCommand() const {
         return m_expiratoryTriggerFlowCommand;
     }
+    /// Get the value of the minimum duration of inspiration in ms
+    inline const int16_t tiMinCommand() const { return m_tiMinCommand; }
+    /// Get the value of the max duration of inspiration in ms
+    inline const int16_t tiMaxCommand() const { return m_tiMaxCommand; }
 
     /// Get the desired tidal Volume for the next cycle (used in VC modes)
     inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
@@ -254,14 +264,18 @@ class MainController {
     }
     /// Get the enabling state of trigger mode for the next cycle
     inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
-    /// Get the value of the inspiratory trigger flow command
+    /// Get the value of the inspiratory trigger flow command for the next cycle
     inline const int16_t inspiratoryTriggerFlowNextCommand() const {
         return m_inspiratoryTriggerFlowNextCommand;
     }
-    /// Get the value of the expiratory trigger flow command
+    /// Get the value of the expiratory trigger flow command for the next cycle
     inline const int16_t expiratoryTriggerFlowNextCommand() const {
         return m_expiratoryTriggerFlowNextCommand;
     }
+    /// Get the value of the minimum duration of inspiration in ms for the next cycle
+    inline const int16_t tiMinNextCommand() const { return m_tiMinNextCommand; }
+    /// Get the value of the max duration of inspiration in ms for the next cycle
+    inline const int16_t tiMaxNextCommand() const { return m_tiMaxNextCommand; }
 
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
@@ -488,13 +502,22 @@ class MainController {
     /// Desired expiratory trigger flow for next cycle (in percent of max flow)
     int16_t m_expiratoryTriggerFlowNextCommand;
 
+    /// Minimum duration of inspiration in ms
+    int16_t m_tiMinCommand;
+    /// Max duration of inspiration in ms
+    int16_t m_tiMaxCommand;
+    /// Minimum duration of inspiration in ms for next cycle
+    int16_t m_tiMinNextCommand;
+    /// Max duration of inspiration in ms for next cycle
+    int16_t m_tiMaxNextCommand;
+
     /// Ventilation controller in use (for everything related to breathing control)
     VentilationController* m_ventilationController;
     /// Ventilation controller for the next cycle
     VentilationController* m_ventilationControllerNextCommand;
 
     /// Array containing pointers to different ventilation controllers
-    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES];
+    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES+1];
 
     VentilationModes m_ventilationControllerMode;
 

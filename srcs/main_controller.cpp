@@ -48,6 +48,10 @@ MainController::MainController() {
     m_inspiratoryTriggerFlowNextCommand = DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND;
     m_expiratoryTriggerFlowCommand = DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND;
     m_expiratoryTriggerFlowNextCommand = DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND;
+    m_tiMinCommand = DEFAULT_MIN_INSPIRATION_DURATION_COMMAND;
+    m_tiMinNextCommand = DEFAULT_MIN_INSPIRATION_DURATION_COMMAND;
+    m_tiMaxCommand = DEFAULT_MAX_INSPIRATION_DURATION_COMMAND;
+    m_tiMaxNextCommand = DEFAULT_MAX_INSPIRATION_DURATION_COMMAND;
 
     m_pressureTriggerOffsetCommand = DEFAULT_TRIGGER_OFFSET;
     m_pressureTriggerOffsetNextCommand = DEFAULT_TRIGGER_OFFSET;
@@ -60,8 +64,9 @@ MainController::MainController() {
     m_ventilationControllersTable[PC_AC] = &pcAcController;
     m_ventilationControllersTable[VC_CMV] = &vcCmvController;
     m_ventilationControllersTable[PC_VSAI] = &pcVsaiController;
+    m_ventilationControllersTable[VC_AC] = &vcAcController;
 
-    m_ventilationControllerMode = VC_CMV;
+    m_ventilationControllerMode = PC_AC;
 
     m_ventilationController = m_ventilationControllersTable[m_ventilationControllerMode];
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
@@ -128,9 +133,6 @@ void MainController::initRespiratoryCycle() {
     m_isPeepDetected = false;
     m_tidalVolumeAlreadyRead = false;
 
-    // todo remove
-    m_tidalVolumeNextCommand = m_pressureTriggerOffsetNextCommand * 10;
-
     // Update new settings at the beginning of the respiratory cycle
     m_cyclesPerMinuteCommand = m_cyclesPerMinuteNextCommand;
     m_peepCommand = m_peepNextCommand;
@@ -142,6 +144,8 @@ void MainController::initRespiratoryCycle() {
     m_plateauDurationCommand = m_plateauDurationNextCommand;
     m_inspiratoryTriggerFlowCommand = m_inspiratoryTriggerFlowNextCommand;
     m_expiratoryTriggerFlowCommand = m_expiratoryTriggerFlowNextCommand;
+    m_tiMaxCommand = m_tiMaxNextCommand;
+    m_tiMinCommand = m_tiMinNextCommand;
 
     // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
@@ -472,8 +476,10 @@ void MainController::sendStopMessageToUi() {
         mmH2OtoCmH2O(m_peakPressureNextCommand), mmH2OtoCmH2O(m_plateauPressureNextCommand),
         mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
         m_triggerModeEnabledNextCommand, m_pressureTriggerOffsetNextCommand,
-        alarmController.isSnoozed(), readCpuLoadPercent(), m_ventilationControllerMode, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
+        alarmController.isSnoozed(), readCpuLoadPercent(), m_ventilationControllerMode,
+        m_inspiratoryTriggerFlowNextCommand, m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand,
+        m_tiMaxNextCommand, 0u, 0u, 0u, 0u, 0u, 0u, m_tidalVolumeNextCommand, 0u, 0u,
+        m_plateauDurationNextCommand, 0u);
 #endif
 }
 
@@ -508,8 +514,9 @@ void MainController::sendMachineState() {
         m_peepMeasure, alarmController.triggeredAlarms(), m_tidalVolumeMeasure,
         m_expiratoryTermNextCommand, m_triggerModeEnabledNextCommand,
         m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed(),
-        readCpuLoadPercent(), m_ventilationControllerMode, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u);
+        readCpuLoadPercent(), m_ventilationControllerMode, m_inspiratoryTriggerFlowNextCommand,
+        m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand, m_tiMaxNextCommand, 0u, 0u, 0u, 0u,
+        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u);
 #endif
 }
 
@@ -517,6 +524,8 @@ void MainController::onVentilationModeSet(uint16_t p_ventilationControllerMode) 
     if (m_ventilationControllerMode >= 1
         && m_ventilationControllerMode <= NUMBER_OF_VENTILATION_MODES) {
         m_ventilationControllerMode = static_cast<VentilationModes>(p_ventilationControllerMode);
+        m_ventilationControllerNextCommand =
+            m_ventilationControllersTable[m_ventilationControllerMode];
     }
 #if !SIMULATION
     // Send acknowledgment to the UI
@@ -758,7 +767,8 @@ void MainController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
 
 // cppcheck-suppress unusedFunction
 void MainController::onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlow) {
-    if (p_inspiratoryTriggerFlow >= 0 && p_inspiratoryTriggerFlow <= 100) {
+    if (p_inspiratoryTriggerFlow >= CONST_MIN_INSPIRATORY_TRIGGER_FLOW
+        && p_inspiratoryTriggerFlow <= CONST_MAX_INSPIRATORY_TRIGGER_FLOW) {
         m_inspiratoryTriggerFlowNextCommand = p_inspiratoryTriggerFlow;
     }
 
@@ -770,8 +780,8 @@ void MainController::onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFl
 
 // cppcheck-suppress unusedFunction
 void MainController::onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlow) {
-    // Todo percentage as constant
-    if (p_expiratoryTriggerFlow >= 0 && p_expiratoryTriggerFlow <= 100) {
+    if (p_expiratoryTriggerFlow >= CONST_MIN_EXPIRATORY_TRIGGER_FLOW
+        && p_expiratoryTriggerFlow <= CONST_MAX_EXPIRATORY_TRIGGER_FLOW) {
         m_expiratoryTriggerFlowNextCommand = p_expiratoryTriggerFlow;
     }
 
@@ -783,21 +793,27 @@ void MainController::onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlow
 
 // cppcheck-suppress unusedFunction
 void MainController::onTiMinSet(uint16_t p_tiMin) {
-    // TODO
+    if (p_tiMin >= CONST_MIN_MIN_INSPIRATION_DURATION
+        && p_tiMin <= CONST_MAX_MIN_INSPIRATION_DURATION) {
+        m_tiMinNextCommand = p_tiMin;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(12, p_tiMin);
+    sendControlAck(12, m_tiMinNextCommand);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onTiMaxSet(uint16_t p_tiMax) {
-    // TODO
+    if (p_tiMax >= CONST_MIN_MAX_INSPIRATION_DURATION
+        && p_tiMax <= CONST_MAX_MAX_INSPIRATION_DURATION) {
+        m_tiMaxNextCommand = p_tiMax;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(13, p_tiMax);
+    sendControlAck(13, m_tiMaxNextCommand);
 #endif
 }
 
@@ -901,11 +917,14 @@ void MainController::onHighTidalVolumeAlarmTresholdSet(uint16_t p_highTidalVolum
 
 // cppcheck-suppress unusedFunction
 void MainController::onPlateauDurationSet(uint16_t p_plateauDuration) {
-    // TODO
+    if (p_plateauDuration >= CONST_MIN_PLATEAU_DURATION
+        && p_plateauDuration <= CONST_MAX_PLATEAU_DURATION) {
+        m_plateauDurationNextCommand = p_plateauDuration;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(23, p_plateauDuration);
+    sendControlAck(23, m_plateauDurationNextCommand);
 #endif
 }
 

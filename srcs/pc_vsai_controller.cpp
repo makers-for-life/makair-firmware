@@ -120,11 +120,11 @@ void PC_VSAI_Controller::inhale() {
         m_plateauPressureReached = true;
     }
 
-    int32_t tiMinInTick = 400u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
+    int32_t tiMinInTick = mainController.tiMinCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
 
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
         m_maxInspiratoryFlow = mainController.inspiratoryFlow();
-    } else if ((mainController.inspiratoryFlow() < ((50 * m_maxInspiratoryFlow) / 100))
+    } else if ((mainController.inspiratoryFlow() < ((mainController.expiratoryTriggerFlowCommand() * m_maxInspiratoryFlow) / 100))
                && (static_cast<int64_t>(mainController.tick())
                    > static_cast<int64_t>(tiMinInTick))) {
         mainController.ticksPerInhalationSet(mainController.tick());
