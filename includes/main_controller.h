@@ -517,7 +517,7 @@ class MainController {
     VentilationController* m_ventilationControllerNextCommand;
 
     /// Array containing pointers to different ventilation controllers
-    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES+1];
+    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES + 1];
 
     VentilationModes m_ventilationControllerMode;
 

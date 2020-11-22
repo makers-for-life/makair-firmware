@@ -126,8 +126,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define FAULHABER_OPENED 660  // PWM duty cycle 64% -> open
 #define FAULHABER_CLOSED 900  // PWM duty cycle 90% -> closed
 
-#define VALVE_RESPONSE_TIME_MS 50  // estimated response time for going to open state to close
-                                   // state.
+#define VALVE_RESPONSE_TIME_MS 50  // estimated response time for going to open state to close state
 
 #define PIN_INSPIRATORY_VALVE D5  // PB4 / TIM3_CH1
 #define PIN_EXPIRATORY_VALVE D4   // PB5 / TIM3_CH2

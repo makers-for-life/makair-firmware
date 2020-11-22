@@ -124,7 +124,8 @@ void PC_VSAI_Controller::inhale() {
 
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
         m_maxInspiratoryFlow = mainController.inspiratoryFlow();
-    } else if ((mainController.inspiratoryFlow() < ((mainController.expiratoryTriggerFlowCommand() * m_maxInspiratoryFlow) / 100))
+    } else if ((mainController.inspiratoryFlow()
+                < ((mainController.expiratoryTriggerFlowCommand() * m_maxInspiratoryFlow) / 100))
                && (static_cast<int64_t>(mainController.tick())
                    > static_cast<int64_t>(tiMinInTick))) {
         mainController.ticksPerInhalationSet(mainController.tick());
