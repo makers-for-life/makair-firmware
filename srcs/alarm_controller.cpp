@@ -152,7 +152,7 @@ void AlarmController::detectedAlarm(uint8_t p_alarmCode,
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         Alarm* current = &m_alarms[i];
         bool wasTriggered = current->isTriggered();
-        if (current->getCode() == p_alarmCode) {
+        if (current->isEnabled() && (current->getCode() == p_alarmCode)) {
             current->detected(p_cycleNumber);
 
             if (current->isTriggered()) {
@@ -322,4 +322,23 @@ void AlarmController::updateCoreData(uint32_t p_tick,
     m_pressure = p_pressure;
     m_phase = p_phase;
     m_cycle_number = p_cycle_number;
+}
+
+void AlarmController::updateEnabledAlarms(Alarms enabledAlarms) {
+    // Disable every alarms
+    for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
+        m_alarms[i].disable();
+    }
+
+    // Enable provided alarms
+    for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
+        if (enabledAlarms.alarms[i] != 0u) {
+            for (uint8_t j = 0; j < ALARMS_SIZE; j++) {
+                if (m_alarms[j].getCode() == enabledAlarms.alarms[i]) {
+                    m_alarms[j].enable();
+                    break;
+                }
+            }
+        }
+    }
 }

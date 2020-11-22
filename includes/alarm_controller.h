@@ -30,6 +30,11 @@
 #define RCM_SW_18 17u
 #define RCM_SW_19 24u
 
+/// List of alarms (named by their code)
+struct Alarms {
+    uint8_t alarms[ALARMS_SIZE];
+};
+
 // CLASS =====================================================================
 
 /// Manage alarm features
@@ -88,6 +93,13 @@ class AlarmController {
 
     /// Get the alarms triggered during this cycle
     uint8_t* triggeredAlarms() { return m_triggeredAlarms; }
+
+    /**
+     * Update the list of enabled alarms (alarms not provided here will have no effects)
+     *
+     * @param The new list of enabled alarms
+     */
+    void updateEnabledAlarms(Alarms enabledAlarms);
 
  private:
     /// Highest priority of the currently triggered alarms

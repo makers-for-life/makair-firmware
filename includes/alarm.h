@@ -55,6 +55,15 @@ class Alarm {
     /// Reset to zero the number of detection.
     void notDetected();
 
+    /// Enable this alarm
+    void enable();
+
+    /// Disable this alarm
+    void disable();
+
+    /// True if this alarm is enabled
+    bool isEnabled();
+
  private:
     /// Alarm priority
     AlarmPriority m_priority;
@@ -73,4 +82,7 @@ class Alarm {
 
     /// Number of cycles since the alarm was triggered
     uint32_t m_cyclesSinceTrigger;
+
+    /// Whether or not this alarm is enabled
+    bool m_enabled;
 };
