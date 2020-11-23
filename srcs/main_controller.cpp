@@ -52,6 +52,10 @@ MainController::MainController() {
     m_tiMinNextCommand = DEFAULT_MIN_INSPIRATION_DURATION_COMMAND;
     m_tiMaxCommand = DEFAULT_MAX_INSPIRATION_DURATION_COMMAND;
     m_tiMaxNextCommand = DEFAULT_MAX_INSPIRATION_DURATION_COMMAND;
+    m_targetInspiratoryFlowCommand = DEFAULT_TARGET_FLOW_COMMAND;
+    m_targetInspiratoryFlowNextCommand = DEFAULT_TARGET_FLOW_COMMAND;
+    m_inspiratoryDurationCommand = DEFAULT_INSPIRATORY_DURATION;
+    m_inspiratoryDurationNextCommand = DEFAULT_INSPIRATORY_DURATION;
 
     m_pressureTriggerOffsetCommand = DEFAULT_TRIGGER_OFFSET;
     m_pressureTriggerOffsetNextCommand = DEFAULT_TRIGGER_OFFSET;
@@ -146,6 +150,8 @@ void MainController::initRespiratoryCycle() {
     m_expiratoryTriggerFlowCommand = m_expiratoryTriggerFlowNextCommand;
     m_tiMaxCommand = m_tiMaxNextCommand;
     m_tiMinCommand = m_tiMinNextCommand;
+    m_targetInspiratoryFlowCommand = m_targetInspiratoryFlowNextCommand;
+    m_inspiratoryDurationCommand = m_inspiratoryDurationNextCommand;
 
     // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
@@ -479,7 +485,7 @@ void MainController::sendStopMessageToUi() {
         alarmController.isSnoozed(), readCpuLoadPercent(), m_ventilationControllerMode,
         m_inspiratoryTriggerFlowNextCommand, m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand,
         m_tiMaxNextCommand, 0u, 0u, 0u, 0u, 0u, 0u, m_tidalVolumeNextCommand, 0u, 0u,
-        m_plateauDurationNextCommand, 0u, 0u, 0u);
+        m_plateauDurationNextCommand, 0u, static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand/1000), m_inspiratoryDurationNextCommand);
 #endif
 }
 
@@ -516,7 +522,7 @@ void MainController::sendMachineState() {
         m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed(),
         readCpuLoadPercent(), m_ventilationControllerMode, m_inspiratoryTriggerFlowNextCommand,
         m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand, m_tiMaxNextCommand, 0u, 0u, 0u, 0u,
-        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u, 0u, 0u);
+        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u, static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand/1000), m_inspiratoryDurationNextCommand);
 #endif
 }
 
@@ -935,5 +941,30 @@ void MainController::onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold) {
 #if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(24, p_leakAlarmThreshold);
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onTargetInspiratoryFlow(uint16_t p_targetInspiratoryFlow) {
+    int32_t temporaryValue = static_cast<uint32_t>(p_targetInspiratoryFlow)*1000;
+    if (temporaryValue >= CONST_MIN_INSPIRATORY_FLOW && temporaryValue <= CONST_MAX_INSPIRATORY_FLOW){
+        m_targetInspiratoryFlowNextCommand = temporaryValue;
+    }
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(25, static_cast<uint16_t>(m_targetInspiratoryFlowNextCommand/1000));
+#endif
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onInspiratoryDuration(uint16_t p_inspiratoryDuration) {
+    if (p_inspiratoryDuration >= CONST_MIN_INSPIRATORY_DURATION && p_inspiratoryDuration <= CONST_MAX_INSPIRATORY_DURATION){
+        m_inspiratoryDurationNextCommand = p_inspiratoryDuration;
+    }
+
+#if !SIMULATION
+    // Send acknowledgment to the UI
+    sendControlAck(26, m_inspiratoryDurationNextCommand);
 #endif
 }

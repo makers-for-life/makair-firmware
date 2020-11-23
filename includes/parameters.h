@@ -47,12 +47,15 @@
 #define CONST_MAX_EXPIRATORY_TRIGGER_FLOW 100    // [%]
 #define CONST_MIN_EXPIRATORY_TRIGGER_FLOW 0      // [%]
 #define CONST_MIN_MIN_INSPIRATION_DURATION 100   // [in ms]
-#define CONST_MAX_MIN_INSPIRATION_DURATION 2000  // [in ms]
-#define CONST_MIN_MAX_INSPIRATION_DURATION 300   // [in ms]
-#define CONST_MAX_MAX_INSPIRATION_DURATION 3000  // [in ms]
-#define CONST_MAX_MAX_INSPIRATION_DURATION 3000  // [in ms]
+#define CONST_MAX_MIN_INSPIRATION_DURATION 3000  // [in ms]
+#define CONST_MIN_MAX_INSPIRATION_DURATION 200   // [in ms]
+#define CONST_MAX_MAX_INSPIRATION_DURATION 5000  // [in ms]
 #define CONST_MIN_PLATEAU_DURATION 0             // [in ms]
 #define CONST_MAX_PLATEAU_DURATION 2000          // [in ms]
+#define CONST_MIN_INSPIRATORY_FLOW 5000          // [in ml/min]
+#define CONST_MAX_INSPIRATORY_FLOW 80000         // [in ml/min]
+#define CONST_MIN_INSPIRATORY_DURATION 200          // [in ml/min]
+#define CONST_MAX_INSPIRATORY_DURATION 3000         // [in ml/min]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
@@ -63,12 +66,14 @@
 #define DEFAULT_PEAK_PRESSURE_COMMAND 200              // in mmH2O
 #define DEFAULT_EXPIRATORY_TERM_COMMAND 20             // 20 means I:E = 10:20 = 1:2
 #define DEFAULT_TIDAL_VOLUME_COMMAND 400               // in mL
-#define DEFAULT_PLATEAU_DURATION_COMMAND 300           // in ms
+#define DEFAULT_PLATEAU_DURATION_COMMAND 200           // in ms
 #define DEFAULT_TRIGGER_OFFSET 20                      // in mmH2O
 #define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND 10    // in percent of current flow
-#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 25     // in percent of max inspirated flow
-#define DEFAULT_MIN_INSPIRATION_DURATION_COMMAND 100   // in ms
+#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 30     // in percent of max inspirated flow
+#define DEFAULT_MIN_INSPIRATION_DURATION_COMMAND 200   // in ms
 #define DEFAULT_MAX_INSPIRATION_DURATION_COMMAND 1000  // in ms
+#define DEFAULT_TARGET_FLOW_COMMAND 40000              // in mL/min
+#define DEFAULT_INSPIRATORY_DURATION 800               // in ms
 
 #define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20
 #define CONST_MAX_CYCLE 35u

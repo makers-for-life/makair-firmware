@@ -217,11 +217,11 @@ void serialControlLoop() {
                     break;
 
                 case TargetInspiratoryFlow:
-                    // TODO
+                    mainController.onTargetInspiratoryFlow(value);
                     break;
 
                 case InspiratoryDuration:
-                    // TODO
+                     mainController.onInspiratoryDuration(value);
                     break;
 
                 default:

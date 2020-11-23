@@ -140,6 +140,12 @@ class MainController {
     /// Set the threshold for leak that raise the alarm
     void onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold);
 
+    /// Set the inspiratory flow target
+    void onTargetInspiratoryFlow(uint16_t p_targetInspiratoryFlow);
+
+    /// Set the inspiration duration 
+    void onInspiratoryDuration(uint16_t p_inspiratoryDuration);
+
     /// Decrease the desired number of cycles per minute
     void onCycleDecrease();
 
@@ -245,6 +251,11 @@ class MainController {
     inline const int16_t tiMinCommand() const { return m_tiMinCommand; }
     /// Get the value of the max duration of inspiration in ms
     inline const int16_t tiMaxCommand() const { return m_tiMaxCommand; }
+    /// get target inspiratory flow in mL/min (used in VC modes)
+    inline const int32_t targetInspiratoryFlowCommand() const { return m_targetInspiratoryFlowCommand; }
+    /// Get duration of inspiration command
+    inline const int16_t inspiratoryDurationCommand() const { return m_inspiratoryDurationCommand; }
+    
 
     /// Get the desired tidal Volume for the next cycle (used in VC modes)
     inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
@@ -276,7 +287,11 @@ class MainController {
     inline const int16_t tiMinNextCommand() const { return m_tiMinNextCommand; }
     /// Get the value of the max duration of inspiration in ms for the next cycle
     inline const int16_t tiMaxNextCommand() const { return m_tiMaxNextCommand; }
-
+    /// get target inspiratory flow in mL/min (used in VC modes) for next cycle
+    inline const int32_t targetInspiratoryFlowNextCommand() const { return m_targetInspiratoryFlowNextCommand; }
+    /// Get duration of inspiration command fo next cycle
+    inline const int16_t inspiratoryDurationNextCommand() const { return m_inspiratoryDurationNextCommand; }
+    
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
     /// Get the measured rebounce peak pressure
@@ -534,6 +549,15 @@ class MainController {
     int16_t m_plateauDurationCommand;
     /// Plateau duration command for next cycle
     int16_t m_plateauDurationNextCommand;
+
+    /// inspiratory flow required (used in VC modes)
+    int32_t m_targetInspiratoryFlowCommand;
+    /// inspiratory flow required (used in VC modes) for next cycle
+    int32_t m_targetInspiratoryFlowNextCommand;
+    /// Duration of inspiration    
+    int16_t m_inspiratoryDurationCommand;   
+    /// Duration of inspiration/// Duration of inspiration
+    int16_t m_inspiratoryDurationNextCommand;
 
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;
