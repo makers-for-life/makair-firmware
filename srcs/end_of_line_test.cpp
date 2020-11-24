@@ -184,13 +184,14 @@ void millisecondTimerEOL(void)
                 continue;
             }
             eolTestNumber++;
+            eolMSCount = 0;
             eolstep = TEST_BAT_DEAD;
         }
     } else if (eolstep == TEST_BAT_DEAD) {
         // Check if the voltage is acceptable
         blower.runSpeed(1799);  // Run blower to drain more current
         batlevel = getBatteryLevelX100();
-        if (eolMSCount < 2000u) {
+        if (eolMSCount < 5000u) {
             (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\n  V=%02d.%02d",
                            batlevel / 100, batlevel % 100);
         } else {
@@ -218,10 +219,11 @@ void millisecondTimerEOL(void)
                        "Test Vbat\nDebrancher 220V...\n  V=%02d.%02d", batlevel / 100,
                        batlevel % 100);
         if (!isMainsConnected()) {
+            eolMSCount = 0;
             eolstep = TEST_BAT_DEAD;
         }
     } else if (eolstep == CONNECT_MAINS) {
-        // Ask the operator to reconnect the machine and wait for a voltage raise of 0.4 V
+        // Ask the operator to reconnect the machine and wait for a voltage raise of 0.4 V (or direct info from supply)
         batlevel = getBatteryLevelX100();
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nConnecter 220V...\nV=%02d.%02d",
