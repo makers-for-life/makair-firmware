@@ -31,6 +31,13 @@ class VC_CMV_Controller : public VentilationController {
     /// End the current breathing cycle
     void endCycle() override;
 
+    /// List of alarms that must be enabled for this mode
+    struct Alarms enabledAlarms() const {
+        struct Alarms a = {0u, RCM_SW_2,  RCM_SW_3,  RCM_SW_11, RCM_SW_12,
+                           0u, RCM_SW_15, RCM_SW_16, RCM_SW_18, RCM_SW_19};
+        return a;
+    }
+
  private:
     /// Determine the blower speed to adopt for next cycle
     void calculateBlower();

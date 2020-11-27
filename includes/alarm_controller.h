@@ -17,18 +17,18 @@
 
 #define ALARMS_SIZE 10u
 
-#define RCM_SW_1 12u
-#define RCM_SW_2 11u
-#define RCM_SW_3 14u
+#define RCM_SW_1 12u // Plateau pressure not reached
+#define RCM_SW_2 11u // Patient is unplugged
+#define RCM_SW_3 14u // Peep not reached
 // #define RCM_SW_6 15u - NOT IN THIS VERSION
 // #define RCM_SW_8 18u - NOT IN THIS VERSION
-#define RCM_SW_11 21u
-#define RCM_SW_12 13u
-#define RCM_SW_14 22u
-#define RCM_SW_15 23u
-#define RCM_SW_16 31u
-#define RCM_SW_18 17u
-#define RCM_SW_19 24u
+#define RCM_SW_11 21u // Battery Low
+#define RCM_SW_12 13u // Battery vers Low
+#define RCM_SW_14 22u // Plateau pressure not reached
+#define RCM_SW_15 23u // Peep not reached
+#define RCM_SW_16 31u // Mains disconnected
+#define RCM_SW_18 17u // Pressure too high 
+#define RCM_SW_19 24u // Patient is unplugged
 
 /// List of alarms (named by their code)
 struct Alarms {

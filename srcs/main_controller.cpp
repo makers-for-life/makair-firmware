@@ -124,6 +124,9 @@ void MainController::setup() {
     reachSafetyPosition();
 
     m_ventilationController->setup();
+
+    alarmController.updateEnabledAlarms(m_ventilationController->enabledAlarms());
+
 }
 
 void MainController::initRespiratoryCycle() {
@@ -157,6 +160,7 @@ void MainController::initRespiratoryCycle() {
     if (m_ventilationController != m_ventilationControllerNextCommand) {
         m_ventilationController = m_ventilationControllerNextCommand;
         m_ventilationController->setup();
+        alarmController.updateEnabledAlarms(m_ventilationController->enabledAlarms());
     }
 
     computeTickParameters();
