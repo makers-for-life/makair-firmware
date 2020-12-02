@@ -111,7 +111,6 @@ uint16_t scanMatrixCounterC3R3 = 0;
 // fast solution: no hardware timer, no interrupt priority or atomicity issue. Close to Arduino
 // philosophy.
 void scanMatrixLoop() {
-#ifndef DISABLE_BUTTONS
     if (1u == scanMatrixCurrentColumn) {
         // Increase counter for each column and row
         if (HIGH == digitalRead(PIN_IN_ROW1)) {
@@ -220,14 +219,15 @@ void scanMatrixLoop() {
     digitalWrite(PIN_OUT_COL1, (1u == scanMatrixCurrentColumn) ? HIGH : LOW);
     digitalWrite(PIN_OUT_COL2, (2u == scanMatrixCurrentColumn) ? HIGH : LOW);
     digitalWrite(PIN_OUT_COL3, (3u == scanMatrixCurrentColumn) ? HIGH : LOW);
-#endif
 }
 
 void keyboardLoop() {
+#ifndef DISABLE_BUTTONS
     scanMatrixLoop();
     buttonAlarmOff.tick();
     buttonStart.tick();
     buttonStop.tick();
+#endif
 }
 
 // cppcheck-suppress unusedFunction
