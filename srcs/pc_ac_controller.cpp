@@ -38,7 +38,7 @@ void PC_AC_Controller::exhale() {
 
     // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
     if ((mainController.tick()
-         > (mainController.ticksPerInhalation() + (500u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
+         > (mainController.ticksPerInhalation() + (700u / MAIN_CONTROLLER_COMPUTE_PERIOD_MS)))) {
         // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
         // machine
         if (((mainController.pressure())

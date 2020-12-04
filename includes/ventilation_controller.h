@@ -30,11 +30,7 @@ class VentilationController {
     virtual void endCycle() = 0;
 
     /// List of alarms that must be enabled for this mode
-    struct Alarms enabledAlarms() const {
-        struct Alarms a = {RCM_SW_1,  RCM_SW_2,  RCM_SW_3,  RCM_SW_11, RCM_SW_12,
-                           RCM_SW_14, RCM_SW_15, RCM_SW_16, RCM_SW_18, RCM_SW_19};
-        return a;
-    }
+    virtual struct Alarms enabledAlarms() const = 0;
 
  private:
 };

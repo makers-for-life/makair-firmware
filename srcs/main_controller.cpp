@@ -126,10 +126,13 @@ void MainController::setup() {
     m_ventilationController->setup();
 
     alarmController.updateEnabledAlarms(m_ventilationController->enabledAlarms());
-
 }
 
 void MainController::initRespiratoryCycle() {
+
+    Serial.print(m_expiratoryVolume);
+    Serial.print(",");
+    Serial.println(m_tidalVolumeMeasure);
     m_expiratoryVolume = 0;
     DBG_DO(Serial.println("Init respiratory cycle");)
     m_cycleNb++;
@@ -374,14 +377,17 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 
 // cppcheck-suppress unusedFunction
 void MainController::updateFakeExpiratoryFlow() {
-    int32_t openning;
-    if (m_ventilationControllerMode == PC_VSAI) {
-        openning = expiratoryValve.positionLinear;
-    } else {
-        openning = expiratoryValve.position;
-    }
 
-    if (openning == 125) {
+    // get section in mm2 x 100
+    int32_t A2MultiplyBy100 = expiratoryValve.getSectionBigHoseX100();
+    int32_t A1MultiplyBy100 = 7853;
+    int32_t rhoMultiplyBy10 = 12;
+    int32_t pressure = max( int32_t(0), m_pressure-int32_t(50));
+    
+
+    int32_t tempRatioX100 = 100*(2 * pressure * 980000 / (rhoMultiplyBy10* (10000 - (100*A2MultiplyBy100/A1MultiplyBy100)*(100*A2MultiplyBy100/A1MultiplyBy100))));
+    m_expiratoryFlow = (A2MultiplyBy100 * sqrt(tempRatioX100)*60)/1000;
+    /*if (openning == 125) {
         m_expiratoryFlow = 0;
     } else {
         int32_t aMultiplyBy100 =
@@ -392,9 +398,19 @@ void MainController::updateFakeExpiratoryFlow() {
         int32_t p = m_pressure;
         m_expiratoryFlow =
             (((aMultiplyBy100 * p) * p) + (bMultiplyBy100 * p) + cMultiplyBy100) / 100;
-    }
+    }*/
 
-    m_expiratoryVolume += ((m_expiratoryFlow / 60) * m_dt) / 1000;
+    Serial.print(A2MultiplyBy100);
+    Serial.print(",");
+    Serial.print(m_pressure);
+    Serial.print(",");
+    Serial.print(tempRatioX100);
+    Serial.print(",");
+    Serial.print(m_expiratoryFlow);
+    Serial.print(",");
+    Serial.println();
+
+    m_expiratoryVolume += ((m_expiratoryFlow / 60) * m_dt) / 1000000;
 }
 
 void MainController::updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume) {
@@ -489,7 +505,9 @@ void MainController::sendStopMessageToUi() {
         alarmController.isSnoozed(), readCpuLoadPercent(), m_ventilationControllerMode,
         m_inspiratoryTriggerFlowNextCommand, m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand,
         m_tiMaxNextCommand, 0u, 0u, 0u, 0u, 0u, 0u, m_tidalVolumeNextCommand, 0u, 0u,
-        m_plateauDurationNextCommand, 0u, static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand/1000), m_inspiratoryDurationNextCommand);
+        m_plateauDurationNextCommand, 0u,
+        static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
+        m_inspiratoryDurationNextCommand);
 #endif
 }
 
@@ -526,7 +544,9 @@ void MainController::sendMachineState() {
         m_pressureTriggerOffsetNextCommand, m_cyclesPerMinuteMeasure, alarmController.isSnoozed(),
         readCpuLoadPercent(), m_ventilationControllerMode, m_inspiratoryTriggerFlowNextCommand,
         m_expiratoryTriggerFlowNextCommand, m_tiMinNextCommand, m_tiMaxNextCommand, 0u, 0u, 0u, 0u,
-        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u, static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand/1000), m_inspiratoryDurationNextCommand);
+        0u, 0u, m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u,
+        static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
+        m_inspiratoryDurationNextCommand);
 #endif
 }
 
@@ -950,20 +970,22 @@ void MainController::onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold) {
 
 // cppcheck-suppress unusedFunction
 void MainController::onTargetInspiratoryFlow(uint16_t p_targetInspiratoryFlow) {
-    int32_t temporaryValue = static_cast<uint32_t>(p_targetInspiratoryFlow)*1000;
-    if (temporaryValue >= CONST_MIN_INSPIRATORY_FLOW && temporaryValue <= CONST_MAX_INSPIRATORY_FLOW){
+    int32_t temporaryValue = static_cast<uint32_t>(p_targetInspiratoryFlow) * 1000;
+    if (temporaryValue >= CONST_MIN_INSPIRATORY_FLOW
+        && temporaryValue <= CONST_MAX_INSPIRATORY_FLOW) {
         m_targetInspiratoryFlowNextCommand = temporaryValue;
     }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(25, static_cast<uint16_t>(m_targetInspiratoryFlowNextCommand/1000));
+    sendControlAck(25, static_cast<uint16_t>(m_targetInspiratoryFlowNextCommand / 1000));
 #endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onInspiratoryDuration(uint16_t p_inspiratoryDuration) {
-    if (p_inspiratoryDuration >= CONST_MIN_INSPIRATORY_DURATION && p_inspiratoryDuration <= CONST_MAX_INSPIRATORY_DURATION){
+    if (p_inspiratoryDuration >= CONST_MIN_INSPIRATORY_DURATION
+        && p_inspiratoryDuration <= CONST_MAX_INSPIRATORY_DURATION) {
         m_inspiratoryDurationNextCommand = p_inspiratoryDuration;
     }
 

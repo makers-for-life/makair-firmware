@@ -53,6 +53,8 @@ class VC_CMV_Controller : public VentilationController {
 
     int32_t VCinspiratoryPID(int32_t targetFlow, int32_t currentFlow, int32_t dt);
 
+    bool m_duringPlateau = true;
+    
     int32_t m_volume;
     /// Current blower speed
     uint16_t m_blowerSpeed;

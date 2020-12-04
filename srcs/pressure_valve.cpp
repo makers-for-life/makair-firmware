@@ -127,6 +127,21 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
     return command;
 }
 
+int32_t PressureValve::getSectionBigHoseX100() {
+    int32_t section;
+    Serial.print(command);
+    Serial.print(",");
+    if (command > 105) {
+        section = 0;
+    } else if (command >= 50) {
+        section = 5760 - 558 * command / 10;
+    } else {
+        section = 4390 - 5 * command - 47 * command * command / 100;
+    }
+
+    return max(int32_t(0), section);
+}
+
 uint16_t valveAngle2MicroSeconds(uint16_t value) {
     // Faulhaber motors works with PWM
     return map(value, 0, 125, FAULHABER_OPENED, FAULHABER_CLOSED);

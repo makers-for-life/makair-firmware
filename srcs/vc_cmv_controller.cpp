@@ -74,6 +74,8 @@ void VC_CMV_Controller::initCycle() {
     calculateBlower();
     blower.runSpeed(m_blowerSpeed);
     m_blowerSpeed = blower.getSpeed();
+    mainController.ticksPerInhalationSet(mainController.ticksPerInhalation() + 50);
+    m_duringPlateau = false;
 }
 
 void VC_CMV_Controller::inhale() {
@@ -87,17 +89,24 @@ void VC_CMV_Controller::inhale() {
          - mainController.plateauDurationCommand());  // in ms
 
     if (inspirationRemainingDurationMs > 20) {
-        m_targetFlowMultiplyBy1000 =
+        /*m_targetFlowMultiplyBy1000 =
             (60 * 1000
              * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume()))
             / inspirationRemainingDurationMs;  // in mL/min
-        m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);
+        m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);*/
+        m_targetFlowMultiplyBy1000 = mainController.targetInspiratoryFlowCommand();
     }
 
+    int32_t safetyVolume = mainController.inspiratoryFlow() * VALVE_RESPONSE_TIME_MS / 60000; // todo check greater than volume target
+    if (!m_duringPlateau && mainController.currentDeliveredVolume() > mainController.tidalVolumeCommand() -safetyVolume ) {
+        mainController.ticksPerInhalationSet(mainController.tick()
+                                             + mainController.plateauDurationCommand()
+                                                   / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);
+        m_duringPlateau = true;
+    }
     if (mainController.tick()
         < mainController.ticksPerInhalation()
-              - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS
-              - VALVE_RESPONSE_TIME_MS / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
+              - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
         /*int32_t expiratoryValveOpenningValue = VCinspiratoryPID(
             m_targetFlowMultiplyBy1000, mainController.inspiratoryFlow(), mainController.dt());
         inspiratoryValve.openLinear(expiratoryValveOpenningValue);*/
@@ -136,8 +145,6 @@ void VC_CMV_Controller::inhale() {
 
     } else {
         inspiratoryValve.close();
-        Serial.print(0);
-        Serial.print(",");
         Serial.print(mainController.inspiratoryFlow());
         Serial.print(",");
         Serial.print(m_targetFlowMultiplyBy1000);
@@ -166,6 +173,19 @@ void VC_CMV_Controller::exhale() {
 
     inspiratoryValve.close();
     // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
+
+    Serial.print(mainController.inspiratoryFlow());
+    Serial.print(",");
+    Serial.print(m_targetFlowMultiplyBy1000);
+    Serial.print(",");
+    Serial.print(mainController.currentDeliveredVolume() * 100);
+    Serial.print(",");
+    /*Serial.print(twoA1SquareDotDeltaPressureMultiplyBy100);
+    Serial.print(",");
+    Serial.print(tempRatio);
+    Serial.print(",");*/
+    Serial.print(0);
+    Serial.println();
 }
 
 void VC_CMV_Controller::endCycle() {}
