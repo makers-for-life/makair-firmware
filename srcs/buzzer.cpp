@@ -109,13 +109,13 @@ void Update_IT_callback(void)
                && (Active_Buzzer_Has_Begun == true)) {
         // If we are at start of pattern, check for repeating mode
         BuzzerTim->pause();
-        BuzzerControl_Off();
+        //BuzzerControl_Off();
     } else {
         // Previous state is finished, switch to next one
         if (Active_Buzzer[Active_Buzzer_Index] == BZ_ON) {
-            BuzzerControl_On();
+            //BuzzerControl_On();
         } else {
-            BuzzerControl_Off();
+            //BuzzerControl_Off();
         }
         BuzzerTim->setOverflow(Active_Buzzer[Active_Buzzer_Index + 1u], TICK_FORMAT);
         Active_Buzzer_Index = (Active_Buzzer_Index + 2u) % Active_Buzzer_Size;
@@ -127,7 +127,7 @@ void Buzzer_Init() {
     // Buzzer HardwareTimer object creation
     BuzzerTim = new HardwareTimer(BUZZER_TIMER);
 
-    BuzzerControl_Off();
+    //BuzzerControl_Off();
     // CPU Clock down to 10 kHz
     BuzzerTim->setPrescaleFactor((BuzzerTim->getTimerClkFreq() / (TIMER_TICK_PER_MS * 1000)));
     BuzzerTim->setOverflow(1);  // don't care right now, timer is not started in init
@@ -162,7 +162,7 @@ void Buzzer_Mute() {
         Active_Buzzer_Index = 0;
 
         // Configuration of mute pattern
-        BuzzerControl_Off();
+        //BuzzerControl_Off();
         BuzzerTim->setOverflow(PAUSE_120S, TICK_FORMAT);
 
         // Timer starts. Required to configure output on GPIO
@@ -195,6 +195,6 @@ void Buzzer_Stop(void) {
     Active_Buzzer_Repeat = false;
 
     // Avoid unexpected infinite buzzing
-    BuzzerControl_Off();
+    // //BuzzerControl_Off();
     BuzzerTim->pause();
 }

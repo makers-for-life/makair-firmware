@@ -50,7 +50,7 @@
 // Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor
 // Note: Hardware v1 cannot support any mass flow meter sensor
-#define MASS_FLOW_METER
+//#define MASS_FLOW_METER
 
 // Available Mass Flow Meters
 #define MFM_SFM_3300D 1

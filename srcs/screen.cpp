@@ -83,9 +83,9 @@ void displayCurrentSettings(uint16_t peakPressureMax,
 
     char message[SCREEN_LINE_LENGTH + 1];
 
-    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u    %2u  %2u %4uHz",
+    (void)snprintf(message, SCREEN_LINE_LENGTH + 1, "%2u    %2u  %2u ",
                    convertAndRound(peakPressureMax), convertAndRound(plateauPressureMax),
-                   convertAndRound(peepMin),buzzerCurrentFreq);
+                   convertAndRound(peepMin));
 
     screen.print(message);
 }

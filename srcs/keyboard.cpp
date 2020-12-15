@@ -73,10 +73,10 @@ void onPeepPressureIncrease() { pController.onPeepPressureIncrease(); }
 void onPeepPressureDecrease() { pController.onPeepPressureDecrease(); }
 
 /// Handler of the button to increase the number of breathing cycles
-void onCycleIncrease() { pController.onCycleIncrease(); BuzzerIncrementFreq();BuzzerControl_On();}
+void onCycleIncrease() { pController.onCycleIncrease(); BuzzerControl_On();}
 
 /// Handler of the button to decrease the number of breathing cycles
-void onCycleDecrease() { pController.onCycleDecrease(); BuzzerDecrementFreq();BuzzerControl_On();}
+void onCycleDecrease() { pController.onCycleDecrease(); BuzzerControl_Off();}
 
 /// Handler of the button to stop alarm
 void onAlarmOff() { alarmController.snooze(); }
