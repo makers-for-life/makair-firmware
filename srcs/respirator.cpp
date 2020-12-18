@@ -139,17 +139,70 @@ void setup(void) {
     Calibration_Init();
 
     if (!eolTest.isRunning()) {
-        mainStateMachine.setupAndStart();
+        // mainStateMachine.setupAndStart();
 
         // Init the watchdog timer. It must be reloaded frequently otherwise MCU resests
-        IWatchdog.begin(WATCHDOG_TIMEOUT);
-        IWatchdog.reload();
+        // IWatchdog.begin(WATCHDOG_TIMEOUT);
+        // IWatchdog.reload();
     } else {
         eolTest.setupAndStart();
     }
 }
 
-// cppcheck-suppress unusedFunction
-void loop(void) { COUNT_IDLE_CYCLE; }
+void loop(void) {
 
+    inspiratoryValve.open();
+    expiratoryValve.close();
+
+    int32_t blower_values[2] = {1080, 1800};
+    int32_t expiratory_angle_values[2] = {110, 90};
+    int32_t inspiratory_angle_values[6] = {125, 120, 110, 90, 40, 0};
+
+    Serial.println("index\tblower speed "
+                   "(0-1800)\tinspiratoryValveOpenning(0-125)\texpiratoryValveOpenning(0-125)"
+                   "\tinspiratoryFlow(mL/"
+                   "min)\texpiratoryFlow(mL/min)\tpressure(mmH2O)");
+    for (int32_t i = 0; i < 2; i++) {
+        blower.runSpeed(blower_values[i]);
+
+        for (int32_t k = 0; k < 2; k++) {
+            expiratoryValve.open(expiratory_angle_values[k]);
+            for (int32_t l = 0; l < 6; l++) {    
+                inspiratoryValve.open(inspiratory_angle_values[l]);
+                inspiratoryValve.execute();
+                expiratoryValve.execute();
+                delay(10000);
+                int32_t sumFlow = 0;
+                int32_t sumFlowexpi = 0;
+                int32_t sumPressure = 0;
+                for (int32_t j = 0; j < 100; j++) {
+                    expiratoryValve.execute();
+                    inspiratoryValve.execute();
+                    sumFlow += MFM_read_airflow();
+                    sumFlowexpi += MFM_expi_read_airflow();
+                    sumPressure += inspiratoryPressureSensor.read();
+                    delay(10);
+                }
+                Serial.print(i);
+                Serial.print("\t");
+                Serial.print(blower_values[i]);
+                Serial.print("\t");
+                Serial.print(inspiratory_angle_values[l]);
+                Serial.print("\t");
+                Serial.print(expiratory_angle_values[6]);
+                Serial.print("\t");
+                Serial.print(sumFlow / 100);
+                Serial.print("\t");
+                Serial.print(sumFlowexpi / 100);
+                Serial.print("\t");
+                Serial.print(sumPressure / 100);
+                Serial.println();
+            }
+        }
+    }
+
+    delay(10000000);
+
+    // COUNT_IDLE_CYCLE;
+}
 #endif
