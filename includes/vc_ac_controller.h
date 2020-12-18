@@ -19,7 +19,7 @@ class VC_AC_Controller final : public VC_CMV_Controller {
     /// List of alarms that must be enabled for this mode
     struct Alarms enabledAlarms() const {
         struct Alarms a = {0u,        RCM_SW_2,  RCM_SW_3,  RCM_SW_4,  RCM_SW_5,
-                           RCM_SW_6,  RCM_SW_7,  RCM_SW_11, RCM_SW_12, 0u,
+                           RCM_SW_6,  RCM_SW_7,RCM_SW_8,  RCM_SW_9,  RCM_SW_11, RCM_SW_12, 0u,
                            RCM_SW_15, RCM_SW_16, RCM_SW_18, RCM_SW_19};
         return a;
     }

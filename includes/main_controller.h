@@ -120,10 +120,10 @@ class MainController {
         uint16_t p_highExpiratoryMinuteVolumeAlarmThreshold);
 
     /// Set alarm threshold for low respiratory rate
-    void onLowExpiratoryRateAlarmThresholdSet(uint16_t p_lowExpiratoryRateAlarmThreshold);
+    void onlowRespiratoryRateAlarmThresholdSet(uint16_t p_lowRespiratoryRateAlarmThreshold);
 
     /// Set alarm threshold for high respiratory rate
-    void onHighExpiratoryRateAlarmThresholdSet(uint16_t p_highExpiratoryRateAlarmThreshold);
+    void onhighRespiratoryRateAlarmThresholdSet(uint16_t p_highRespiratoryRateAlarmThreshold);
 
     /// Set target tidal volume (used in VC modes)
     void onTargetTidalVolumeSet(uint16_t p_targetTidalVolume);
@@ -581,6 +581,17 @@ class MainController {
     int32_t m_highExpiratoryMinuteVolumeAlarmThresholdCommand; 
     // Threshold for high inspiratory minute volume alarm for next cycle
     int32_t m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand; 
+
+    // Threshold for low respiratory rate
+    int32_t m_lowRespiratoryRateAlarmThresholdCommand; 
+    // Threshold for low respiratory rate for next cycle
+    int32_t m_lowRespiratoryRateAlarmThresholdNextCommand; 
+
+    // Threshold for low respiratory rate
+    int32_t m_highRespiratoryRateAlarmThresholdCommand; 
+    // Threshold for low respiratory rate for next cycle
+    int32_t m_highRespiratoryRateAlarmThresholdNextCommand; 
+    
 
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;

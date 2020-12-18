@@ -188,12 +188,12 @@ void serialControlLoop() {
                     mainController.onHighExpiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
-                case LowExpiratoryRateAlarmThreshold:
-                    mainController.onLowExpiratoryRateAlarmThresholdSet(value);
+                case lowRespiratoryRateAlarmThreshold:
+                    mainController.onlowRespiratoryRateAlarmThresholdSet(value);
                     break;
 
-                case HighExpiratoryRateAlarmThreshold:
-                    mainController.onHighExpiratoryRateAlarmThresholdSet(value);
+                case highRespiratoryRateAlarmThreshold:
+                    mainController.onhighRespiratoryRateAlarmThresholdSet(value);
                     break;
 
                 case TargetTidalVolume:

@@ -176,8 +176,8 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
                         uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
                         uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
-                        uint8_t lowExpiratoryRateAlarmThreshold,
-                        uint8_t highExpiratoryRateAlarmThreshold,
+                        uint8_t lowRespiratoryRateAlarmThreshold,
+                        uint8_t highRespiratoryRateAlarmThreshold,
                         uint16_t targetTidalVolumeValue,
                         uint16_t lowTidalVolumeAlarmTresholdValue,
                         uint16_t highTidalVolumeAlarmTresholdValue,
@@ -344,14 +344,14 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(lowExpiratoryRateAlarmThreshold);
-    crc32.update(lowExpiratoryRateAlarmThreshold);
+    Serial6.write(lowRespiratoryRateAlarmThreshold);
+    crc32.update(lowRespiratoryRateAlarmThreshold);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(highExpiratoryRateAlarmThreshold);
-    crc32.update(highExpiratoryRateAlarmThreshold);
+    Serial6.write(highRespiratoryRateAlarmThreshold);
+    crc32.update(highRespiratoryRateAlarmThreshold);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
@@ -552,8 +552,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
                               uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
                               uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
-                              uint8_t lowExpiratoryRateAlarmThreshold,
-                              uint8_t highExpiratoryRateAlarmThreshold,
+                              uint8_t lowRespiratoryRateAlarmThreshold,
+                              uint8_t highRespiratoryRateAlarmThreshold,
                               uint16_t targetTidalVolumeValue,
                               uint16_t lowTidalVolumeAlarmTresholdValue,
                               uint16_t highTidalVolumeAlarmTresholdValue,
@@ -783,14 +783,14 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(lowExpiratoryRateAlarmThreshold);
-    crc32.update(lowExpiratoryRateAlarmThreshold);
+    Serial6.write(lowRespiratoryRateAlarmThreshold);
+    crc32.update(lowRespiratoryRateAlarmThreshold);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(highExpiratoryRateAlarmThreshold);
-    crc32.update(highExpiratoryRateAlarmThreshold);
+    Serial6.write(highRespiratoryRateAlarmThreshold);
+    crc32.update(highRespiratoryRateAlarmThreshold);
 
     Serial6.print("\t");
     crc32.update("\t", 1);

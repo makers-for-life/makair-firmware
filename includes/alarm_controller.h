@@ -15,7 +15,7 @@
 
 // CONSTANTS ==================================================================
 
-#define ALARMS_SIZE 14u
+#define ALARMS_SIZE 16u
 
 #define RCM_SW_1 12u // Plateau pressure not reached
 #define RCM_SW_2 11u // Patient is unplugged
@@ -34,6 +34,8 @@
 #define RCM_SW_5 41u // Inspiratory minute Volume is too high
 #define RCM_SW_6 42u // Expiratory minute Volume is too low
 #define RCM_SW_7 43u // Expiratory minute Volume is too high
+#define RCM_SW_8 44u // Respiratory rate is too low
+#define RCM_SW_9 45u // Respiratory rate is too high
 
 /// List of alarms (named by their code)
 struct Alarms {

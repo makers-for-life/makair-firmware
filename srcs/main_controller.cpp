@@ -84,6 +84,14 @@ MainController::MainController() {
     m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand =
         DEFAULT_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD;
 
+    m_highExpiratoryMinuteVolumeAlarmThresholdCommand =
+        DEFAULT_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD;
+    m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand =
+        DEFAULT_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD;
+
+    m_lowRespiratoryRateAlarmThresholdCommand = DEFAULT_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD;
+    m_lowRespiratoryRateAlarmThresholdNextCommand = DEFAULT_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD;
+
     m_ventilationControllersTable[PC_CMV] = &pcCmvController;
     m_ventilationControllersTable[PC_AC] = &pcAcController;
     m_ventilationControllersTable[VC_CMV] = &vcCmvController;
@@ -186,6 +194,9 @@ void MainController::initRespiratoryCycle() {
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand;
     m_highExpiratoryMinuteVolumeAlarmThresholdCommand =
         m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
+    m_highExpiratoryMinuteVolumeAlarmThresholdCommand =
+        m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
+    m_lowRespiratoryRateAlarmThresholdCommand = m_lowRespiratoryRateAlarmThresholdNextCommand;
 
     // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
@@ -520,6 +531,7 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_15);
     }
 
+    // RC-SW-4 & 5 : Inspiratory minute Volume is too low/high
     int32_t inspiratoryMinuteVolume = m_tidalVolumeMeasure * m_cyclesPerMinuteMeasure;  // In mL/min
     if (inspiratoryMinuteVolume < m_lowInspiratoryMinuteVolumeAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_4, m_cycleNb,
@@ -534,6 +546,7 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_5);
     }
 
+    // RC-SW-6 & 7 : Expiratory minute Volume is too low/high
     int32_t expiratoryMinuteVolume = m_expiratoryVolume * m_cyclesPerMinuteMeasure;  // In mL/min
     if (expiratoryMinuteVolume < m_lowExpiratoryMinuteVolumeAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_6, m_cycleNb,
@@ -548,7 +561,21 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_7);
     }
 
-    // RC-SW-4 : Inspiratory minute Volume is too low
+    // RC-SW-8 & 9 : Respiratory rate is too low/high
+    if (m_cyclesPerMinuteMeasure < m_lowRespiratoryRateAlarmThresholdCommand) {
+        alarmController.detectedAlarm(RCM_SW_8, m_cycleNb,
+                                      m_lowRespiratoryRateAlarmThresholdCommand,
+                                      m_cyclesPerMinuteMeasure);
+    } else if (m_cyclesPerMinuteMeasure > m_highRespiratoryRateAlarmThresholdCommand) {
+        alarmController.detectedAlarm(RCM_SW_9, m_cycleNb,
+                                      m_highRespiratoryRateAlarmThresholdCommand,
+                                      m_cyclesPerMinuteMeasure);
+    } else {
+        alarmController.notDetectedAlarm(RCM_SW_8);
+        alarmController.notDetectedAlarm(RCM_SW_9);
+    }
+
+    
 
 #endif
 }
@@ -570,8 +597,10 @@ void MainController::sendStopMessageToUi() {
         m_tiMaxNextCommand, m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
         m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
-        m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000, 0u, 0u,
-        m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u,
+        m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
+        m_lowRespiratoryRateAlarmThresholdNextCommand,
+        m_highRespiratoryRateAlarmThresholdNextCommand, m_tidalVolumeNextCommand, 0u, 0u,
+        m_plateauDurationNextCommand, 0u,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
         m_inspiratoryDurationNextCommand);
 #endif
@@ -593,6 +622,8 @@ void MainController::stop(uint32_t p_currentMillis) {
     alarmController.notDetectedAlarm(RCM_SW_5);
     alarmController.notDetectedAlarm(RCM_SW_6);
     alarmController.notDetectedAlarm(RCM_SW_7);
+    alarmController.notDetectedAlarm(RCM_SW_8);
+    alarmController.notDetectedAlarm(RCM_SW_9);
     alarmController.notDetectedAlarm(RCM_SW_14);
     alarmController.notDetectedAlarm(RCM_SW_15);
     alarmController.notDetectedAlarm(RCM_SW_18);
@@ -617,8 +648,10 @@ void MainController::sendMachineState() {
         m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
         m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
-        m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000, 0u, 0u,
-        m_tidalVolumeNextCommand, 0u, 0u, m_plateauDurationNextCommand, 0u,
+        m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000,
+        m_lowRespiratoryRateAlarmThresholdNextCommand,
+        m_highRespiratoryRateAlarmThresholdNextCommand, m_tidalVolumeNextCommand, 0u, 0u,
+        m_plateauDurationNextCommand, 0u,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
         m_inspiratoryDurationNextCommand);
 #endif
@@ -991,32 +1024,39 @@ void MainController::onHighExpiratoryMinuteVolumeAlarmThresholdSet(
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onLowExpiratoryRateAlarmThresholdSet(
-    uint16_t p_lowExpiratoryRateAlarmThreshold) {
-    // TODO
+void MainController::onlowRespiratoryRateAlarmThresholdSet(
+    uint16_t p_lowRespiratoryRateAlarmThreshold) {
+    if (p_lowRespiratoryRateAlarmThreshold >= CONST_MIN_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD
+        && p_lowRespiratoryRateAlarmThreshold <= CONST_MAX_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD) {
+        m_lowRespiratoryRateAlarmThresholdNextCommand = p_lowRespiratoryRateAlarmThreshold;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(18, p_lowExpiratoryRateAlarmThreshold);
+    sendControlAck(18, m_lowRespiratoryRateAlarmThresholdNextCommand);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
-void MainController::onHighExpiratoryRateAlarmThresholdSet(
-    uint16_t p_highExpiratoryRateAlarmThreshold) {
-    // TODO
+void MainController::onhighRespiratoryRateAlarmThresholdSet(
+    uint16_t p_highRespiratoryRateAlarmThreshold) {
+    if (p_highRespiratoryRateAlarmThreshold >= CONST_MIN_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD
+        && p_highRespiratoryRateAlarmThreshold <= CONST_MAX_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD) {
+        m_highRespiratoryRateAlarmThresholdNextCommand = p_highRespiratoryRateAlarmThreshold;
+    }
 
 #if !SIMULATION
     // Send acknowledgment to the UI
-    sendControlAck(19, p_highExpiratoryRateAlarmThreshold);
+    sendControlAck(19, m_highRespiratoryRateAlarmThresholdNextCommand);
 #endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onTargetTidalVolumeSet(uint16_t p_targetTidalVolume) {
     if (p_targetTidalVolume >= CONST_MIN_TIDAL_VOLUME
-        && p_targetTidalVolume <= CONST_MAX_TIDAL_VOLUME)
+        && p_targetTidalVolume <= CONST_MAX_TIDAL_VOLUME) {
         m_tidalVolumeNextCommand = p_targetTidalVolume;
+    }
 #if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(20, m_tidalVolumeNextCommand);

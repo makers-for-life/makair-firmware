@@ -61,10 +61,10 @@ enum ControlSetting {
     HighExpiratoryMinuteVolumeAlarmThreshold = 17,
     /// Threshold for low expiratory rate alarm in cycle per minute (value bounds must be between 5
     /// and 25)
-    LowExpiratoryRateAlarmThreshold = 18,
+    lowRespiratoryRateAlarmThreshold = 18,
     /// Threshold for high expiratory rate alarm in cycle per minute (value bounds must be between
     /// 20 and 35)
-    HighExpiratoryRateAlarmThreshold = 19,
+    highRespiratoryRateAlarmThreshold = 19,
     /// Target tidal volume in mL (value bounds must be between 50 and 2000)
     TargetTidalVolume = 20,
     /// Threshold for low tidal volume in mL (value bounds must be between 0 and 1000)

@@ -58,27 +58,39 @@ AlarmController::AlarmController()
 
           /**
            * RCM-SW-4
-           * The device shall embed a high priority alarm 15 when Inspiratory minute Volume is too low from the 3th respiratory cycle.
+           * The device shall embed a high priority alarm 40 when Inspiratory minute Volume is too low from the 3th respiratory cycle.
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_4, 3u),
 
           /**
            * RCM-SW-5
-           * The device shall embed a high priority alarm 16 when Inspiratory minute Volume is too high from the 3th respiratory cycle.
+           * The device shall embed a high priority alarm 41 when Inspiratory minute Volume is too high from the 3th respiratory cycle.
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_5, 3u),
 
            /**
            * RCM-SW-6
-           * The device shall embed a high priority alarm 17 when Expiratory minute Volume is too low from the 3th respiratory cycle.
+           * The device shall embed a high priority alarm 42 when Expiratory minute Volume is too low from the 3th respiratory cycle.
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_6, 3u),
 
           /**
            * RCM-SW-7
-           * The device shall embed a high priority alarm 18 when Expiratory minute Volume is too high from the 3th respiratory cycle.
+           * The device shall embed a high priority alarm 43 when Expiratory minute Volume is too high from the 3th respiratory cycle.
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_7, 3u),
+
+          /**
+           * RCM-SW-8
+           * The device shall embed a high priority alarm 44 when Respiratory rate is too low from the 3th respiratory cycle.
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_8, 3u),
+
+          /**
+           * RCM-SW-9
+           * The device shall embed a high priority alarm 45 when Respiratory rate is too high from the 3th respiratory cycle.
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_9, 3u),
 
           /**
            * RCM-SW-6 - NOT IN THIS VERSION
