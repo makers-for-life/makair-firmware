@@ -155,8 +155,8 @@ void loop(void) {
     expiratoryValve.close();
 
     int32_t blower_values[2] = {1080, 1800};
-    int32_t expiratory_angle_values[2] = {110, 90};
-    int32_t inspiratory_angle_values[6] = {125, 120, 110, 90, 40, 0};
+    int32_t expiratory_angle_values[2] = {0, 0};
+    int32_t inspiratory_angle_values[6] = {0, 0, 0, 0, 0, 0};
 
     Serial.println("index\tblower speed "
                    "(0-1800)\tinspiratoryValveOpenning(0-125)\texpiratoryValveOpenning(0-125)"
@@ -189,7 +189,7 @@ void loop(void) {
                 Serial.print("\t");
                 Serial.print(inspiratory_angle_values[l]);
                 Serial.print("\t");
-                Serial.print(expiratory_angle_values[6]);
+                Serial.print(expiratory_angle_values[k]);
                 Serial.print("\t");
                 Serial.print(sumFlow / 100);
                 Serial.print("\t");
