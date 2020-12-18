@@ -20,10 +20,6 @@
 #define RCM_SW_1 12u // Plateau pressure not reached
 #define RCM_SW_2 11u // Patient is unplugged
 #define RCM_SW_3 14u // Peep not reached
-#define RCM_SW_4 15u // Inspiratory minute Volume is too low
-#define RCM_SW_5 16u // Inspiratory minute Volume is too high
-#define RCM_SW_6 17u // Expiratory minute Volume is too low
-#define RCM_SW_7 18u // Expiratory minute Volume is too high
 // #define RCM_SW_6 15u - NOT IN THIS VERSION
 // #define RCM_SW_8 18u - NOT IN THIS VERSION
 #define RCM_SW_11 21u // Battery Low
@@ -33,6 +29,11 @@
 #define RCM_SW_16 31u // Mains disconnected
 #define RCM_SW_18 17u // Pressure too high 
 #define RCM_SW_19 24u // Patient is unplugged
+
+#define RCM_SW_4 40u // Inspiratory minute Volume is too low
+#define RCM_SW_5 41u // Inspiratory minute Volume is too high
+#define RCM_SW_6 42u // Expiratory minute Volume is too low
+#define RCM_SW_7 43u // Expiratory minute Volume is too high
 
 /// List of alarms (named by their code)
 struct Alarms {
