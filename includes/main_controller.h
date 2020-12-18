@@ -562,6 +562,26 @@ class MainController {
     /// Duration of inspiration/// Duration of inspiration
     int16_t m_inspiratoryDurationNextCommand;
 
+    // Threshold for low inspiratory minute volume alarm
+    int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdCommand; 
+    // Threshold for low inspiratory minute volume alarm for next cycle
+    int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand;
+
+    // Threshold for high inspiratory minute volume alarm
+    int32_t m_highInspiratoryMinuteVolumeAlarmThresholdCommand; 
+    // Threshold for high inspiratory minute volume alarm for next cycle
+    int32_t m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand; 
+
+    // Threshold for low inspiratory minute volume alarm
+    int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdCommand; 
+    // Threshold for low inspiratory minute volume alarm for next cycle
+    int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand; 
+
+    // Threshold for high inspiratory minute volume alarm
+    int32_t m_highExpiratoryMinuteVolumeAlarmThresholdCommand; 
+    // Threshold for high inspiratory minute volume alarm for next cycle
+    int32_t m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand; 
+
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;
 

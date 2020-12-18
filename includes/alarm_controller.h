@@ -15,11 +15,15 @@
 
 // CONSTANTS ==================================================================
 
-#define ALARMS_SIZE 10u
+#define ALARMS_SIZE 14u
 
 #define RCM_SW_1 12u // Plateau pressure not reached
 #define RCM_SW_2 11u // Patient is unplugged
 #define RCM_SW_3 14u // Peep not reached
+#define RCM_SW_4 15u // Inspiratory minute Volume is too low
+#define RCM_SW_5 16u // Inspiratory minute Volume is too high
+#define RCM_SW_6 17u // Expiratory minute Volume is too low
+#define RCM_SW_7 18u // Expiratory minute Volume is too high
 // #define RCM_SW_6 15u - NOT IN THIS VERSION
 // #define RCM_SW_8 18u - NOT IN THIS VERSION
 #define RCM_SW_11 21u // Battery Low

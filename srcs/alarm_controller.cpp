@@ -57,6 +57,30 @@ AlarmController::AlarmController()
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_3, 3u),
 
           /**
+           * RCM-SW-4
+           * The device shall embed a high priority alarm 15 when Inspiratory minute Volume is too low from the 3th respiratory cycle.
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_4, 3u),
+
+          /**
+           * RCM-SW-5
+           * The device shall embed a high priority alarm 16 when Inspiratory minute Volume is too high from the 3th respiratory cycle.
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_5, 3u),
+
+           /**
+           * RCM-SW-6
+           * The device shall embed a high priority alarm 17 when Expiratory minute Volume is too low from the 3th respiratory cycle.
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_6, 3u),
+
+          /**
+           * RCM-SW-7
+           * The device shall embed a high priority alarm 18 when Expiratory minute Volume is too high from the 3th respiratory cycle.
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_7, 3u),
+
+          /**
            * RCM-SW-6 - NOT IN THIS VERSION
            * The software shall monitor the motor temperature, and raise a high priority alarm 15 if
            * temperature is over 80°C.
