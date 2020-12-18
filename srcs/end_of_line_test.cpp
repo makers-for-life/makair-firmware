@@ -34,6 +34,7 @@ int32_t maxPressureValue = 0;
 int32_t minFlowValue = INT32_MAX;
 int32_t maxFlowValue = 0;
 
+const VentilationController* defaultVentilationController;
 EolTest eolTest = EolTest();
 HardwareTimer* eolTimer;
 
@@ -311,17 +312,19 @@ void millisecondTimerEOL(void)
                 continue;  // Wait release if still pressed in previous test
             }
             eolstep = CHECK_UI_SCREEN;
+            mainController.sendStopMessageToUi();
+            defaultVentilationController = mainController.ventilationControllerNextCommand();
         }
     } else if (eolstep == CHECK_UI_SCREEN) {
         // Ask the operator to activate the trigger on the UI screen. It allows to test
         // communication with the UI, and tactile function of the UI.
-        mainController.sendStopMessageToUi();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Activer le trigger\nSur ecran");
+        
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Changer mode\nde ventilation\nSur ecran ta");
 
         // Check serial from the UI
         serialControlLoop();
 
-        if (mainController.triggerModeEnabledNextCommand()) {
+        if (mainController.ventilationControllerNextCommand() != defaultVentilationController) {
             eolstep = PLUG_AIR_TEST_SYTEM;
             eolMSCount = 0;
         }

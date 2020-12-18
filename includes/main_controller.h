@@ -291,6 +291,9 @@ class MainController {
     inline const int32_t targetInspiratoryFlowNextCommand() const { return m_targetInspiratoryFlowNextCommand; }
     /// Get duration of inspiration command fo next cycle
     inline const int16_t inspiratoryDurationNextCommand() const { return m_inspiratoryDurationNextCommand; }
+    /// Ventilation controller pointer for the next cycle
+    inline const VentilationController* ventilationControllerNextCommand() const { return m_ventilationControllerNextCommand; }
+    
     
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
