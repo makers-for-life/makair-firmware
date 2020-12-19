@@ -617,7 +617,7 @@ void MainController::sendStopMessageToUi() {
         m_lowTidalVolumeAlarmTresholdNextCommand, m_highTidalVolumeAlarmTresholdNextCommand,
         m_plateauDurationNextCommand, 0u,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
-        m_inspiratoryDurationNextCommand);
+        m_inspiratoryDurationNextCommand, 0u);
 #endif
 }
 
@@ -671,7 +671,7 @@ void MainController::sendMachineState() {
         m_lowTidalVolumeAlarmTresholdNextCommand, m_highTidalVolumeAlarmTresholdNextCommand,
         m_plateauDurationNextCommand, 0u,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
-        m_inspiratoryDurationNextCommand);
+        m_inspiratoryDurationNextCommand, 0u);
 #endif
 }
 

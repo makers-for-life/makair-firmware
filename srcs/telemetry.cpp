@@ -184,7 +184,8 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
-                        uint16_t inspiratoryDurationValue) {
+                        uint16_t inspiratoryDurationCommandValue,
+                        uint16_t previousInspiratoryDurationValue) {
     uint8_t ventilationModeValue;
     switch (ventilationMode) {
     case PC_CMV:
@@ -402,10 +403,18 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte inspiratoryDuration[2];  // 16 bits
-    toBytes16(inspiratoryDuration, inspiratoryDurationValue);
-    Serial6.write(inspiratoryDuration, 2);
-    crc32.update(inspiratoryDuration, 2);
+    byte inspiratoryDurationCommand[2];  // 16 bits
+    toBytes16(inspiratoryDurationCommand, inspiratoryDurationCommandValue);
+    Serial6.write(inspiratoryDurationCommand, 2);
+    crc32.update(inspiratoryDurationCommand, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte previousInspiratoryDuration[2];  // 16 bits
+    toBytes16(previousInspiratoryDuration, previousInspiratoryDurationValue);
+    Serial6.write(previousInspiratoryDuration, 2);
+    crc32.update(previousInspiratoryDuration, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
@@ -560,7 +569,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t plateauDurationValue,
                               uint16_t leakAlarmThresholdValue,
                               uint8_t targetInspiratoryFlow,
-                              uint16_t inspiratoryDurationValue) {
+                              uint16_t inspiratoryDurationCommandValue,
+                              uint16_t previousInspiratoryDurationValue) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -841,10 +851,18 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte inspiratoryDuration[2];  // 16 bits
-    toBytes16(inspiratoryDuration, inspiratoryDurationValue);
-    Serial6.write(inspiratoryDuration, 2);
-    crc32.update(inspiratoryDuration, 2);
+    byte inspiratoryDurationCommand[2];  // 16 bits
+    toBytes16(inspiratoryDurationCommand, inspiratoryDurationCommandValue);
+    Serial6.write(inspiratoryDurationCommand, 2);
+    crc32.update(inspiratoryDurationCommand, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte previousInspiratoryDuration[2];  // 16 bits
+    toBytes16(previousInspiratoryDuration, previousInspiratoryDurationValue);
+    Serial6.write(previousInspiratoryDuration, 2);
+    crc32.update(previousInspiratoryDuration, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
