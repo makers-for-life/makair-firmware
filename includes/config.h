@@ -26,9 +26,6 @@
  */
 #define DEBUG 3
 
-/// Simulation mode allows to run main controller on a computer
-#define SIMULATION false
-
 /// Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor
 #define MASS_FLOW_METER_ENABLED

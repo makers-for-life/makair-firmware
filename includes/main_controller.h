@@ -11,11 +11,9 @@
 
 // Internal
 
-#if !SIMULATION
 #include "../includes/alarm_controller.h"
 #include "../includes/battery.h"
 #include "../includes/telemetry.h"
-#endif
 
 #include "../includes/blower.h"
 #include "../includes/config.h"
@@ -298,7 +296,9 @@ class MainController {
         return m_inspiratoryDurationNextCommand;
     }
     /// Ventilation controller pointer for the next cycle
-    inline const VentilationController* ventilationControllerNextCommand() const { return m_ventilationControllerNextCommand; }
+    inline const VentilationController* ventilationControllerNextCommand() const {
+        return m_ventilationControllerNextCommand;
+    }
 
 
     /// Get the measured peak pressure
