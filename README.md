@@ -1,5 +1,7 @@
 # MakAir Firmware
 
+[![Firmware Lint](https://github.com/makers-for-life/makair-firmware/workflows/Firmware%20Lint/badge.svg)](https://github.com/makers-for-life/makair-firmware/actions?query=workflow%3A%22Firmware+Lint%22) [![Firmware Unit Tests](https://github.com/makers-for-life/makair-firmware/workflows/Firmware%20Unit%20Tests/badge.svg)](https://github.com/makers-for-life/makair-firmware/actions?query=workflow%3A%22Firmware+Unit+Tests%22)
+
 ## Versions
 
 See [CHANGELOG.md](CHANGELOG.md).
