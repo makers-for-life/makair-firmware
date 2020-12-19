@@ -97,8 +97,11 @@ void VC_CMV_Controller::inhale() {
         m_targetFlowMultiplyBy1000 = mainController.targetInspiratoryFlowCommand();
     }
 
-    int32_t safetyVolume = mainController.inspiratoryFlow() * VALVE_RESPONSE_TIME_MS / 60000; // todo check greater than volume target
-    if (!m_duringPlateau && mainController.currentDeliveredVolume() > mainController.tidalVolumeCommand() -safetyVolume ) {
+    int32_t safetyVolume = mainController.inspiratoryFlow() * VALVE_RESPONSE_TIME_MS
+                           / 60000;  // todo check greater than volume target
+    if (!m_duringPlateau
+        && mainController.currentDeliveredVolume()
+               > mainController.tidalVolumeCommand() - safetyVolume) {
         mainController.ticksPerInhalationSet(mainController.tick()
                                              + mainController.plateauDurationCommand()
                                                    / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);
@@ -107,9 +110,7 @@ void VC_CMV_Controller::inhale() {
     if (mainController.tick()
         < mainController.ticksPerInhalation()
               - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
-        /*int32_t expiratoryValveOpenningValue = VCinspiratoryPID(
-            m_targetFlowMultiplyBy1000, mainController.inspiratoryFlow(), mainController.dt());
-        inspiratoryValve.openLinear(expiratoryValveOpenningValue);*/
+
         int32_t flow = mainController.inspiratoryFlow();
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
@@ -119,44 +120,21 @@ void VC_CMV_Controller::inhale() {
         int32_t twoA1SquareDotDeltaPressureMultiplyBy100 =
             100 * 2 * (A1MultiplyBy100 * A1MultiplyBy100 / 10000)
             * (98 * (blowerPressure - patientPressure) / 10);
-        int32_t tempRatio = twoA1SquareDotDeltaPressureMultiplyBy100
-                            / (rhoMultiplyBy100 * (m_targetFlowMultiplyBy1000 / 60)
-                               * (m_targetFlowMultiplyBy1000 / 60) / 100);
+        int32_t divider = (rhoMultiplyBy100 * (m_targetFlowMultiplyBy1000 / 60)
+                           * (m_targetFlowMultiplyBy1000 / 60) / 100);
+        int32_t tempRatio = (divider == 0) ? 0 : twoA1SquareDotDeltaPressureMultiplyBy100 / divider;
         int32_t sectionToOpen;
         if (m_targetFlowMultiplyBy1000 == 0) {
             sectionToOpen = 0;
 
         } else {
-            sectionToOpen = (A1MultiplyBy100 * 10 / sqrt(tempRatio + 100));
+            int32_t divider2 = (tempRatio + 100 < 0) ? 0 : sqrt(tempRatio + 100);
+            sectionToOpen = (divider2 == 0) ? 0 : (A1MultiplyBy100 * 10 / divider2);
         }
         inspiratoryValve.openSection(sectionToOpen);
-        Serial.print(flow);
-        Serial.print(",");
-        Serial.print(m_targetFlowMultiplyBy1000);
-        Serial.print(",");
-        Serial.print(mainController.currentDeliveredVolume() * 100);
-        Serial.print(",");
-        /*Serial.print(twoA1SquareDotDeltaPressureMultiplyBy100);
-        Serial.print(",");
-        Serial.print(tempRatio);
-        Serial.print(",");*/
-        Serial.print(sectionToOpen);
-        Serial.println();
 
     } else {
         inspiratoryValve.close();
-        Serial.print(mainController.inspiratoryFlow());
-        Serial.print(",");
-        Serial.print(m_targetFlowMultiplyBy1000);
-        Serial.print(",");
-        Serial.print(mainController.currentDeliveredVolume() * 100);
-        Serial.print(",");
-        /*Serial.print(twoA1SquareDotDeltaPressureMultiplyBy100);
-        Serial.print(",");
-        Serial.print(tempRatio);
-        Serial.print(",");*/
-        Serial.print(0);
-        Serial.println();
     }
 
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
@@ -173,19 +151,6 @@ void VC_CMV_Controller::exhale() {
 
     inspiratoryValve.close();
     // m_inspiratoryValveLastAperture = inspiratoryValveOpenningValue;
-
-    Serial.print(mainController.inspiratoryFlow());
-    Serial.print(",");
-    Serial.print(m_targetFlowMultiplyBy1000);
-    Serial.print(",");
-    Serial.print(mainController.currentDeliveredVolume() * 100);
-    Serial.print(",");
-    /*Serial.print(twoA1SquareDotDeltaPressureMultiplyBy100);
-    Serial.print(",");
-    Serial.print(tempRatio);
-    Serial.print(",");*/
-    Serial.print(0);
-    Serial.println();
 }
 
 void VC_CMV_Controller::endCycle() {}
@@ -194,14 +159,13 @@ void VC_CMV_Controller::calculateBlower() {
     int32_t inspirationDurationMs =
         (mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
          - mainController.plateauDurationCommand());  // in ms
-    m_targetFlowMultiplyBy1000 =
-        (60 * 1000 * mainController.tidalVolumeCommand()) / inspirationDurationMs;  // in mL/min
+    m_targetFlowMultiplyBy1000 = (inspirationDurationMs == 0)
+                                     ? 0
+                                     : (60 * 1000 * mainController.tidalVolumeCommand())
+                                           / inspirationDurationMs;  // in mL/min
 
     // 40L/min -> max blower (1800) ; 6L/min -> min blower (300)
     m_blowerSpeed = 1800;
-    // * (400 * MIN_BLOWER_SPEED - 60 * MAX_BLOWER_SPEED
-    // + (MAX_BLOWER_SPEED - MIN_BLOWER_SPEED) * m_targetFlowMultiplyBy1000 / 100)
-    // / 340;
 }
 
 int32_t
@@ -298,82 +262,4 @@ VC_CMV_Controller::PCexpiratoryPID(int32_t targetPressure, int32_t currentPressu
     m_expiratoryValveLastAperture = expiratoryValveAperture;
 
     return expiratoryValveAperture;
-}
-
-int32_t VC_CMV_Controller::VCinspiratoryPID(int32_t targetFlow, int32_t currentFlow, int32_t dt) {
-    int32_t minAperture = inspiratoryValve.minAperture();
-    int32_t maxAperture = inspiratoryValve.maxAperture();
-    int32_t inspiratoryValveAperture;
-    int32_t derivative = 0;
-    int32_t smoothError = 0;
-    int32_t temporaryInspiratoryPidIntegral = 0;
-    int32_t proportionnalWeight;
-    int32_t derivativeWeight;
-
-    int32_t coefficientP = 15;
-    int32_t coefficientI = 300;
-    int32_t coefficientD = 750;  // 0.75
-
-    // Compute error
-    int32_t error = targetFlow - currentFlow;
-
-    // Calculate the derivative part
-    // Include a moving average on error for smoothing purpose
-    m_inspiratoryPidLastErrors[m_inspiratoryPidLastErrorsIndex] = error;
-    m_inspiratoryPidLastErrorsIndex++;
-    if (m_inspiratoryPidLastErrorsIndex
-        >= static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN)) {
-        m_inspiratoryPidLastErrorsIndex = 0;
-    }
-    int32_t totalValues = 0;
-    for (uint8_t i = 0u; i < PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN; i++) {
-        totalValues += m_inspiratoryPidLastErrors[i];
-    }
-    smoothError = totalValues / static_cast<int32_t>(PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN);
-    derivative = ((dt == 0)) ? 0 : ((1000000 * (m_inspiratoryPidLastError - smoothError)) / dt);
-
-    // Ca
-    temporaryInspiratoryPidIntegral =
-        m_inspiratoryPidIntegral + ((coefficientI * error * (dt / 1000)) / 1000000);
-    temporaryInspiratoryPidIntegral =
-        max(int32_t(-1000), min(int32_t(1000), temporaryInspiratoryPidIntegral));
-
-    proportionnalWeight = ((coefficientP * error) / 1000);
-    int32_t integralWeight = temporaryInspiratoryPidIntegral;
-    derivativeWeight = coefficientD * derivative / 1000000;
-
-    int32_t command = proportionnalWeight + integralWeight + derivativeWeight;
-
-    inspiratoryValveAperture =
-        max(minAperture, min(maxAperture, (maxAperture + minAperture) / 2
-                                              + (minAperture - maxAperture) * command / 2000));
-
-    // If the valve is completely open or completely closed, don't update integral part
-    if ((inspiratoryValveAperture != minAperture) && (inspiratoryValveAperture != maxAperture)) {
-        m_inspiratoryPidIntegral = temporaryInspiratoryPidIntegral;
-    }
-
-    m_inspiratoryPidLastError = smoothError;
-    m_inspiratoryValveLastAperture = inspiratoryValveAperture;
-
-    int32_t inspirationRemainingDurationMs =
-        ((mainController.ticksPerInhalation() - mainController.tick())
-             * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
-         - mainController.plateauDurationCommand());  // in ms
-
-    Serial.print(inspirationRemainingDurationMs);
-    Serial.print(",");
-    Serial.print(m_volume);
-    Serial.print(",");
-    Serial.print(targetFlow);
-    Serial.print(",");
-    Serial.print(currentFlow);
-    Serial.print(",");
-    Serial.print(proportionnalWeight);
-    Serial.print(",");
-    Serial.print(integralWeight);
-    Serial.print(",");
-    Serial.print(derivativeWeight);
-    Serial.println();
-    return inspiratoryValveAperture;
 }
