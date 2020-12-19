@@ -15,7 +15,6 @@
 #include "../includes/keyboard.h"
 
 // External
-#include "../includes/config.h"
 #include <OneButton.h>
 
 // Internal

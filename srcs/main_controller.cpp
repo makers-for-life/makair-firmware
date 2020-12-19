@@ -164,7 +164,6 @@ void MainController::setup() {
 }
 
 void MainController::initRespiratoryCycle() {
-
     Serial.print(m_expiratoryVolume);
     Serial.print(",");
     Serial.println(m_tidalVolumeMeasure);
@@ -425,7 +424,6 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 
 // cppcheck-suppress unusedFunction
 void MainController::updateFakeExpiratoryFlow() {
-
     // get section in mm2 x 100
     int32_t A2MultiplyBy100 = expiratoryValve.getSectionBigHoseX100();
     int32_t A1MultiplyBy100 = 7853;

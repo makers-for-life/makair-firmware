@@ -224,7 +224,8 @@ void millisecondTimerEOL(void)
             eolstep = TEST_BAT_DEAD;
         }
     } else if (eolstep == CONNECT_MAINS) {
-        // Ask the operator to reconnect the machine and wait for a voltage raise of 0.4 V (or direct info from supply)
+        // Ask the operator to reconnect the machine and wait for a voltage raise of 0.4 V
+        // (or direct info from supply)
         batlevel = getBatteryLevelX100();
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nConnecter 220V...\nV=%02d.%02d",
@@ -318,8 +319,9 @@ void millisecondTimerEOL(void)
     } else if (eolstep == CHECK_UI_SCREEN) {
         // Ask the operator to activate the trigger on the UI screen. It allows to test
         // communication with the UI, and tactile function of the UI.
-        
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Changer mode\nde ventilation\nSur ecran ta");
+
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
+            "Changer mode\nde ventilation\nSur ecran ta");
 
         // Check serial from the UI
         serialControlLoop();

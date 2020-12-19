@@ -143,7 +143,7 @@ class MainController {
     /// Set the inspiratory flow target
     void onTargetInspiratoryFlow(uint16_t p_targetInspiratoryFlow);
 
-    /// Set the inspiration duration 
+    /// Set the inspiration duration
     void onInspiratoryDuration(uint16_t p_inspiratoryDuration);
 
     /// Decrease the desired number of cycles per minute
@@ -252,10 +252,12 @@ class MainController {
     /// Get the value of the max duration of inspiration in ms
     inline const int16_t tiMaxCommand() const { return m_tiMaxCommand; }
     /// get target inspiratory flow in mL/min (used in VC modes)
-    inline const int32_t targetInspiratoryFlowCommand() const { return m_targetInspiratoryFlowCommand; }
+    inline const int32_t targetInspiratoryFlowCommand() const {
+        return m_targetInspiratoryFlowCommand;
+    }
     /// Get duration of inspiration command
     inline const int16_t inspiratoryDurationCommand() const { return m_inspiratoryDurationCommand; }
-    
+
 
     /// Get the desired tidal Volume for the next cycle (used in VC modes)
     inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
@@ -288,13 +290,17 @@ class MainController {
     /// Get the value of the max duration of inspiration in ms for the next cycle
     inline const int16_t tiMaxNextCommand() const { return m_tiMaxNextCommand; }
     /// get target inspiratory flow in mL/min (used in VC modes) for next cycle
-    inline const int32_t targetInspiratoryFlowNextCommand() const { return m_targetInspiratoryFlowNextCommand; }
+    inline const int32_t targetInspiratoryFlowNextCommand() const {
+        return m_targetInspiratoryFlowNextCommand;
+    }
     /// Get duration of inspiration command fo next cycle
-    inline const int16_t inspiratoryDurationNextCommand() const { return m_inspiratoryDurationNextCommand; }
+    inline const int16_t inspiratoryDurationNextCommand() const {
+        return m_inspiratoryDurationNextCommand;
+    }
     /// Ventilation controller pointer for the next cycle
     inline const VentilationController* ventilationControllerNextCommand() const { return m_ventilationControllerNextCommand; }
-    
-    
+
+
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
     /// Get the measured rebounce peak pressure
@@ -557,56 +563,56 @@ class MainController {
     int32_t m_targetInspiratoryFlowCommand;
     /// inspiratory flow required (used in VC modes) for next cycle
     int32_t m_targetInspiratoryFlowNextCommand;
-    /// Duration of inspiration    
-    int16_t m_inspiratoryDurationCommand;   
+    /// Duration of inspiration
+    int16_t m_inspiratoryDurationCommand;
     /// Duration of inspiration/// Duration of inspiration
     int16_t m_inspiratoryDurationNextCommand;
 
     // Threshold for low inspiratory minute volume alarm
-    int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdCommand; 
+    int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdCommand;
     // Threshold for low inspiratory minute volume alarm for next cycle
     int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand;
 
     // Threshold for high inspiratory minute volume alarm
-    int32_t m_highInspiratoryMinuteVolumeAlarmThresholdCommand; 
+    int32_t m_highInspiratoryMinuteVolumeAlarmThresholdCommand;
     // Threshold for high inspiratory minute volume alarm for next cycle
-    int32_t m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand; 
+    int32_t m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand;
 
     // Threshold for low inspiratory minute volume alarm
-    int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdCommand; 
+    int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdCommand;
     // Threshold for low inspiratory minute volume alarm for next cycle
-    int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand; 
+    int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand;
 
     // Threshold for high inspiratory minute volume alarm
-    int32_t m_highExpiratoryMinuteVolumeAlarmThresholdCommand; 
+    int32_t m_highExpiratoryMinuteVolumeAlarmThresholdCommand;
     // Threshold for high inspiratory minute volume alarm for next cycle
-    int32_t m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand; 
+    int32_t m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
 
     // Threshold for low respiratory rate
-    int32_t m_lowRespiratoryRateAlarmThresholdCommand; 
+    int32_t m_lowRespiratoryRateAlarmThresholdCommand;
     // Threshold for low respiratory rate for next cycle
-    int32_t m_lowRespiratoryRateAlarmThresholdNextCommand; 
+    int32_t m_lowRespiratoryRateAlarmThresholdNextCommand;
 
     // Threshold for low respiratory rate
-    int32_t m_highRespiratoryRateAlarmThresholdCommand; 
+    int32_t m_highRespiratoryRateAlarmThresholdCommand;
     // Threshold for low respiratory rate for next cycle
-    int32_t m_highRespiratoryRateAlarmThresholdNextCommand; 
+    int32_t m_highRespiratoryRateAlarmThresholdNextCommand;
 
-    // Threshold for low tidal Volume Alarm 
-    int32_t m_lowTidalVolumeAlarmTresholdCommand; 
+    // Threshold for low tidal Volume Alarm
+    int32_t m_lowTidalVolumeAlarmTresholdCommand;
     // Threshold for low tidal Volume Alarm next cycle
-    int32_t m_lowTidalVolumeAlarmTresholdNextCommand; 
+    int32_t m_lowTidalVolumeAlarmTresholdNextCommand;
 
-    // Threshold for high tidal Volume Alarm 
-    int32_t m_highTidalVolumeAlarmTresholdCommand; 
+    // Threshold for high tidal Volume Alarm
+    int32_t m_highTidalVolumeAlarmTresholdCommand;
     // Threshold for high tidal Volume Alarm next cycle
-    int32_t m_highTidalVolumeAlarmTresholdNextCommand; 
+    int32_t m_highTidalVolumeAlarmTresholdNextCommand;
 
     // Threshold for leak alarm
-    int32_t m_leakAlarmThresholdCommand; 
+    int32_t m_leakAlarmThresholdCommand;
     // Threshold for leak alarm for next cycle
-    int32_t m_leakAlarmThresholdNextCommand; 
-    
+    int32_t m_leakAlarmThresholdNextCommand;
+
 
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;

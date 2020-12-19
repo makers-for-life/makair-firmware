@@ -153,7 +153,7 @@ AlarmController::AlarmController()
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_21, 3u),
         }),
 
-          
+
       m_tick(0u),
       m_unsnooze(true),
       m_pressure(0u),

@@ -110,7 +110,6 @@ void VC_CMV_Controller::inhale() {
     if (mainController.tick()
         < mainController.ticksPerInhalation()
               - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
-
         int32_t flow = mainController.inspiratoryFlow();
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
