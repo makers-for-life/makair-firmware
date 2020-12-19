@@ -930,8 +930,8 @@ void MainController::onTiMaxSet(uint16_t p_tiMax) {
 void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(
     uint16_t p_lowInspiratoryMinuteVolumeAlarmThreshold) {
     // CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD might not be equal to 0
-    // cppcheck-suppress unsignedPositive ;
     if (p_lowInspiratoryMinuteVolumeAlarmThreshold
+            // cppcheck-suppress unsignedPositive ;
             >= CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD
         && p_lowInspiratoryMinuteVolumeAlarmThreshold
                <= CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD) {
@@ -962,8 +962,8 @@ void MainController::onHighInspiratoryMinuteVolumeAlarmThresholdSet(
 void MainController::onLowExpiratoryMinuteVolumeAlarmThresholdSet(
     uint16_t p_lowExpiratoryMinuteVolumeAlarmThreshold) {
     // CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD might not be equal to 0
-    // cppcheck-suppress unsignedPositive ;
     if (p_lowExpiratoryMinuteVolumeAlarmThreshold
+            // cppcheck-suppress unsignedPositive ;
             >= CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD
         && p_lowExpiratoryMinuteVolumeAlarmThreshold
                <= CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD) {
