@@ -15,27 +15,29 @@
 
 // CONSTANTS ==================================================================
 
-#define ALARMS_SIZE 16u
+#define ALARMS_SIZE 19u
 
-#define RCM_SW_1 12u // Plateau pressure not reached
-#define RCM_SW_2 11u // Patient is unplugged
-#define RCM_SW_3 14u // Peep not reached
-// #define RCM_SW_6 15u - NOT IN THIS VERSION
-// #define RCM_SW_8 18u - NOT IN THIS VERSION
-#define RCM_SW_11 21u // Battery Low
-#define RCM_SW_12 13u // Battery vers Low
-#define RCM_SW_14 22u // Plateau pressure not reached
-#define RCM_SW_15 23u // Peep not reached
-#define RCM_SW_16 31u // Mains disconnected
-#define RCM_SW_18 17u // Pressure too high 
-#define RCM_SW_19 24u // Patient is unplugged
+#define RCM_SW_1 12u   // Plateau pressure not reached
+#define RCM_SW_2 11u   // Patient is unplugged
+#define RCM_SW_3 14u   // Peep not reached
+#define RCM_SW_11 21u  // Battery Low
+#define RCM_SW_12 13u  // Battery vers Low
+#define RCM_SW_14 22u  // Plateau pressure not reached
+#define RCM_SW_15 23u  // Peep not reached
+#define RCM_SW_16 31u  // Mains disconnected
+#define RCM_SW_18 17u  // Pressure too high
+#define RCM_SW_19 24u  // Patient is unplugged
 
-#define RCM_SW_4 40u // Inspiratory minute Volume is too low
-#define RCM_SW_5 41u // Inspiratory minute Volume is too high
-#define RCM_SW_6 42u // Expiratory minute Volume is too low
-#define RCM_SW_7 43u // Expiratory minute Volume is too high
-#define RCM_SW_8 44u // Respiratory rate is too low
-#define RCM_SW_9 45u // Respiratory rate is too high
+#define RCM_SW_4 40u   // Inspiratory minute Volume is too low
+#define RCM_SW_5 41u   // Inspiratory minute Volume is too high
+#define RCM_SW_6 42u   // Expiratory minute Volume is too low
+#define RCM_SW_7 43u   // Expiratory minute Volume is too high
+#define RCM_SW_8 44u   // Respiratory rate is too low
+#define RCM_SW_9 45u   // Respiratory rate is too high
+#define RCM_SW_10 46u  // Leak is too high
+
+#define RCM_SW_20 47u  // Tidal Volume is too low
+#define RCM_SW_21 48u  // Tidal Volume is too high
 
 /// List of alarms (named by their code)
 struct Alarms {

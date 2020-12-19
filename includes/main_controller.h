@@ -591,6 +591,21 @@ class MainController {
     int32_t m_highRespiratoryRateAlarmThresholdCommand; 
     // Threshold for low respiratory rate for next cycle
     int32_t m_highRespiratoryRateAlarmThresholdNextCommand; 
+
+    // Threshold for low tidal Volume Alarm 
+    int32_t m_lowTidalVolumeAlarmTresholdCommand; 
+    // Threshold for low tidal Volume Alarm next cycle
+    int32_t m_lowTidalVolumeAlarmTresholdNextCommand; 
+
+    // Threshold for high tidal Volume Alarm 
+    int32_t m_highTidalVolumeAlarmTresholdCommand; 
+    // Threshold for high tidal Volume Alarm next cycle
+    int32_t m_highTidalVolumeAlarmTresholdNextCommand; 
+
+    // Threshold for leak alarm
+    int32_t m_leakAlarmThresholdCommand; 
+    // Threshold for leak alarm for next cycle
+    int32_t m_leakAlarmThresholdNextCommand; 
     
 
     /// Volume expired by the patient during the exhalation phase

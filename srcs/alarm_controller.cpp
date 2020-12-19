@@ -93,25 +93,16 @@ AlarmController::AlarmController()
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_9, 3u),
 
           /**
-           * RCM-SW-6 - NOT IN THIS VERSION
-           * The software shall monitor the motor temperature, and raise a high priority alarm 15 if
-           * temperature is over 80°C.
+           * RCM-SW-10
+           * The device shall embed a high priority alarm 46 when Leak is too high.
            */
-          //   Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_6, 1u),
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_10, 3u),
 
           /**
            * RCM-SW-18
            * The device shall embed a high priority alarm 17 when the peak pressure is > 80cmH2O.
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_18, 1u),
-
-          /**
-           * RCM-SW-8 - NOT IN THIS VERSION
-           * The software shall detect pressure out-of-range value in case of pressure sensor
-           * disconnection or shortcut (< 0.250V & > 3.1V) and a high Priority Alarm 18 shall be
-           * triggered.
-           */
-          //   Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_8, 1u),
 
           /**
            * RCM-SW-11
@@ -147,7 +138,22 @@ AlarmController::AlarmController()
            * The device shall embed an information (audible) signal 31 when the mains are
            * disconnected to alert the user (vOut < 26,5V).
            */
-          Alarm(AlarmPriority::ALARM_LOW, RCM_SW_16, 1u)}),
+          Alarm(AlarmPriority::ALARM_LOW, RCM_SW_16, 1u),
+
+          /**
+           * RCM-SW-20
+           * The device shall embed a medium priority alarm 47 when Tidal Volume is too low
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_20, 3u),
+
+          /**
+           * RCM-SW-21
+           * The device shall embed a medium priority alarm 48 when Tidal Volume is too high
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_21, 3u),
+        }),
+
+          
       m_tick(0u),
       m_unsnooze(true),
       m_pressure(0u),

@@ -33,9 +33,9 @@ class VC_CMV_Controller : public VentilationController {
 
     /// List of alarms that must be enabled for this mode
     struct Alarms enabledAlarms() const {
-        struct Alarms a = {0u,        RCM_SW_2,  RCM_SW_3,  RCM_SW_4,  RCM_SW_5,
-                           RCM_SW_6,  RCM_SW_7,  RCM_SW_11, RCM_SW_12, 0u,
-                           RCM_SW_15, RCM_SW_16, RCM_SW_18, RCM_SW_19};
+        struct Alarms a = {0u,        RCM_SW_2,  RCM_SW_3,  0u,  0u,
+                           0u,  RCM_SW_7, 0u, 0u, RCM_SW_10, RCM_SW_11, RCM_SW_12, 0u,
+                           RCM_SW_15, RCM_SW_16, RCM_SW_18, RCM_SW_19, 0u, 0u};
         return a;
     }
 
@@ -51,8 +51,6 @@ class VC_CMV_Controller : public VentilationController {
      * @param dt Time since the last computation (in microsecond)
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
-
-    int32_t VCinspiratoryPID(int32_t targetFlow, int32_t currentFlow, int32_t dt);
 
     bool m_duringPlateau = true;
 
