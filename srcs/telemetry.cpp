@@ -184,8 +184,7 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
-                        uint16_t inspiratoryDurationCommandValue,
-                        uint16_t previousInspiratoryDurationValue) {
+                        uint16_t inspiratoryDurationCommandValue) {
     uint8_t ventilationModeValue;
     switch (ventilationMode) {
     case PC_CMV:
@@ -407,14 +406,6 @@ void sendStoppedMessage(uint8_t peakCommand,
     toBytes16(inspiratoryDurationCommand, inspiratoryDurationCommandValue);
     Serial6.write(inspiratoryDurationCommand, 2);
     crc32.update(inspiratoryDurationCommand, 2);
-
-    Serial6.print("\t");
-    crc32.update("\t", 1);
-
-    byte previousInspiratoryDuration[2];  // 16 bits
-    toBytes16(previousInspiratoryDuration, previousInspiratoryDurationValue);
-    Serial6.write(previousInspiratoryDuration, 2);
-    crc32.update(previousInspiratoryDuration, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

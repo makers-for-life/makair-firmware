@@ -48,8 +48,7 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
-                        uint16_t inspiratoryDurationCommandValue,
-                        uint16_t previousInspiratoryDurationValue);
+                        uint16_t inspiratoryDurationCommandValue);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
