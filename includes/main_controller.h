@@ -14,7 +14,6 @@
 #include "../includes/alarm_controller.h"
 #include "../includes/battery.h"
 #include "../includes/telemetry.h"
-
 #include "../includes/blower.h"
 #include "../includes/config.h"
 #include "../includes/cycle.h"
