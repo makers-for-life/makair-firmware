@@ -926,7 +926,6 @@ void MainController::onTiMaxSet(uint16_t p_tiMax) {
 }
 
 // cppcheck-suppress unusedFunction
-
 void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(
     uint16_t p_lowInspiratoryMinuteVolumeAlarmThreshold) {
     // CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD might not be equal to 0
@@ -936,6 +935,7 @@ void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(
         && p_lowInspiratoryMinuteVolumeAlarmThreshold
                <= CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD) {
         m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand =
+            // cppcheck-suppress cert-INT31-c ;
             1000 * (int32_t)p_lowInspiratoryMinuteVolumeAlarmThreshold;
     }
 
@@ -968,6 +968,7 @@ void MainController::onLowExpiratoryMinuteVolumeAlarmThresholdSet(
         && p_lowExpiratoryMinuteVolumeAlarmThreshold
                <= CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD) {
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand =
+            // cppcheck-suppress cert-INT31-c ;
             1000 * (int32_t)p_lowExpiratoryMinuteVolumeAlarmThreshold;
     }
 
