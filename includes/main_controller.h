@@ -357,6 +357,10 @@ class MainController {
     /// Get last pressure values
     inline int16_t* lastPressureValues() { return m_lastPressureValues; }
 
+    /// Get last pressure values index
+    inline uint16_t lastPressureValuesIndex() { return m_lastPressureValuesIndex; }
+    
+
     /**
      * Input the real duration since the last pressure controller computation
      *
