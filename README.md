@@ -10,7 +10,7 @@
 | V1.3.x | Add Hardware V2 support | ✅
 | V1.5.x | Rework ventilation algorithms (pressure control, alarms, code quality) | ✅
 | V3.0.x | Support for triggers, add mass flow meter, add Hardware V3 support | ✅
-| V4.0.x | Protocol V2, ventilation modes, drop Hardware V1 & Hardware V2 support | ❌
+| V4.0.x | Protocol V2 with ventilation modes, drop Hardware V1 & V2 support | ❌
 
 For a full history of all minor versions, as well as details of all changes, see [CHANGELOG.md](CHANGELOG.md).
 
