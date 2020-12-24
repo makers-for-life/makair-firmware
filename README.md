@@ -1,8 +1,20 @@
 # MakAir Firmware
 
+[![Firmware Lint](https://github.com/makers-for-life/makair-firmware/workflows/Firmware%20Lint/badge.svg)](https://github.com/makers-for-life/makair-firmware/actions?query=workflow%3A%22Firmware+Lint%22) [![Firmware Unit Tests](https://github.com/makers-for-life/makair-firmware/workflows/Firmware%20Unit%20Tests/badge.svg)](https://github.com/makers-for-life/makair-firmware/actions?query=workflow%3A%22Firmware+Unit+Tests%22)
+
 ## Versions
 
-See [CHANGELOG.md](CHANGELOG.md).
+| Version | Last Changelog | Ready? |
+| ------- | -------------- | ------ |
+| V1.2.x | First release version on Hardware V1 | ✅
+| V1.3.x | Add Hardware V2 support | ✅
+| V1.5.x | Rework ventilation algorithms (pressure control, alarms, code quality) | ✅
+| V3.0.x | Support for triggers, add mass flow meter, add Hardware V3 support | ✅
+| V4.0.x | Protocol V2 with ventilation modes, drop Hardware V1 & V2 support | ❌
+
+For a full history of all minor versions, as well as details of all changes, see [CHANGELOG.md](CHANGELOG.md).
+
+## Releases
 
 Pre-compiled binaries are available in the [Releases](https://github.com/makers-for-life/makair-firmware/releases) section.
 
