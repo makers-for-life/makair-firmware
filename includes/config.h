@@ -51,4 +51,9 @@
 /// Defines the range of the Mass Flow Meter in SLM (standard liter per minute)
 #define MFM_RANGE 200
 
+/**
+ * @name Disables features
+ */
+/// Disable hardware buttons, used when integrating a motherboard in a touch- \
+///   only device.
 //#define DISABLE_BUTTONS
