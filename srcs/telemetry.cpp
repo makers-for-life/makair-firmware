@@ -185,7 +185,18 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
                         uint16_t inspiratoryDurationCommandValue,
-                        uint16_t batteryLevelValue) {
+                        uint16_t batteryLevelValue,
+                        uint8_t currentAlarmCodes[ALARMS_SIZE]) {
+
+    uint8_t currentAlarmSize = 0;
+    for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
+        if (currentAlarmCodes[i] != 0u) {
+            currentAlarmSize++;
+        } else {
+            break;
+        }
+    }
+
     uint8_t ventilationModeValue;
     switch (ventilationMode) {
     case PC_CMV:
@@ -415,6 +426,14 @@ void sendStoppedMessage(uint8_t peakCommand,
     toBytes16(batteryLevel, batteryLevelValue);
     Serial6.write(batteryLevel, 2);
     crc32.update(batteryLevel, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(currentAlarmSize);
+    crc32.update(currentAlarmSize);
+    Serial6.write(currentAlarmCodes, currentAlarmSize);
+    crc32.update(currentAlarmCodes, currentAlarmSize);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

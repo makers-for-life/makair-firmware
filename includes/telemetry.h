@@ -49,7 +49,8 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
                         uint16_t inspiratoryDurationCommandValue,
-                        uint16_t batteryLevelValue);
+                        uint16_t batteryLevelValue,
+                        uint8_t currentAlarmCodes[ALARMS_SIZE]);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
