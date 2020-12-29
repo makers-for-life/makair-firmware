@@ -42,7 +42,7 @@
 uint32_t mfmHoneywellHafSerialNumber = 0;
 
 uint32_t mfmSfm3300SerialNumberExpi = 0;
-
+uint32_t mfmSfm3019SerialNumber = 0;
 HardwareTimer* massFlowTimer;
 
 volatile bool mfmFaultCondition = false;
@@ -110,17 +110,24 @@ void MFM_Timer_Callback(void)
     if (!mfmFaultCondition) {
 #if MASS_FLOW_METER_SENSOR == MFM_SFM3019
         Wire.begin();
-        uint8_t readCountbis = Wire.requestFrom(0x2E, 3);
+        uint8_t readCountbis = Wire.requestFrom(MFM_SFM3019_I2C_ADDRESS, 3);
         mfmLastData.c[1] = Wire.read();
         mfmLastData.c[0] = Wire.read();
         Wire.end();
-        int32_t expi = (1000 * (mfmLastData.si + 24576)) / 200;
+        // Hardware reset if not able to read two bytes.
+        if (readCountbis != 3u) {
+            mfmFaultCondition = true;
+            mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+            mfmInspiratoryAirVolumeSumMilliliters = 1000000000;  // 1e9
+        }
+        mfmInspiratoryLastValueFixedFloat = (1000 * (mfmLastData.si + 24576)) / 170;
+
 #endif
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 
         // begin() and end() everytime you read... the lib never free buffers if you don't do this.
         Wire.begin();
-        uint8_t readCount = Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
+        uint8_t readCount = Wire.requestFrom(MFM_HONEYWELL_HAF_I2C_ADDRESS, 2);
         mfmLastData.c[0] = Wire.read();
         mfmLastData.c[1] = Wire.read();
         // Wire.endTransmission() send a new write order followed by a stop. Useless and the sensor
@@ -150,6 +157,9 @@ void MFM_Timer_Callback(void)
         // 100 value per second, 100 slpm during 10 minutes: sum will be 1.2e9. it fits in a int32
         // int32 max with milliliters = 2e6 liters.
 
+#endif
+
+#if MASS_FLOW_METER_SENSOR == MFM_SFM3019 || MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
         // The sensor (100 SPLM version anyway) tends to output spurrious values located at around
         // 500 SLM, which are obviously not correct. Let's filter them out based on the range of the
         // sensor + 10%.
@@ -178,7 +188,7 @@ void MFM_Timer_Callback(void)
         // begin() and end() everytime you read... the lib never free buffers if you don't do this.
         Wire.begin();
         // do not request crc, only two bytes
-        uint8_t readCountExpi = Wire.requestFrom(MFM_SENSOR_EXPI_I2C_ADDRESS, 2);
+        uint8_t readCountExpi = Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 2);
         mfmLastData.c[1] = Wire.read();
         mfmLastData.c[0] = Wire.read();
         Wire.end();
@@ -220,8 +230,9 @@ void MFM_Timer_Callback(void)
             // also set SDA and SCL to 0 to avoid sensor to be powered by I2C bus.
             pinMode(PIN_I2C_SDA, OUTPUT);
             pinMode(PIN_I2C_SCL, OUTPUT);
-            digitalWrite(PIN_I2C_SDA, LOW);
             digitalWrite(PIN_I2C_SCL, LOW);
+            __NOP();
+            digitalWrite(PIN_I2C_SDA, LOW);
         }
 
         mfmResetStateMachine--;
@@ -234,10 +245,22 @@ void MFM_Timer_Callback(void)
             pinMode(PIN_I2C_SCL, INPUT);
         }
 
+#if MASS_FLOW_METER_SENSOR == MFM_SFM3019
+        if (mfmResetStateMachine == MFM_WAIT_SOFTRESET_PERIODS) {
+            // start air continuous measurement
+            Wire.begin();
+            Wire.beginTransmission(MFM_SFM3019_I2C_ADDRESS);
+            Wire.write(0x36);
+            Wire.write(0x08);
+            mfmFaultCondition = (0 != Wire.endTransmission()) || mfmFaultCondition;
+            Wire.end();
+        }
+
+#endif
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
         if (mfmResetStateMachine == MFM_WAIT_SOFTRESET_PERIODS) {
             Wire.begin();
-            Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
+            Wire.beginTransmission(MFM_HONEYWELL_HAF_I2C_ADDRESS);
             Wire.write(0x02);                         // Force reset
             uint8_t status = Wire.endTransmission();  // actually send the data
             Wire.end();
@@ -248,7 +271,7 @@ void MFM_Timer_Callback(void)
         if (mfmResetStateMachine == MFM_WAIT_READSERIALR1_PERIODS) {
             Wire.begin();
             // read first serial number register
-            uint8_t rxcount = Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
+            uint8_t rxcount = Wire.requestFrom(MFM_HONEYWELL_HAF_I2C_ADDRESS, 2);
             Wire.end();
             if (rxcount != 2u) {  // still a problem
                 mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
@@ -263,14 +286,14 @@ void MFM_Timer_Callback(void)
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
             Wire.begin();
             // read second serial number register
-            uint8_t rxcount = Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
+            uint8_t rxcount = Wire.requestFrom(MFM_HONEYWELL_HAF_I2C_ADDRESS, 2);
             Wire.end();
             mfmFaultCondition = (rxcount != 2u) || mfmFaultCondition;
 #endif
 
 #if MASS_FLOW_METER_SENSOR_EXPI == MFM_SFM_3300D
             Wire.begin();
-            Wire.beginTransmission(MFM_SENSOR_EXPI_I2C_ADDRESS);
+            Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
             Wire.write(0x10);
             Wire.write(0x00);
             mfmFaultCondition = (0 != Wire.endTransmission()) || mfmFaultCondition;
@@ -292,7 +315,8 @@ void MFM_Timer_Callback(void)
 
 bool MFM_init(void) {
     mfmInspiratoryAirVolumeSumMilliliters = 0;
-
+    // cppcheck-suppress unreadVariable
+    uint32_t errorCount = 0;
     // Set power on (hardware v3)
     pinMode(MFM_POWER_CONTROL, OUTPUT);
     digitalWrite(MFM_POWER_CONTROL, MFM_POWER_ON);
@@ -327,104 +351,123 @@ bool MFM_init(void) {
     Wire.end();
     delay(4);
 
+    //     // start air continuous measurement
+    //     Wire.begin();
+    //     Wire.beginTransmission(MFM_SFM3019_I2C_ADDRESS);
+    //     Wire.write(0x36);
+    //     Wire.write(0x08);
+    //     errorCount += Wire.endTransmission();
+    //     Wire.end();
+
+    //     delay(2);
+    //     //Stop continuous measurement 0x3FF9
+    //     Wire.begin();
+    //     Wire.beginTransmission(0x2E);
+    //     Wire.write(0x3F);
+    //     Wire.write(0xF9);
+    //     Wire.endTransmission();
+    //     Wire.end();
+
+    //     delay(2);
+    //      //Read Scale Factor, Offset, and Flow Unit 0x3661
+    //     Wire.begin();
+    //     Wire.beginTransmission(0x2E);
+    //     Wire.write(0x36);
+    //     Wire.write(0x61);
+    //     Wire.endTransmission();
+    //     Wire.end();
+    // delay(2);
+    //     Wire.begin();
+    //     int ccc = Wire.requestFrom(0x2E, 8);
+    //     Serial.print(ccc);
+    //     Serial.print(" ");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+    //     Serial.print(Wire.read()); Serial.print(",");
+
+    //     Wire.end();
+
+    delay(5);
+    // Read serial number
+    Wire.begin();
+    Wire.beginTransmission(MFM_SFM3019_I2C_ADDRESS);
+    Wire.write(0xE1);
+    Wire.write(0x02);
+    errorCount = Wire.endTransmission();
+
+    delay(1);
+    errorCount += ((18u == Wire.requestFrom(MFM_SFM3019_I2C_ADDRESS, 18)) ? 0u : 1u);
+    if (errorCount == 0u) {
+        // the serial number is 64 bits wide, but it will never be used until year 2042.
+        // The serial number can be converted from binary into decimal,
+        // whereby in decimal it has the following format::
+        // yywwxxxxxx, where: yy: last to digits of calibration year, ww:
+        // calibration week, xxxxxx: unique 6-digit sequential number
+        // within the calibration week.
+        uint32_t sn_inspi = 0;
+        Wire.read();
+        Wire.read();  // product number part 1
+        Wire.read();  // crc
+        Wire.read();
+        Wire.read();  // product number part 2
+        Wire.read();  // crc
+
+        Wire.read();
+        Wire.read();  // ignore this part of serial
+        Wire.read();  // ignore inlined crc
+        Wire.read();
+        Wire.read();  // ignore this part of serial
+        Wire.read();  // ignore inlined crc
+        sn_inspi |= Wire.read();
+        sn_inspi <<= 8;
+        sn_inspi |= Wire.read();
+        sn_inspi <<= 8;
+        Wire.read();  // ignore inlined crc
+        sn_inspi |= Wire.read();
+        sn_inspi <<= 8;
+        sn_inspi |= Wire.read();
+        Wire.read();  // ignore inlined crc
+        mfmSfm3019SerialNumber = sn_inspi;
+    }
+    delay(1);
+
     // start air continuous measurement
     Wire.begin();
-    Wire.beginTransmission(0x2E);
+    Wire.beginTransmission(MFM_SFM3019_I2C_ADDRESS);
     Wire.write(0x36);
     Wire.write(0x08);
-    Wire.endTransmission();
+    errorCount += Wire.endTransmission();
     Wire.end();
 
-    delay(2);
-    // //Stop continuous measurement 0x3FF9
-    // Wire.begin();
-    // Wire.beginTransmission(0x2E);
-    // Wire.write(0x3F);
-    // Wire.write(0xF9);
-    // Wire.endTransmission();
-    // Wire.end();
-
-    // delay(2);
-    //  //Read Scale Factor, Offset, and Flow Unit 0x3661
-    // Wire.begin();
-    // Wire.beginTransmission(0x2E);
-    // Wire.write(0x36);
-    // Wire.write(0x61);
-    // Wire.endTransmission();
-    // Wire.end();
-
-    // Wire.begin();
-    // int ccc = Wire.requestFrom(0x2E, 8);
-    // Serial.print(ccc);
-    // Serial.print(" ");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-
-    // Wire.end();
-
-    // delay(5);
-    //  //Read serial number
-    // Wire.begin();
-    // Wire.beginTransmission(0x2E);
-    // Wire.write(0xE1);
-    // Wire.write(0x02);
-    // Wire.endTransmission();
-    // Wire.end();
-
-    // Wire.begin();
-    // int ccc2 = Wire.requestFrom(0x2E, 20);
-    // Serial.print(ccc2);
-    // Serial.print(" ");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.print(Wire.read()); Serial.print(",");
-    // Serial.println(".");
-    // Wire.end();
+    delay(40);  // the first measurement result will be available after 12ms
+    // small accuracy deviations (few % of reading) can occur during the first 30ms
 
     // delay(10000);
+    if (errorCount != 0u) {
+        mfmFaultCondition = true;
+        mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+    }
 #endif
 
 #if MASS_FLOW_METER_SENSOR_EXPI == MFM_SFM_3300D
     Wire.begin();  // Join I2C bus (address is optional for master)
-    Wire.beginTransmission(MFM_SENSOR_EXPI_I2C_ADDRESS);
+    Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
     Wire.write(0x20);  // 0x2000 soft reset
     Wire.write(0x00);
-    uint32_t errorCount = Wire.endTransmission();
+    errorCount = Wire.endTransmission();
     delay(5);  // end of reset
 
-    Wire.beginTransmission(MFM_SENSOR_EXPI_I2C_ADDRESS);
+    Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
     Wire.write(0x31);  // 0x31AE read serial
     Wire.write(0xAE);
     errorCount += Wire.endTransmission();
 
-    errorCount += ((6u == Wire.requestFrom(MFM_SENSOR_EXPI_I2C_ADDRESS, 6)) ? 0u : 1u);
+    errorCount += ((6u == Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 6)) ? 0u : 1u);
     if (errorCount == 0u) {
         u_int32_t sn_expi = 0;
         sn_expi = Wire.read();
@@ -439,7 +482,7 @@ bool MFM_init(void) {
         mfmSfm3300SerialNumberExpi = sn_expi;
     }
     delay(10);
-    Wire.beginTransmission(MFM_SENSOR_EXPI_I2C_ADDRESS);
+    Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
     Wire.write(0x10);  // 0x1000 start measurement
     Wire.write(0x00);
     errorCount += Wire.endTransmission();
@@ -463,7 +506,7 @@ bool MFM_init(void) {
     leading 0
     */
     Wire.begin();
-    Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
+    Wire.beginTransmission(MFM_HONEYWELL_HAF_I2C_ADDRESS);
     Wire.write(0x02);  // Force reset
     uint8_t txOk = Wire.endTransmission();
     Wire.end();
@@ -471,14 +514,14 @@ bool MFM_init(void) {
 
     u_int32_t sn = 0;
     Wire.begin();
-    Wire.beginTransmission(MFM_SENSOR_I2C_ADDRESS);
-    uint8_t rxcount = Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
+    Wire.beginTransmission(MFM_HONEYWELL_HAF_I2C_ADDRESS);
+    uint8_t rxcount = Wire.requestFrom(MFM_HONEYWELL_HAF_I2C_ADDRESS, 2);
     sn = Wire.read();
     sn <<= 8;
     sn |= Wire.read();  // first transmission is serial number register 0
     sn <<= 8;
     delay(2);  // if you do not wait, sensor will send again register 0
-    rxcount += Wire.requestFrom(MFM_SENSOR_I2C_ADDRESS, 2);
+    rxcount += Wire.requestFrom(MFM_HONEYWELL_HAF_I2C_ADDRESS, 2);
     sn |= Wire.read();
     sn <<= 8;
     sn |= Wire.read();  // second transmission is serial number register 1
@@ -533,6 +576,8 @@ void MFM_expi_reset(void) { mfmExpiratoryAirVolumeSumMilliliters = 0; }
 uint32_t MFM_read_serial_number(void) {
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     return mfmHoneywellHafSerialNumber;
+#elif MASS_FLOW_METER_SENSOR == MFM_SFM3019
+    return mfmSfm3019SerialNumber;
 #endif
     return 0;
 }
@@ -587,7 +632,7 @@ int32_t MFM_getOffset(void) { return mfmInspiratoryCalibrationOffset; }
 int32_t MFM_read_milliliters(bool reset_after_read) {
     int32_t result = MASS_FLOW_ERROR_VALUE;
 
-#if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
+#if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF || MASS_FLOW_METER_SENSOR == MFM_SFM3019
     // period is MASS_FLOW_PERIOD / 10000  (100 µs prescaler)
     result = mfmFaultCondition
                  ? MASS_FLOW_ERROR_VALUE
@@ -648,7 +693,11 @@ void setup(void) {
     screen.setCursor(0, 3);
     screen.print(calib == MFM_CALIBRATION_OK ? "calib OK" : "calibration error");
 
+#if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
     (void)snprintf(buffer, sizeof(buffer), "serial=%08x ", MFM_read_serial_number());
+#elif MASS_FLOW_METER_SENSOR == MFM_SFM3019
+    (void)snprintf(buffer, sizeof(buffer), "serial=%d ", MFM_read_serial_number());
+#endif
     Serial.println(buffer);
 
 #ifdef MASS_FLOW_METER_SENSOR_EXPI
