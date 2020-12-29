@@ -408,8 +408,8 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.write(inspiratoryDurationCommand, 2);
     crc32.update(inspiratoryDurationCommand, 2);
 
-    Serial6.print("\n");
-    crc32.update("\n", 1);
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte batteryLevel[2];  // 16 bits
     toBytes16(batteryLevel, batteryLevelValue);
@@ -865,8 +865,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(previousInspiratoryDuration, 2);
     crc32.update(previousInspiratoryDuration, 2);
 
-    Serial6.print("\n");
-    crc32.update("\n", 1);
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
     byte batteryLevel[2];  // 16 bits
     toBytes16(batteryLevel, batteryLevelValue);
