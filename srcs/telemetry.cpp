@@ -184,7 +184,8 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
-                        uint16_t inspiratoryDurationCommandValue) {
+                        uint16_t inspiratoryDurationCommandValue,
+                        uint16_t batteryLevelValue) {
     uint8_t ventilationModeValue;
     switch (ventilationMode) {
     case PC_CMV:
@@ -410,6 +411,14 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.print("\n");
     crc32.update("\n", 1);
 
+    byte batteryLevel[2];  // 16 bits
+    toBytes16(batteryLevel, batteryLevelValue);
+    Serial6.write(batteryLevel, 2);
+    crc32.update(batteryLevel, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
     byte crc[4];  // 32 bits
     toBytes32(crc, crc32.finalize());
     Serial6.write(crc, 4);
@@ -561,7 +570,8 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint16_t leakAlarmThresholdValue,
                               uint8_t targetInspiratoryFlow,
                               uint16_t inspiratoryDurationCommandValue,
-                              uint16_t previousInspiratoryDurationValue) {
+                              uint16_t previousInspiratoryDurationValue,
+                              uint16_t batteryLevelValue) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -854,6 +864,14 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     toBytes16(previousInspiratoryDuration, previousInspiratoryDurationValue);
     Serial6.write(previousInspiratoryDuration, 2);
     crc32.update(previousInspiratoryDuration, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte batteryLevel[2];  // 16 bits
+    toBytes16(batteryLevel, batteryLevelValue);
+    Serial6.write(batteryLevel, 2);
+    crc32.update(batteryLevel, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
