@@ -31,13 +31,13 @@ static const int32_t RAW_PRESSURE_FILTER_DIVIDER = 5;
 //
 // There is a voltage divider in between Vout and Vadc
 // Vadc = 68/83 Vout
-// 
+//
 // With current ADC (12 bits), and mean Vref=3.348V:
 // Vadc = 3.348 * RawAdc/4096 = 0,000817382 * RawAdc
-// 
+//
 // Vout = 83/68 * 0,000817382 * RawAdc
 // Vout = 0,000997686 * RawAdc
-// 
+//
 // Put it together:
 // P(mmH20) = 1133((0,000997686 * RawAdc)/5.05) - 45
 // P(mmH20) = 0,223837466 * RawAdc - 45

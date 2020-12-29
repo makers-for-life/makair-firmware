@@ -164,7 +164,6 @@ void MainController::setup() {
 }
 
 void MainController::initRespiratoryCycle() {
-
     Serial.print(m_expiratoryVolume);
     Serial.print(",");
     Serial.println(m_tidalVolumeMeasure);
@@ -199,8 +198,6 @@ void MainController::initRespiratoryCycle() {
         m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand;
     m_lowExpiratoryMinuteVolumeAlarmThresholdCommand =
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand;
-    m_highExpiratoryMinuteVolumeAlarmThresholdCommand =
-        m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
     m_highExpiratoryMinuteVolumeAlarmThresholdCommand =
         m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
     m_lowRespiratoryRateAlarmThresholdCommand = m_lowRespiratoryRateAlarmThresholdNextCommand;
@@ -425,7 +422,6 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 
 // cppcheck-suppress unusedFunction
 void MainController::updateFakeExpiratoryFlow() {
-
     // get section in mm2 x 100
     int32_t A2MultiplyBy100 = expiratoryValve.getSectionBigHoseX100();
     int32_t A1MultiplyBy100 = 7853;
@@ -483,21 +479,16 @@ void MainController::executeCommands() {
     if (m_pressure > ALARM_THRESHOLD_MAX_PRESSURE) {
         inspiratoryValve.close();
         expiratoryValve.open();
-#if !SIMULATION
         alarmController.detectedAlarm(RCM_SW_18, m_cycleNb, ALARM_THRESHOLD_MAX_PRESSURE,
                                       m_pressure);
-#endif
     } else {
-#if !SIMULATION
         alarmController.notDetectedAlarm(RCM_SW_18);
-#endif
     }
     inspiratoryValve.execute();
     expiratoryValve.execute();
 }
 
 void MainController::checkCycleAlarm() {
-#if !SIMULATION
     // RCM-SW-1 + RCM-SW-14: check if plateau is reached
     int16_t minPlateauBeforeAlarm =
         (m_plateauPressureCommand * (100 - ALARM_THRESHOLD_DIFFERENCE_PERCENT)) / 100;
@@ -590,8 +581,6 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_20);
         alarmController.notDetectedAlarm(RCM_SW_21);
     }
-
-#endif
 }
 
 void MainController::reachSafetyPosition() {
@@ -601,7 +590,6 @@ void MainController::reachSafetyPosition() {
 }
 
 void MainController::sendStopMessageToUi() {
-#if !SIMULATION
     sendStoppedMessage(
         mmH2OtoCmH2O(m_peakPressureNextCommand), mmH2OtoCmH2O(m_plateauPressureNextCommand),
         mmH2OtoCmH2O(m_peepNextCommand), m_cyclesPerMinuteNextCommand, m_expiratoryTermNextCommand,
@@ -629,7 +617,6 @@ void MainController::stop(uint32_t p_currentMillis) {
     reachSafetyPosition();
     m_lastEndOfRespirationDateMs = p_currentMillis;
 
-#if !SIMULATION
     // Stop alarms related to breathing cycle
     alarmController.notDetectedAlarm(RCM_SW_1);
     alarmController.notDetectedAlarm(RCM_SW_2);
@@ -647,11 +634,9 @@ void MainController::stop(uint32_t p_currentMillis) {
     alarmController.notDetectedAlarm(RCM_SW_20);
     alarmController.notDetectedAlarm(RCM_SW_21);
     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
-#endif
 }
 
 void MainController::sendMachineState() {
-#if !SIMULATION
     // Send the next command, because command has not been updated yet (will be at the beginning of
     // the next cycle)
     sendMachineStateSnapshot(
@@ -684,10 +669,8 @@ void MainController::onVentilationModeSet(uint16_t p_ventilationControllerMode) 
         m_ventilationControllerNextCommand =
             m_ventilationControllersTable[m_ventilationControllerMode];
     }
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(1, m_ventilationControllerMode);
-#endif
 }
 
 void MainController::onCycleDecrease() {
@@ -698,10 +681,8 @@ void MainController::onCycleDecrease() {
     if (m_cyclesPerMinuteNextCommand < CONST_MIN_CYCLE) {
         m_cyclesPerMinuteNextCommand = CONST_MIN_CYCLE;
     }
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
-#endif
 }
 
 void MainController::onCycleIncrease() {
@@ -713,10 +694,8 @@ void MainController::onCycleIncrease() {
         m_cyclesPerMinuteNextCommand = CONST_MAX_CYCLE;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -729,10 +708,8 @@ void MainController::onCycleSet(uint16_t p_cpm) {
         m_cyclesPerMinuteNextCommand = p_cpm;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(4, m_cyclesPerMinuteNextCommand);
-#endif
 }
 
 void MainController::onPeepPressureDecrease() {
@@ -744,10 +721,8 @@ void MainController::onPeepPressureDecrease() {
         // Do nothing
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(3, m_peepNextCommand);
-#endif
 }
 
 void MainController::onPeepPressureIncrease() {
@@ -762,10 +737,8 @@ void MainController::onPeepPressureIncrease() {
         m_peepNextCommand = CONST_MAX_PEEP_PRESSURE;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(3, m_peepNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -779,10 +752,8 @@ void MainController::onPeepSet(int16_t p_peep) {
         m_peepNextCommand = p_peep;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(3, m_peepNextCommand);
-#endif
 }
 
 void MainController::onPlateauPressureDecrease() {
@@ -796,10 +767,8 @@ void MainController::onPlateauPressureDecrease() {
         m_plateauPressureNextCommand = CONST_MIN_PLATEAU_PRESSURE;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
-#endif
 }
 
 void MainController::onPlateauPressureIncrease() {
@@ -810,10 +779,8 @@ void MainController::onPlateauPressureIncrease() {
     m_plateauPressureNextCommand =
         min(m_plateauPressureNextCommand, static_cast<int16_t>(CONST_MAX_PLATEAU_PRESSURE));
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -826,10 +793,8 @@ void MainController::onPlateauPressureSet(int16_t p_plateauPressure) {
         m_plateauPressureNextCommand = p_plateauPressure;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
-#endif
 }
 
 void MainController::onPeakPressureDecrease() {
@@ -888,10 +853,8 @@ void MainController::onExpiratoryTermSet(uint16_t p_expiratoryTerm) {
         m_expiratoryTermNextCommand = p_expiratoryTerm;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(5, m_expiratoryTermNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -899,10 +862,8 @@ void MainController::onTriggerModeEnabledSet(uint16_t p_triggerEnabled) {
     if ((p_triggerEnabled == 0u) || (p_triggerEnabled == 1u)) {
         m_triggerModeEnabledNextCommand = p_triggerEnabled;
     }
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(6, m_triggerModeEnabledNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -916,36 +877,34 @@ void MainController::onTriggerOffsetSet(uint16_t p_triggerOffset) {
         m_pressureTriggerOffsetNextCommand = p_triggerOffset;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(7, m_pressureTriggerOffsetNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onInspiratoryTriggerFlowSet(uint16_t p_inspiratoryTriggerFlow) {
+    // CONST_MIN_INSPIRATORY_TRIGGER_FLOW might not be equal to 0
+    // cppcheck-suppress unsignedPositive ;
     if (p_inspiratoryTriggerFlow >= CONST_MIN_INSPIRATORY_TRIGGER_FLOW
         && p_inspiratoryTriggerFlow <= CONST_MAX_INSPIRATORY_TRIGGER_FLOW) {
         m_inspiratoryTriggerFlowNextCommand = p_inspiratoryTriggerFlow;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(10, m_inspiratoryTriggerFlowNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onExpiratoryTriggerFlowSet(uint16_t p_expiratoryTriggerFlow) {
+    // CONST_MIN_EXPIRATORY_TRIGGER_FLOW might not be equal to 0
+    // cppcheck-suppress unsignedPositive ;
     if (p_expiratoryTriggerFlow >= CONST_MIN_EXPIRATORY_TRIGGER_FLOW
         && p_expiratoryTriggerFlow <= CONST_MAX_EXPIRATORY_TRIGGER_FLOW) {
         m_expiratoryTriggerFlowNextCommand = p_expiratoryTriggerFlow;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(11, m_expiratoryTriggerFlowNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -955,10 +914,8 @@ void MainController::onTiMinSet(uint16_t p_tiMin) {
         m_tiMinNextCommand = p_tiMin;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(12, m_tiMinNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -968,28 +925,26 @@ void MainController::onTiMaxSet(uint16_t p_tiMax) {
         m_tiMaxNextCommand = p_tiMax;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(13, m_tiMaxNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
-
 void MainController::onLowInspiratoryMinuteVolumeAlarmThresholdSet(
     uint16_t p_lowInspiratoryMinuteVolumeAlarmThreshold) {
+    // CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD might not be equal to 0
     if (p_lowInspiratoryMinuteVolumeAlarmThreshold
+            // cppcheck-suppress unsignedPositive ;
             >= CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD
         && p_lowInspiratoryMinuteVolumeAlarmThreshold
                <= CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD) {
         m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand =
+            // cppcheck-suppress cert-INT31-c ;
             1000 * (int32_t)p_lowInspiratoryMinuteVolumeAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(14, m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand / 1000);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1003,27 +958,26 @@ void MainController::onHighInspiratoryMinuteVolumeAlarmThresholdSet(
             1000 * (int32_t)p_highInspiratoryMinuteVolumeAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(15, m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand / 1000);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onLowExpiratoryMinuteVolumeAlarmThresholdSet(
     uint16_t p_lowExpiratoryMinuteVolumeAlarmThreshold) {
+    // CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD might not be equal to 0
     if (p_lowExpiratoryMinuteVolumeAlarmThreshold
+            // cppcheck-suppress unsignedPositive ;
             >= CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD
         && p_lowExpiratoryMinuteVolumeAlarmThreshold
                <= CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD) {
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand =
+            // cppcheck-suppress cert-INT31-c ;
             1000 * (int32_t)p_lowExpiratoryMinuteVolumeAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(16, m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1037,10 +991,8 @@ void MainController::onHighExpiratoryMinuteVolumeAlarmThresholdSet(
             1000 * (int32_t)p_highExpiratoryMinuteVolumeAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(17, m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand / 1000);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1051,10 +1003,8 @@ void MainController::onlowRespiratoryRateAlarmThresholdSet(
         m_lowRespiratoryRateAlarmThresholdNextCommand = p_lowRespiratoryRateAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(18, m_lowRespiratoryRateAlarmThresholdNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1065,10 +1015,8 @@ void MainController::onhighRespiratoryRateAlarmThresholdSet(
         m_highRespiratoryRateAlarmThresholdNextCommand = p_highRespiratoryRateAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(19, m_highRespiratoryRateAlarmThresholdNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1077,23 +1025,21 @@ void MainController::onTargetTidalVolumeSet(uint16_t p_targetTidalVolume) {
         && p_targetTidalVolume <= CONST_MAX_TIDAL_VOLUME) {
         m_tidalVolumeNextCommand = p_targetTidalVolume;
     }
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(20, m_tidalVolumeNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onLowTidalVolumeAlarmTresholdSet(uint16_t p_lowTidalVolumeAlarmTreshold) {
+    // CONST_MIN_LOW_TIDAL_VOLUME_ALARM_THRESHOLD might not be equal to 0
+    // cppcheck-suppress unsignedPositive ;
     if (p_lowTidalVolumeAlarmTreshold >= CONST_MIN_LOW_TIDAL_VOLUME_ALARM_THRESHOLD
         && p_lowTidalVolumeAlarmTreshold <= CONST_MAX_LOW_TIDAL_VOLUME_ALARM_THRESHOLD) {
         m_lowTidalVolumeAlarmTresholdNextCommand = p_lowTidalVolumeAlarmTreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(21, m_lowTidalVolumeAlarmTresholdNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1103,23 +1049,21 @@ void MainController::onHighTidalVolumeAlarmTresholdSet(uint16_t p_highTidalVolum
         m_highTidalVolumeAlarmTresholdNextCommand = p_highTidalVolumeAlarmTreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(22, m_highTidalVolumeAlarmTresholdNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
 void MainController::onPlateauDurationSet(uint16_t p_plateauDuration) {
+    // CONST_MIN_PLATEAU_DURATION might not be equal to 0
+    // cppcheck-suppress unsignedPositive ;
     if (p_plateauDuration >= CONST_MIN_PLATEAU_DURATION
         && p_plateauDuration <= CONST_MAX_PLATEAU_DURATION) {
         m_plateauDurationNextCommand = p_plateauDuration;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(23, m_plateauDurationNextCommand);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1130,10 +1074,8 @@ void MainController::onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold) {
         m_leakAlarmThresholdNextCommand = 10 * p_leakAlarmThreshold;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(24, m_leakAlarmThresholdNextCommand / 10);
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1144,10 +1086,8 @@ void MainController::onTargetInspiratoryFlow(uint16_t p_targetInspiratoryFlow) {
         m_targetInspiratoryFlowNextCommand = temporaryValue;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(25, static_cast<uint16_t>(m_targetInspiratoryFlowNextCommand / 1000));
-#endif
 }
 
 // cppcheck-suppress unusedFunction
@@ -1157,8 +1097,6 @@ void MainController::onInspiratoryDuration(uint16_t p_inspiratoryDuration) {
         m_inspiratoryDurationNextCommand = p_inspiratoryDuration;
     }
 
-#if !SIMULATION
     // Send acknowledgment to the UI
     sendControlAck(26, m_inspiratoryDurationNextCommand);
-#endif
 }

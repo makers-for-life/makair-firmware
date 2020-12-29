@@ -45,6 +45,7 @@ VC_CMV_Controller::VC_CMV_Controller() {
     m_inspiratoryPidIntegral = 0;
     m_expiratoryPidLastError = 0;
     m_maxInspiratoryFlow = 0;
+    m_targetFlowMultiplyBy1000 = 0;
 }
 
 void VC_CMV_Controller::setup() {
@@ -53,7 +54,6 @@ void VC_CMV_Controller::setup() {
 
 void VC_CMV_Controller::initCycle() {
     m_maxInspiratoryFlow = 0;
-    m_volume = 0;
     m_expiratoryValveLastAperture = expiratoryValve.maxAperture();
     // Reset PID values
     m_expiratoryPidIntegral = 0;
@@ -110,7 +110,6 @@ void VC_CMV_Controller::inhale() {
     if (mainController.tick()
         < mainController.ticksPerInhalation()
               - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
-
         int32_t flow = mainController.inspiratoryFlow();
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
