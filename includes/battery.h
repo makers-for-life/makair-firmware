@@ -65,7 +65,7 @@
 #define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 2660u
 
 /// Number of samples of the moving average
-#define BATTERY_MAX_SAMPLES 200u
+#define BATTERY_MAX_SAMPLES 20u
 
 /**
  * Initialize battery abstraction

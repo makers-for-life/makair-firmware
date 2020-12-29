@@ -57,7 +57,7 @@ void sendDataSnapshot(uint16_t centileValue,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
-                      uint16_t batteryLevelValue,
+                      uint8_t batteryLevel,
                       int16_t inspiratoryFlowValue,
                       int16_t expiratoryFlowValue);
 

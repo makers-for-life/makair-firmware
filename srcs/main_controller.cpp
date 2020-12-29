@@ -272,7 +272,7 @@ void MainController::compute() {
     // Send data snaphshot only every 10 ms
     if ((m_tick % moduloValue) == 0u) {
         sendDataSnapshot(m_tick, max((int16_t)0, m_pressure), m_phase, inspiratoryValve.position,
-                         expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevelX10(),
+                         expiratoryValve.position, blower.getSpeed() / 100u, getBatteryLevel(),
                          max(int32_t(0), m_inspiratoryFlow / 10),
                          max(int32_t(0), m_expiratoryFlow / 10));
     }

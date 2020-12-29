@@ -422,7 +422,7 @@ void sendDataSnapshot(uint16_t centileValue,
                       uint8_t blowerValvePosition,
                       uint8_t patientValvePosition,
                       uint8_t blowerRpm,
-                      uint16_t batteryLevelValue,
+                      uint8_t batteryLevel,
                       int16_t inspiratoryFlowValue,
                       int16_t expiratoryFlowValue) {
     uint8_t phaseValue;
@@ -499,10 +499,8 @@ void sendDataSnapshot(uint16_t centileValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte batteryLevel[2];  // 16 bits
-    toBytes16(batteryLevel, batteryLevelValue);
-    Serial6.write(batteryLevel, 2);
-    crc32.update(batteryLevel, 2);
+    Serial6.write(batteryLevel);
+    crc32.update(batteryLevel);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
