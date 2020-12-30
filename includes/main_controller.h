@@ -13,7 +13,6 @@
 
 #include "../includes/alarm_controller.h"
 #include "../includes/battery.h"
-#include "../includes/telemetry.h"
 #include "../includes/blower.h"
 #include "../includes/config.h"
 #include "../includes/cycle.h"
@@ -23,6 +22,7 @@
 #include "../includes/pc_cmv_controller.h"
 #include "../includes/pc_vsai_controller.h"
 #include "../includes/pressure_valve.h"
+#include "../includes/telemetry.h"
 #include "../includes/vc_ac_controller.h"
 #include "../includes/vc_cmv_controller.h"
 
@@ -255,7 +255,6 @@ class MainController {
     /// Get duration of inspiration command
     inline const int16_t inspiratoryDurationCommand() const { return m_inspiratoryDurationCommand; }
 
-
     /// Get the desired tidal Volume for the next cycle (used in VC modes)
     inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
     // Get the desired plateau duration for the next cycle (used in VC modes)
@@ -298,7 +297,6 @@ class MainController {
     inline const VentilationController* ventilationControllerNextCommand() const {
         return m_ventilationControllerNextCommand;
     }
-
 
     /// Get the measured peak pressure
     inline int16_t peakPressureMeasure() const { return m_peakPressureMeasure; }
@@ -364,7 +362,6 @@ class MainController {
 
     /// Get last pressure values index
     inline uint16_t lastPressureValuesIndex() { return m_lastPressureValuesIndex; }
-    
 
     /**
      * Input the real duration since the last pressure controller computation
@@ -380,6 +377,9 @@ class MainController {
      * @param p_currentDeliveredVolume Delivered Volume in mL/s
      */
     void updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolume);
+
+    // current expiratory Volume
+    void updateCurrentExpiratoryVolume(int32_t p_expiratoryVolume);
 
     /// Put actuators in safety position
     void reachSafetyPosition();
@@ -615,7 +615,6 @@ class MainController {
     int32_t m_leakAlarmThresholdCommand;
     // Threshold for leak alarm for next cycle
     int32_t m_leakAlarmThresholdNextCommand;
-
 
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;

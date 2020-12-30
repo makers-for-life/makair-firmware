@@ -140,6 +140,9 @@ void millisecondTimerMSM(void)
 #ifdef MASS_FLOW_METER_ENABLED
         (void)MFM_read_milliliters(true);  // Reset volume integral
 #endif
+#ifdef MASS_FLOW_METER_SENSOR_EXPI
+        (void)MFM_expi_read_milliliters(true);  // Reset volume integral
+#endif
 
     } else if (msmstep == BREATH) {
         // If breathing
@@ -163,6 +166,7 @@ void millisecondTimerMSM(void)
 #ifdef MASS_FLOW_METER_SENSOR_EXPI
                 expiratoryflow = MFM_expi_read_airflow();
                 mainController.updateExpiratoryFlow(expiratoryflow);
+                mainController.updateCurrentExpiratoryVolume(MFM_expi_read_milliliters(false));
 #else
                 mainController.updateFakeExpiratoryFlow();
 #endif

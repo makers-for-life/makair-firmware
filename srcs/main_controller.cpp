@@ -466,6 +466,12 @@ void MainController::updateCurrentDeliveredVolume(int32_t p_currentDeliveredVolu
     }
 }
 
+void MainController::updateCurrentExpiratoryVolume(int32_t p_expiratoryVolume) {
+    if (p_expiratoryVolume != MASS_FLOW_ERROR_VALUE) {
+        m_expiratoryVolume = p_expiratoryVolume;
+    }
+}
+
 void MainController::computeTickParameters() {
     m_plateauDurationMs = m_inspiratoryDurationCommand;
 
@@ -581,6 +587,16 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_20);
         alarmController.notDetectedAlarm(RCM_SW_21);
     }
+
+    // RCM_SW_10 : Leak is too low/high
+    int32_t leakPerMinute =
+        (m_currentDeliveredVolume - m_expiratoryVolume) * m_cyclesPerMinuteMeasure;  // In mL/min
+    if (leakPerMinute > m_leakAlarmThresholdCommand) {
+        alarmController.detectedAlarm(RCM_SW_10, m_cycleNb, m_leakAlarmThresholdNextCommand,
+                                      leakPerMinute);
+    } else {
+        alarmController.notDetectedAlarm(RCM_SW_10);
+    }
 }
 
 void MainController::reachSafetyPosition() {
@@ -603,7 +619,7 @@ void MainController::sendStopMessageToUi() {
         m_lowRespiratoryRateAlarmThresholdNextCommand,
         m_highRespiratoryRateAlarmThresholdNextCommand, m_tidalVolumeNextCommand,
         m_lowTidalVolumeAlarmTresholdNextCommand, m_highTidalVolumeAlarmTresholdNextCommand,
-        m_plateauDurationNextCommand, 0u,
+        m_plateauDurationNextCommand, m_leakAlarmThresholdNextCommand / 10,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
         m_inspiratoryDurationNextCommand, getBatteryLevelX100(), alarmController.triggeredAlarms());
 }
@@ -625,6 +641,7 @@ void MainController::stop(uint32_t p_currentMillis) {
     alarmController.notDetectedAlarm(RCM_SW_7);
     alarmController.notDetectedAlarm(RCM_SW_8);
     alarmController.notDetectedAlarm(RCM_SW_9);
+    alarmController.notDetectedAlarm(RCM_SW_10);
     alarmController.notDetectedAlarm(RCM_SW_14);
     alarmController.notDetectedAlarm(RCM_SW_15);
     alarmController.notDetectedAlarm(RCM_SW_18);
@@ -653,7 +670,7 @@ void MainController::sendMachineState() {
         m_lowRespiratoryRateAlarmThresholdNextCommand,
         m_highRespiratoryRateAlarmThresholdNextCommand, m_tidalVolumeNextCommand,
         m_lowTidalVolumeAlarmTresholdNextCommand, m_highTidalVolumeAlarmTresholdNextCommand,
-        m_plateauDurationNextCommand, 0u,
+        m_plateauDurationNextCommand, m_leakAlarmThresholdNextCommand / 10,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
         m_inspiratoryDurationNextCommand, m_ticksPerInhalation * MAIN_CONTROLLER_COMPUTE_PERIOD_MS,
         getBatteryLevelX100());
