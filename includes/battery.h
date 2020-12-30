@@ -42,15 +42,15 @@
 
 /**
  * RCM_SW_11
- *  = 24,6 => 24,6 / RAW_BATTERY_MULTIPLIER
+ *  = 23,2 => 23,2 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY 3271u
+#define RAW_VOLTAGE_ON_BATTERY 3085u
 
 /**
  * RCM_SW_12
- *  = 24 => 24 / RAW_BATTERY_MULTIPLIER
+ *  = 22,6 => 22,6 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_LOW 797u
+#define RAW_VOLTAGE_ON_BATTERY_LOW 3005u
 
 /**
  * Below this value, the machine wont start

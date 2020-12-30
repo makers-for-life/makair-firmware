@@ -45,7 +45,7 @@ AlarmController::AlarmController()
           /**
            * RCM-SW-12
            * The device shall monitor the battery voltage and trig a high priority alarm 13 when
-           * voltage is < 24V.
+           * voltage is < 22,6V (20% SoC).
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_12, 1u),
 
@@ -107,7 +107,7 @@ AlarmController::AlarmController()
           /**
            * RCM-SW-11
            * The device shall monitor the battery voltage and trigger a medium priority alarm 21
-           * when voltage is < 24,6V.
+           * when voltage is < 23,2V (40% SoC).
            */
           Alarm(AlarmPriority::ALARM_MEDIUM, RCM_SW_11, 1u),
 
