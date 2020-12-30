@@ -605,9 +605,7 @@ void MainController::sendStopMessageToUi() {
         m_lowTidalVolumeAlarmTresholdNextCommand, m_highTidalVolumeAlarmTresholdNextCommand,
         m_plateauDurationNextCommand, 0u,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
-        m_inspiratoryDurationNextCommand,
-        getBatteryLevelX10(),
-        alarmController.triggeredAlarms());
+        m_inspiratoryDurationNextCommand, getBatteryLevelX10(), alarmController.triggeredAlarms());
 }
 
 void MainController::stop(uint32_t p_currentMillis) {
@@ -657,8 +655,8 @@ void MainController::sendMachineState() {
         m_lowTidalVolumeAlarmTresholdNextCommand, m_highTidalVolumeAlarmTresholdNextCommand,
         m_plateauDurationNextCommand, 0u,
         static_cast<uint8_t>(m_targetInspiratoryFlowNextCommand / 1000),
-        m_inspiratoryDurationNextCommand, m_ticksPerInhalation*MAIN_CONTROLLER_COMPUTE_PERIOD_MS,
-        getBatteryLevelX10());//todo check tick per inhalation accuracy
+        m_inspiratoryDurationNextCommand, m_ticksPerInhalation * MAIN_CONTROLLER_COMPUTE_PERIOD_MS,
+        getBatteryLevelX10());  // todo check tick per inhalation accuracy
 }
 
 void MainController::onVentilationModeSet(uint16_t p_ventilationControllerMode) {
