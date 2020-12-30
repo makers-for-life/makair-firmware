@@ -74,12 +74,6 @@ void millisecondTimerMSM(void)
     clockMsmTimer++;
     int32_t pressure = inspiratoryPressureSensor.read();
     mainController.updatePressure(pressure);
-    int32_t inspiratoryflow = 0;
-#ifdef MASS_FLOW_METER_ENABLED
-    inspiratoryflow = MFM_read_airflow();
-#endif
-
-    mainController.updateInspiratoryFlow(inspiratoryflow);
 
     if ((clockMsmTimer % 10u) == 0u) {
         // Check if some buttons have been pushed
@@ -156,10 +150,21 @@ void millisecondTimerMSM(void)
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
-                mainController.updateFakeExpiratoryFlow();
+
                 uint32_t currentMicro = micros();
+                int32_t inspiratoryflow = 0;
+                int32_t expiratoryflow = 0;
 #ifdef MASS_FLOW_METER_ENABLED
+                inspiratoryflow = MFM_read_airflow();
                 mainController.updateCurrentDeliveredVolume(MFM_read_milliliters(false));
+#endif
+                mainController.updateInspiratoryFlow(inspiratoryflow);
+
+#ifdef MASS_FLOW_METER_SENSOR_EXPI
+                expiratoryflow = MFM_expi_read_airflow();
+                mainController.updateExpiratoryFlow(expiratoryflow);
+#else
+                mainController.updateFakeExpiratoryFlow();
 #endif
                 mainController.updateDt(currentMicro - lastMicro);
                 lastMicro = currentMicro;
