@@ -76,17 +76,18 @@ void PC_CMV_Controller::initCycle() {
 
     // Apply blower ramp-up
     if (m_blowerIncrement >= 0) {
-        blower.runSpeed(m_blowerSpeed + static_cast<uint16_t>(abs(m_blowerIncrement)));
+        blower.runSpeedWithRampUp(m_blowerSpeed + static_cast<uint16_t>(abs(m_blowerIncrement)));
     } else {
         // When blower increment is negative, we need to check that it is less than current speed
         // If not, it would result in an overflow
         if (static_cast<uint16_t>(abs(m_blowerIncrement)) < m_blowerSpeed) {
-            blower.runSpeed(m_blowerSpeed - static_cast<uint16_t>(abs(m_blowerIncrement)));
+            blower.runSpeedWithRampUp(m_blowerSpeed
+                                      - static_cast<uint16_t>(abs(m_blowerIncrement)));
         } else {
-            blower.runSpeed(MIN_BLOWER_SPEED);
+            blower.runSpeedWithRampUp(MIN_BLOWER_SPEED);
         }
     }
-    m_blowerSpeed = blower.getSpeed();
+    m_blowerSpeed = blower.getTargetSpeed();
     m_blowerIncrement = 0;
 }
 

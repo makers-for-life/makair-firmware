@@ -72,8 +72,8 @@ void VC_CMV_Controller::initCycle() {
     m_inspiratoryFlowLastValuesIndex = 0;
 
     calculateBlower();
-    blower.runSpeed(m_blowerSpeed);
-    m_blowerSpeed = blower.getSpeed();
+    blower.runSpeedWithRampUp(m_blowerSpeed);
+    m_blowerSpeed = blower.getTargetSpeed();
     mainController.ticksPerInhalationSet(mainController.ticksPerInhalation() + 50);
     m_duringPlateau = false;
 }

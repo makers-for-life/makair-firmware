@@ -492,6 +492,7 @@ void MainController::executeCommands() {
     }
     inspiratoryValve.execute();
     expiratoryValve.execute();
+    blower.execute();
 }
 
 void MainController::checkCycleAlarm() {
