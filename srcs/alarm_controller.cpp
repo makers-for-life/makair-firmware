@@ -219,22 +219,9 @@ void AlarmController::detectedAlarm(uint8_t p_alarmCode,
     }
 }
 
-int compare(uint8_t a, uint8_t b) {
-    int result = 0;
+bool compare(uint8_t a, uint8_t b) {
 
-    if (a == b) {
-        result = 0;
-    } else if (a == 0u) {
-        result = 1;
-    } else if (b == 0u) {
-        result = -1;
-    } else if (a < b) {
-        result = -1;
-    } else {
-        result = 1;
-    }
-
-    return result;
+      return a>b;
 }
 
 void AlarmController::notDetectedAlarm(uint8_t p_alarmCode) {
