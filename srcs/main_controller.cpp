@@ -164,9 +164,6 @@ void MainController::setup() {
 }
 
 void MainController::initRespiratoryCycle() {
-    Serial.print(m_expiratoryVolume);
-    Serial.print(",");
-    Serial.println(m_tidalVolumeMeasure);
     m_expiratoryVolume = 0;
     DBG_DO(Serial.println("Init respiratory cycle");)
     m_cycleNb++;
@@ -447,7 +444,7 @@ void MainController::updateFakeExpiratoryFlow() {
             (((aMultiplyBy100 * p) * p) + (bMultiplyBy100 * p) + cMultiplyBy100) / 100;
     }*/
 
-    Serial.print(A2MultiplyBy100);
+    /*Serial.print(A2MultiplyBy100);
     Serial.print(",");
     Serial.print(m_pressure);
     Serial.print(",");
@@ -455,7 +452,7 @@ void MainController::updateFakeExpiratoryFlow() {
     Serial.print(",");
     Serial.print(m_expiratoryFlow);
     Serial.print(",");
-    Serial.println();
+    Serial.println();*/
 
     m_expiratoryVolume += ((m_expiratoryFlow / 60) * m_dt) / 1000000;
 }

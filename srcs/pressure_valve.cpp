@@ -129,8 +129,6 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
 
 int32_t PressureValve::getSectionBigHoseX100() {
     int32_t section;
-    Serial.print(command);
-    Serial.print(",");
     if (command > 105) {
         section = 0;
     } else if (command >= 50) {
