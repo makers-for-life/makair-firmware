@@ -116,7 +116,7 @@ void sendBootMessage() {
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("B:");
+    Serial6.write("B:", 2);
     crc32.update("B:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -221,7 +221,7 @@ void sendStoppedMessage(uint8_t peakCommand,
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("O:");
+    Serial6.write("O:", 2);
     crc32.update("O:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -464,7 +464,7 @@ void sendDataSnapshot(uint16_t centileValue,
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("D:");
+    Serial6.write("D:", 2);
     crc32.update("D:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -621,10 +621,9 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
         ventilationModeValue = 0u;
         break;
     }
-
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("S:");
+    Serial6.write("S:", 2);
     crc32.update("S:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -940,7 +939,7 @@ void sendAlarmTrap(uint16_t centileValue,
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("T:");
+    Serial6.write("T:", 2);
     crc32.update("T:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -1044,7 +1043,7 @@ void sendAlarmTrap(uint16_t centileValue,
 void sendControlAck(uint8_t setting, uint16_t valueValue) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("A:");
+    Serial6.write("A:", 2);
     crc32.update("A:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
