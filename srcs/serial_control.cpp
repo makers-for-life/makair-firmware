@@ -85,7 +85,7 @@ void serialControlLoop() {
                 computedCRC.update(rawValue, 2);
                 uint16_t value = toU16(rawValue);
 
-                byte rawExpectedCRC[2];
+                byte rawExpectedCRC[4];
                 Serial6.readBytes(rawExpectedCRC, 4);
                 uint32_t expectedCRC = toU32(rawExpectedCRC);
 
@@ -221,7 +221,7 @@ void serialControlLoop() {
                     break;
 
                 case InspiratoryDuration:
-                     mainController.onInspiratoryDuration(value);
+                    mainController.onInspiratoryDuration(value);
                     break;
 
                 default:
