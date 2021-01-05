@@ -92,7 +92,9 @@ int32_t Blower::getBlowerPressure(int32_t p_flow) {
         // todo sage overflow
         returnValue = 703 - 281 * p_flow / 100000 - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
     } else {
-        returnValue = 0;
+        // todo better characterization
+        returnValue = 703 * m_speed / MAX_BLOWER_SPEED - 281 * p_flow / 100000
+                      - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
     }
 
     return returnValue;
