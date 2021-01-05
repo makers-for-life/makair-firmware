@@ -97,7 +97,7 @@ int32_t Blower::getBlowerPressure(int32_t p_flow) {
                       - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
     }
 
-    return returnValue;
+    return min(703, max(returnValue, 0));
 }
 
 uint16_t Blower::getSpeed() const { return m_speed; }
