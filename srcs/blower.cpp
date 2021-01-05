@@ -48,7 +48,7 @@ void Blower::runSpeedWithRampUp(uint16_t p_targetSpeed) {
         if (p_targetSpeed != m_targetSpeed) {  // first time with new target
             m_lastCallDate = micros();
             m_targetSpeed = p_targetSpeed;
-            m_speed = MIN_BLOWER_SPEED;
+            m_speed = max(m_speed, MIN_BLOWER_SPEED);
         }
     }
 }
