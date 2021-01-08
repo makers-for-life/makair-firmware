@@ -85,3 +85,5 @@ uint32_t MFM_expi_read_serial_number(void);
 #define MFM_SDP703_02_I2C_ADDRESS 0x40
 #define MFM_SFM3019_I2C_ADDRESS 0x2E
 
+// exposed for other peripherals sharing I2C bus pause the timer.
+extern HardwareTimer* massFlowTimer;

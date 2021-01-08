@@ -43,7 +43,7 @@ uint32_t mfmHoneywellHafSerialNumber = 0;
 
 uint32_t mfmSfm3300SerialNumberExpi = 0;
 uint32_t mfmSfm3019SerialNumber = 0;
-HardwareTimer* massFlowTimer;
+HardwareTimer* massFlowTimer = NULL;
 
 volatile bool mfmFaultCondition = false;
 
