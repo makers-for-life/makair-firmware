@@ -86,4 +86,6 @@ uint32_t MFM_expi_read_serial_number(void);
 #define MFM_SFM3019_I2C_ADDRESS 0x2E
 
 // exposed for other peripherals sharing I2C bus pause the timer.
-extern HardwareTimer* massFlowTimer;
+extern volatile uint16_t MFM_force_release_I2C;
+#define MFM_FORCE_RELEASE_I2C_TRUE 0xb00b
+#define MFM_FORCE_RELEASE_I2C_FALSE 0
