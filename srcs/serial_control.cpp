@@ -224,6 +224,14 @@ void serialControlLoop() {
                     mainController.onInspiratoryDuration(value);
                     break;
 
+                case Locale:
+                    // TODO
+                    break;
+
+                case PatientHeight:
+                    // TODO
+                    break;
+
                 default:
                     DBG_DO({
                         Serial.print("Unknown control setting: ");

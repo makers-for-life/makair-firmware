@@ -80,6 +80,10 @@ enum ControlSetting {
     TargetInspiratoryFlow = 25,
     /// Duration of inspiration in ms (value bounds must be between 200 and 3000)
     InspiratoryDuration = 26,
+    /// Language of the UI; this should be two letters (see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)) in ASCII representation as two u8
+    Locale = 27,
+    /// Patient's height in centimeters
+    PatientHeight = 28,
 };
 
 /**

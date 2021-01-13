@@ -186,7 +186,9 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t targetInspiratoryFlow,
                         uint16_t inspiratoryDurationCommandValue,
                         uint16_t batteryLevelValue,
-                        uint8_t currentAlarmCodes[ALARMS_SIZE]) {
+                        uint8_t currentAlarmCodes[ALARMS_SIZE],
+                        uint8_t patientHeight,
+                        uint16_t localeValue) {
 
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
@@ -435,6 +437,20 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.write(currentAlarmCodes, currentAlarmSize);
     crc32.update(currentAlarmCodes, currentAlarmSize);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(patientHeight);
+    crc32.update(patientHeight);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte locale[2];  // 16 bits
+    toBytes16(locale, localeValue);
+    Serial6.write(locale, 2);
+    crc32.update(locale, 2);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -590,7 +606,9 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t targetInspiratoryFlow,
                               uint16_t inspiratoryDurationCommandValue,
                               uint16_t previousInspiratoryDurationValue,
-                              uint16_t batteryLevelValue) {
+                              uint16_t batteryLevelValue,
+                              uint8_t patientHeight,
+                              uint16_t localeValue) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -891,6 +909,20 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.write(batteryLevel, 2);
     crc32.update(batteryLevel, 2);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(patientHeight);
+    crc32.update(patientHeight);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte locale[2];  // 16 bits
+    toBytes16(locale, localeValue);
+    Serial6.write(locale, 2);
+    crc32.update(locale, 2);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -1076,6 +1108,257 @@ void sendControlAck(uint8_t setting, uint16_t valueValue) {
     toBytes16(value, valueValue);
     Serial6.write(value, 2);
     crc32.update(value, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+void sendWatchdogRestartFatalError(void) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(1);
+    crc32.update(1);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+void sendCalibrationFatalError(int16_t pressureOffsetValue,
+                               int16_t minPressureValue,
+                               int16_t maxPressureValue,
+                               int16_t flowAtStartingValue,
+                               int16_t flowWithBlowerOnValue) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+    crc32.update(systick, 8);
+
+    Serial6.write(2);
+    crc32.update(2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte pressureOffset[2];  // 16 bits
+    toBytes16(pressureOffset, pressureOffsetValue);
+    Serial6.write(pressureOffset, 2);
+    crc32.update(pressureOffset, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte minPressure[2];  // 16 bits
+    toBytes16(minPressure, minPressureValue);
+    Serial6.write(minPressure, 2);
+    crc32.update(minPressure, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte maxPressure[2];  // 16 bits
+    toBytes16(maxPressure, maxPressureValue);
+    Serial6.write(maxPressure, 2);
+    crc32.update(maxPressure, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte flowAtStarting[2];  // 16 bits
+    toBytes16(flowAtStarting, flowAtStartingValue);
+    Serial6.write(flowAtStarting, 2);
+    crc32.update(flowAtStarting, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte flowWithBlowerOn[2];  // 16 bits
+    toBytes16(flowWithBlowerOn, flowWithBlowerOnValue);
+    Serial6.write(flowWithBlowerOn, 2);
+    crc32.update(flowWithBlowerOn, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(3);
+    crc32.update(3);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte batteryLevel[2];  // 16 bits
+    toBytes16(batteryLevel, batteryLevelValue);
+    Serial6.write(batteryLevel, 2);
+    crc32.update(batteryLevel, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+void sendMassFlowMeterFatalError(void) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(4);
+    crc32.update(4);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+void sendInconsistentPressureFatalError(uint16_t pressureValue) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(5);
+    crc32.update(5);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte pressure[2];  // 16 bits
+    toBytes16(pressure, pressureValue);
+    Serial6.write(pressure, 2);
+    crc32.update(pressure, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);

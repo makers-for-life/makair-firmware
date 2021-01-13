@@ -50,7 +50,9 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t targetInspiratoryFlow,
                         uint16_t inspiratoryDurationCommandValue,
                         uint16_t batteryLevelValue,
-                        uint8_t currentAlarmCodes[ALARMS_SIZE]);
+                        uint8_t currentAlarmCodes[ALARMS_SIZE],
+                        uint8_t patientHeight,
+                        uint16_t localeValue);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
@@ -100,7 +102,9 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t targetInspiratoryFlow,
                               uint16_t inspiratoryDurationCommandValue,
                               uint16_t previousInspiratoryDurationValue,
-                              uint16_t batteryLevelValue);
+                              uint16_t batteryLevelValue,
+                              uint8_t patientHeight,
+                              uint16_t localeValue);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,
@@ -116,6 +120,25 @@ void sendAlarmTrap(uint16_t centileValue,
 
 /// Send a "control ack" message
 void sendControlAck(uint8_t setting, uint16_t value);
+
+/// Send a "watchdog restart" fatal error
+void sendWatchdogRestartFatalError(void);
+
+/// Send a "calibration" fatal error
+void sendCalibrationFatalError(int16_t pressureOffsetValue,
+                               int16_t minPressureValue,
+                               int16_t maxPressureValue,
+                               int16_t flowAtStartingValue,
+                               int16_t flowWithBlowerOnValue);
+
+/// Send a "battery deeply discharged" fatal error
+void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue);
+
+/// Send a "mass flow meter" fatal error
+void sendMassFlowMeterFatalError(void);
+
+/// Send a "inconsistent pressure" fatal error
+void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
 /**
  * Convert and round a pressure in mmH2O to a pressure in cmH2O
