@@ -491,6 +491,7 @@ void MainController::executeCommands() {
     } else {
         alarmController.notDetectedAlarm(RCM_SW_18);
     }
+
     inspiratoryValve.execute();
     expiratoryValve.execute();
     blower.execute();
@@ -598,6 +599,13 @@ void MainController::checkCycleAlarm() {
                                       leakPerMinute);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_10);
+    }
+
+    if (m_peakPressureMeasure > m_peakPressureAlarmThresholdCommand) {
+        alarmController.detectedAlarm(RCM_SW_22, m_cycleNb, m_peakPressureAlarmThresholdCommand,
+                                      m_pressure);
+    } else {
+        alarmController.notDetectedAlarm(RCM_SW_22);
     }
 }
 
