@@ -218,6 +218,13 @@ class MainController {
      */
     void onTriggerOffsetSet(uint16_t p_triggerOffset);
 
+    /**
+     * Set the desired threshold for max peak pressure
+     *
+     * @param p_peakPressureAlarmThreshold Desired threshold in mmH2O
+     */
+    void onPeakPressureAlarmThreshold(int16_t p_peakPressureAlarmThreshold);
+
     // Get the desired tidalVolue
     inline int16_t tidalVolumeCommand() const { return m_tidalVolumeCommand; }
     // Get the desired plateau duration (in VC modes)
@@ -615,6 +622,11 @@ class MainController {
     int32_t m_leakAlarmThresholdCommand;
     // Threshold for leak alarm for next cycle
     int32_t m_leakAlarmThresholdNextCommand;
+
+    // Threshold for peak pressure alarm
+    int16_t m_peakPressureAlarmThresholdCommand;
+    // Threshold for peak pressure alarmfor next cycle
+    int16_t m_peakPressureAlarmThresholdNextCommand;
 
     /// Volume expired by the patient during the exhalation phase
     int32_t m_expiratoryVolume;

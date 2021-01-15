@@ -73,7 +73,9 @@
 #define CONST_MIN_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 50               // [in mL]
 #define CONST_MAX_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 2000             // [in mL]
 #define CONST_MIN_LEAK_ALARM_THRESHOLD 0                             // [in cL/min]
-#define CONST_MIN_LEAK_ALARM_THRESHOLD 10000                        // [in cL/min]
+#define CONST_MIN_LEAK_ALARM_THRESHOLD 10000                         // [in cL/min]
+#define CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD 50                   // [in mmH2O]
+#define CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD 700                  // [in mmH2O]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
@@ -101,6 +103,7 @@
 #define DEFAULT_LOW_TIDAL_VOLUME_ALARM_THRESHOLD 200                  // [in mL]
 #define DEFAULT_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 1000                // [in mL]
 #define DEFAULT_LEAK_ALARM_THRESHOLD 2000                             // [in mL/min]
+#define DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD 500                     // [in mmH2O]
 
 #define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20
 #define CONST_MAX_CYCLE 35u

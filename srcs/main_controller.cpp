@@ -99,6 +99,9 @@ MainController::MainController() {
     m_leakAlarmThresholdNextCommand = DEFAULT_LEAK_ALARM_THRESHOLD;
     m_leakAlarmThresholdCommand = DEFAULT_LEAK_ALARM_THRESHOLD;
 
+    m_peakPressureAlarmThresholdCommand = DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD;
+    m_peakPressureAlarmThresholdNextCommand = DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD;
+
     m_ventilationControllersTable[PC_CMV] = &pcCmvController;
     m_ventilationControllersTable[PC_AC] = &pcAcController;
     m_ventilationControllersTable[VC_CMV] = &vcCmvController;
@@ -200,6 +203,7 @@ void MainController::initRespiratoryCycle() {
     m_lowRespiratoryRateAlarmThresholdCommand = m_lowRespiratoryRateAlarmThresholdNextCommand;
     m_highTidalVolumeAlarmTresholdCommand = m_highTidalVolumeAlarmTresholdNextCommand;
     m_leakAlarmThresholdCommand = m_leakAlarmThresholdNextCommand;
+    m_peakPressureAlarmThresholdCommand = m_peakPressureAlarmThresholdNextCommand;
 
     // Run setup of the controller only if different from previous cycle
     if (m_ventilationController != m_ventilationControllerNextCommand) {
@@ -1112,4 +1116,15 @@ void MainController::onInspiratoryDuration(uint16_t p_inspiratoryDuration) {
 
     // Send acknowledgment to the UI
     sendControlAck(26, m_inspiratoryDurationNextCommand);
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onPeakPressureAlarmThreshold(int16_t p_peakPressureAlarmThreshold) {
+    if (p_peakPressureAlarmThreshold >= CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD
+        && p_peakPressureAlarmThreshold <= CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD) {
+        m_peakPressureAlarmThresholdNextCommand = p_peakPressureAlarmThreshold;
+    }
+
+    // Send acknowledgment to the UI
+    sendControlAck(27, m_peakPressureAlarmThresholdNextCommand);
 }

@@ -157,6 +157,12 @@ AlarmController::AlarmController()
            * The device shall embed a medium priority alarm 48 when Tidal Volume is too high
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_21, 3u),
+
+          /**
+           * RCM-SW-22
+           * The device shall embed a medium priority alarm 48 when peak pressure is too high
+           */
+          Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_22, 1u),
       }),
 
       m_tick(0u),
