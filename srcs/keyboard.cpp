@@ -21,10 +21,10 @@
 #include "../includes/activation.h"
 #include "../includes/buzzer.h"
 #include "../includes/calibration.h"
+#include "../includes/config.h"
 #include "../includes/debug.h"
 #include "../includes/main_controller.h"
 #include "../includes/parameters.h"
-#include "../includes/config.h"
 
 // INITIALISATION =============================================================
 

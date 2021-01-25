@@ -321,7 +321,7 @@ void millisecondTimerEOL(void)
         // communication with the UI, and tactile function of the UI.
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-            "Changer mode\nde ventilation\nSur ecran ta");
+                       "Changer mode\nde ventilation\nSur ecran ta");
 
         // Check serial from the UI
         serialControlLoop();

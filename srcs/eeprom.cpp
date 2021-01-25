@@ -10,15 +10,15 @@
  * The massflowmeter will get some values in between.
  * So, the error on the flow measurement will be invisible, and the error on the volume measurement
  * will have a very very slight error.
- * 
+ *
  * Reading:
  * The EEProm_Content is updated with EEPROM actual content.
  * When the EEPROM is virgin, the EEProm_Content structure is overriden
  * When the I2C fails, the EEProm_Content structure is overriden
  * When the EEPROM is corrupted, the EEProm_Content will contain some corrupted data.
- * 
+ *
  * Writing:
- * The EEProm_Content is copied to EEPROM. 
+ * The EEProm_Content is copied to EEPROM.
  *
  *****************************************************************************/
 

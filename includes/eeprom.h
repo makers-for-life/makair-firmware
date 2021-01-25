@@ -10,11 +10,11 @@
 #include <Arduino.h>
 
 // declare here all types of data stored in eeprom
-// Beware : this is only a 2Kbit EEPROM. 255 bytes maximum ! Last 5 bytes are reserved to detect virgin status and corruption error.
+// Beware : this is only a 2Kbit EEPROM. 255 bytes maximum ! Last 5 bytes are reserved to detect
+// virgin status and corruption error.
 // Beware : do not write too often. 1 million write cycle is the limit during product lifetime.
-// Beware : read about C struct alignement and padding on a 32 bits system, and check
-// sizeof(struct).
-// Reserved bytes : 
+// Beware : read about C struct alignement and padding on a 32 bits
+// system, and check sizeof(struct). Reserved bytes :
 // - 0xFF : 0XFF if virgin, 0xAB if not.
 // - 0xFB, 0xFC, OxFD, 0xFE : CRC32 of EEPROM_Content
 typedef struct {
@@ -48,4 +48,3 @@ typedef char assertMaxEepromSize__LINE__[(sizeof(EEProm_Content) < 251) ? 1 : -1
 
 // error code: the eeprom is corrupted. EEProm_Content contains what was read.
 #define EEPROM_ERROR_CORRUPTED 0xAA
-
