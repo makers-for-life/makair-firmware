@@ -153,7 +153,6 @@ void millisecondTimerMSM(void)
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
-
                 uint32_t currentMicro = micros();
                 int32_t inspiratoryflow = 0;
                 int32_t expiratoryflow = 0;

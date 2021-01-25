@@ -44,7 +44,6 @@ void Blower::setup() {
 void Blower::runSpeedWithRampUp(uint16_t p_targetSpeed) {
     // cppcheck-suppress unsignedPositive ; MIN_BLOWER_SPEED might not be equal to 0
     if ((p_targetSpeed >= MIN_BLOWER_SPEED) && (p_targetSpeed <= MAX_BLOWER_SPEED)) {
-
         if (p_targetSpeed != m_targetSpeed) {  // first time with new target
             m_lastCallDate = micros();
             m_targetSpeed = p_targetSpeed;
@@ -70,7 +69,6 @@ void Blower::execute() {
 void Blower::runSpeed(uint16_t p_runSpeed) {
     // cppcheck-suppress unsignedPositive ; MIN_BLOWER_SPEED might not be equal to 0
     if ((p_runSpeed >= MIN_BLOWER_SPEED) && (p_runSpeed <= MAX_BLOWER_SPEED)) {
-
         // do not forcefully set the capture compare again and again if speed do not change
         if (m_stopped || (m_speed != p_runSpeed)) {
             actuator->setCaptureCompare(timerChannel, BlowerSpeed2MicroSeconds(p_runSpeed),

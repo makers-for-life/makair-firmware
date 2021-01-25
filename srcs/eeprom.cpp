@@ -27,14 +27,12 @@
 // Associated header
 #include "../includes/eeprom.h"
 
+#include <math.h>
+
 // Internal
 #include "../includes/config.h"
 #include "../includes/mass_flow_meter.h"
 #include "../includes/parameters.h"
-
-#if MODE == MODE_EEPROM_TESTS
-#include "../includes/mass_flow_meter.h"
-#endif
 
 // External
 #include "CRC32.h"
@@ -43,7 +41,6 @@
 #include <IWatchdog.h>
 #include <OneButton.h>
 #include <Wire.h>
-#include <math.h>
 
 #define EEPROM_I2C_ADDRESS 0x51
 
@@ -137,7 +134,8 @@ int32_t eeprom_write(void) {
         // don't ask me why "min" function is so clunky...
         int remainingBytesInPage =
             sizeof(EEProm_Content) - (page * 16) >= 16 ? 16 : sizeof(EEProm_Content) - (page * 16);
-        Wire.write(&(((uint8_t*)(&EEProm_Content))[page * 16]), remainingBytesInPage);
+        Wire.write(&((reinterpret_cast<uint8_t*>(&EEProm_Content))[page * 16]),
+                   remainingBytesInPage);
         totalWriteErrors += Wire.endTransmission();
         eeprom_wire_end();
         delay(7);
@@ -174,7 +172,6 @@ int32_t eeprom_write(void) {
 // use for tests only
 // write 0xFF everywhere.
 void eeprom_virginize(void) {
-
     // write 16 bytes by 16.
     for (int page = 0; page < 16; page++) {
         eeprom_wire_begin();
@@ -207,17 +204,17 @@ void loop(void) {
     char inChar;
     char buffer[100];
     if (Serial.available()) {
-        inChar = (char)Serial.read();
+        inChar = static_cast<char>(Serial.read());
         // dump and print eeprom content
         if (inChar == 'd') {
             Serial.println("dump EEPROM");
             for (int page = 0; page < 16; page++) {
                 eeprom_wire_begin();
                 int readCount = Wire.requestFrom(EEPROM_I2C_ADDRESS, 16, page * 16, 1, true);
-                (void)snprintf(buffer, 100, "@%02X | ", page * 16);
+                (void)snprintf(buffer, sizeof(buffer), "@%02X | ", page * 16);
                 Serial.print(buffer);
                 for (int i = 0; i < 16; i++) {
-                    (void)snprintf(buffer, 100, "%02X ", Wire.read());
+                    (void)snprintf(buffer, sizeof(buffer), "%02X ", Wire.read());
                     Serial.print(buffer);
                 }
                 Serial.println("");
@@ -229,10 +226,10 @@ void loop(void) {
         if (inChar == 'b') {
             Serial.println("dump EEProm_Content");
             for (int page = 0; page < 16; page++) {
-                (void)snprintf(buffer, 100, "@%02X | ", page * 16);
+                (void)snprintf(buffer, sizeof(buffer), "@%02X | ", page * 16);
                 Serial.print(buffer);
                 for (int i = 0; i < 16; i++) {
-                    (void)snprintf(buffer, 100, "%02X ",
+                    (void)snprintf(buffer, sizeof(buffer), "%02X ",
                                    ((unsigned char*)(&EEProm_Content))[page * 16 + i]);
                     Serial.print(buffer);
                 }

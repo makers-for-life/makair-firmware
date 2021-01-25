@@ -25,7 +25,6 @@ typedef struct {
     char stuffc[62];
     char stuffc2[62];
     char stuffc3[62];
-
 } EEProm_Content_t;
 
 // define default values if needed

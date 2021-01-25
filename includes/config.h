@@ -53,4 +53,4 @@
  */
 /// Disable hardware buttons, used when integrating a motherboard in a touch- \
 ///   only device.
-//#define DISABLE_BUTTONS
+// #define DISABLE_BUTTONS

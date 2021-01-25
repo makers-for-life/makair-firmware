@@ -191,7 +191,6 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t patientHeight,
                         uint8_t patientGender,
                         uint16_t peakPressureAlarmThresholdValue) {
-
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
