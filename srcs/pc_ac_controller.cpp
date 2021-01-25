@@ -30,7 +30,7 @@ void PC_AC_Controller::exhale() {
 
     // Calculate max pressure for the last samples
     int32_t maxPressureValue = mainController.lastPressureValues()[0];
-    for (uint8_t i = 0; i < MAX_PRESSURE_SAMPLES; i++) {
+    for (uint8_t i = 0u; i < MAX_PRESSURE_SAMPLES; i++) {
         if (mainController.lastPressureValues()[i] > maxPressureValue) {
             maxPressureValue = mainController.lastPressureValues()[i];
         }

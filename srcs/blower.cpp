@@ -58,7 +58,7 @@ void Blower::execute() {
     uint32_t currentDate = micros();
     uint16_t runSpeed = 0;
     if (m_targetSpeed > m_speed) {
-        runSpeed = min(m_targetSpeed, uint16_t(m_speed + (currentDate - m_lastCallDate) / 1000));
+        runSpeed = min(m_targetSpeed, uint16_t(m_speed + (currentDate - m_lastCallDate) / 1000u));
     } else {
         runSpeed = m_targetSpeed;
     }
@@ -88,11 +88,12 @@ int32_t Blower::getBlowerPressure(int32_t p_flow) {
     if (m_speed == MAX_BLOWER_SPEED) {
         // This order 2 characteruzation has been made experimentally
         // todo sage overflow
-        returnValue = 703 - 281 * p_flow / 100000 - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
+        returnValue =
+            703 - (281 * (p_flow / 100000)) - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
     } else {
         // todo better characterization
-        returnValue = 703 * m_speed / MAX_BLOWER_SPEED - 281 * p_flow / 100000
-                      - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
+        returnValue = 703 * static_cast<int32_t>(m_speed) / static_cast<int32_t>(MAX_BLOWER_SPEED)
+                      - (281 * (p_flow / 100000)) - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
     }
 
     return min(int32_t(703), max(returnValue, int32_t(0)));

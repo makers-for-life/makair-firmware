@@ -6,7 +6,7 @@
  *****************************************************************************/
 
 #pragma once
-#define NUMBER_OF_VENTILATION_MODES 5
+#define NUMBER_OF_VENTILATION_MODES 5u
 
 // ENUMS =================================================================
 

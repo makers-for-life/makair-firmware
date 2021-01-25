@@ -27,7 +27,7 @@
 #include "../includes/vc_cmv_controller.h"
 
 /// Number of values to aggregate when computing plateau pressure
-#define MAX_PRESSURE_SAMPLES 10
+#define MAX_PRESSURE_SAMPLES 10u
 
 // CLASS ======================================================================
 
@@ -551,7 +551,7 @@ class MainController {
     VentilationController* m_ventilationControllerNextCommand;
 
     /// Array containing pointers to different ventilation controllers
-    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES + 1];
+    VentilationController* m_ventilationControllersTable[NUMBER_OF_VENTILATION_MODES + 1u];
 
     VentilationModes m_ventilationControllerMode;
 
@@ -575,57 +575,64 @@ class MainController {
     int32_t m_targetInspiratoryFlowNextCommand;
     /// Duration of inspiration
     int16_t m_inspiratoryDurationCommand;
-    /// Duration of inspiration/// Duration of inspiration
+    /// Duration of inspiration
     int16_t m_inspiratoryDurationNextCommand;
 
-    // Threshold for low inspiratory minute volume alarm
+    /// Threshold for low inspiratory minute volume alarm
     int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdCommand;
-    // Threshold for low inspiratory minute volume alarm for next cycle
+    /// Threshold for low inspiratory minute volume alarm for next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand;
 
-    // Threshold for high inspiratory minute volume alarm
+    /// Threshold for high inspiratory minute volume alarm
     int32_t m_highInspiratoryMinuteVolumeAlarmThresholdCommand;
-    // Threshold for high inspiratory minute volume alarm for next cycle
+    /// Threshold for high inspiratory minute volume alarm for next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand;
 
-    // Threshold for low inspiratory minute volume alarm
+    /// Threshold for low inspiratory minute volume alarm
     int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdCommand;
-    // Threshold for low inspiratory minute volume alarm for next cycle
+    /// Threshold for low inspiratory minute volume alarm for next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand;
 
-    // Threshold for high inspiratory minute volume alarm
+    /// Threshold for high inspiratory minute volume alarm
     int32_t m_highExpiratoryMinuteVolumeAlarmThresholdCommand;
-    // Threshold for high inspiratory minute volume alarm for next cycle
+    /// Threshold for high inspiratory minute volume alarm for next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
 
-    // Threshold for low respiratory rate
+    /// Threshold for low respiratory rate
     int32_t m_lowRespiratoryRateAlarmThresholdCommand;
-    // Threshold for low respiratory rate for next cycle
+    /// Threshold for low respiratory rate for next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_lowRespiratoryRateAlarmThresholdNextCommand;
 
-    // Threshold for low respiratory rate
+    /// Threshold for low respiratory rate
     int32_t m_highRespiratoryRateAlarmThresholdCommand;
-    // Threshold for low respiratory rate for next cycle
+    /// Threshold for low respiratory rate for next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_highRespiratoryRateAlarmThresholdNextCommand;
 
-    // Threshold for low tidal Volume Alarm
+    /// Threshold for low tidal Volume Alarm
     int32_t m_lowTidalVolumeAlarmThresholdCommand;
-    // Threshold for low tidal Volume Alarm next cycle
+    /// Threshold for low tidal Volume Alarm next cycle
     int32_t m_lowTidalVolumeAlarmThresholdNextCommand;
 
-    // Threshold for high tidal Volume Alarm
+    /// Threshold for high tidal Volume Alarm
     int32_t m_highTidalVolumeAlarmThresholdCommand;
-    // Threshold for high tidal Volume Alarm next cycle
+    /// Threshold for high tidal Volume Alarm next cycle
+    // cppcheck-suppress misra-c2012-5.2
     int32_t m_highTidalVolumeAlarmThresholdNextCommand;
 
-    // Threshold for leak alarm
+    /// Threshold for leak alarm
     int32_t m_leakAlarmThresholdCommand;
-    // Threshold for leak alarm for next cycle
+    /// Threshold for leak alarm for next cycle
     int32_t m_leakAlarmThresholdNextCommand;
 
-    // Threshold for peak pressure alarm
+    /// Threshold for peak pressure alarm
     int16_t m_peakPressureAlarmThresholdCommand;
-    // Threshold for peak pressure alarmfor next cycle
+    /// Threshold for peak pressure alarmfor next cycle
     int16_t m_peakPressureAlarmThresholdNextCommand;
 
     /// Volume expired by the patient during the exhalation phase

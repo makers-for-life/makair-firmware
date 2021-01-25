@@ -84,30 +84,32 @@ int32_t eeprom_read(void) {
     eeprom_virgin = Wire.read();
     eeprom_wire_end();
 
-    if (readCount != 5) {
+    if (readCount != 5u) {
+        // cppcheck-suppress misra-c2012-15.5
         return EEPROM_ERROR_UNABLE_TO_RW;
     }
 
-    if (EEPROM_VIRGIN_TRUE == eeprom_virgin) {
+    if (static_cast<uint8_t>(EEPROM_VIRGIN_TRUE) == eeprom_virgin) {
+        // cppcheck-suppress misra-c2012-15.5
         return EEPROM_ERROR_READ_VIRGIN;
     }
 
     // read bytes 16 by 16.
-    for (int page = 0; page < ((sizeof(EEProm_Content) / 16) + 1); page++) {
+    for (unsigned int page = 0; page < ((sizeof(EEProm_Content) / 16u) + 1u); page++) {
         eeprom_wire_begin();
         // requestFrom(uint8_t address, uint8_t quantity, uint32_t iaddress, uint8_t isize, uint8_t
         // sendStop)
-        readCount = Wire.requestFrom(EEPROM_I2C_ADDRESS, 16, page * 16, 1, true);
-        totalReadCount += readCount;
-        for (int i = 0; i < 16; i++) {
-            EEPROM_Buffer[page * 16 + i] = Wire.read();
+        readCount = Wire.requestFrom(EEPROM_I2C_ADDRESS, 16, page * 16u, 1, true);
+        totalReadCount += static_cast<int16_t>(readCount);
+        for (unsigned int i = 0; i < 16u; i++) {
+            EEPROM_Buffer[(page * 16u) + i] = Wire.read();
         }
         eeprom_wire_end();
         delay(7);
     }
 
     int32_t returnVal = 0;
-    if (totalReadCount >= sizeof(EEProm_Content)) {
+    if (static_cast<uint64_t>(totalReadCount) >= sizeof(EEProm_Content)) {
         // read was successfull, copy from intermediate buffer to the real EEProm_Content
         memcpy(&EEProm_Content, &EEPROM_Buffer, sizeof(EEProm_Content));
     } else {
@@ -117,6 +119,7 @@ int32_t eeprom_read(void) {
     // compute CRC32, compare to the one in eeprom
     uint32_t crc = CRC32::calculate((unsigned char*)&EEProm_Content, sizeof(EEProm_Content));
     if (crc != eeprom_crc32.crc) {
+        // cppcheck-suppress misra-c2012-15.5
         return EEPROM_ERROR_CORRUPTED;
     }
 
@@ -127,14 +130,15 @@ int32_t eeprom_write(void) {
     int32_t totalWriteErrors = 0;
 
     // write 16 bytes by 16.
-    for (int page = 0; page < ((sizeof(EEProm_Content) / 16) + 1); page++) {
+    for (unsigned int page = 0; page < ((sizeof(EEProm_Content) / 16u) + 1u); page++) {
         eeprom_wire_begin();
         Wire.beginTransmission(EEPROM_I2C_ADDRESS);
-        Wire.write(page * 16);  // address
+        Wire.write(page * 16u);  // address
         // don't ask me why "min" function is so clunky...
-        int remainingBytesInPage =
-            sizeof(EEProm_Content) - (page * 16) >= 16 ? 16 : sizeof(EEProm_Content) - (page * 16);
-        Wire.write(&((reinterpret_cast<uint8_t*>(&EEProm_Content))[page * 16]),
+        int remainingBytesInPage = ((sizeof(EEProm_Content) - (page * 16u)) >= 16u)
+                                       ? 16u
+                                       : sizeof(EEProm_Content) - (page * 16u);
+        Wire.write(&((reinterpret_cast<uint8_t*>(&EEProm_Content))[page * 16u]),
                    remainingBytesInPage);
         totalWriteErrors += Wire.endTransmission();
         eeprom_wire_end();
@@ -155,7 +159,8 @@ int32_t eeprom_write(void) {
     delay(7);
 
     // also write virgin status, if needed
-    if (EEPROM_VIRGIN_NOTINITIALIZED == eeprom_virgin || EEPROM_VIRGIN_TRUE == eeprom_virgin) {
+    if ((static_cast<uint8_t>(EEPROM_VIRGIN_NOTINITIALIZED) == eeprom_virgin)
+        || (static_cast<uint8_t>(EEPROM_VIRGIN_TRUE) == eeprom_virgin)) {
         eeprom_wire_begin();
         Wire.beginTransmission(EEPROM_I2C_ADDRESS);
         Wire.write(0xFF);
@@ -165,7 +170,7 @@ int32_t eeprom_write(void) {
         eeprom_wire_end();
     }
 
-    return (totalWriteErrors == 0 ? 0 : EEPROM_ERROR_UNABLE_TO_RW);
+    return ((totalWriteErrors == 0) ? 0 : EEPROM_ERROR_UNABLE_TO_RW);
 }
 
 #if MODE == MODE_EEPROM_TESTS

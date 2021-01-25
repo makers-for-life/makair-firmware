@@ -129,6 +129,7 @@ void sendBootMessage() {
     crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits

@@ -63,7 +63,7 @@ void PressureValve::open(uint16_t p_command) { command = p_command; }
 void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
     int32_t tempCommand;
     if (p_sectionMultiplyBy100 < 1960) {
-        tempCommand = 98 - 318 * p_sectionMultiplyBy100 / 10000;
+        tempCommand = 98 - (318 * p_sectionMultiplyBy100 / 10000);
     } else {
         tempCommand = 2626 - (36 * p_sectionMultiplyBy100) / 10
                       + 168 * ((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100) / 1000
@@ -72,6 +72,7 @@ void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
                                * (p_sectionMultiplyBy100) / 100)
                             / 100000;
     }
+    // cppcheck-suppress misra-c2012-12.3
     command = min(max(int32_t(minApertureAngle), tempCommand), int32_t(maxApertureAngle));
     /*Serial.print(command);
     Serial.print(",");*/
@@ -129,12 +130,12 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
 
 int32_t PressureValve::getSectionBigHoseX100() {
     int32_t section;
-    if (command > 105) {
+    if (command > 105u) {
         section = 0;
-    } else if (command >= 50) {
-        section = 5760 - 558 * command / 10;
+    } else if (command >= 50u) {
+        section = 5760u - (558u * command / 10u);
     } else {
-        section = 4390 - 5 * command - 47 * command * command / 100;
+        section = 4390u - (5u * command) - (47u * command * command / 100u);
     }
 
     return max(int32_t(0), section);

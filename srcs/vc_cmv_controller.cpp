@@ -74,7 +74,7 @@ void VC_CMV_Controller::initCycle() {
     calculateBlower();
     blower.runSpeedWithRampUp(m_blowerSpeed);
     m_blowerSpeed = blower.getTargetSpeed();
-    mainController.ticksPerInhalationSet(mainController.ticksPerInhalation() + 50);
+    mainController.ticksPerInhalationSet(mainController.ticksPerInhalation() + 50u);
     m_duringPlateau = false;
 }
 
@@ -84,16 +84,16 @@ void VC_CMV_Controller::inhale() {
     expiratoryValve.close();
 
     int32_t inspirationRemainingDurationMs =
-        ((mainController.ticksPerInhalation() - mainController.tick())
-             * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
-         - mainController.plateauDurationCommand());  // in ms
+        static_cast<int32_t>((mainController.ticksPerInhalation() - mainController.tick())
+                             * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
+        - mainController.plateauDurationCommand();  // in ms
 
     if (inspirationRemainingDurationMs > 20) {
-        /*m_targetFlowMultiplyBy1000 =
-            (60 * 1000
-             * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume()))
-            / inspirationRemainingDurationMs;  // in mL/min
-        m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);*/
+        // m_targetFlowMultiplyBy1000 =
+        //     (60 * 1000
+        //      * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume()))
+        //     / inspirationRemainingDurationMs;  // in mL/min
+        // m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);
         m_targetFlowMultiplyBy1000 = mainController.targetInspiratoryFlowCommand();
     }
 
@@ -102,14 +102,15 @@ void VC_CMV_Controller::inhale() {
     if (!m_duringPlateau
         && mainController.currentDeliveredVolume()
                > mainController.tidalVolumeCommand() - safetyVolume) {
-        mainController.ticksPerInhalationSet(mainController.tick()
-                                             + mainController.plateauDurationCommand()
-                                                   / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);
+        mainController.ticksPerInhalationSet(
+            mainController.tick()
+            + static_cast<uint16_t>(mainController.plateauDurationCommand())
+                  / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);
         m_duringPlateau = true;
     }
-    if (mainController.tick()
-        < mainController.ticksPerInhalation()
-              - mainController.plateauDurationCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
+    if (mainController.tick() < mainController.ticksPerInhalation()
+                                    - static_cast<uint16_t>(mainController.plateauDurationCommand())
+                                          / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
         int32_t flow = mainController.inspiratoryFlow();
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
@@ -121,13 +122,14 @@ void VC_CMV_Controller::inhale() {
             * (98 * (blowerPressure - patientPressure) / 10);
         int32_t divider = (rhoMultiplyBy100 * (m_targetFlowMultiplyBy1000 / 60)
                            * (m_targetFlowMultiplyBy1000 / 60) / 100);
-        int32_t tempRatio = (divider == 0) ? 0 : twoA1SquareDotDeltaPressureMultiplyBy100 / divider;
+        int32_t tempRatio =
+            (divider == 0) ? 0 : (twoA1SquareDotDeltaPressureMultiplyBy100 / divider);
         int32_t sectionToOpen;
         if (m_targetFlowMultiplyBy1000 == 0) {
             sectionToOpen = 0;
 
         } else {
-            int32_t divider2 = (tempRatio + 100 < 0) ? 0 : sqrt(tempRatio + 100);
+            int32_t divider2 = ((tempRatio + 100) < 0) ? 0 : sqrt(tempRatio + 100);
             sectionToOpen = (divider2 == 0) ? 0 : (A1MultiplyBy100 * 10 / divider2);
         }
         inspiratoryValve.openSection(sectionToOpen);
@@ -156,8 +158,8 @@ void VC_CMV_Controller::endCycle() {}
 
 void VC_CMV_Controller::calculateBlower() {
     int32_t inspirationDurationMs =
-        (mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS
-         - mainController.plateauDurationCommand());  // in ms
+        ((mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
+         - static_cast<uint16_t>(mainController.plateauDurationCommand()));  // in ms
     m_targetFlowMultiplyBy1000 = (inspirationDurationMs == 0)
                                      ? 0
                                      : (60 * 1000 * mainController.tidalVolumeCommand())

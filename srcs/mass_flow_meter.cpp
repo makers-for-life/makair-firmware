@@ -109,7 +109,7 @@ void MFM_Timer_Callback(void)
     digitalWrite(PIN_LED_START, HIGH);
     // it takes typically 350 µs to read the value.
 #endif
-    if (MFM_force_release_I2C != MFM_FORCE_RELEASE_I2C_TRUE) {
+    if (MFM_force_release_I2C != static_cast<uint16_t>(MFM_FORCE_RELEASE_I2C_TRUE)) {
         if (!mfmFaultCondition) {
 #if MASS_FLOW_METER_SENSOR == MFM_SFM3019
             Wire.begin();

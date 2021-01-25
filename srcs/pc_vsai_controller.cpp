@@ -121,7 +121,8 @@ void PC_VSAI_Controller::inhale() {
         m_plateauPressureReached = true;
     }
 
-    int32_t tiMinInTick = mainController.tiMinCommand() / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
+    int32_t tiMinInTick =
+        mainController.tiMinCommand() / static_cast<int16_t>(MAIN_CONTROLLER_COMPUTE_PERIOD_MS);
 
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
         m_maxInspiratoryFlow = mainController.inspiratoryFlow();
