@@ -188,11 +188,11 @@ void serialControlLoop() {
                     mainController.onHighExpiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
-                case lowRespiratoryRateAlarmThreshold:
+                case LowRespiratoryRateAlarmThreshold:
                     mainController.onlowRespiratoryRateAlarmThresholdSet(value);
                     break;
 
-                case highRespiratoryRateAlarmThreshold:
+                case HighRespiratoryRateAlarmThreshold:
                     mainController.onhighRespiratoryRateAlarmThresholdSet(value);
                     break;
 
@@ -200,12 +200,12 @@ void serialControlLoop() {
                     mainController.onTargetTidalVolumeSet(value);
                     break;
 
-                case LowTidalVolumeAlarmTreshold:
-                    mainController.onLowTidalVolumeAlarmTresholdSet(value);
+                case LowTidalVolumeAlarmThreshold:
+                    mainController.onLowTidalVolumeAlarmThresholdSet(value);
                     break;
 
-                case HighTidalVolumeAlarmTreshold:
-                    mainController.onHighTidalVolumeAlarmTresholdSet(value);
+                case HighTidalVolumeAlarmThreshold:
+                    mainController.onHighTidalVolumeAlarmThresholdSet(value);
                     break;
 
                 case PlateauDuration:
@@ -229,6 +229,14 @@ void serialControlLoop() {
                     break;
 
                 case PatientHeight:
+                    // TODO
+                    break;
+
+                case PatientGender:
+                    // TODO
+                    break;
+
+                case PeakPressureAlarmThreshold:
                     // TODO
                     break;
 

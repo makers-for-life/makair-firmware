@@ -126,10 +126,10 @@ class MainController {
     void onTargetTidalVolumeSet(uint16_t p_targetTidalVolume);
 
     /// Set threshold on tidal volume below which an alarm is raised
-    void onLowTidalVolumeAlarmTresholdSet(uint16_t p_lowTidalVolumeAlarmTreshold);
+    void onLowTidalVolumeAlarmThresholdSet(uint16_t p_lowTidalVolumeAlarmThreshold);
 
     /// Set threshold on tidal volume for which an alarm is raised
-    void onHighTidalVolumeAlarmTresholdSet(uint16_t p_highTidalVolumeAlarmTreshold);
+    void onHighTidalVolumeAlarmThresholdSet(uint16_t p_highTidalVolumeAlarmThreshold);
 
     /// Set the duration of Pause at the end of expiration in VC modes
     void onPlateauDurationSet(uint16_t p_plateauDuration);
@@ -609,14 +609,14 @@ class MainController {
     int32_t m_highRespiratoryRateAlarmThresholdNextCommand;
 
     // Threshold for low tidal Volume Alarm
-    int32_t m_lowTidalVolumeAlarmTresholdCommand;
+    int32_t m_lowTidalVolumeAlarmThresholdCommand;
     // Threshold for low tidal Volume Alarm next cycle
-    int32_t m_lowTidalVolumeAlarmTresholdNextCommand;
+    int32_t m_lowTidalVolumeAlarmThresholdNextCommand;
 
     // Threshold for high tidal Volume Alarm
-    int32_t m_highTidalVolumeAlarmTresholdCommand;
+    int32_t m_highTidalVolumeAlarmThresholdCommand;
     // Threshold for high tidal Volume Alarm next cycle
-    int32_t m_highTidalVolumeAlarmTresholdNextCommand;
+    int32_t m_highTidalVolumeAlarmThresholdNextCommand;
 
     // Threshold for leak alarm
     int32_t m_leakAlarmThresholdCommand;

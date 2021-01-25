@@ -43,16 +43,18 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t lowRespiratoryRateAlarmThreshold,
                         uint8_t highRespiratoryRateAlarmThreshold,
                         uint16_t targetTidalVolumeValue,
-                        uint16_t lowTidalVolumeAlarmTresholdValue,
-                        uint16_t highTidalVolumeAlarmTresholdValue,
+                        uint16_t lowTidalVolumeAlarmThresholdValue,
+                        uint16_t highTidalVolumeAlarmThresholdValue,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
                         uint16_t inspiratoryDurationCommandValue,
                         uint16_t batteryLevelValue,
                         uint8_t currentAlarmCodes[ALARMS_SIZE],
+                        uint16_t localeValue,
                         uint8_t patientHeight,
-                        uint16_t localeValue);
+                        uint8_t patientGender,
+                        uint16_t peakPressureAlarmThresholdValue);
 
 /// Send a "data snapshot" message
 void sendDataSnapshot(uint16_t centileValue,
@@ -95,16 +97,18 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t lowRespiratoryRateAlarmThreshold,
                               uint8_t highRespiratoryRateAlarmThreshold,
                               uint16_t targetTidalVolumeValue,
-                              uint16_t lowTidalVolumeAlarmTresholdValue,
-                              uint16_t highTidalVolumeAlarmTresholdValue,
+                              uint16_t lowTidalVolumeAlarmThresholdValue,
+                              uint16_t highTidalVolumeAlarmThresholdValue,
                               uint16_t plateauDurationValue,
                               uint16_t leakAlarmThresholdValue,
                               uint8_t targetInspiratoryFlow,
                               uint16_t inspiratoryDurationCommandValue,
                               uint16_t previousInspiratoryDurationValue,
                               uint16_t batteryLevelValue,
+                              uint16_t localeValue,
                               uint8_t patientHeight,
-                              uint16_t localeValue);
+                              uint8_t patientGender,
+                              uint16_t peakPressureAlarmThresholdValue);
 
 /// Send a "alarm trap" message
 void sendAlarmTrap(uint16_t centileValue,

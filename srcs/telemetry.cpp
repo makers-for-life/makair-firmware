@@ -179,16 +179,18 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t lowRespiratoryRateAlarmThreshold,
                         uint8_t highRespiratoryRateAlarmThreshold,
                         uint16_t targetTidalVolumeValue,
-                        uint16_t lowTidalVolumeAlarmTresholdValue,
-                        uint16_t highTidalVolumeAlarmTresholdValue,
+                        uint16_t lowTidalVolumeAlarmThresholdValue,
+                        uint16_t highTidalVolumeAlarmThresholdValue,
                         uint16_t plateauDurationValue,
                         uint16_t leakAlarmThresholdValue,
                         uint8_t targetInspiratoryFlow,
                         uint16_t inspiratoryDurationCommandValue,
                         uint16_t batteryLevelValue,
                         uint8_t currentAlarmCodes[ALARMS_SIZE],
+                        uint16_t localeValue,
                         uint8_t patientHeight,
-                        uint16_t localeValue) {
+                        uint8_t patientGender,
+                        uint16_t peakPressureAlarmThresholdValue) {
 
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
@@ -378,18 +380,18 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte lowTidalVolumeAlarmTreshold[2];  // 16 bits
-    toBytes16(lowTidalVolumeAlarmTreshold, lowTidalVolumeAlarmTresholdValue);
-    Serial6.write(lowTidalVolumeAlarmTreshold, 2);
-    crc32.update(lowTidalVolumeAlarmTreshold, 2);
+    byte lowTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(lowTidalVolumeAlarmThreshold, lowTidalVolumeAlarmThresholdValue);
+    Serial6.write(lowTidalVolumeAlarmThreshold, 2);
+    crc32.update(lowTidalVolumeAlarmThreshold, 2);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte highTidalVolumeAlarmTreshold[2];  // 16 bits
-    toBytes16(highTidalVolumeAlarmTreshold, highTidalVolumeAlarmTresholdValue);
-    Serial6.write(highTidalVolumeAlarmTreshold, 2);
-    crc32.update(highTidalVolumeAlarmTreshold, 2);
+    byte highTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(highTidalVolumeAlarmThreshold, highTidalVolumeAlarmThresholdValue);
+    Serial6.write(highTidalVolumeAlarmThreshold, 2);
+    crc32.update(highTidalVolumeAlarmThreshold, 2);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
@@ -440,16 +442,30 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
+    byte locale[2];  // 16 bits
+    toBytes16(locale, localeValue);
+    Serial6.write(locale, 2);
+    crc32.update(locale, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(patientHeight);
     crc32.update(patientHeight);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte locale[2];  // 16 bits
-    toBytes16(locale, localeValue);
-    Serial6.write(locale, 2);
-    crc32.update(locale, 2);
+    Serial6.write(patientGender);
+    crc32.update(patientGender);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte peakPressureAlarmThreshold[2];  // 16 bits
+    toBytes16(peakPressureAlarmThreshold, peakPressureAlarmThresholdValue);
+    Serial6.write(peakPressureAlarmThreshold, 2);
+    crc32.update(peakPressureAlarmThreshold, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
@@ -599,16 +615,18 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t lowRespiratoryRateAlarmThreshold,
                               uint8_t highRespiratoryRateAlarmThreshold,
                               uint16_t targetTidalVolumeValue,
-                              uint16_t lowTidalVolumeAlarmTresholdValue,
-                              uint16_t highTidalVolumeAlarmTresholdValue,
+                              uint16_t lowTidalVolumeAlarmThresholdValue,
+                              uint16_t highTidalVolumeAlarmThresholdValue,
                               uint16_t plateauDurationValue,
                               uint16_t leakAlarmThresholdValue,
                               uint8_t targetInspiratoryFlow,
                               uint16_t inspiratoryDurationCommandValue,
                               uint16_t previousInspiratoryDurationValue,
                               uint16_t batteryLevelValue,
+                              uint16_t localeValue,
                               uint8_t patientHeight,
-                              uint16_t localeValue) {
+                              uint8_t patientGender,
+                              uint16_t peakPressureAlarmThresholdValue) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -850,18 +868,18 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte lowTidalVolumeAlarmTreshold[2];  // 16 bits
-    toBytes16(lowTidalVolumeAlarmTreshold, lowTidalVolumeAlarmTresholdValue);
-    Serial6.write(lowTidalVolumeAlarmTreshold, 2);
-    crc32.update(lowTidalVolumeAlarmTreshold, 2);
+    byte lowTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(lowTidalVolumeAlarmThreshold, lowTidalVolumeAlarmThresholdValue);
+    Serial6.write(lowTidalVolumeAlarmThreshold, 2);
+    crc32.update(lowTidalVolumeAlarmThreshold, 2);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte highTidalVolumeAlarmTreshold[2];  // 16 bits
-    toBytes16(highTidalVolumeAlarmTreshold, highTidalVolumeAlarmTresholdValue);
-    Serial6.write(highTidalVolumeAlarmTreshold, 2);
-    crc32.update(highTidalVolumeAlarmTreshold, 2);
+    byte highTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(highTidalVolumeAlarmThreshold, highTidalVolumeAlarmThresholdValue);
+    Serial6.write(highTidalVolumeAlarmThreshold, 2);
+    crc32.update(highTidalVolumeAlarmThreshold, 2);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
@@ -912,16 +930,30 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
+    byte locale[2];  // 16 bits
+    toBytes16(locale, localeValue);
+    Serial6.write(locale, 2);
+    crc32.update(locale, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
     Serial6.write(patientHeight);
     crc32.update(patientHeight);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    byte locale[2];  // 16 bits
-    toBytes16(locale, localeValue);
-    Serial6.write(locale, 2);
-    crc32.update(locale, 2);
+    Serial6.write(patientGender);
+    crc32.update(patientGender);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte peakPressureAlarmThreshold[2];  // 16 bits
+    toBytes16(peakPressureAlarmThreshold, peakPressureAlarmThresholdValue);
+    Serial6.write(peakPressureAlarmThreshold, 2);
+    crc32.update(peakPressureAlarmThreshold, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
