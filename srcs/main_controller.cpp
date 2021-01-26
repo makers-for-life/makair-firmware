@@ -486,10 +486,13 @@ void MainController::computeTickParameters() {
 }
 
 void MainController::executeCommands() {
-    if (m_pressure > ALARM_THRESHOLD_MAX_PRESSURE) {
+    if (m_pressure
+        > m_peakPressureAlarmThresholdCommand + AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM) {
         inspiratoryValve.close();
         expiratoryValve.open();
-        alarmController.detectedAlarm(RCM_SW_18, m_cycleNb, ALARM_THRESHOLD_MAX_PRESSURE,
+        alarmController.detectedAlarm(RCM_SW_18, m_cycleNb,
+                                      m_peakPressureAlarmThresholdCommand
+                                          + AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM,
                                       m_pressure);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_18);
@@ -802,6 +805,9 @@ void MainController::onPlateauPressureDecrease() {
         m_plateauPressureNextCommand = CONST_MIN_PLATEAU_PRESSURE;
     }
 
+    m_peakPressureAlarmThresholdNextCommand =
+        m_plateauPressureNextCommand + PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU;
+
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
 }
@@ -813,6 +819,8 @@ void MainController::onPlateauPressureIncrease() {
 
     m_plateauPressureNextCommand =
         min(m_plateauPressureNextCommand, static_cast<int16_t>(CONST_MAX_PLATEAU_PRESSURE));
+    m_peakPressureAlarmThresholdNextCommand =
+        m_plateauPressureNextCommand + PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU;
 
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
@@ -827,6 +835,8 @@ void MainController::onPlateauPressureSet(int16_t p_plateauPressure) {
     } else {
         m_plateauPressureNextCommand = p_plateauPressure;
     }
+    m_peakPressureAlarmThresholdNextCommand =
+        m_plateauPressureNextCommand + PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU;
 
     // Send acknowledgment to the UI
     sendControlAck(2, m_plateauPressureNextCommand);
@@ -1214,5 +1224,6 @@ void MainController::onPatientComputePreset() {
     m_lowRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand - 3u;
     m_lowTidalVolumeAlarmThresholdNextCommand = tidalVolume - 100u;
     m_highTidalVolumeAlarmThresholdNextCommand = tidalVolume + 100u;
-    m_peakPressureAlarmThresholdNextCommand = m_plateauPressureNextCommand + 150u;
+    m_peakPressureAlarmThresholdNextCommand =
+        m_plateauPressureNextCommand + PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU;
 }

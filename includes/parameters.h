@@ -111,6 +111,9 @@
 #define DEFAULT_PATIENT_HEIGHT 170u                                    // [in cm]
 #define DEFAULT_PATIENT_GENDER 0u                                      // [0 = male, 1 = female]
 
+#define PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU 150  // [in mmH2O]
+#define AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM 100     // [in mmH2O]
+
 #define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20u
 #define CONST_MAX_CYCLE 35u
 #define CONST_MIN_CYCLE 5u
@@ -304,7 +307,6 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 ///@{
 
 #define ALARM_THRESHOLD_MIN_PRESSURE 20         // RCM-SW-2 + RCM-SW-19
-#define ALARM_THRESHOLD_MAX_PRESSURE 700        // RCM-SW-18
 #define ALARM_THRESHOLD_DIFFERENCE_PERCENT 20   // RCM-SW-1 + RCM-SW-14
 #define ALARM_THRESHOLD_DIFFERENCE_PRESSURE 20  // RCM-SW-3 + RCM-SW-15
 
