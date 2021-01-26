@@ -850,7 +850,6 @@ void MainController::onPeakPressureDecrease() {
     }
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
 
-    m_peakPressureNextCommand = m_ventilationControllerMode * 10;
 #endif
 }
 
@@ -876,7 +875,6 @@ void MainController::onPeakPressureIncrease() {
     }
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
 
-    m_peakPressureNextCommand = m_ventilationControllerMode * 10;
 #endif
 }
 
