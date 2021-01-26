@@ -1155,7 +1155,7 @@ void MainController::onPeakPressureAlarmThreshold(int16_t p_peakPressureAlarmThr
 void MainController::onPatientHeight(int16_t p_patientHeight) {
     if ((p_patientHeight >= CONST_MIN_PATIENT_HEIGHT)
         && (p_patientHeight <= CONST_MAX_PATIENT_HEIGHT)) {
-        m_peakPressureAlarmThresholdNextCommand = p_patientHeight;
+        m_patientHeight = p_patientHeight;
     } else {
         m_patientHeight = DEFAULT_PATIENT_HEIGHT;
     }
