@@ -1162,6 +1162,8 @@ void MainController::onPatientHeight(int16_t p_patientHeight) {
 
     // Send acknowledgment to the UI
     sendControlAck(28, m_patientHeight);
+
+    mainController.onPatientComputePreset();
 }
 
 // cppcheck-suppress unusedFunction
@@ -1186,16 +1188,16 @@ void MainController::onPatientComputePreset() {
 
     // Male
     if (m_patientGender == 0) {
-        theoricalWeight = 50 * 0.9 * (m_patientHeight - 152);
+        theoricalWeight = 50 + 0.9 * (m_patientHeight - 152);
     } else {
-        theoricalWeight = 45.5 * 0.9 * (m_patientHeight - 152);
+        theoricalWeight = 45.5 + 0.9 * (m_patientHeight - 152);
     }
 
     tidalVolume = theoricalWeight * 7;
 
     m_tidalVolumeNextCommand = tidalVolume;
-    m_peepNextCommand = 5u;
-    m_plateauPressureNextCommand = 20u; //TODO to be computed dynamically
+    m_peepNextCommand = 50u;
+    m_plateauPressureNextCommand = 200u; //TODO to be computed dynamically
 
     m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume - 1500u;
     m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume + 1500u;
@@ -1205,5 +1207,5 @@ void MainController::onPatientComputePreset() {
     m_lowRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand - 3u;
     m_lowTidalVolumeAlarmThresholdNextCommand = tidalVolume - 100u;
     m_highTidalVolumeAlarmThresholdNextCommand = tidalVolume + 100u;
-    m_peakPressureAlarmThresholdNextCommand = m_plateauPressureNextCommand + 15u;
+    m_peakPressureAlarmThresholdNextCommand = m_plateauPressureNextCommand + 150u;
 }
