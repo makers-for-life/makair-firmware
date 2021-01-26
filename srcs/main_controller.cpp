@@ -1144,5 +1144,31 @@ void MainController::onPeakPressureAlarmThreshold(int16_t p_peakPressureAlarmThr
     }
 
     // Send acknowledgment to the UI
-    sendControlAck(27, m_peakPressureAlarmThresholdNextCommand);
+    sendControlAck(30, m_peakPressureAlarmThresholdNextCommand);
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onPatientHeight(int16_t p_patientHeight) {
+    if ((p_patientHeight >= CONST_MIN_PATIENT_HEIGHT)
+        && (p_patientHeight <= CONST_MAX_PATIENT_HEIGHT)) {
+        m_peakPressureAlarmThresholdNextCommand = p_patientHeight;
+    } else {
+        m_patientHeight = DEFAULT_PATIENT_HEIGHT;
+    }
+
+    // Send acknowledgment to the UI
+    sendControlAck(28, m_patientHeight);
+}
+
+// cppcheck-suppress unusedFunction
+void MainController::onPatientGender(int16_t p_patientGender) {
+    if ((p_patientGender >= CONST_MIN_PATIENT_GENDER)
+        && (p_patientGender <= CONST_MAX_PATIENT_GENDER)) {
+        m_patientGender = p_patientGender;
+    } else {
+        p_patientGender = DEFAULT_PATIENT_GENDER;
+    }
+
+    // Send acknowledgment to the UI
+    sendControlAck(29, m_patientGender);
 }

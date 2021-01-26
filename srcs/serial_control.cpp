@@ -229,11 +229,11 @@ void serialControlLoop() {
                     break;
 
                 case PatientHeight:
-                    // TODO
+                    mainController.onPatientHeight(value);
                     break;
 
                 case PatientGender:
-                    // TODO
+                    mainController.onPatientGender(value);
                     break;
 
                 case PeakPressureAlarmThreshold:
