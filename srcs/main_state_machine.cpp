@@ -129,6 +129,10 @@ void millisecondTimerMSM(void)
         activationController.refreshState();
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
+            // set patient height to default value
+            if (mainController.patientHeight() == 0) {
+                mainController.onPatientHeight(DEFAULT_PATIENT_HEIGHT);
+            }
         }
 
     } else if (msmstep == INIT_CYCLE) {
