@@ -61,6 +61,9 @@ void PressureValve::open(uint16_t p_command) { command = p_command; }
  * @param p_section The section to open the valve (in mm^2 multiplied by 100)
  */
 void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
+    // Min-max to prevent overflow
+    p_sectionMultiplyBy100 = min(max(int32_t(0), p_sectionMultiplyBy100), int32_t(3318));
+
     int32_t tempCommand;
     if (p_sectionMultiplyBy100 < 1960) {
         tempCommand = 98 - (318 * p_sectionMultiplyBy100 / 10000);
@@ -74,12 +77,12 @@ void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
     }
     // cppcheck-suppress misra-c2012-12.3
     command = min(max(int32_t(minApertureAngle), tempCommand), int32_t(maxApertureAngle));
-    /*Serial.print(command);
-    Serial.print(",");*/
 }
 
 // Linearization has been made experimentaly
 uint16_t PressureValve::openLinear(uint16_t p_command) {
+    p_command = min(max(uint16_t(minApertureAngle), p_command), uint16_t(maxApertureAngle));
+
     positionLinear = p_command;
     // The p_command is in [ 0 ; 125 ], but the valve is only effective in [30; 100]
     // So lets make it between 30 and 100
@@ -125,9 +128,12 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
          - 1140u)
         / 10u);
 
+    command = min(max(uint16_t(minApertureAngle), command), uint16_t(maxApertureAngle));
+    
     return command;
 }
 
+// This is used to calculate a theorical expiratory flow
 int32_t PressureValve::getSectionBigHoseX100() {
     int32_t section;
     if (command > 105u) {

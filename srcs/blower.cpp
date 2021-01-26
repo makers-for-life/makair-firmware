@@ -87,13 +87,12 @@ int32_t Blower::getBlowerPressure(int32_t p_flow) {
     // For now the blower has only been characterize at max speed
     if (m_speed == MAX_BLOWER_SPEED) {
         // This order 2 characteruzation has been made experimentally
-        // todo sage overflow
         returnValue =
-            703 - (281 * (p_flow / 100000)) - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
+            703 - (281 * (p_flow / 100000)) - 832 * (p_flow / 200) * (p_flow / 500) / 100000;
     } else {
         // todo better characterization
         returnValue = 703 * static_cast<int32_t>(m_speed) / static_cast<int32_t>(MAX_BLOWER_SPEED)
-                      - (281 * (p_flow / 100000)) - 832 * (p_flow / 100) * (p_flow / 100) / 1000000;
+                      - (281 * (p_flow / 100000)) - 832 * (p_flow / 200) * (p_flow / 500) / 100000;
     }
 
     return min(int32_t(703), max(returnValue, int32_t(0)));

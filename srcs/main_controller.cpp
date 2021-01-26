@@ -1104,7 +1104,6 @@ void MainController::onPlateauDurationSet(uint16_t p_plateauDuration) {
 
 // cppcheck-suppress unusedFunction
 void MainController::onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold) {
-    // TODO
     if ((p_leakAlarmThreshold >= CONST_MIN_LEAK_ALARM_THRESHOLD)
         && (p_leakAlarmThreshold <= CONST_MIN_LEAK_ALARM_THRESHOLD)) {
         m_leakAlarmThresholdNextCommand = 10u * p_leakAlarmThreshold;

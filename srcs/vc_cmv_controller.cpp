@@ -97,8 +97,9 @@ void VC_CMV_Controller::inhale() {
         m_targetFlowMultiplyBy1000 = mainController.targetInspiratoryFlowCommand();
     }
 
+    // The safety volume is the volume that will be delivered during the closing of the valve. Taking is into account allows better accuracy on volume delivery
     int32_t safetyVolume = mainController.inspiratoryFlow() * VALVE_RESPONSE_TIME_MS
-                           / 60000;  // todo check greater than volume target
+                           / 60000;  
     if (!m_duringPlateau
         && mainController.currentDeliveredVolume()
                > mainController.tidalVolumeCommand() - safetyVolume) {
@@ -108,6 +109,7 @@ void VC_CMV_Controller::inhale() {
                   / MAIN_CONTROLLER_COMPUTE_PERIOD_MS);
         m_duringPlateau = true;
     }
+    // If before plateau
     if (mainController.tick() < mainController.ticksPerInhalation()
                                     - static_cast<uint16_t>(mainController.plateauDurationCommand())
                                           / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
@@ -115,6 +117,8 @@ void VC_CMV_Controller::inhale() {
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
 
+        // Use Venturi equation to find the sectionToOpen in order to get the target flow.
+        // https://en.wikipedia.org/wiki/Venturi_effect
         int32_t A1MultiplyBy100 = 3318;
         int32_t rhoMultiplyBy100 = 120;
         int32_t twoA1SquareDotDeltaPressureMultiplyBy100 =
@@ -132,19 +136,24 @@ void VC_CMV_Controller::inhale() {
             int32_t divider2 = ((tempRatio + 100) < 0) ? 0 : sqrt(tempRatio + 100);
             sectionToOpen = (divider2 == 0) ? 0 : (A1MultiplyBy100 * 10 / divider2);
         }
+
+        // Open the valve to a specific section (in mm^2 multiplied by 100)
         inspiratoryValve.openSection(sectionToOpen);
 
-    } else {
+    } 
+    // else : during plateau, valves are closed
+    else {
         inspiratoryValve.close();
     }
 
+    // Compute max inspiratory flow
     if (mainController.inspiratoryFlow() > m_maxInspiratoryFlow) {
         m_maxInspiratoryFlow = mainController.inspiratoryFlow();
     }
 }
 
 void VC_CMV_Controller::exhale() {
-    // Open the expiration valve so the patient can exhale outside
+    // Open the expiration valve using PID so the patient can exhale outside
     int32_t expiratoryValveOpenningValue = PCexpiratoryPID(
         mainController.pressureCommand(), mainController.pressure(), mainController.dt());
 
@@ -157,6 +166,8 @@ void VC_CMV_Controller::exhale() {
 void VC_CMV_Controller::endCycle() {}
 
 void VC_CMV_Controller::calculateBlower() {
+
+    // Compute target flow for inspiration
     int32_t inspirationDurationMs =
         ((mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
          - static_cast<uint16_t>(mainController.plateauDurationCommand()));  // in ms
@@ -165,7 +176,7 @@ void VC_CMV_Controller::calculateBlower() {
                                      : (60 * 1000 * mainController.tidalVolumeCommand())
                                            / inspirationDurationMs;  // in mL/min
 
-    // 40L/min -> max blower (1800) ; 6L/min -> min blower (300)
+    // Blower always run at full speed
     m_blowerSpeed = 1800;
 }
 
