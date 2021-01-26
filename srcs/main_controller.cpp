@@ -1199,7 +1199,7 @@ void MainController::onPatientComputePreset() {
 
     m_tidalVolumeNextCommand = tidalVolume;
     m_peepNextCommand = 50u;
-    m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND
+    m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
     m_plateauPressureNextCommand = m_peepNextCommand + (tidalVolume * 0.172);
 
     m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume - 1500u;
