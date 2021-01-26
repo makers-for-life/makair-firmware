@@ -1195,6 +1195,8 @@ void MainController::onPatientComputePreset() {
 
     tidalVolume = theoricalWeight * 7;
 
+    tidalVolume = tidalVolume - (tidalVolume % 10);
+
     m_tidalVolumeNextCommand = tidalVolume;
     m_peepNextCommand = 50u;
     m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND
