@@ -239,6 +239,13 @@ class MainController {
      */
     void onPatientGender(int16_t p_patientGender);
 
+
+    /**
+     * Updates patient computed params
+     *
+     */
+    void onPatientComputePreset();
+
     // Get the patient Height in cm
     inline int32_t patientHeight() const { return m_patientHeight; }
     // Get the desired tidalVolue
