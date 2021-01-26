@@ -237,7 +237,7 @@ void serialControlLoop() {
                     break;
 
                 case PeakPressureAlarmThreshold:
-                    // TODO
+                    mainController.onPeakPressureAlarmThreshold(value);
                     break;
 
                 default:
