@@ -1183,14 +1183,14 @@ void MainController::onPatientGender(int16_t p_patientGender) {
 
 // cppcheck-suppress unusedFunction
 void MainController::onPatientComputePreset() {
-    uint16_t theoricalWeight = 0;
-    uint16_t tidalVolume = 0;
+    int32_t theoricalWeight = 0;
+    int32_t tidalVolume = 0;
 
     // Male
     if (m_patientGender == 0) {
-        theoricalWeight = 50 + 0.9 * (m_patientHeight - 152);
+        theoricalWeight = 23 * (m_patientHeight * m_patientHeight) / 10000;
     } else {
-        theoricalWeight = 45.5 + 0.9 * (m_patientHeight - 152);
+        theoricalWeight = 21 * (m_patientHeight * m_patientHeight) / 10000;
     }
 
     tidalVolume = theoricalWeight * 7;
@@ -1200,12 +1200,16 @@ void MainController::onPatientComputePreset() {
     m_tidalVolumeNextCommand = tidalVolume;
     m_peepNextCommand = 50u;
     m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
-    m_plateauPressureNextCommand = m_peepNextCommand + (tidalVolume * 0.172);
+    m_plateauPressureNextCommand = m_peepNextCommand + 172 * (tidalVolume) / 1000;
 
-    m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume - 1500u;
-    m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume + 1500u;
-    m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume - 1500u;
-    m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume + 1500u;
+    m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand =
+        m_cyclesPerMinuteCommand * tidalVolume - 1500u;
+    m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand =
+        m_cyclesPerMinuteCommand * tidalVolume + 1500u;
+    m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand =
+        m_cyclesPerMinuteCommand * tidalVolume - 1500u;
+    m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand =
+        m_cyclesPerMinuteCommand * tidalVolume + 1500u;
     m_highRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand + 3u;
     m_lowRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand - 3u;
     m_lowTidalVolumeAlarmThresholdNextCommand = tidalVolume - 100u;
