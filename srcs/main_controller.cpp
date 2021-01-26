@@ -1197,7 +1197,7 @@ void MainController::onPatientComputePreset() {
 
     m_tidalVolumeNextCommand = tidalVolume;
     m_peepNextCommand = 50u;
-    m_plateauPressureNextCommand = 200u; //TODO to be computed dynamically
+    m_plateauPressureNextCommand = m_peepNextCommand + (tidalVolume * 0.172);
 
     m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume - 1500u;
     m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand = m_cyclesPerMinuteCommand * tidalVolume + 1500u;
