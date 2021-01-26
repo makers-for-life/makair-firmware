@@ -140,6 +140,9 @@ MainController::MainController() {
     m_tidalVolumeAlreadyRead = false;
     m_plateauDurationMs = 0;
 
+    m_patientHeight = 0;
+    m_patientGender = 0;
+
     m_inspiratoryValveAngle = VALVE_CLOSED_STATE;
 
     computeTickParameters();

@@ -219,11 +219,25 @@ class MainController {
     void onTriggerOffsetSet(uint16_t p_triggerOffset);
 
     /**
+     * Set the desired patient height
+     *
+     * @param p_patientHeight Desired patient height in cm
+     */
+    void onPatientHeight(int16_t p_patientHeight);
+
+    /**
      * Set the desired threshold for max peak pressure
      *
      * @param p_peakPressureAlarmThreshold Desired threshold in mmH2O
      */
     void onPeakPressureAlarmThreshold(int16_t p_peakPressureAlarmThreshold);
+
+    /**
+     * Set the desired patient gender
+     *
+     * @param p_patientGender patient gender 0 = male, 1 = female
+     */
+    void onPatientGender(int16_t p_patientGender);
 
     // Get the desired tidalVolue
     inline int16_t tidalVolumeCommand() const { return m_tidalVolumeCommand; }
@@ -689,6 +703,12 @@ class MainController {
 
     /// Number of the current cycle's pressures
     uint16_t m_numberOfPressures;
+
+    // Height of the patient in cm
+    int32_t m_patientHeight;
+
+    // Gender of patient 0 = male, 1 = female
+    int32_t m_patientGender;
 };
 
 extern MainController mainController;
