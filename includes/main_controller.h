@@ -239,6 +239,8 @@ class MainController {
      */
     void onPatientGender(int16_t p_patientGender);
 
+    // Get the patient Height in cm
+    inline int32_t patientHeight() const { return m_patientHeight; }
     // Get the desired tidalVolue
     inline int16_t tidalVolumeCommand() const { return m_tidalVolumeCommand; }
     // Get the desired plateau duration (in VC modes)
