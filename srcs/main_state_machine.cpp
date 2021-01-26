@@ -164,10 +164,9 @@ void millisecondTimerMSM(void)
 
 #ifdef MASS_FLOW_METER_ENABLED&& MASS_FLOW_METER_SENSOR_EXPI
                 expiratoryflow = MFM_expi_read_airflow();
+                mainController.updateExpiratoryFlow(expiratoryflow);
                 mainController.updateCurrentExpiratoryVolume(MFM_expi_read_milliliters(false));
 #else
-                mainController.updateExpiratoryFlow(expiratoryflow);
-
                 mainController.updateFakeExpiratoryFlow();
 #endif
                 mainController.updateDt(currentMicro - lastMicro);
