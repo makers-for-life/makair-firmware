@@ -195,16 +195,23 @@ void MainController::initRespiratoryCycle() {
     m_tiMinCommand = m_tiMinNextCommand;
     m_targetInspiratoryFlowCommand = m_targetInspiratoryFlowNextCommand;
     m_inspiratoryDurationCommand = m_inspiratoryDurationNextCommand;
+
     m_lowInspiratoryMinuteVolumeAlarmThresholdCommand =
         m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand;
     m_highInspiratoryMinuteVolumeAlarmThresholdCommand =
         m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand;
+
     m_lowExpiratoryMinuteVolumeAlarmThresholdCommand =
         m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand;
     m_highExpiratoryMinuteVolumeAlarmThresholdCommand =
         m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand;
+
     m_lowRespiratoryRateAlarmThresholdCommand = m_lowRespiratoryRateAlarmThresholdNextCommand;
+    m_highRespiratoryRateAlarmThresholdCommand = m_highRespiratoryRateAlarmThresholdNextCommand;
+
     m_highTidalVolumeAlarmThresholdCommand = m_highTidalVolumeAlarmThresholdNextCommand;
+    m_lowTidalVolumeAlarmThresholdCommand = m_lowTidalVolumeAlarmThresholdNextCommand;
+
     m_leakAlarmThresholdCommand = m_leakAlarmThresholdNextCommand;
     m_peakPressureAlarmThresholdCommand = m_peakPressureAlarmThresholdNextCommand;
 
