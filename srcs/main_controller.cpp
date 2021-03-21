@@ -1189,7 +1189,7 @@ void MainController::onPatientGender(int16_t p_patientGender) {
         && (p_patientGender <= CONST_MAX_PATIENT_GENDER)) {
         m_patientGender = p_patientGender;
     } else {
-        p_patientGender = DEFAULT_PATIENT_GENDER;
+        m_patientGender = DEFAULT_PATIENT_GENDER;
     }
 
     // Send acknowledgment to the UI
