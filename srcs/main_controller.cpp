@@ -494,7 +494,7 @@ void MainController::computeTickParameters() {
 
 void MainController::executeCommands() {
     if (m_pressure
-        > m_peakPressureAlarmThresholdCommand + AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM) {
+        > (m_peakPressureAlarmThresholdCommand + AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM)) {
         inspiratoryValve.close();
         expiratoryValve.open();
         alarmController.detectedAlarm(RCM_SW_18, m_cycleNb,
@@ -1217,20 +1217,20 @@ void MainController::onPatientComputePreset() {
     m_tidalVolumeNextCommand = tidalVolume;
     m_peepNextCommand = 50u;
     m_cyclesPerMinuteNextCommand = DEFAULT_CYCLE_PER_MINUTE_COMMAND;
-    m_plateauPressureNextCommand = m_peepNextCommand + 172 * (tidalVolume) / 1000;
+    m_plateauPressureNextCommand = m_peepNextCommand + ((172 * tidalVolume) / 1000);
 
     m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand =
-        m_cyclesPerMinuteCommand * tidalVolume - 1500u;
+        (static_cast<int32_t>(m_cyclesPerMinuteCommand) * tidalVolume) - 1500;
     m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand =
-        m_cyclesPerMinuteCommand * tidalVolume + 1500u;
+        (static_cast<int32_t>(m_cyclesPerMinuteCommand) * tidalVolume) + 1500;
     m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand =
-        m_cyclesPerMinuteCommand * tidalVolume - 1500u;
+        (static_cast<int32_t>(m_cyclesPerMinuteCommand) * tidalVolume) - 1500;
     m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand =
-        m_cyclesPerMinuteCommand * tidalVolume + 1500u;
+        (static_cast<int32_t>(m_cyclesPerMinuteCommand) * tidalVolume) + 1500;
     m_highRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand + 3u;
     m_lowRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand - 3u;
-    m_lowTidalVolumeAlarmThresholdNextCommand = tidalVolume - 100u;
-    m_highTidalVolumeAlarmThresholdNextCommand = tidalVolume + 100u;
+    m_lowTidalVolumeAlarmThresholdNextCommand = tidalVolume - 100;
+    m_highTidalVolumeAlarmThresholdNextCommand = tidalVolume + 100;
     m_peakPressureAlarmThresholdNextCommand =
         m_plateauPressureNextCommand + PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU;
 }

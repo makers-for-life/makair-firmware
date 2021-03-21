@@ -62,18 +62,21 @@ void PressureValve::open(uint16_t p_command) { command = p_command; }
  */
 void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
     // Min-max to prevent overflow
-    p_sectionMultiplyBy100 = min(max(int32_t(0), p_sectionMultiplyBy100), int32_t(3318));
+    int32_t cappedSectionMultiplyBy100 =
+        // cppcheck-suppress misra-c2012-12.3 ; cppcheck error
+        min(max(int32_t(0), p_sectionMultiplyBy100), int32_t(3318));
 
     int32_t tempCommand;
-    if (p_sectionMultiplyBy100 < 1960) {
-        tempCommand = 98 - (318 * p_sectionMultiplyBy100 / 10000);
+    if (cappedSectionMultiplyBy100 < 1960) {
+        tempCommand = 98 - (318 * cappedSectionMultiplyBy100 / 10000);
     } else {
-        tempCommand = 2626 - (36 * p_sectionMultiplyBy100) / 10
-                      + 168 * ((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100) / 1000
-                      - 264
-                            * (((p_sectionMultiplyBy100 * p_sectionMultiplyBy100) / 100)
-                               * (p_sectionMultiplyBy100) / 100)
-                            / 100000;
+        tempCommand =
+            2626 - (36 * cappedSectionMultiplyBy100) / 10
+            + 168 * ((cappedSectionMultiplyBy100 * cappedSectionMultiplyBy100) / 100) / 1000
+            - 264
+                  * (((cappedSectionMultiplyBy100 * cappedSectionMultiplyBy100) / 100)
+                     * (cappedSectionMultiplyBy100) / 100)
+                  / 100000;
     }
     // cppcheck-suppress misra-c2012-12.3
     command = min(max(int32_t(minApertureAngle), tempCommand), int32_t(maxApertureAngle));
@@ -81,14 +84,17 @@ void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
 
 // Linearization has been made experimentaly
 uint16_t PressureValve::openLinear(uint16_t p_command) {
-    p_command = min(max(uint16_t(minApertureAngle), p_command), uint16_t(maxApertureAngle));
+    uint16_t cappedCommand =
+        // cppcheck-suppress misra-c2012-12.3 ; cppcheck error
+        min(max(uint16_t(minApertureAngle), p_command), uint16_t(maxApertureAngle));
 
-    positionLinear = p_command;
-    // The p_command is in [ 0 ; 125 ], but the valve is only effective in [30; 100]
+    positionLinear = cappedCommand;
+    // The cappedCommand is in [ 0 ; 125 ], but the valve is only effective in [30; 100]
     // So lets make it between 30 and 100
     // A x10 multiplier is used here for better precision with integer calculations
     // The value of intermediateValue will consequently be in [300 ; 1000]
-    uint32_t intermediateValue = (((static_cast<uint32_t>(p_command) * 75u) / 125u) + 30u) * 10u;
+    uint32_t intermediateValue =
+        (((static_cast<uint32_t>(cappedCommand) * 75u) / 125u) + 30u) * 10u;
 
     /* An order 3 polynom is used to correct the non linearity of the valve.
     To find this polynom, the following experimental protocol was used:
@@ -128,6 +134,7 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
          - 1140u)
         / 10u);
 
+    // cppcheck-suppress misra-c2012-12.3 ; cppcheck error
     command = min(max(uint16_t(minApertureAngle), command), uint16_t(maxApertureAngle));
 
     return command;

@@ -139,12 +139,14 @@ void sendBootMessage() {
     crc32.update(systick, 8);
 
     Serial6.print("\t");
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
     Serial6.write(MODE);
     crc32.update(static_cast<uint8_t>(MODE));
 
     Serial6.print("\t");
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
     Serial6.write(value128);
