@@ -31,7 +31,7 @@
 - added a facility to pre-configure the ventilator settings upon boot, using a patient height setting
   (_submitting the patient height will update all ventilation hyperparameters to optimum values_)
 - added configurable alarms for pressure and volume modes, adding to all existing alarms
-- sending more measured values for display, eg. respiratory durations and cycles per minute
+- sending more measured values for display, e.g. respiratory durations and cycles per minute
 - a more precise battery voltage value is now sent over the telemetry protocol
   (_this is used for battery SoC estimations_)
 - display a special message on LCD screen when watchdog reset was triggered
@@ -40,7 +40,7 @@
 - added a ramp-up algorithm on the blower speed controller, in order to prevent current surges in the transformer, which could trigger a temporary handover on batteries
   (_this is a security feature, in cases where batteries would be depleted or not connected, the ventilator would suddently reboot during use_)
 - added a compilation flag to disable all hardware buttons
-  (_this is used for touchscreen-only MakAir devices, ie. non-traditional ones_)
+  (_this is used for touchscreen-only MakAir devices, i.e. non-traditional ones_)
 - added basic support for the motherboard V3 EEPROM chip over I2C
 - a lot of potential exceptions due to possible divisions by zero have been fixed
 - increase the size of the hardware buffer used by telemetry
