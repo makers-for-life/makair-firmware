@@ -129,7 +129,7 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
         / 10u);
 
     command = min(max(uint16_t(minApertureAngle), command), uint16_t(maxApertureAngle));
-    
+
     return command;
 }
 

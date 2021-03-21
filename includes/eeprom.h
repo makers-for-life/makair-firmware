@@ -51,17 +51,18 @@ typedef char assertMaxEepromSize__LINE__[(sizeof(EEProm_Content) < 251) ? 1 : -1
 /**
  * Write EEProm_Content RAM buffer in EEPROM. Up to  EEProm_Content size, it can take up to 200ms.
  * Beware to keep number of writes below 1 million during product lifetime.
- * 
+ *
  * @return returns 0 if no problem, or EEPROM_ERROR_UNABLE_TO_RW
- * 
+ *
  */
 int32_t eeprom_write(void);
 
 /**
- * Read EEPROM and fill EEProm_Content RAM buffer. Up to  EEProm_Content size, it can take up to 200ms
- * 
- * @return returns 0 if no problem, or EEPROM_ERROR_UNABLE_TO_RW, EEPROM_ERROR_READ_VIRGIN, EEPROM_ERROR_CORRUPTED
- * 
+ * Read EEPROM and fill EEProm_Content RAM buffer. Up to  EEProm_Content size, it can take up to
+ * 200ms
+ *
+ * @return returns 0 if no problem, or EEPROM_ERROR_UNABLE_TO_RW, EEPROM_ERROR_READ_VIRGIN,
+ * EEPROM_ERROR_CORRUPTED
+ *
  */
 int32_t eeprom_read(void);
-

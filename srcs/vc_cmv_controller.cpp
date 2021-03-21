@@ -97,9 +97,9 @@ void VC_CMV_Controller::inhale() {
         m_targetFlowMultiplyBy1000 = mainController.targetInspiratoryFlowCommand();
     }
 
-    // The safety volume is the volume that will be delivered during the closing of the valve. Taking is into account allows better accuracy on volume delivery
-    int32_t safetyVolume = mainController.inspiratoryFlow() * VALVE_RESPONSE_TIME_MS
-                           / 60000;  
+    // The safety volume is the volume that will be delivered during the closing of the valve.
+    // Taking is into account allows better accuracy on volume delivery
+    int32_t safetyVolume = mainController.inspiratoryFlow() * VALVE_RESPONSE_TIME_MS / 60000;
     if (!m_duringPlateau
         && mainController.currentDeliveredVolume()
                > mainController.tidalVolumeCommand() - safetyVolume) {
@@ -131,7 +131,6 @@ void VC_CMV_Controller::inhale() {
         int32_t sectionToOpen;
         if (m_targetFlowMultiplyBy1000 == 0) {
             sectionToOpen = 0;
-
         } else {
             int32_t divider2 = ((tempRatio + 100) < 0) ? 0 : sqrt(tempRatio + 100);
             sectionToOpen = (divider2 == 0) ? 0 : (A1MultiplyBy100 * 10 / divider2);
@@ -139,10 +138,7 @@ void VC_CMV_Controller::inhale() {
 
         // Open the valve to a specific section (in mm^2 multiplied by 100)
         inspiratoryValve.openSection(sectionToOpen);
-
-    } 
-    // else : during plateau, valves are closed
-    else {
+    } else {  // else : during plateau, valves are closed
         inspiratoryValve.close();
     }
 
@@ -166,7 +162,6 @@ void VC_CMV_Controller::exhale() {
 void VC_CMV_Controller::endCycle() {}
 
 void VC_CMV_Controller::calculateBlower() {
-
     // Compute target flow for inspiration
     int32_t inspirationDurationMs =
         ((mainController.ticksPerInhalation() * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)

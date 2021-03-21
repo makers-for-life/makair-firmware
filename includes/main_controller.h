@@ -239,7 +239,6 @@ class MainController {
      */
     void onPatientGender(int16_t p_patientGender);
 
-
     /**
      * Updates patient computed params
      *
