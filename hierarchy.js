@@ -10,7 +10,7 @@ var hierarchy =
     [ "PressureSensor", "class_pressure_sensor.html", null ],
     [ "PressureValve", "class_pressure_valve.html", null ],
     [ "RpiWatchdog", "class_rpi_watchdog.html", null ],
-    [ "Test", null, [
+    [ "testing::Test", null, [
       [ "PressionTest", "class_pression_test.html", null ]
     ] ],
     [ "VentilationController", "class_ventilation_controller.html", [
