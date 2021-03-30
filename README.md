@@ -14,6 +14,12 @@
 
 For a full history of all minor versions, as well as details of all changes, see [CHANGELOG.md](CHANGELOG.md).
 
+## Latest Improvements
+
+A bleeding edge firmware version is available on the [https://github.com/makers-for-life/makair-firmware/tree/dev](dev) branch, which contains our latest improvements, ventilation modes and safety fixes.
+
+**⚠️ Note that the `master` branch contains a legacy firmware version, that will not work with the latest version of [makair-control-ui](https://github.com/makers-for-life/makair-firmware/tree/dev), please use the `dev` branch instead.**
+
 ## Releases
 
 Pre-compiled binaries are available in the [Releases](https://github.com/makers-for-life/makair-firmware/releases) section.
