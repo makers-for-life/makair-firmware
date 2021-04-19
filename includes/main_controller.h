@@ -669,11 +669,20 @@ class MainController {
     /// Measured pressure
     int16_t m_pressure;
 
-    /// Measured expiratory flow
+    /// Measured inspiratory flow
     int32_t m_inspiratoryFlow;
+
+    /// Measured max inspiratory flow
+    int32_t m_maxInspiratoryFlow;
 
     /// Measured inspiratory flow
     int32_t m_expiratoryFlow;
+
+    /// Measured max inspiratory flow
+    int32_t m_maxExpiratoryFlow;
+
+    /// Measured max inspiratory flow
+    int32_t m_lastMaxExpiratoryFlow;
 
     /**
      * Current delivered volume by the blower

@@ -28,7 +28,10 @@ MainController::MainController() {
     m_phase = CyclePhases::INHALATION;
 
     m_inspiratoryFlow = 0;
+    m_maxInspiratoryFlow = 0;
     m_expiratoryFlow = 0;
+    m_maxExpiratoryFlow = 0;
+    m_lastMaxExpiratoryFlow = 0;
     m_currentDeliveredVolume = 0;
     m_expiratoryVolume = 0;
 
@@ -235,6 +238,10 @@ void MainController::initRespiratoryCycle() {
     m_PlateauMeasureSum = 0u;
     m_PlateauMeasureCount = 0u;
 
+    m_maxInspiratoryFlow = 0;
+    m_lastMaxExpiratoryFlow = m_maxExpiratoryFlow;
+    m_maxExpiratoryFlow = 0;
+
     m_ventilationController->initCycle();
 }
 
@@ -421,6 +428,10 @@ void MainController::updateTick(uint32_t p_tick) { m_tick = p_tick; }
 void MainController::updateInspiratoryFlow(int32_t p_currentInspiratoryFlow) {
     if (p_currentInspiratoryFlow != MASS_FLOW_ERROR_VALUE) {
         m_inspiratoryFlow = p_currentInspiratoryFlow;
+
+        if (m_inspiratoryFlow >= m_maxInspiratoryFlow) {
+            m_maxInspiratoryFlow = m_inspiratoryFlow;
+        }
     }
 }
 
@@ -428,6 +439,10 @@ void MainController::updateInspiratoryFlow(int32_t p_currentInspiratoryFlow) {
 void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
     if (p_currentExpiratoryFlow != MASS_FLOW_ERROR_VALUE) {
         m_expiratoryFlow = p_currentExpiratoryFlow;
+
+        if (m_expiratoryFlow >= m_maxExpiratoryFlow) {
+            m_maxExpiratoryFlow = m_expiratoryFlow;
+        }
     }
 }
 
@@ -623,6 +638,13 @@ void MainController::checkCycleAlarm() {
                                       m_pressure);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_22);
+    }
+
+    if (m_lastMaxExpiratoryFlow < (m_maxInspiratoryFlow * MIN_EXPIRATORY_FLOW_OFFSET)) {
+        alarmController.detectedAlarm(RCM_SW_23, m_cycleNb, m_maxInspiratoryFlow / MIN_EXPIRATORY_FLOW_OFFSET,
+                                      m_lastMaxExpiratoryFlow);
+    } else {
+        alarmController.notDetectedAlarm(RCM_SW_23);
     }
 }
 

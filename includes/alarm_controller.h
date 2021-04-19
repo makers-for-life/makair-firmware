@@ -15,7 +15,7 @@
 
 // CONSTANTS ==================================================================
 
-#define ALARMS_SIZE 20u
+#define ALARMS_SIZE 21u
 
 #define RCM_SW_1 12u   // Plateau pressure not reached
 #define RCM_SW_2 11u   // Patient is unplugged
@@ -39,6 +39,7 @@
 #define RCM_SW_20 47u  // Tidal Volume is too low
 #define RCM_SW_21 48u  // Tidal Volume is too high
 #define RCM_SW_22 49u  // peak pressure is too high
+#define RCM_SW_23 107u  // Expiratory flow too low
 
 /// List of alarms (named by their code)
 struct Alarms {

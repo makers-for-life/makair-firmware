@@ -163,6 +163,12 @@ AlarmController::AlarmController()
            * The device shall embed a medium priority alarm 48 when peak pressure is too high
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_22, 1u),
+
+          /**
+           * RCM-SW-23
+           * The device shall embed a medium priority alarm 107 when expiratory flow is too low
+           */
+          Alarm(AlarmPriority::ALARM_MEDIUM, RCM_SW_23, 3u),
       }),
 
       m_tick(0u),
