@@ -45,15 +45,15 @@
 #define BZ_ON (1u)
 
 /// High priority alarm buzzer pattern size
-#define BUZZER_HIGH_PRIO_SIZE 32
+#define BUZZER_HIGH_PRIO_SIZE 40
 
 /// High priority alarm buzzer pattern definition, composed of
 /// multiple couple of states (Actif/Inactif) and duration (miliseconds)
 const uint32_t Buzzer_High_Prio[BUZZER_HIGH_PRIO_SIZE] = {
-    BZ_ON, BIP, BZ_OFF, BIP_PAUSE, BZ_ON, BIP,    BZ_OFF, BIP_PAUSE,
-    BZ_ON, BIP, BZ_OFF, BIP_PAUSE, BZ_ON, BEEEEP, BZ_OFF, PAUSE_1S,
-    BZ_ON, BIP, BZ_OFF, BIP_PAUSE, BZ_ON, BIP,    BZ_OFF, BIP_PAUSE,
-    BZ_ON, BIP, BZ_OFF, BIP_PAUSE, BZ_ON, BEEEEP, BZ_OFF, PAUSE_10S};
+    BZ_ON,  BIP,       BZ_OFF, BIP_PAUSE, BZ_ON,  BIP,       BZ_OFF, BIP_PAUSE, BZ_ON,  BIP,
+    BZ_OFF, BIP_PAUSE, BZ_ON,  BIP,       BZ_OFF, BIP_PAUSE, BZ_ON,  BEEEEP,    BZ_OFF, PAUSE_1S,
+    BZ_ON,  BIP,       BZ_OFF, BIP_PAUSE, BZ_ON,  BIP,       BZ_OFF, BIP_PAUSE, BZ_ON,  BIP,
+    BZ_OFF, BIP_PAUSE, BZ_ON,  BIP,       BZ_OFF, BIP_PAUSE, BZ_ON,  BEEEEP,    BZ_OFF, PAUSE_10S};
 
 /// Medium priority alarm buzzer pattern size
 #define BUZZER_MEDIUM_PRIO_SIZE 8
