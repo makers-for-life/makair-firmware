@@ -698,6 +698,7 @@ void MainController::stop(uint32_t p_currentMillis) {
     alarmController.notDetectedAlarm(RCM_SW_19);
     alarmController.notDetectedAlarm(RCM_SW_20);
     alarmController.notDetectedAlarm(RCM_SW_21);
+    alarmController.notDetectedAlarm(RCM_SW_23);
     digitalWrite(PIN_LED_START, LED_START_INACTIVE);
 }
 
