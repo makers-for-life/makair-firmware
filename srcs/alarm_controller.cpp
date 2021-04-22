@@ -160,7 +160,7 @@ AlarmController::AlarmController()
 
           /**
            * RCM-SW-22
-           * The device shall embed a medium priority alarm 48 when peak pressure is too high
+           * The device shall embed a medium priority alarm 49 when peak pressure is too high
            */
           Alarm(AlarmPriority::ALARM_HIGH, RCM_SW_22, 1u),
 
