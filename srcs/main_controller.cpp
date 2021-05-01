@@ -641,7 +641,8 @@ void MainController::checkCycleAlarm() {
     }
 
     if (m_lastMaxExpiratoryFlow < (m_maxInspiratoryFlow / MIN_EXPIRATORY_FLOW_OFFSET)) {
-        alarmController.detectedAlarm(RCM_SW_23, m_cycleNb, m_maxInspiratoryFlow / MIN_EXPIRATORY_FLOW_OFFSET,
+        alarmController.detectedAlarm(RCM_SW_23, m_cycleNb,
+                                      m_maxInspiratoryFlow / MIN_EXPIRATORY_FLOW_OFFSET,
                                       m_lastMaxExpiratoryFlow);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_23);
