@@ -58,6 +58,8 @@ void setup(void) {
     if (isBatteryDeepDischarged()) {
         displayBatteryDeepDischarge();
         while (true) {
+            sendBatteryDeeplyDischargedFatalError(getBatteryLevelX100());
+            delay(2000);
         }
     }
 
@@ -130,6 +132,8 @@ void setup(void) {
         Buzzer_High_Prio_Start();
         displayWatchdogError();
         while (1) {
+            sendWatchdogRestartFatalError();
+            delay(2000);
         }
     }
 
