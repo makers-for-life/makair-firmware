@@ -22,6 +22,9 @@
  *
  *****************************************************************************/
 
+#ifdef EEPROM_ENABLED  // EEPROM support is not finished yet (remove cppcheck-suppress on functions
+                       // when feature is stable)
+
 // INCLUDES ===================================================================
 
 // Associated header
@@ -70,6 +73,7 @@ inline void eeprom_wire_end(void) {
     MFM_force_release_I2C = MFM_FORCE_RELEASE_I2C_FALSE;
 }
 
+// cppcheck-suppress unusedFunction
 int32_t eeprom_read(void) {
     int32_t totalReadCount = 0;
     uint8_t readCount;
@@ -126,6 +130,7 @@ int32_t eeprom_read(void) {
     return returnVal;
 }
 
+// cppcheck-suppress unusedFunction
 int32_t eeprom_write(void) {
     int32_t totalWriteErrors = 0;
 
@@ -279,4 +284,6 @@ void loop(void) {
         }
     }
 }
+#endif
+
 #endif

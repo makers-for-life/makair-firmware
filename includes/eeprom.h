@@ -1,11 +1,12 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2021 Makers For Life
- * @file mass_flow_meter.h
- * @brief Mass flow meter management
+ * @file eeprom.h
+ * @brief I2C eeprom management
  *****************************************************************************/
 
 #pragma once
+#ifdef EEPROM_ENABLED  // EEPROM support is not finished yet
 
 #include <Arduino.h>
 
@@ -66,3 +67,5 @@ int32_t eeprom_write(void);
  *
  */
 int32_t eeprom_read(void);
+
+#endif

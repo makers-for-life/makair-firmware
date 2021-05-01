@@ -42,6 +42,7 @@
 - added a compilation flag to disable all hardware buttons
   (_this is used for touchscreen-only MakAir devices, i.e. non-traditional ones_)
 - added basic support for the motherboard V3 EEPROM chip over I2C
+  (_disabled by default until stable_)
 - a lot of potential exceptions due to possible divisions by zero have been fixed
 - increase the size of the hardware buffer used by telemetry
 - improve Doxygen documentation
