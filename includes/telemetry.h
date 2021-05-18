@@ -128,21 +128,21 @@ void sendControlAck(uint8_t setting, uint16_t value);
 /// Send a "watchdog restart" fatal error
 void sendWatchdogRestartFatalError(void);
 
-/// Send a "calibration" fatal error
-void sendCalibrationFatalError(int16_t pressureOffsetValue,
-                               int16_t minPressureValue,
-                               int16_t maxPressureValue,
-                               int16_t flowAtStartingValue,
-                               int16_t flowWithBlowerOnValue);
+// /// Send a "calibration" fatal error
+// void sendCalibrationFatalError(int16_t pressureOffsetValue,
+//                                int16_t minPressureValue,
+//                                int16_t maxPressureValue,
+//                                int16_t flowAtStartingValue,
+//                                int16_t flowWithBlowerOnValue);
 
 /// Send a "battery deeply discharged" fatal error
 void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue);
 
-/// Send a "mass flow meter" fatal error
-void sendMassFlowMeterFatalError(void);
+// /// Send a "mass flow meter" fatal error
+// void sendMassFlowMeterFatalError(void);
 
-/// Send a "inconsistent pressure" fatal error
-void sendInconsistentPressureFatalError(uint16_t pressureValue);
+// /// Send a "inconsistent pressure" fatal error
+// void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
 /**
  * Convert and round a pressure in mmH2O to a pressure in cmH2O
