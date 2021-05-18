@@ -108,7 +108,7 @@ class AlarmController {
     /**
      * Update the list of enabled alarms (alarms not provided here will have no effects)
      *
-     * @param The new list of enabled alarms
+     * @param enabledAlarms The new list of enabled alarms
      */
     void updateEnabledAlarms(Alarms enabledAlarms);
 

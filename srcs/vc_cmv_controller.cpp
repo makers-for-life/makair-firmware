@@ -1,7 +1,7 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file VC_CMV_Controller.cpp
+ * @file vc_cmv_controller.cpp
  * @brief PID for VC_CMV control
  *****************************************************************************/
 

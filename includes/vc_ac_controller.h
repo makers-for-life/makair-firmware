@@ -1,7 +1,7 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file VC_AC_Controller.h
+ * @file vc_ac_controller.h
  * @brief PID for AC volume control
  *****************************************************************************/
 

@@ -1,7 +1,7 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file VC_CMV_Controller.h
+ * @file vc_cmv_controller.h
  * @brief PID for Volume control
  *****************************************************************************/
 

@@ -55,11 +55,6 @@ void PressureValve::close() { command = closeApertureAngle; }
 
 void PressureValve::open(uint16_t p_command) { command = p_command; }
 
-/**
- * Request opening of the Pressure Valve with a given section (in mm^2)
- *
- * @param p_section The section to open the valve (in mm^2 multiplied by 100)
- */
 void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
     // Min-max to prevent overflow
     int32_t cappedSectionMultiplyBy100 =
