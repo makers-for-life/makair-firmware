@@ -16,16 +16,14 @@ jobs:
 
       - name: Install STM libs
         run: |
-          arduino-cli config init --additional-urls https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+          arduino-cli config init --additional-urls https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
           arduino-cli config dump
           arduino-cli core update-index
-          export STM32DUINO_VERSION="1.9.0"
-          arduino-cli core install STM32:stm32@$STM32DUINO_VERSION
+          export STM32DUINO_VERSION="2.0.0"
+          arduino-cli core install STMicroelectronics:stm32@$STM32DUINO_VERSION
           arduino-cli lib install LiquidCrystal@1.0.7
           arduino-cli lib install OneButton@1.5.0
           arduino-cli lib install CRC32@2.0.0
-          sed -i '/recipe.output.tmp_file={build.project_name}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/$STM32DUINO_VERSION/platform.txt"
-          sed -i '/recipe.output.save_file={build.project_name}.{build.variant}.hex/d' "$HOME/.arduino15/packages/STM32/hardware/stm32/$STM32DUINO_VERSION/platform.txt"
 
       - name: Get the version
         id: version
@@ -41,7 +39,7 @@ jobs:
       - name: Build production HW3
         run: |
           sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
+          arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
           mkdir -p dist/
           VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
           cp output/respirator-production.bin "dist/respirator-production-HW3-$VERSION-$GITHUB_SHA.bin"
@@ -50,7 +48,7 @@ jobs:
         run: |
           sed -Ei 's/#define MODE .+/#define MODE MODE_PROD/' includes/config.h
           sed -Ei 's/#define MASS_FLOW_METER_ENABLED/\/\/ #define MASS_FLOW_METER_ENABLED/' includes/config.h
-          arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
+          arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
           mkdir -p dist/
           VERSION=$(sed -En 's/#define VERSION[ ]+["](.+)["]/\1/p' includes/parameters.h)
           cp output/respirator-production.bin "dist/respirator-production-HW3-NOMASSFLOWMETER-$VERSION-$GITHUB_SHA.bin"
