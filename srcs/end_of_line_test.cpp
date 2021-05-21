@@ -210,7 +210,7 @@ void millisecondTimerEOL(void)
         // FAIL: Battery voltage is too low
         eolFail = true;
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Test Vbat Failure\nBATTERIE IS TO LOW\n  V=%02d.%d", batlevel / 100,
+                       "Test Vbat Failure\nBATTERY IS TO LOW\n  V=%02d.%d", batlevel / 100,
                        batlevel % 100);
     } else if (eolstep == DISCONNECT_MAINS) {
         // Ask the operator to unplug the machine
@@ -347,7 +347,7 @@ void millisecondTimerEOL(void)
         inspiratoryValve.execute();
         pressureValue = inspiratoryPressureSensor.read();
         blower.runSpeed(1790);
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Mise sous pression\n  \nP = %d mmH2O",
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Increasing pressure\n  \nP = %d mmH2O",
                        pressureValue);
         if (pressureValue > 650) {
             eolMSCount = 0;
