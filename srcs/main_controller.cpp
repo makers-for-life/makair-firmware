@@ -615,9 +615,11 @@ void MainController::checkCycleAlarm() {
     if (m_tidalVolumeMeasure < m_lowTidalVolumeAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_20, m_cycleNb, m_lowTidalVolumeAlarmThresholdCommand,
                                       m_tidalVolumeMeasure);
+        alarmController.notDetectedAlarm(RCM_SW_21);
     } else if (m_tidalVolumeMeasure > m_highTidalVolumeAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_21, m_cycleNb, m_highTidalVolumeAlarmThresholdCommand,
                                       m_tidalVolumeMeasure);
+        alarmController.notDetectedAlarm(RCM_SW_20);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_20);
         alarmController.notDetectedAlarm(RCM_SW_21);
