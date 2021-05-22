@@ -271,6 +271,7 @@ void AlarmController::runAlarmEffects(uint32_t p_tick) {
     uint8_t numberOfTriggeredAlarms = 0;
     bool justUnsnoozed = false;
 
+    //
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         Alarm* current = &m_alarms[i];
         if (current->isTriggered()) {
@@ -368,12 +369,17 @@ void AlarmController::updateCoreData(uint32_t p_tick,
 }
 
 void AlarmController::updateEnabledAlarms(Alarms enabledAlarms) {
-    // Disable every alarms
+    // Untrigger every alarms
+    for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
+        m_triggeredAlarms[i] = 0u;
+    }
+
+    // First Disable every alarms
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         m_alarms[i].disable();
     }
 
-    // Enable provided alarms
+    // Then Enable provided alarms
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (enabledAlarms.alarms[i] != 0u) {
             for (uint8_t j = 0; j < ALARMS_SIZE; j++) {
