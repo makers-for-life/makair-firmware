@@ -54,8 +54,8 @@
 #define CONST_MAX_PLATEAU_DURATION 2000u          // [in ms]
 #define CONST_MIN_INSPIRATORY_FLOW 5000           // [in ml/min]
 #define CONST_MAX_INSPIRATORY_FLOW 80000          // [in ml/min]
-#define CONST_MIN_INSPIRATORY_DURATION 200u       // [in ml/min]
-#define CONST_MAX_INSPIRATORY_DURATION 3000u      // [in ml/min]
+#define CONST_MIN_INSPIRATORY_DURATION 200u       // [in ms]
+#define CONST_MAX_INSPIRATORY_DURATION 3000u      // [in ms]
 #define CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 0u    // [in L/min]
 #define CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 20u   // [in L/min]
 #define CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 0u     // [in L/min]
@@ -85,7 +85,7 @@
 #define CONST_MIN_EXPIRATORY_TERM 10u
 #define CONST_MAX_EXPIRATORY_TERM 60u
 
-#define DEFAULT_PEEP_COMMAND 100u                       // in mmH2O
+#define DEFAULT_PEEP_COMMAND 50u                        // in mmH2O
 #define DEFAULT_PLATEAU_COMMAND 200u                    // in mmH2O
 #define DEFAULT_PEAK_PRESSURE_COMMAND 200u              // in mmH2O
 #define DEFAULT_EXPIRATORY_TERM_COMMAND 20u             // 20 means I:E = 10:20 = 1:2
