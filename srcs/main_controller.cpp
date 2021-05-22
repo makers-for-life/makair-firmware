@@ -1254,8 +1254,8 @@ void MainController::onPatientComputePreset() {
         (static_cast<int32_t>(m_cyclesPerMinuteCommand) * tidalVolume) - 1500;
     m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand =
         (static_cast<int32_t>(m_cyclesPerMinuteCommand) * tidalVolume) + 1500;
-    m_highRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand + 3u;
-    m_lowRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand - 3u;
+    m_highRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand + 4u;
+    m_lowRespiratoryRateAlarmThresholdNextCommand = m_cyclesPerMinuteCommand - 4u;
     m_lowTidalVolumeAlarmThresholdNextCommand = tidalVolume - 100;
     m_highTidalVolumeAlarmThresholdNextCommand = tidalVolume + 100;
     m_peakPressureAlarmThresholdNextCommand =
