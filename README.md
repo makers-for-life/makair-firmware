@@ -41,7 +41,7 @@ In order to setup your environment and build the code, please follow the followi
 Then, compile the project:
 
 ```sh
-arduino-cli compile --fqbn STM32:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
+arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
 ```
 
 ## How To Flash?
