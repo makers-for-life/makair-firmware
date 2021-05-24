@@ -18,7 +18,7 @@ For a full history of all minor versions, as well as details of all changes, see
 
 A _bleeding edge_ firmware version is available on the [dev](https://github.com/makers-for-life/makair-firmware/tree/dev) branch, which contains our latest improvements. This firmware version might still be work in progress and thus might not be suitable for production use.
 
-**⚠️ Note that the `master` branch may not contain the latest firmware version. It might not work with the latest version of [makair-control-ui](https://github.com/makers-for-life/makair-firmware/tree/dev). In this case, please use the `dev` branch instead.**
+**⚠️ Note that the `master` branch may not contain the latest firmware version. It might not work with the latest version of [makair-control-ui](https://github.com/makers-for-life/makair-control-ui). In this case, please use the `dev` branch instead.**
 
 ## Releases
 
