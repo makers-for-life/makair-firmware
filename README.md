@@ -62,6 +62,7 @@ _Make sure to replace {SERIAL_PORT} with your serial port, which should begin wi
 
 ## Configuration
 
-High-level configuration options are available and documented in [includes/config.h](includes/config.h).
+The configuration options can be found in the following files:
 
-Low-level configuration options can be found in [includes/parameters.h](includes/parameters.h).
+* High-level configuration options are available and documented in [includes/config.h](includes/config.h);
+* Low-level configuration options can be found in [includes/parameters.h](includes/parameters.h);
