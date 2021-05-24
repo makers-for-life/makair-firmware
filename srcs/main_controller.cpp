@@ -570,10 +570,12 @@ void MainController::checkCycleAlarm() {
         alarmController.detectedAlarm(RCM_SW_4, m_cycleNb,
                                       m_lowInspiratoryMinuteVolumeAlarmThresholdCommand,
                                       inspiratoryMinuteVolume);
+        alarmController.notDetectedAlarm(RCM_SW_5);
     } else if (inspiratoryMinuteVolume > m_highInspiratoryMinuteVolumeAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_5, m_cycleNb,
                                       m_highInspiratoryMinuteVolumeAlarmThresholdCommand,
                                       inspiratoryMinuteVolume);
+        alarmController.notDetectedAlarm(RCM_SW_4);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_4);
         alarmController.notDetectedAlarm(RCM_SW_5);
@@ -586,10 +588,12 @@ void MainController::checkCycleAlarm() {
         alarmController.detectedAlarm(RCM_SW_6, m_cycleNb,
                                       m_lowExpiratoryMinuteVolumeAlarmThresholdCommand,
                                       expiratoryMinuteVolume);
+        alarmController.notDetectedAlarm(RCM_SW_7);
     } else if (expiratoryMinuteVolume > m_highExpiratoryMinuteVolumeAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_7, m_cycleNb,
                                       m_highInspiratoryMinuteVolumeAlarmThresholdCommand,
                                       expiratoryMinuteVolume);
+        alarmController.notDetectedAlarm(RCM_SW_6);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_6);
         alarmController.notDetectedAlarm(RCM_SW_7);
@@ -601,11 +605,13 @@ void MainController::checkCycleAlarm() {
         alarmController.detectedAlarm(RCM_SW_8, m_cycleNb,
                                       m_lowRespiratoryRateAlarmThresholdCommand,
                                       m_cyclesPerMinuteMeasure);
+        alarmController.notDetectedAlarm(RCM_SW_9);
     } else if (static_cast<int32_t>(m_cyclesPerMinuteMeasure)
                > m_highRespiratoryRateAlarmThresholdCommand) {
         alarmController.detectedAlarm(RCM_SW_9, m_cycleNb,
                                       m_highRespiratoryRateAlarmThresholdCommand,
                                       m_cyclesPerMinuteMeasure);
+        alarmController.notDetectedAlarm(RCM_SW_8);
     } else {
         alarmController.notDetectedAlarm(RCM_SW_8);
         alarmController.notDetectedAlarm(RCM_SW_9);
@@ -625,7 +631,7 @@ void MainController::checkCycleAlarm() {
         alarmController.notDetectedAlarm(RCM_SW_21);
     }
 
-    // RCM_SW_10 : Leak is too low/high
+    // RCM_SW_10 : Leak is too high
     int32_t leakPerMinute = (m_currentDeliveredVolume - m_expiratoryVolume)
                             * static_cast<int32_t>(m_cyclesPerMinuteMeasure);  // In mL/min
     if (leakPerMinute > m_leakAlarmThresholdCommand) {
