@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -101,6 +101,8 @@ Macros</h2></td></tr>
 <tr class="memitem:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>&#160;&#160;&#160;&quot;dev&quot;</td></tr>
 <tr class="memdesc:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current version of the software.  <a href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">More...</a><br /></td></tr>
 <tr class="separator:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac48e2e4ea9d5d466c9914147df20503d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac48e2e4ea9d5d466c9914147df20503d">ADC_RESOLUTION_MAKAIR</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:ac48e2e4ea9d5d466c9914147df20503d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Core parameters</div></td></tr>
 <tr class="memitem:a5d9ac0bc9a0a989e1b748a5dc575467e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a5d9ac0bc9a0a989e1b748a5dc575467e">MAIN_CONTROLLER_COMPUTE_PERIOD_MS</a>&#160;&#160;&#160;10u</td></tr>
 <tr class="separator:a5d9ac0bc9a0a989e1b748a5dc575467e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,35 +114,159 @@ Macros</h2></td></tr>
 <tr class="separator:a62210c4e5811263ce8960d52c2631df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53f7cd639ae07ab155bc69e410f4ee44"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a53f7cd639ae07ab155bc69e410f4ee44">CONST_MAX_PLATEAU_PRESSURE</a>&#160;&#160;&#160;400</td></tr>
 <tr class="separator:a53f7cd639ae07ab155bc69e410f4ee44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83ccc8990de27988b24e94bd648458d3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a83ccc8990de27988b24e94bd648458d3">CONST_MIN_PLATEAU_PRESSURE</a>&#160;&#160;&#160;100</td></tr>
+<tr class="memitem:a83ccc8990de27988b24e94bd648458d3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a83ccc8990de27988b24e94bd648458d3">CONST_MIN_PLATEAU_PRESSURE</a>&#160;&#160;&#160;50</td></tr>
 <tr class="separator:a83ccc8990de27988b24e94bd648458d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a635a743a1850dc2825f00b0a8b7359c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a635a743a1850dc2825f00b0a8b7359c1">CONST_MAX_PEEP_PRESSURE</a>&#160;&#160;&#160;300</td></tr>
 <tr class="separator:a635a743a1850dc2825f00b0a8b7359c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3168705fb44f50a7555981aed2271822"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a3168705fb44f50a7555981aed2271822">CONST_MIN_PEEP_PRESSURE</a>&#160;&#160;&#160;50</td></tr>
+<tr class="memitem:a3168705fb44f50a7555981aed2271822"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a3168705fb44f50a7555981aed2271822">CONST_MIN_PEEP_PRESSURE</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a3168705fb44f50a7555981aed2271822"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f41d250e9f00b946d4fe9d6450acc35"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a1f41d250e9f00b946d4fe9d6450acc35">CONST_MIN_TRIGGER_OFFSET</a>&#160;&#160;&#160;0u</td></tr>
 <tr class="separator:a1f41d250e9f00b946d4fe9d6450acc35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00b852c64329e0e819e3beace1321eb3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a00b852c64329e0e819e3beace1321eb3">CONST_MAX_TRIGGER_OFFSET</a>&#160;&#160;&#160;100u</td></tr>
 <tr class="separator:a00b852c64329e0e819e3beace1321eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae40a069871060b9e0136e1d127e0436e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ae40a069871060b9e0136e1d127e0436e">CONST_INITIAL_ZERO_PRESSURE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:ae40a069871060b9e0136e1d127e0436e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ae40a069871060b9e0136e1d127e0436e">CONST_INITIAL_ZERO_PRESSURE</a>&#160;&#160;&#160;0u</td></tr>
 <tr class="separator:ae40a069871060b9e0136e1d127e0436e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac605d836e03a1d333643996682cc196e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac605d836e03a1d333643996682cc196e">CONST_INITIAL_ZERO_VOLUME</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:ac605d836e03a1d333643996682cc196e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac605d836e03a1d333643996682cc196e">CONST_INITIAL_ZERO_VOLUME</a>&#160;&#160;&#160;0u</td></tr>
 <tr class="separator:ac605d836e03a1d333643996682cc196e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04705886f1b09ba8dbbd009f06cbba91"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a04705886f1b09ba8dbbd009f06cbba91">CONST_MIN_TIDAL_VOLUME</a>&#160;&#160;&#160;50u</td></tr>
+<tr class="separator:a04705886f1b09ba8dbbd009f06cbba91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c85f4d46246f8cd44703c98e10ad50"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ae7c85f4d46246f8cd44703c98e10ad50">CONST_MAX_TIDAL_VOLUME</a>&#160;&#160;&#160;2000u</td></tr>
+<tr class="separator:ae7c85f4d46246f8cd44703c98e10ad50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4923e7db0f6f4cfdd8459c53c74173f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4923e7db0f6f4cfdd8459c53c74173f7">CONST_MAX_INSPIRATORY_TRIGGER_FLOW</a>&#160;&#160;&#160;100u</td></tr>
+<tr class="separator:a4923e7db0f6f4cfdd8459c53c74173f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bce7e93c838c24f52504d7c06490f60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4bce7e93c838c24f52504d7c06490f60">CONST_MIN_INSPIRATORY_TRIGGER_FLOW</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:a4bce7e93c838c24f52504d7c06490f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b3253803468cab2b7622a93fa1e29a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a2b3253803468cab2b7622a93fa1e29a1">CONST_MAX_EXPIRATORY_TRIGGER_FLOW</a>&#160;&#160;&#160;100u</td></tr>
+<tr class="separator:a2b3253803468cab2b7622a93fa1e29a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1de0f8e88f00ff2681b80dcae57c4fea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a1de0f8e88f00ff2681b80dcae57c4fea">CONST_MIN_EXPIRATORY_TRIGGER_FLOW</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:a1de0f8e88f00ff2681b80dcae57c4fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42056fb751cbe9645767208deca13b77"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a42056fb751cbe9645767208deca13b77">CONST_MIN_MIN_INSPIRATION_DURATION</a>&#160;&#160;&#160;100u</td></tr>
+<tr class="separator:a42056fb751cbe9645767208deca13b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ff7240c7f6035880e5e5ed0ba17b753"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4ff7240c7f6035880e5e5ed0ba17b753">CONST_MAX_MIN_INSPIRATION_DURATION</a>&#160;&#160;&#160;3000u</td></tr>
+<tr class="separator:a4ff7240c7f6035880e5e5ed0ba17b753"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69c1eb9935464ba3368f0fa7238c88ba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a69c1eb9935464ba3368f0fa7238c88ba">CONST_MIN_MAX_INSPIRATION_DURATION</a>&#160;&#160;&#160;200u</td></tr>
+<tr class="separator:a69c1eb9935464ba3368f0fa7238c88ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dc5988d93d10ba68cbe1e46fd166b4d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4dc5988d93d10ba68cbe1e46fd166b4d">CONST_MAX_MAX_INSPIRATION_DURATION</a>&#160;&#160;&#160;5000u</td></tr>
+<tr class="separator:a4dc5988d93d10ba68cbe1e46fd166b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af34de7d89f40600128b781cdc93f0a84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#af34de7d89f40600128b781cdc93f0a84">CONST_MIN_PLATEAU_DURATION</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:af34de7d89f40600128b781cdc93f0a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1699412bdda5a9bd33daf3143aabbba3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a1699412bdda5a9bd33daf3143aabbba3">CONST_MAX_PLATEAU_DURATION</a>&#160;&#160;&#160;2000u</td></tr>
+<tr class="separator:a1699412bdda5a9bd33daf3143aabbba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a593bd0b554c6d956a6ce3bc06c1d9c2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a593bd0b554c6d956a6ce3bc06c1d9c2d">CONST_MIN_INSPIRATORY_FLOW</a>&#160;&#160;&#160;5000</td></tr>
+<tr class="separator:a593bd0b554c6d956a6ce3bc06c1d9c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cfb8be86a5013a3a4d3123eb3aefc65"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a6cfb8be86a5013a3a4d3123eb3aefc65">CONST_MAX_INSPIRATORY_FLOW</a>&#160;&#160;&#160;80000</td></tr>
+<tr class="separator:a6cfb8be86a5013a3a4d3123eb3aefc65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6f93a6e3caa68d376122fcb0291dad7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ad6f93a6e3caa68d376122fcb0291dad7">CONST_MIN_INSPIRATORY_DURATION</a>&#160;&#160;&#160;200u</td></tr>
+<tr class="separator:ad6f93a6e3caa68d376122fcb0291dad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa13ded83f7ce7184059e00f37886435a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa13ded83f7ce7184059e00f37886435a">CONST_MAX_INSPIRATORY_DURATION</a>&#160;&#160;&#160;3000u</td></tr>
+<tr class="separator:aa13ded83f7ce7184059e00f37886435a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbacb3047f7fa5bd85698ca32afc3147"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#acbacb3047f7fa5bd85698ca32afc3147">CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:acbacb3047f7fa5bd85698ca32afc3147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e61afa9d4a10ca502f69007dea97d1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a0e61afa9d4a10ca502f69007dea97d1c">CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;20u</td></tr>
+<tr class="separator:a0e61afa9d4a10ca502f69007dea97d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1593a8cd141146a062754e8a95e3c1e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa1593a8cd141146a062754e8a95e3c1e">CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:aa1593a8cd141146a062754e8a95e3c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3810e41253964c1a35f9bf16842359f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ad3810e41253964c1a35f9bf16842359f">CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;20u</td></tr>
+<tr class="separator:ad3810e41253964c1a35f9bf16842359f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d447cb440d293f6aa1b6510c7c61e89"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4d447cb440d293f6aa1b6510c7c61e89">CONST_MIN_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;1u</td></tr>
+<tr class="separator:a4d447cb440d293f6aa1b6510c7c61e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1503bd8e665694ca14999e3446429d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ad1503bd8e665694ca14999e3446429d2">CONST_MAX_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;40u</td></tr>
+<tr class="separator:ad1503bd8e665694ca14999e3446429d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace2603777438b892c81dea58014680aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ace2603777438b892c81dea58014680aa">CONST_MIN_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;1u</td></tr>
+<tr class="separator:ace2603777438b892c81dea58014680aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a025a178757d93350c9a1cc78f13dbbd7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a025a178757d93350c9a1cc78f13dbbd7">CONST_MAX_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;40u</td></tr>
+<tr class="separator:a025a178757d93350c9a1cc78f13dbbd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80698598faf6f7de8939ec322158f6dd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a80698598faf6f7de8939ec322158f6dd">CONST_MIN_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD</a>&#160;&#160;&#160;5u</td></tr>
+<tr class="separator:a80698598faf6f7de8939ec322158f6dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aced077cad59ddec02da92ae3d379b91b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aced077cad59ddec02da92ae3d379b91b">CONST_MAX_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD</a>&#160;&#160;&#160;25u</td></tr>
+<tr class="separator:aced077cad59ddec02da92ae3d379b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a757a6654e907aa0454fabd28e3289a84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a757a6654e907aa0454fabd28e3289a84">CONST_MIN_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD</a>&#160;&#160;&#160;15u</td></tr>
+<tr class="separator:a757a6654e907aa0454fabd28e3289a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e46effc05bf725512b3a6dd408e066"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#af1e46effc05bf725512b3a6dd408e066">CONST_MAX_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD</a>&#160;&#160;&#160;35u</td></tr>
+<tr class="separator:af1e46effc05bf725512b3a6dd408e066"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbe3a62fb13f1f80f05b12f0b5cab362"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#afbe3a62fb13f1f80f05b12f0b5cab362">CONST_MIN_LOW_TIDAL_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:afbe3a62fb13f1f80f05b12f0b5cab362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f241939959b7b0ffcae36aa8791e76b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a9f241939959b7b0ffcae36aa8791e76b">CONST_MAX_LOW_TIDAL_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;1000u</td></tr>
+<tr class="separator:a9f241939959b7b0ffcae36aa8791e76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2334e55c95c03fe443d71f1d74d8b489"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a2334e55c95c03fe443d71f1d74d8b489">CONST_MIN_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;50u</td></tr>
+<tr class="separator:a2334e55c95c03fe443d71f1d74d8b489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada58392150312cf246d1c131eccc7b34"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ada58392150312cf246d1c131eccc7b34">CONST_MAX_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;2000u</td></tr>
+<tr class="separator:ada58392150312cf246d1c131eccc7b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf9a70a5b44fe7b72f22cf982045e3ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#abf9a70a5b44fe7b72f22cf982045e3ac">CONST_MIN_LEAK_ALARM_THRESHOLD</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:abf9a70a5b44fe7b72f22cf982045e3ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf9a70a5b44fe7b72f22cf982045e3ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#abf9a70a5b44fe7b72f22cf982045e3ac">CONST_MIN_LEAK_ALARM_THRESHOLD</a>&#160;&#160;&#160;10000u</td></tr>
+<tr class="separator:abf9a70a5b44fe7b72f22cf982045e3ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a017153d79bccd00811500b84af8519c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a017153d79bccd00811500b84af8519c1">CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD</a>&#160;&#160;&#160;50</td></tr>
+<tr class="separator:a017153d79bccd00811500b84af8519c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a446d8bc386e68743fbc49c11c3303e38"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a446d8bc386e68743fbc49c11c3303e38">CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD</a>&#160;&#160;&#160;700</td></tr>
+<tr class="separator:a446d8bc386e68743fbc49c11c3303e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ea1fb266451c9c0efe80a49587c970"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a91ea1fb266451c9c0efe80a49587c970">CONST_MIN_PATIENT_HEIGHT</a>&#160;&#160;&#160;30</td></tr>
+<tr class="separator:a91ea1fb266451c9c0efe80a49587c970"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a325c2936e097b83e0944e1bc4d300c1a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a325c2936e097b83e0944e1bc4d300c1a">CONST_MAX_PATIENT_HEIGHT</a>&#160;&#160;&#160;250</td></tr>
+<tr class="separator:a325c2936e097b83e0944e1bc4d300c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6235d98eb0f849276ab85b1869e4eea2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a6235d98eb0f849276ab85b1869e4eea2">CONST_MIN_PATIENT_GENDER</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a6235d98eb0f849276ab85b1869e4eea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae98d160facb7da3126d7b32a3c71cfb5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ae98d160facb7da3126d7b32a3c71cfb5">CONST_MAX_PATIENT_GENDER</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:ae98d160facb7da3126d7b32a3c71cfb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5588abb1b730718f7c0ad74f63fe4248"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a5588abb1b730718f7c0ad74f63fe4248">CONST_MIN_EXPIRATORY_TERM</a>&#160;&#160;&#160;10u</td></tr>
 <tr class="separator:a5588abb1b730718f7c0ad74f63fe4248"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35b997041e534129c460bd935a5856a8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a35b997041e534129c460bd935a5856a8">CONST_MAX_EXPIRATORY_TERM</a>&#160;&#160;&#160;60u</td></tr>
 <tr class="separator:a35b997041e534129c460bd935a5856a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1644856c6fbd420e096b7ac9ea16d1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa1644856c6fbd420e096b7ac9ea16d1c">DEFAULT_PEEP_COMMAND</a>&#160;&#160;&#160;100</td></tr>
+<tr class="memitem:aa1644856c6fbd420e096b7ac9ea16d1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa1644856c6fbd420e096b7ac9ea16d1c">DEFAULT_PEEP_COMMAND</a>&#160;&#160;&#160;50u</td></tr>
 <tr class="separator:aa1644856c6fbd420e096b7ac9ea16d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a62a927e85b98a61eb191cc0dd5a7fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a8a62a927e85b98a61eb191cc0dd5a7fd">DEFAULT_PLATEAU_COMMAND</a>&#160;&#160;&#160;200</td></tr>
+<tr class="memitem:a8a62a927e85b98a61eb191cc0dd5a7fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a8a62a927e85b98a61eb191cc0dd5a7fd">DEFAULT_PLATEAU_COMMAND</a>&#160;&#160;&#160;200u</td></tr>
 <tr class="separator:a8a62a927e85b98a61eb191cc0dd5a7fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac668cfe0d7480a92558c79ef31615182"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac668cfe0d7480a92558c79ef31615182">DEFAULT_PEAK_PRESSURE_COMMAND</a>&#160;&#160;&#160;200</td></tr>
+<tr class="memitem:ac668cfe0d7480a92558c79ef31615182"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac668cfe0d7480a92558c79ef31615182">DEFAULT_PEAK_PRESSURE_COMMAND</a>&#160;&#160;&#160;200u</td></tr>
 <tr class="separator:ac668cfe0d7480a92558c79ef31615182"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa009824368472837d3a5e3a19a7d9582"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa009824368472837d3a5e3a19a7d9582">DEFAULT_EXPIRATORY_TERM_COMMAND</a>&#160;&#160;&#160;20</td></tr>
+<tr class="memitem:aa009824368472837d3a5e3a19a7d9582"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa009824368472837d3a5e3a19a7d9582">DEFAULT_EXPIRATORY_TERM_COMMAND</a>&#160;&#160;&#160;20u</td></tr>
 <tr class="separator:aa009824368472837d3a5e3a19a7d9582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6f06b6e2a3b577fbf6453707d03a3d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ae6f06b6e2a3b577fbf6453707d03a3d1">DEFAULT_TRIGGER_OFFSET</a>&#160;&#160;&#160;20</td></tr>
+<tr class="memitem:a9d2384807755a06c3659d34bc2ff4fef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a9d2384807755a06c3659d34bc2ff4fef">DEFAULT_TIDAL_VOLUME_COMMAND</a>&#160;&#160;&#160;400u</td></tr>
+<tr class="separator:a9d2384807755a06c3659d34bc2ff4fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cbd2012d8ced2f248a08bd69b8f19f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a7cbd2012d8ced2f248a08bd69b8f19f8">DEFAULT_PLATEAU_DURATION_COMMAND</a>&#160;&#160;&#160;200u</td></tr>
+<tr class="separator:a7cbd2012d8ced2f248a08bd69b8f19f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6f06b6e2a3b577fbf6453707d03a3d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ae6f06b6e2a3b577fbf6453707d03a3d1">DEFAULT_TRIGGER_OFFSET</a>&#160;&#160;&#160;20u</td></tr>
 <tr class="separator:ae6f06b6e2a3b577fbf6453707d03a3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d2417817645f6463f780c1127c6a112"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a8d2417817645f6463f780c1127c6a112">DEFAULT_CYCLE_PER_MINUTE_COMMAND</a>&#160;&#160;&#160;20</td></tr>
+<tr class="memitem:a0b2ed9a36e6aab2ef53486c73bf5d7e8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a0b2ed9a36e6aab2ef53486c73bf5d7e8">DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND</a>&#160;&#160;&#160;10u</td></tr>
+<tr class="separator:a0b2ed9a36e6aab2ef53486c73bf5d7e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61deed4c1ab0ef8db9a40c1e03e4cf6c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a61deed4c1ab0ef8db9a40c1e03e4cf6c">DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND</a>&#160;&#160;&#160;30u</td></tr>
+<tr class="separator:a61deed4c1ab0ef8db9a40c1e03e4cf6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ecf94b7110082c59b3823fb0cc5e42c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a1ecf94b7110082c59b3823fb0cc5e42c">DEFAULT_MIN_INSPIRATION_DURATION_COMMAND</a>&#160;&#160;&#160;200u</td></tr>
+<tr class="separator:a1ecf94b7110082c59b3823fb0cc5e42c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92b160b49c42a3cf5138ba41082aebb2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a92b160b49c42a3cf5138ba41082aebb2">DEFAULT_MAX_INSPIRATION_DURATION_COMMAND</a>&#160;&#160;&#160;1000u</td></tr>
+<tr class="separator:a92b160b49c42a3cf5138ba41082aebb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab77c21511e3e91a8c571dd80a76dc444"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ab77c21511e3e91a8c571dd80a76dc444">DEFAULT_TARGET_FLOW_COMMAND</a>&#160;&#160;&#160;40000u</td></tr>
+<tr class="separator:ab77c21511e3e91a8c571dd80a76dc444"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab64cdab95d3db2d1714a63108bd4364e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ab64cdab95d3db2d1714a63108bd4364e">DEFAULT_INSPIRATORY_DURATION</a>&#160;&#160;&#160;800u</td></tr>
+<tr class="separator:ab64cdab95d3db2d1714a63108bd4364e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40f814f5fc23c353185fffc5aa61e328"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a40f814f5fc23c353185fffc5aa61e328">DEFAULT_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;3000u</td></tr>
+<tr class="separator:a40f814f5fc23c353185fffc5aa61e328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78e2fe0ad522d4fbef829c3f401cf22f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a78e2fe0ad522d4fbef829c3f401cf22f">DEFAULT_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;3000u</td></tr>
+<tr class="separator:a78e2fe0ad522d4fbef829c3f401cf22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a423b541e74339a6c2769876b8e22c7bb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a423b541e74339a6c2769876b8e22c7bb">DEFAULT_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;20000u</td></tr>
+<tr class="separator:a423b541e74339a6c2769876b8e22c7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb819d76d1bdbde2570d12fe21e7f100"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#acb819d76d1bdbde2570d12fe21e7f100">DEFAULT_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;20000u</td></tr>
+<tr class="separator:acb819d76d1bdbde2570d12fe21e7f100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a1544ba21a04ed4783e3892bb863a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ab1a1544ba21a04ed4783e3892bb863a2">DEFAULT_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD</a>&#160;&#160;&#160;16u</td></tr>
+<tr class="separator:ab1a1544ba21a04ed4783e3892bb863a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af193da236cf7923a4599bed64aafde65"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#af193da236cf7923a4599bed64aafde65">DEFAULT_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD</a>&#160;&#160;&#160;24u</td></tr>
+<tr class="separator:af193da236cf7923a4599bed64aafde65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a531dcf0704132f9b158ef425c94f1b48"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a531dcf0704132f9b158ef425c94f1b48">DEFAULT_LOW_TIDAL_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;200u</td></tr>
+<tr class="separator:a531dcf0704132f9b158ef425c94f1b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4046b2503fdcad0b1da0cbff9933e600"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4046b2503fdcad0b1da0cbff9933e600">DEFAULT_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD</a>&#160;&#160;&#160;1000u</td></tr>
+<tr class="separator:a4046b2503fdcad0b1da0cbff9933e600"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b37e40e62a1ae7a651547b7bf28d057"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a1b37e40e62a1ae7a651547b7bf28d057">DEFAULT_LEAK_ALARM_THRESHOLD</a>&#160;&#160;&#160;2000u</td></tr>
+<tr class="separator:a1b37e40e62a1ae7a651547b7bf28d057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8786e3434f101c4ff1279892b8b740b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac8786e3434f101c4ff1279892b8b740b">DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD</a>&#160;&#160;&#160;500u</td></tr>
+<tr class="separator:ac8786e3434f101c4ff1279892b8b740b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe009a9d4df16628fa0da184e38e610c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#afe009a9d4df16628fa0da184e38e610c">DEFAULT_PATIENT_HEIGHT</a>&#160;&#160;&#160;170u</td></tr>
+<tr class="separator:afe009a9d4df16628fa0da184e38e610c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac07326a666fe6121de3dfc01a74a3c78"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#ac07326a666fe6121de3dfc01a74a3c78">DEFAULT_PATIENT_GENDER</a>&#160;&#160;&#160;0u</td></tr>
+<tr class="separator:ac07326a666fe6121de3dfc01a74a3c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b363ad0655d76896704341919efa96d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a7b363ad0655d76896704341919efa96d">PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU</a>&#160;&#160;&#160;150</td></tr>
+<tr class="separator:a7b363ad0655d76896704341919efa96d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ca7a408f0a07025b7a0213251bb5f79"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a7ca7a408f0a07025b7a0213251bb5f79">AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:a7ca7a408f0a07025b7a0213251bb5f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d2417817645f6463f780c1127c6a112"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a8d2417817645f6463f780c1127c6a112">DEFAULT_CYCLE_PER_MINUTE_COMMAND</a>&#160;&#160;&#160;20u</td></tr>
 <tr class="separator:a8d2417817645f6463f780c1127c6a112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa24738c128b9fa7c48cab15790e7280b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#aa24738c128b9fa7c48cab15790e7280b">CONST_MAX_CYCLE</a>&#160;&#160;&#160;35u</td></tr>
 <tr class="separator:aa24738c128b9fa7c48cab15790e7280b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,6 +276,8 @@ Macros</h2></td></tr>
 <tr class="separator:a4728dd3c8f35e7888081467736e75147"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1c21e6533ef5528bd6aa463be29180d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#af1c21e6533ef5528bd6aa463be29180d">MAX_PRESSURE_OFFSET</a>&#160;&#160;&#160;40</td></tr>
 <tr class="separator:af1c21e6533ef5528bd6aa463be29180d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a957fad115bf97a9e7ab975b55d7701be"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a957fad115bf97a9e7ab975b55d7701be">MIN_EXPIRATORY_FLOW_OFFSET</a>&#160;&#160;&#160;2.5</td></tr>
+<tr class="separator:a957fad115bf97a9e7ab975b55d7701be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18c05583946e0bdf6e30760c6efae626"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a18c05583946e0bdf6e30760c6efae626">TRIGGER_MODE_ENABLED_BY_DEFAULT</a>&#160;&#160;&#160;false</td></tr>
 <tr class="separator:a18c05583946e0bdf6e30760c6efae626"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Valves</div></td></tr>
@@ -161,10 +289,12 @@ Macros</h2></td></tr>
 <tr class="separator:a9c638cefa9f29db2a20baf563fde2692"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e4727590dd46279bc6434b6570ece20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a4e4727590dd46279bc6434b6570ece20">VALVE_PERIOD</a>&#160;&#160;&#160;1000</td></tr>
 <tr class="separator:a4e4727590dd46279bc6434b6570ece20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93c1fe731aacff0426ba616398cb2c9a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a93c1fe731aacff0426ba616398cb2c9a">FAULHABER_OPENED</a>&#160;&#160;&#160;640</td></tr>
+<tr class="memitem:a93c1fe731aacff0426ba616398cb2c9a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a93c1fe731aacff0426ba616398cb2c9a">FAULHABER_OPENED</a>&#160;&#160;&#160;660</td></tr>
 <tr class="separator:a93c1fe731aacff0426ba616398cb2c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12800883231e26855d4f520ff3ab7ef9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a12800883231e26855d4f520ff3ab7ef9">FAULHABER_CLOSED</a>&#160;&#160;&#160;900</td></tr>
 <tr class="separator:a12800883231e26855d4f520ff3ab7ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0bad61a386ec10ace47b4f74693d83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a2e0bad61a386ec10ace47b4f74693d83">VALVE_RESPONSE_TIME_MS</a>&#160;&#160;&#160;50</td></tr>
+<tr class="separator:a2e0bad61a386ec10ace47b4f74693d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf9de90e07bb76d9ef98fb3a2d0f72bb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#acf9de90e07bb76d9ef98fb3a2d0f72bb">PIN_INSPIRATORY_VALVE</a>&#160;&#160;&#160;D5</td></tr>
 <tr class="separator:acf9de90e07bb76d9ef98fb3a2d0f72bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf4d2c11a8636713069d17837e68a33d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#adf4d2c11a8636713069d17837e68a33d">PIN_EXPIRATORY_VALVE</a>&#160;&#160;&#160;D4</td></tr>
@@ -176,7 +306,7 @@ Macros</h2></td></tr>
 <tr class="memitem:a20a4460ee37165a7dd902d34959fb003"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a20a4460ee37165a7dd902d34959fb003">ESC_PPM_PERIOD</a>&#160;&#160;&#160;    10000</td></tr>
 <tr class="separator:a20a4460ee37165a7dd902d34959fb003"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Blower</div></td></tr>
-<tr class="memitem:a9d2b8b8d0ab40857c2d65732708b8782"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a9d2b8b8d0ab40857c2d65732708b8782">MIN_BLOWER_SPEED</a>&#160;&#160;&#160;00u</td></tr>
+<tr class="memitem:a9d2b8b8d0ab40857c2d65732708b8782"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a9d2b8b8d0ab40857c2d65732708b8782">MIN_BLOWER_SPEED</a>&#160;&#160;&#160;300u</td></tr>
 <tr class="separator:a9d2b8b8d0ab40857c2d65732708b8782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ffa4d83d65bee55efc0a43440e9db2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a3ffa4d83d65bee55efc0a43440e9db2e">MAX_BLOWER_SPEED</a>&#160;&#160;&#160;1800u</td></tr>
 <tr class="separator:a3ffa4d83d65bee55efc0a43440e9db2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -302,8 +432,6 @@ Macros</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Alarm thresholds</div></td></tr>
 <tr class="memitem:a52ce94bf17c8c2f3595ffe623247d89a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a52ce94bf17c8c2f3595ffe623247d89a">ALARM_THRESHOLD_MIN_PRESSURE</a>&#160;&#160;&#160;20</td></tr>
 <tr class="separator:a52ce94bf17c8c2f3595ffe623247d89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a896208fffdc13aef1b9fed9e2e769407"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a896208fffdc13aef1b9fed9e2e769407">ALARM_THRESHOLD_MAX_PRESSURE</a>&#160;&#160;&#160;800</td></tr>
-<tr class="separator:a896208fffdc13aef1b9fed9e2e769407"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17b278faa2d18f90512d448cb1005a73"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a17b278faa2d18f90512d448cb1005a73">ALARM_THRESHOLD_DIFFERENCE_PERCENT</a>&#160;&#160;&#160;20</td></tr>
 <tr class="separator:a17b278faa2d18f90512d448cb1005a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a48f441e0d36ed09913e312d33b2168"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parameters_8h.html#a3a48f441e0d36ed09913e312d33b2168">ALARM_THRESHOLD_DIFFERENCE_PRESSURE</a>&#160;&#160;&#160;20</td></tr>
@@ -348,6 +476,38 @@ Macros</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ac48e2e4ea9d5d466c9914147df20503d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac48e2e4ea9d5d466c9914147df20503d">&#9670;&nbsp;</a></span>ADC_RESOLUTION_MAKAIR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ADC_RESOLUTION_MAKAIR&#160;&#160;&#160;12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00317">317</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a7ca7a408f0a07025b7a0213251bb5f79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ca7a408f0a07025b7a0213251bb5f79">&#9670;&nbsp;</a></span>AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00115">115</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
 <a id="a17b278faa2d18f90512d448cb1005a73"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17b278faa2d18f90512d448cb1005a73">&#9670;&nbsp;</a></span>ALARM_THRESHOLD_DIFFERENCE_PERCENT</h2>
 
@@ -360,7 +520,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00246">246</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00312">312</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -376,23 +536,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00247">247</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
-
-</div>
-</div>
-<a id="a896208fffdc13aef1b9fed9e2e769407"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a896208fffdc13aef1b9fed9e2e769407">&#9670;&nbsp;</a></span>ALARM_THRESHOLD_MAX_PRESSURE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ALARM_THRESHOLD_MAX_PRESSURE&#160;&#160;&#160;800</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00245">245</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00313">313</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -408,7 +552,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00244">244</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00311">311</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -419,7 +563,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CONST_INITIAL_ZERO_PRESSURE&#160;&#160;&#160;0</td>
+          <td class="memname">#define CONST_INITIAL_ZERO_PRESSURE&#160;&#160;&#160;0u</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -435,7 +579,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CONST_INITIAL_ZERO_VOLUME&#160;&#160;&#160;0</td>
+          <td class="memname">#define CONST_INITIAL_ZERO_VOLUME&#160;&#160;&#160;0u</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -456,7 +600,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00055">55</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00118">118</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -472,7 +616,263 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00046">46</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00086">86</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a2b3253803468cab2b7622a93fa1e29a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b3253803468cab2b7622a93fa1e29a1">&#9670;&nbsp;</a></span>CONST_MAX_EXPIRATORY_TRIGGER_FLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_EXPIRATORY_TRIGGER_FLOW&#160;&#160;&#160;100u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00047">47</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a025a178757d93350c9a1cc78f13dbbd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a025a178757d93350c9a1cc78f13dbbd7">&#9670;&nbsp;</a></span>CONST_MAX_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;40u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00066">66</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ad1503bd8e665694ca14999e3446429d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1503bd8e665694ca14999e3446429d2">&#9670;&nbsp;</a></span>CONST_MAX_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;40u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00064">64</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="af1e46effc05bf725512b3a6dd408e066"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1e46effc05bf725512b3a6dd408e066">&#9670;&nbsp;</a></span>CONST_MAX_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD&#160;&#160;&#160;35u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00070">70</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ada58392150312cf246d1c131eccc7b34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada58392150312cf246d1c131eccc7b34">&#9670;&nbsp;</a></span>CONST_MAX_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;2000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00074">74</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="aa13ded83f7ce7184059e00f37886435a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa13ded83f7ce7184059e00f37886435a">&#9670;&nbsp;</a></span>CONST_MAX_INSPIRATORY_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_INSPIRATORY_DURATION&#160;&#160;&#160;3000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00058">58</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a6cfb8be86a5013a3a4d3123eb3aefc65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cfb8be86a5013a3a4d3123eb3aefc65">&#9670;&nbsp;</a></span>CONST_MAX_INSPIRATORY_FLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_INSPIRATORY_FLOW&#160;&#160;&#160;80000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00056">56</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a4923e7db0f6f4cfdd8459c53c74173f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4923e7db0f6f4cfdd8459c53c74173f7">&#9670;&nbsp;</a></span>CONST_MAX_INSPIRATORY_TRIGGER_FLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_INSPIRATORY_TRIGGER_FLOW&#160;&#160;&#160;100u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00045">45</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ad3810e41253964c1a35f9bf16842359f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3810e41253964c1a35f9bf16842359f">&#9670;&nbsp;</a></span>CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;20u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00062">62</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a0e61afa9d4a10ca502f69007dea97d1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e61afa9d4a10ca502f69007dea97d1c">&#9670;&nbsp;</a></span>CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;20u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00060">60</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="aced077cad59ddec02da92ae3d379b91b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aced077cad59ddec02da92ae3d379b91b">&#9670;&nbsp;</a></span>CONST_MAX_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD&#160;&#160;&#160;25u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00068">68</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a9f241939959b7b0ffcae36aa8791e76b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f241939959b7b0ffcae36aa8791e76b">&#9670;&nbsp;</a></span>CONST_MAX_LOW_TIDAL_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_LOW_TIDAL_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;1000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00072">72</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a4dc5988d93d10ba68cbe1e46fd166b4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dc5988d93d10ba68cbe1e46fd166b4d">&#9670;&nbsp;</a></span>CONST_MAX_MAX_INSPIRATION_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_MAX_INSPIRATION_DURATION&#160;&#160;&#160;5000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00052">52</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a4ff7240c7f6035880e5e5ed0ba17b753"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ff7240c7f6035880e5e5ed0ba17b753">&#9670;&nbsp;</a></span>CONST_MAX_MIN_INSPIRATION_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_MIN_INSPIRATION_DURATION&#160;&#160;&#160;3000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00050">50</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ae98d160facb7da3126d7b32a3c71cfb5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae98d160facb7da3126d7b32a3c71cfb5">&#9670;&nbsp;</a></span>CONST_MAX_PATIENT_GENDER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_PATIENT_GENDER&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00082">82</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a325c2936e097b83e0944e1bc4d300c1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a325c2936e097b83e0944e1bc4d300c1a">&#9670;&nbsp;</a></span>CONST_MAX_PATIENT_HEIGHT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_PATIENT_HEIGHT&#160;&#160;&#160;250</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00080">80</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -492,6 +892,22 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a446d8bc386e68743fbc49c11c3303e38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a446d8bc386e68743fbc49c11c3303e38">&#9670;&nbsp;</a></span>CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD&#160;&#160;&#160;700</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00078">78</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
 <a id="a635a743a1850dc2825f00b0a8b7359c1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a635a743a1850dc2825f00b0a8b7359c1">&#9670;&nbsp;</a></span>CONST_MAX_PEEP_PRESSURE</h2>
 
@@ -508,6 +924,22 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a1699412bdda5a9bd33daf3143aabbba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1699412bdda5a9bd33daf3143aabbba3">&#9670;&nbsp;</a></span>CONST_MAX_PLATEAU_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_PLATEAU_DURATION&#160;&#160;&#160;2000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00054">54</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
 <a id="a53f7cd639ae07ab155bc69e410f4ee44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a53f7cd639ae07ab155bc69e410f4ee44">&#9670;&nbsp;</a></span>CONST_MAX_PLATEAU_PRESSURE</h2>
 
@@ -521,6 +953,22 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00035">35</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ae7c85f4d46246f8cd44703c98e10ad50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7c85f4d46246f8cd44703c98e10ad50">&#9670;&nbsp;</a></span>CONST_MAX_TIDAL_VOLUME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MAX_TIDAL_VOLUME&#160;&#160;&#160;2000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00044">44</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -552,7 +1000,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00056">56</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00119">119</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -568,7 +1016,295 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00045">45</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00085">85</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a1de0f8e88f00ff2681b80dcae57c4fea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1de0f8e88f00ff2681b80dcae57c4fea">&#9670;&nbsp;</a></span>CONST_MIN_EXPIRATORY_TRIGGER_FLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_EXPIRATORY_TRIGGER_FLOW&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00048">48</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ace2603777438b892c81dea58014680aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace2603777438b892c81dea58014680aa">&#9670;&nbsp;</a></span>CONST_MIN_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;1u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00065">65</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a4d447cb440d293f6aa1b6510c7c61e89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d447cb440d293f6aa1b6510c7c61e89">&#9670;&nbsp;</a></span>CONST_MIN_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;1u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00063">63</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a757a6654e907aa0454fabd28e3289a84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a757a6654e907aa0454fabd28e3289a84">&#9670;&nbsp;</a></span>CONST_MIN_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD&#160;&#160;&#160;15u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00069">69</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a2334e55c95c03fe443d71f1d74d8b489"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2334e55c95c03fe443d71f1d74d8b489">&#9670;&nbsp;</a></span>CONST_MIN_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;50u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00073">73</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ad6f93a6e3caa68d376122fcb0291dad7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6f93a6e3caa68d376122fcb0291dad7">&#9670;&nbsp;</a></span>CONST_MIN_INSPIRATORY_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_INSPIRATORY_DURATION&#160;&#160;&#160;200u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00057">57</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a593bd0b554c6d956a6ce3bc06c1d9c2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a593bd0b554c6d956a6ce3bc06c1d9c2d">&#9670;&nbsp;</a></span>CONST_MIN_INSPIRATORY_FLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_INSPIRATORY_FLOW&#160;&#160;&#160;5000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00055">55</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a4bce7e93c838c24f52504d7c06490f60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bce7e93c838c24f52504d7c06490f60">&#9670;&nbsp;</a></span>CONST_MIN_INSPIRATORY_TRIGGER_FLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_INSPIRATORY_TRIGGER_FLOW&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00046">46</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="abf9a70a5b44fe7b72f22cf982045e3ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf9a70a5b44fe7b72f22cf982045e3ac">&#9670;&nbsp;</a></span>CONST_MIN_LEAK_ALARM_THRESHOLD <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_LEAK_ALARM_THRESHOLD&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00076">76</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="abf9a70a5b44fe7b72f22cf982045e3ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf9a70a5b44fe7b72f22cf982045e3ac">&#9670;&nbsp;</a></span>CONST_MIN_LEAK_ALARM_THRESHOLD <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_LEAK_ALARM_THRESHOLD&#160;&#160;&#160;10000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00076">76</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="aa1593a8cd141146a062754e8a95e3c1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1593a8cd141146a062754e8a95e3c1e">&#9670;&nbsp;</a></span>CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00061">61</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="acbacb3047f7fa5bd85698ca32afc3147"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbacb3047f7fa5bd85698ca32afc3147">&#9670;&nbsp;</a></span>CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00059">59</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a80698598faf6f7de8939ec322158f6dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80698598faf6f7de8939ec322158f6dd">&#9670;&nbsp;</a></span>CONST_MIN_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD&#160;&#160;&#160;5u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00067">67</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="afbe3a62fb13f1f80f05b12f0b5cab362"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbe3a62fb13f1f80f05b12f0b5cab362">&#9670;&nbsp;</a></span>CONST_MIN_LOW_TIDAL_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_LOW_TIDAL_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00071">71</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a69c1eb9935464ba3368f0fa7238c88ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69c1eb9935464ba3368f0fa7238c88ba">&#9670;&nbsp;</a></span>CONST_MIN_MAX_INSPIRATION_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_MAX_INSPIRATION_DURATION&#160;&#160;&#160;200u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00051">51</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a42056fb751cbe9645767208deca13b77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42056fb751cbe9645767208deca13b77">&#9670;&nbsp;</a></span>CONST_MIN_MIN_INSPIRATION_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_MIN_INSPIRATION_DURATION&#160;&#160;&#160;100u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00049">49</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a6235d98eb0f849276ab85b1869e4eea2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6235d98eb0f849276ab85b1869e4eea2">&#9670;&nbsp;</a></span>CONST_MIN_PATIENT_GENDER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_PATIENT_GENDER&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00081">81</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a91ea1fb266451c9c0efe80a49587c970"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ea1fb266451c9c0efe80a49587c970">&#9670;&nbsp;</a></span>CONST_MIN_PATIENT_HEIGHT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_PATIENT_HEIGHT&#160;&#160;&#160;30</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00079">79</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -588,6 +1324,22 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a017153d79bccd00811500b84af8519c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a017153d79bccd00811500b84af8519c1">&#9670;&nbsp;</a></span>CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD&#160;&#160;&#160;50</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00077">77</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
 <a id="a3168705fb44f50a7555981aed2271822"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3168705fb44f50a7555981aed2271822">&#9670;&nbsp;</a></span>CONST_MIN_PEEP_PRESSURE</h2>
 
@@ -595,12 +1347,28 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CONST_MIN_PEEP_PRESSURE&#160;&#160;&#160;50</td>
+          <td class="memname">#define CONST_MIN_PEEP_PRESSURE&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00038">38</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="af34de7d89f40600128b781cdc93f0a84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af34de7d89f40600128b781cdc93f0a84">&#9670;&nbsp;</a></span>CONST_MIN_PLATEAU_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_PLATEAU_DURATION&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00053">53</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -611,12 +1379,28 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CONST_MIN_PLATEAU_PRESSURE&#160;&#160;&#160;100</td>
+          <td class="memname">#define CONST_MIN_PLATEAU_PRESSURE&#160;&#160;&#160;50</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00036">36</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a04705886f1b09ba8dbbd009f06cbba91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04705886f1b09ba8dbbd009f06cbba91">&#9670;&nbsp;</a></span>CONST_MIN_TIDAL_VOLUME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONST_MIN_TIDAL_VOLUME&#160;&#160;&#160;50u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00043">43</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -648,7 +1432,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00127">127</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00194">194</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -659,12 +1443,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEFAULT_CYCLE_PER_MINUTE_COMMAND&#160;&#160;&#160;20</td>
+          <td class="memname">#define DEFAULT_CYCLE_PER_MINUTE_COMMAND&#160;&#160;&#160;20u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00054">54</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00117">117</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -675,12 +1459,284 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEFAULT_EXPIRATORY_TERM_COMMAND&#160;&#160;&#160;20</td>
+          <td class="memname">#define DEFAULT_EXPIRATORY_TERM_COMMAND&#160;&#160;&#160;20u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00051">51</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00091">91</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a61deed4c1ab0ef8db9a40c1e03e4cf6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61deed4c1ab0ef8db9a40c1e03e4cf6c">&#9670;&nbsp;</a></span>DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND&#160;&#160;&#160;30u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00096">96</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="acb819d76d1bdbde2570d12fe21e7f100"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb819d76d1bdbde2570d12fe21e7f100">&#9670;&nbsp;</a></span>DEFAULT_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;20000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00104">104</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a423b541e74339a6c2769876b8e22c7bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a423b541e74339a6c2769876b8e22c7bb">&#9670;&nbsp;</a></span>DEFAULT_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;20000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00103">103</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="af193da236cf7923a4599bed64aafde65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af193da236cf7923a4599bed64aafde65">&#9670;&nbsp;</a></span>DEFAULT_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD&#160;&#160;&#160;24u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00106">106</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a4046b2503fdcad0b1da0cbff9933e600"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4046b2503fdcad0b1da0cbff9933e600">&#9670;&nbsp;</a></span>DEFAULT_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;1000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00108">108</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ab64cdab95d3db2d1714a63108bd4364e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab64cdab95d3db2d1714a63108bd4364e">&#9670;&nbsp;</a></span>DEFAULT_INSPIRATORY_DURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_INSPIRATORY_DURATION&#160;&#160;&#160;800u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00100">100</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a0b2ed9a36e6aab2ef53486c73bf5d7e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b2ed9a36e6aab2ef53486c73bf5d7e8">&#9670;&nbsp;</a></span>DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND&#160;&#160;&#160;10u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00095">95</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a1b37e40e62a1ae7a651547b7bf28d057"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b37e40e62a1ae7a651547b7bf28d057">&#9670;&nbsp;</a></span>DEFAULT_LEAK_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_LEAK_ALARM_THRESHOLD&#160;&#160;&#160;2000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00109">109</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a78e2fe0ad522d4fbef829c3f401cf22f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78e2fe0ad522d4fbef829c3f401cf22f">&#9670;&nbsp;</a></span>DEFAULT_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;3000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00102">102</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a40f814f5fc23c353185fffc5aa61e328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40f814f5fc23c353185fffc5aa61e328">&#9670;&nbsp;</a></span>DEFAULT_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;3000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00101">101</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ab1a1544ba21a04ed4783e3892bb863a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a1544ba21a04ed4783e3892bb863a2">&#9670;&nbsp;</a></span>DEFAULT_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD&#160;&#160;&#160;16u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00105">105</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a531dcf0704132f9b158ef425c94f1b48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a531dcf0704132f9b158ef425c94f1b48">&#9670;&nbsp;</a></span>DEFAULT_LOW_TIDAL_VOLUME_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_LOW_TIDAL_VOLUME_ALARM_THRESHOLD&#160;&#160;&#160;200u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00107">107</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a92b160b49c42a3cf5138ba41082aebb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92b160b49c42a3cf5138ba41082aebb2">&#9670;&nbsp;</a></span>DEFAULT_MAX_INSPIRATION_DURATION_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_MAX_INSPIRATION_DURATION_COMMAND&#160;&#160;&#160;1000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00098">98</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a1ecf94b7110082c59b3823fb0cc5e42c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ecf94b7110082c59b3823fb0cc5e42c">&#9670;&nbsp;</a></span>DEFAULT_MIN_INSPIRATION_DURATION_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_MIN_INSPIRATION_DURATION_COMMAND&#160;&#160;&#160;200u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00097">97</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ac07326a666fe6121de3dfc01a74a3c78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac07326a666fe6121de3dfc01a74a3c78">&#9670;&nbsp;</a></span>DEFAULT_PATIENT_GENDER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_PATIENT_GENDER&#160;&#160;&#160;0u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00112">112</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="afe009a9d4df16628fa0da184e38e610c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe009a9d4df16628fa0da184e38e610c">&#9670;&nbsp;</a></span>DEFAULT_PATIENT_HEIGHT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_PATIENT_HEIGHT&#160;&#160;&#160;170u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00111">111</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ac8786e3434f101c4ff1279892b8b740b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8786e3434f101c4ff1279892b8b740b">&#9670;&nbsp;</a></span>DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD&#160;&#160;&#160;500u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00110">110</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -691,12 +1747,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEFAULT_PEAK_PRESSURE_COMMAND&#160;&#160;&#160;200</td>
+          <td class="memname">#define DEFAULT_PEAK_PRESSURE_COMMAND&#160;&#160;&#160;200u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00050">50</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00090">90</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -712,7 +1768,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00058">58</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00121">121</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -723,12 +1779,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEFAULT_PEEP_COMMAND&#160;&#160;&#160;100</td>
+          <td class="memname">#define DEFAULT_PEEP_COMMAND&#160;&#160;&#160;50u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00048">48</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00088">88</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -739,12 +1795,60 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEFAULT_PLATEAU_COMMAND&#160;&#160;&#160;200</td>
+          <td class="memname">#define DEFAULT_PLATEAU_COMMAND&#160;&#160;&#160;200u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00049">49</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00089">89</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a7cbd2012d8ced2f248a08bd69b8f19f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cbd2012d8ced2f248a08bd69b8f19f8">&#9670;&nbsp;</a></span>DEFAULT_PLATEAU_DURATION_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_PLATEAU_DURATION_COMMAND&#160;&#160;&#160;200u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00093">93</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="ab77c21511e3e91a8c571dd80a76dc444"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab77c21511e3e91a8c571dd80a76dc444">&#9670;&nbsp;</a></span>DEFAULT_TARGET_FLOW_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_TARGET_FLOW_COMMAND&#160;&#160;&#160;40000u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00099">99</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a9d2384807755a06c3659d34bc2ff4fef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d2384807755a06c3659d34bc2ff4fef">&#9670;&nbsp;</a></span>DEFAULT_TIDAL_VOLUME_COMMAND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_TIDAL_VOLUME_COMMAND&#160;&#160;&#160;400u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00092">92</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -755,12 +1859,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEFAULT_TRIGGER_OFFSET&#160;&#160;&#160;20</td>
+          <td class="memname">#define DEFAULT_TRIGGER_OFFSET&#160;&#160;&#160;20u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00052">52</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00094">94</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -776,7 +1880,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00114">114</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00181">181</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -792,7 +1896,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00108">108</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00173">173</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -803,12 +1907,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FAULHABER_OPENED&#160;&#160;&#160;640</td>
+          <td class="memname">#define FAULHABER_OPENED&#160;&#160;&#160;660</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00107">107</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00172">172</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -826,7 +1930,7 @@ Macros</h2></td></tr>
 
 <p>Period between screen resets in minutes. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00155">155</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00222">222</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -845,7 +1949,7 @@ Macros</h2></td></tr>
 <p>Period between screen updates in microsecond. </p>
 <p>Should be a multiple of MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00152">152</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00219">219</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -861,7 +1965,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00196">196</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00263">263</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -877,7 +1981,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00197">197</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00264">264</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -893,7 +1997,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00192">192</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00259">259</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -909,7 +2013,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00193">193</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00260">260</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -925,7 +2029,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00190">190</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00257">257</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -941,7 +2045,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00191">191</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00258">258</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -957,7 +2061,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00194">194</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00261">261</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -973,7 +2077,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00195">195</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00262">262</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1021,7 +2125,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00227">227</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00294">294</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1037,7 +2141,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00235">235</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00302">302</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1053,7 +2157,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00226">226</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00293">293</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1069,7 +2173,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00126">126</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00193">193</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1085,7 +2189,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00060">60</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00123">123</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +2205,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00230">230</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00297">297</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1117,7 +2221,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00231">231</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00298">298</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1133,7 +2237,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00232">232</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00299">299</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1149,7 +2253,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00233">233</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00300">300</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1160,7 +2264,23 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MIN_BLOWER_SPEED&#160;&#160;&#160;00u</td>
+          <td class="memname">#define MIN_BLOWER_SPEED&#160;&#160;&#160;300u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00192">192</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a957fad115bf97a9e7ab975b55d7701be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a957fad115bf97a9e7ab975b55d7701be">&#9670;&nbsp;</a></span>MIN_EXPIRATORY_FLOW_OFFSET</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MIN_EXPIRATORY_FLOW_OFFSET&#160;&#160;&#160;2.5</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1183,7 +2303,7 @@ Macros</h2></td></tr>
 
 <p>Number of periods used for calculating the respiratory rate. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00092">92</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00157">157</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1199,7 +2319,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00089">89</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00154">154</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1215,7 +2335,23 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00087">87</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00152">152</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a7b363ad0655d76896704341919efa96d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b363ad0655d76896704341919efa96d">&#9670;&nbsp;</a></span>PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU&#160;&#160;&#160;150</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00114">114</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1231,7 +2367,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00211">211</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00278">278</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1247,7 +2383,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00164">164</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00231">231</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1263,7 +2399,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00165">165</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00232">232</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1279,7 +2415,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00166">166</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00233">233</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1295,7 +2431,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00207">207</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00274">274</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1311,7 +2447,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00214">214</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00281">281</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1327,7 +2463,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00208">208</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00275">275</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1343,7 +2479,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00111">111</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00178">178</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1359,7 +2495,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00229">229</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00296">296</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1375,7 +2511,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00228">228</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00295">295</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1391,7 +2527,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00176">176</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00243">243</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1407,7 +2543,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00175">175</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00242">242</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1423,7 +2559,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00171">171</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00238">238</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1439,7 +2575,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00172">172</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00239">239</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1455,7 +2591,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00173">173</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00240">240</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1471,7 +2607,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00110">110</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00177">177</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1487,7 +2623,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00139">139</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00206">206</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1503,7 +2639,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00140">140</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00207">207</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1519,7 +2655,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00141">141</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00208">208</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1535,7 +2671,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00142">142</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00209">209</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1551,7 +2687,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00138">138</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00205">205</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1567,7 +2703,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00136">136</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00203">203</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1583,7 +2719,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00137">137</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00204">204</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1599,7 +2735,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00186">186</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00253">253</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1615,7 +2751,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00188">188</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00255">255</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1631,7 +2767,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00185">185</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00252">252</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1647,7 +2783,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00187">187</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00254">254</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1663,7 +2799,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00168">168</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00235">235</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1679,7 +2815,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00169">169</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00236">236</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1695,7 +2831,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00170">170</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00237">237</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1711,7 +2847,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00206">206</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00273">273</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1727,7 +2863,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00212">212</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00279">279</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1743,7 +2879,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00213">213</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00280">280</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1759,7 +2895,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00210">210</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00277">277</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1775,7 +2911,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00215">215</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00282">282</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1791,7 +2927,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00216">216</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00283">283</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1809,7 +2945,7 @@ Macros</h2></td></tr>
 
 <p>Number of characters per line. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00148">148</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00215">215</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1827,7 +2963,7 @@ Macros</h2></td></tr>
 
 <p>Number of lines. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00145">145</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00212">212</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1843,7 +2979,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00209">209</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00276">276</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1859,7 +2995,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00113">113</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00180">180</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1875,7 +3011,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00112">112</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00179">179</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1891,7 +3027,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00062">62</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00127">127</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1909,7 +3045,7 @@ Macros</h2></td></tr>
 
 <p>Angle when closed. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00105">105</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00170">170</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1927,7 +3063,7 @@ Macros</h2></td></tr>
 
 <p>Angle when opened. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00102">102</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00167">167</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1943,7 +3079,23 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00106">106</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00171">171</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+
+</div>
+</div>
+<a id="a2e0bad61a386ec10ace47b4f74693d83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e0bad61a386ec10ace47b4f74693d83">&#9670;&nbsp;</a></span>VALVE_RESPONSE_TIME_MS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VALVE_RESPONSE_TIME_MS&#160;&#160;&#160;50</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00175">175</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -1986,7 +3138,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00074">74</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00139">139</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2010,7 +3162,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00075">75</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00140">140</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2034,7 +3186,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00073">73</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00138">138</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2058,7 +3210,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00072">72</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00137">137</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2082,7 +3234,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00071">71</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00136">136</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2106,7 +3258,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00080">80</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00145">145</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2130,7 +3282,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00081">81</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00146">146</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2154,7 +3306,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00079">79</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00144">144</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2178,7 +3330,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00078">78</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00143">143</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2202,7 +3354,7 @@ Macros</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00077">77</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00142">142</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>
@@ -2228,7 +3380,7 @@ Macros</h2></td></tr>
 
 <p>Increase target pressure by an offset (in mmH2O) for safety, to avoid going below the target pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00085">85</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parameters_8h_source.html#l00150">150</a> of file <a class="el" href="parameters_8h_source.html">parameters.h</a>.</p>
 
 </div>
 </div>

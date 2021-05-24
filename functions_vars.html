@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -89,6 +89,9 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="class_blower.html#a04eae5c4a39977bc54219514b99c7503">Blower</a>
 , <a class="el" href="class_pressure_valve.html#aa0814e5315cd9b56d748c67e7f46d97b">PressureValve</a>
 </li>
+<li>alarms
+: <a class="el" href="struct_alarms.html#a1d404f3792cb25e1ccc33d94ff6cc267">Alarms</a>
+</li>
 </ul>
 
 
@@ -124,11 +127,16 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="class_alarm_controller.html#a9ac7c221ac460e79fe5bd361a29ddb8c">AlarmController</a>
 </li>
 <li>m_blowerIncrement
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a6a106dc174c1cc74458d0324dcc58f12">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#ab96dc54a89d17d1e151994da64005602">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#ab96dc54a89d17d1e151994da64005602">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a9d56265f453dd6e772a4a6d11f92812c">PC_VSAI_Controller</a>
 </li>
 <li>m_blowerSpeed
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a4708ab44b7d295b672d34890f9c91990">PC_BIPAP_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a156e4b906a485a65fc86503335091482">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a5388afb5b9e11904a801c1613636f8e1">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#a09f78ee753aa3f13eaf1353b85343242">VC_CMV_Controller</a>
+</li>
+<li>m_blowerTicks
+: <a class="el" href="class_v_c___c_m_v___controller.html#a1f58c967d3c1e771dafc22a71272eaa6">VC_CMV_Controller</a>
 </li>
 <li>m_code
 : <a class="el" href="class_alarm.html#ad1504957b19f97406bcbc6041c94061e">Alarm</a>
@@ -169,28 +177,39 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_dt
 : <a class="el" href="class_main_controller.html#aac08173715515e7ffe61be63b3a7097a">MainController</a>
 </li>
+<li>m_duringPlateau
+: <a class="el" href="class_v_c___c_m_v___controller.html#a525c26171a7c82f22f2d837624fa38c2">VC_CMV_Controller</a>
+</li>
+<li>m_enabled
+: <a class="el" href="class_alarm.html#a2461c1d86944e74bb1cde3aeaf0b8905">Alarm</a>
+</li>
 <li>m_expiratoryFlow
 : <a class="el" href="class_main_controller.html#aecef2248d9007a4fab71e11aca04d1b5">MainController</a>
 </li>
 <li>m_expiratoryPidFastMode
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a4bd5f00a0e17a6838b534fede93d6387">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a23c4b2c76892810ab98298e32613516c">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a23c4b2c76892810ab98298e32613516c">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#abb1bfff2a045908ede51cf8a539a1534">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#acbd28464ec401ccc22c70afc194df368">VC_CMV_Controller</a>
 </li>
 <li>m_expiratoryPidIntegral
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ac79c498f7f21654f6e808f2ed5006183">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a74407807e49f42655e5f6e0b68f574fb">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a74407807e49f42655e5f6e0b68f574fb">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a90f9ccf5397dc2f84e220174c740e492">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#ac13a1414747584951927278555083486">VC_CMV_Controller</a>
 </li>
 <li>m_expiratoryPidLastError
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ab9755e1a44bdbbf0b6a08e3ff3646fc9">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a06eda6dd342c2d7f94ac8305455c0a11">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a06eda6dd342c2d7f94ac8305455c0a11">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#aeb608ef66ab574847cdad5f9d6eff38b">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#ad8b50f372effd0ca0e84b1e8090afff2">VC_CMV_Controller</a>
 </li>
 <li>m_expiratoryPidLastErrors
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ac63e4bb51c9db344a9c6f0ddb65c8ada">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a904d4bc9e29548c776fb44789429c8df">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a904d4bc9e29548c776fb44789429c8df">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a026791918e82eb71e5eb18907d7805bf">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#aba3cd7434e6b1b0105378793cf339186">VC_CMV_Controller</a>
 </li>
 <li>m_expiratoryPidLastErrorsIndex
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#af08c504c7b9ebc2372226c07358fb1f5">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#ad97c79634349678835878020506a269d">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#ad97c79634349678835878020506a269d">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a91772355ff29a5a5287421f71f0faa5f">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#a87782ff5366884d44055feccaef9906b">VC_CMV_Controller</a>
 </li>
 <li>m_expiratoryTermCommand
 : <a class="el" href="class_main_controller.html#a196651fd3a81680a2e6e5da2cbcb36ff">MainController</a>
@@ -198,9 +217,16 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_expiratoryTermNextCommand
 : <a class="el" href="class_main_controller.html#af53799e647ea430da17de78f5b8e9216">MainController</a>
 </li>
+<li>m_expiratoryTriggerFlowCommand
+: <a class="el" href="class_main_controller.html#adee9e248fcc245ef32d10047671d2769">MainController</a>
+</li>
+<li>m_expiratoryTriggerFlowNextCommand
+: <a class="el" href="class_main_controller.html#a1def62d2acf2618267519d5194a8070e">MainController</a>
+</li>
 <li>m_expiratoryValveLastAperture
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a53b71725f4ad6dc1a8b9d1f3c574c6c5">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a514f061a177fa8fa6fb37f50f827b0b9">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a514f061a177fa8fa6fb37f50f827b0b9">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#ae031c3de7828a721b8e5b9c0e1c6d5c8">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#aedf3ddd6f257859bf11010b9723424b7">VC_CMV_Controller</a>
 </li>
 <li>m_expiratoryVolume
 : <a class="el" href="class_main_controller.html#aa6e235013fc84c41b663c0850f9ffbb9">MainController</a>
@@ -208,53 +234,85 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_highestPriority
 : <a class="el" href="class_alarm_controller.html#ae11063ec546cd92759a8cf91c5a1964d">AlarmController</a>
 </li>
+<li>m_highExpiratoryMinuteVolumeAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a1b6a3a9479d5bb32aece06163d253488">MainController</a>
+</li>
+<li>m_highExpiratoryMinuteVolumeAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#a968c238dc7c27cb5ad8c16d74f1c049c">MainController</a>
+</li>
+<li>m_highInspiratoryMinuteVolumeAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a9e66ecefbd3d5c16385b31a3a53e968e">MainController</a>
+</li>
+<li>m_highInspiratoryMinuteVolumeAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#a2f38ab833c6f9a6292c03b2514dc3d22">MainController</a>
+</li>
+<li>m_highRespiratoryRateAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#ae397c0f8c8826b7bd633448367a3f474">MainController</a>
+</li>
+<li>m_highRespiratoryRateAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#a4a87a6dd69c0ec0ec72fbf2e75001bd8">MainController</a>
+</li>
+<li>m_highTidalVolumeAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a5251355e5396a6524187d6989e80b20d">MainController</a>
+</li>
+<li>m_highTidalVolumeAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#a6236166a45eaf91798153d562b11d24c">MainController</a>
+</li>
 <li>m_inhalationLastPressure
 : <a class="el" href="class_main_controller.html#aa313bba6db2041f7f8c7701a96c43125">MainController</a>
+</li>
+<li>m_inspiratoryDurationCommand
+: <a class="el" href="class_main_controller.html#ae569c4536c485b070387f67838c6fe0e">MainController</a>
+</li>
+<li>m_inspiratoryDurationNextCommand
+: <a class="el" href="class_main_controller.html#a244f41ebc6485a4cf5700666253bc215">MainController</a>
 </li>
 <li>m_inspiratoryFlow
 : <a class="el" href="class_main_controller.html#af24f1fd16181457d123c7d32ca99a0ee">MainController</a>
 </li>
 <li>m_inspiratoryFlowLastValues
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a7f8a54cb52ee7f7df6df4251330debca">PC_BIPAP_Controller</a>
+: <a class="el" href="class_v_c___c_m_v___controller.html#ad47f00a06cfe031e1155e37c15f2fb2e">VC_CMV_Controller</a>
 </li>
 <li>m_inspiratoryFlowLastValuesIndex
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a2304779d4207f7af1ab22d26035d949a">PC_BIPAP_Controller</a>
+: <a class="el" href="class_v_c___c_m_v___controller.html#a363a597627d7d89d4ffbae92c0da6515">VC_CMV_Controller</a>
 </li>
 <li>m_inspiratoryPidFastMode
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a3031a3040c1bb05d866eaa2c958e33cf">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a8b1aa27d64e50da600ac2cc9cc775f27">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a8b1aa27d64e50da600ac2cc9cc775f27">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#aba675306c226d3dbbbbc1c7282623eb7">PC_VSAI_Controller</a>
 </li>
 <li>m_inspiratoryPidIntegral
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a9da51d9f3de452381accc35723aa040b">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a2fd3dd9deb6558a0c4bb57d83a7368e4">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a2fd3dd9deb6558a0c4bb57d83a7368e4">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#aa623e6a5e00f3e129971249d97235dc0">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#a8608dce974055438ccbdccfa1a8e4401">VC_CMV_Controller</a>
 </li>
 <li>m_inspiratoryPidLastError
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a714fa4d9fa7470bde1f6abf581bf1ea4">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a0f780c7f6513a13d74953741c9134d01">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a0f780c7f6513a13d74953741c9134d01">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a36e7ba3ccd15de94be10003090c5b75f">PC_VSAI_Controller</a>
 </li>
 <li>m_inspiratoryPidLastErrors
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a09c4b80811e4fb81e7dcd9ee83c2cb94">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a83f30655bf8981f96babdc42a135c2cb">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a83f30655bf8981f96babdc42a135c2cb">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#ab5f0e65c46f2027a429760818028d12a">PC_VSAI_Controller</a>
 </li>
 <li>m_inspiratoryPidLastErrorsIndex
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#aa1a3984ee355c1b07843f374625c1276">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#a7abeb7e540c009c070eea4cc1008616d">PC_CMV_Controller</a>
-</li>
-<li>m_inspiratoryPressureLastValues
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#aebc33dcefe60f8bb0022bd26def62fe7">PC_BIPAP_Controller</a>
-</li>
-<li>m_inspiratoryPressureLastValuesIndex
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a228f52f1afac771cea50e9226fe8bdf4">PC_BIPAP_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#a7abeb7e540c009c070eea4cc1008616d">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#ab1b1d1185b75a4594ed5f95a1b71e12b">PC_VSAI_Controller</a>
 </li>
 <li>m_inspiratorySlope
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a8a31d83d76491e5740dbd7541bf22bf4">PC_BIPAP_Controller</a>
+: <a class="el" href="class_p_c___v_s_a_i___controller.html#acffb7f3a8ad41dbbcc18a0a3eb260b0c">PC_VSAI_Controller</a>
+</li>
+<li>m_inspiratoryTriggerFlowCommand
+: <a class="el" href="class_main_controller.html#ab44b78078b0e2bd60248ff0f85c16f08">MainController</a>
+</li>
+<li>m_inspiratoryTriggerFlowNextCommand
+: <a class="el" href="class_main_controller.html#a998e539379a8a4149b874e63ff8fcf23">MainController</a>
 </li>
 <li>m_inspiratoryValveAngle
 : <a class="el" href="class_main_controller.html#a8c73665278fda0bbfdfabee66177f9cd">MainController</a>
 </li>
 <li>m_inspiratoryValveLastAperture
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#af6c9b4e25998ab59e7dc0a837a738436">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#afe20d39cf783335ffbd4926c30a82a54">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#afe20d39cf783335ffbd4926c30a82a54">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#adf4f7b989382278b1e4ede1a299444b6">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#af6cc965e4a5e88ef2ef88c38a5000ef3">VC_CMV_Controller</a>
 </li>
 <li>m_isPeepDetected
 : <a class="el" href="class_main_controller.html#a76b26f9c561d648356e9bd29a455db39">MainController</a>
@@ -265,8 +323,14 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_lastBreathPeriodsMsIndex
 : <a class="el" href="class_main_controller.html#a904746f1931edfd7d3d9dad0d1484dd0">MainController</a>
 </li>
+<li>m_lastCallDate
+: <a class="el" href="class_blower.html#a1874849e9f9719cf434c4efd5298b907">Blower</a>
+</li>
 <li>m_lastEndOfRespirationDateMs
 : <a class="el" href="class_main_controller.html#ae762da13765f168fc75c15508579e575">MainController</a>
+</li>
+<li>m_lastMaxExpiratoryFlow
+: <a class="el" href="class_main_controller.html#affc6b82cb46940c6369e1bb09b3027d2">MainController</a>
 </li>
 <li>m_lastPressureValues
 : <a class="el" href="class_main_controller.html#a455342f081a376b09e8ce92251f37145">MainController</a>
@@ -274,11 +338,58 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_lastPressureValuesIndex
 : <a class="el" href="class_main_controller.html#ae9496a44ed6ab34bf13538d842eb11d9">MainController</a>
 </li>
+<li>m_leakAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a4fdfba2932e4c912446584a715fb984b">MainController</a>
+</li>
+<li>m_leakAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#ab440377abce9058f94f75f2ad3aa0cde">MainController</a>
+</li>
+<li>m_lowExpiratoryMinuteVolumeAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a563559f90fdb927cb4687e6a0764f387">MainController</a>
+</li>
+<li>m_lowExpiratoryMinuteVolumeAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#a4ff922bedab465bdab2e1924274759cb">MainController</a>
+</li>
+<li>m_lowInspiratoryMinuteVolumeAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a50af560c3e5da40e6b080f22345d2e00">MainController</a>
+</li>
+<li>m_lowInspiratoryMinuteVolumeAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#ae7a0f65999dacbc8016fad5ce1763e95">MainController</a>
+</li>
+<li>m_lowRespiratoryRateAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a99332916f3f919d4ee5e950cfd4e6ba1">MainController</a>
+</li>
+<li>m_lowRespiratoryRateAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#afd22a2fee795da492443787c00d39cec">MainController</a>
+</li>
+<li>m_lowTidalVolumeAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#a9a984b81a111d6a5ce64588667527f06">MainController</a>
+</li>
+<li>m_lowTidalVolumeAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#ab7b6b3a0c20a2dcb11aa1e8c0353b29b">MainController</a>
+</li>
+<li>m_maxExpiratoryFlow
+: <a class="el" href="class_main_controller.html#a5f4a371644d90765866684e0d0d82a3d">MainController</a>
+</li>
 <li>m_maxInspiratoryFlow
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a3d44b1e92489e996be464eb77c84f8ac">PC_BIPAP_Controller</a>
+: <a class="el" href="class_main_controller.html#af08057c4f9b292839f04e5ccd6989f3e">MainController</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a28f94f30c32dc6406db2e6eda0fc346f">PC_VSAI_Controller</a>
+, <a class="el" href="class_v_c___c_m_v___controller.html#aa21af5a4cbb784f08b3514727857cb12">VC_CMV_Controller</a>
 </li>
 <li>m_numberOfPressures
 : <a class="el" href="class_main_controller.html#a764fccc8cc127b8f5574875b1ed62e51">MainController</a>
+</li>
+<li>m_patientGender
+: <a class="el" href="class_main_controller.html#aa3e01a22fdf7e732219e1670517085ef">MainController</a>
+</li>
+<li>m_patientHeight
+: <a class="el" href="class_main_controller.html#a692f7e6140fd2679f02d0c0a86113ea3">MainController</a>
+</li>
+<li>m_peakPressureAlarmThresholdCommand
+: <a class="el" href="class_main_controller.html#afdf1335ab45484694891945106d214e7">MainController</a>
+</li>
+<li>m_peakPressureAlarmThresholdNextCommand
+: <a class="el" href="class_main_controller.html#a7eb89c76ac8f310fdeb3f761fe058840">MainController</a>
 </li>
 <li>m_peakPressureCommand
 : <a class="el" href="class_main_controller.html#ad23739f11f2f59c68cb43d27cbc33071">MainController</a>
@@ -302,8 +413,14 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="class_alarm_controller.html#aa42d2ae7ed52f123e4e578620ce93493">AlarmController</a>
 , <a class="el" href="class_main_controller.html#ab386bfa99a21810d16c0e29b9f710899">MainController</a>
 </li>
+<li>m_plateauDurationCommand
+: <a class="el" href="class_main_controller.html#a45c771aa30eccee87b304c0ebb3dd652">MainController</a>
+</li>
 <li>m_plateauDurationMs
 : <a class="el" href="class_main_controller.html#a766567fa302b8e706803f4dbdb797899">MainController</a>
+</li>
+<li>m_plateauDurationNextCommand
+: <a class="el" href="class_main_controller.html#ae69d9b9d127441f1bfd63a9f2d7d3927">MainController</a>
 </li>
 <li>m_PlateauMeasureCount
 : <a class="el" href="class_main_controller.html#a10c4caadda9cded0f0cd187692e82dc0">MainController</a>
@@ -321,8 +438,8 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="class_main_controller.html#abe943c36d5a6a967a74c3c7498545ed9">MainController</a>
 </li>
 <li>m_plateauPressureReached
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a2d42697ebc633fb543a1f3bee7438544">PC_BIPAP_Controller</a>
-, <a class="el" href="class_p_c___c_m_v___controller.html#ae08b52b8cb344b4fa8b5287277781315">PC_CMV_Controller</a>
+: <a class="el" href="class_p_c___c_m_v___controller.html#ae08b52b8cb344b4fa8b5287277781315">PC_CMV_Controller</a>
+, <a class="el" href="class_p_c___v_s_a_i___controller.html#a02c834df1e6f1d7fd766c1c0e2dc5273">PC_VSAI_Controller</a>
 </li>
 <li>m_plateauPressureToDisplay
 : <a class="el" href="class_main_controller.html#ac51b295f48fe3fde1a1dd52576fef946">MainController</a>
@@ -353,7 +470,7 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="class_main_controller.html#a4f94ddf2e339e7194b16d2aa89da9c02">MainController</a>
 </li>
 <li>m_reOpenInspiratoryValve
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#aec5de9c6416edc9ffc993d2e93db5041">PC_BIPAP_Controller</a>
+: <a class="el" href="class_p_c___v_s_a_i___controller.html#a2499dffcb1b4686c772d892fa0b2dd0d">PC_VSAI_Controller</a>
 </li>
 <li>m_rpiWatchdogStep
 : <a class="el" href="class_rpi_watchdog.html#a4f1504b2e82a0cda9af24b2e76592211">RpiWatchdog</a>
@@ -376,6 +493,18 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_sumOfPressures
 : <a class="el" href="class_main_controller.html#a980c4cc825aa7e8c44adf0ac7f81072b">MainController</a>
 </li>
+<li>m_targetFlowMultiplyBy1000
+: <a class="el" href="class_v_c___c_m_v___controller.html#af3a359970d6d77522955a2632394b100">VC_CMV_Controller</a>
+</li>
+<li>m_targetInspiratoryFlowCommand
+: <a class="el" href="class_main_controller.html#ac4a3b0ffb42d7a597c8afdb1fcf2bd24">MainController</a>
+</li>
+<li>m_targetInspiratoryFlowNextCommand
+: <a class="el" href="class_main_controller.html#ab9669e9827863583153e9834e05dcd0f">MainController</a>
+</li>
+<li>m_targetSpeed
+: <a class="el" href="class_blower.html#a4bc48e7e0de6905eaf55b461df6f64d0">Blower</a>
+</li>
 <li>m_tick
 : <a class="el" href="class_alarm_controller.html#a747d2763dad4ae70352cf1fc31b5ce32">AlarmController</a>
 , <a class="el" href="class_main_controller.html#a27a06427747f7d2f1a0c8450ac048a2d">MainController</a>
@@ -389,11 +518,29 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_tidalVolumeAlreadyRead
 : <a class="el" href="class_main_controller.html#aa4a7859dfb421d31baec87521a45c640">MainController</a>
 </li>
+<li>m_tidalVolumeCommand
+: <a class="el" href="class_main_controller.html#a7bde03a4794e3476ec166ae5181952c9">MainController</a>
+</li>
 <li>m_tidalVolumeMeasure
-: <a class="el" href="class_main_controller.html#adfb3e6c4cc7b4013b4310b3c003f53e6">MainController</a>
+: <a class="el" href="class_main_controller.html#a4baeec65d424deb31fc8e0298a90db34">MainController</a>
+</li>
+<li>m_tidalVolumeNextCommand
+: <a class="el" href="class_main_controller.html#aeb81205ba6bf3fb57b20099b921e35d4">MainController</a>
+</li>
+<li>m_tiMaxCommand
+: <a class="el" href="class_main_controller.html#a96a324c92b307e172887524a573b7bd5">MainController</a>
+</li>
+<li>m_tiMaxNextCommand
+: <a class="el" href="class_main_controller.html#a12fd72365ed829375d6967dd2229522f">MainController</a>
 </li>
 <li>m_timeOfLastStopPushed
 : <a class="el" href="class_activation_controller.html#ae53e826b69a5eb471b198c470e86159d">ActivationController</a>
+</li>
+<li>m_tiMinCommand
+: <a class="el" href="class_main_controller.html#a298c895d37ca503df7ad109ca7ff13c7">MainController</a>
+</li>
+<li>m_tiMinNextCommand
+: <a class="el" href="class_main_controller.html#a7ddac23eadb22e2f4ecc7240d4323e09">MainController</a>
 </li>
 <li>m_triggered
 : <a class="el" href="class_main_controller.html#aaef8273edb0ecd411260203a6b0adf41">MainController</a>
@@ -408,7 +555,7 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="class_main_controller.html#af26ee1cafceb1910ef9199fb5ed82446">MainController</a>
 </li>
 <li>m_triggerWindow
-: <a class="el" href="class_p_c___b_i_p_a_p___controller.html#aa5ab9c9a29b68993fc1434ba7d5fd0c4">PC_BIPAP_Controller</a>
+: <a class="el" href="class_p_c___v_s_a_i___controller.html#a82920f0ccd661d11e6a0b6458b848e4f">PC_VSAI_Controller</a>
 </li>
 <li>m_unsnooze
 : <a class="el" href="class_alarm_controller.html#a6745c4201ab3a02eca6b439f4cf79949">AlarmController</a>
@@ -416,8 +563,14 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>m_ventilationController
 : <a class="el" href="class_main_controller.html#a6dd4c4cd88884d53d77e9dc1b1287bf1">MainController</a>
 </li>
+<li>m_ventilationControllerMode
+: <a class="el" href="class_main_controller.html#af3e2209b5bfbfc85f019f750672a0d3c">MainController</a>
+</li>
 <li>m_ventilationControllerNextCommand
 : <a class="el" href="class_main_controller.html#a24cf87b8a5b1eb5b76a0ce0747bb2109">MainController</a>
+</li>
+<li>m_ventilationControllersTable
+: <a class="el" href="class_main_controller.html#ace1ed5c271cb6ca5842050051c159483">MainController</a>
 </li>
 <li>maxApertureAngle
 : <a class="el" href="class_pressure_valve.html#a2814c4fe05bfcc5fe8a45a7f20a7ceda">PressureValve</a>

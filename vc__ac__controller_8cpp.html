@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>software:firmware: includes/pc_bipap_controller.h File Reference</title>
+<title>software:firmware: srcs/vc_ac_controller.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('pc__bipap__controller_8h.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('vc__ac__controller_8cpp.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -83,59 +83,47 @@ $(document).ready(function(){initNavTree('pc__bipap__controller_8h.html',''); in
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">pc_bipap_controller.h File Reference</div>  </div>
+<div class="title">vc_ac_controller.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>PID for BIPAP pressure control.  
+<p>PID for AC volume control.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="parameters_8h_source.html">../includes/parameters.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ventilation__controller_8h_source.html">../includes/ventilation_controller.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="vc__ac__controller_8h_source.html">../includes/vc_ac_controller.h</a>&quot;</code><br />
+<code>#include &quot;Arduino.h&quot;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
+<code>#include &quot;<a class="el" href="main__controller_8h_source.html">../includes/main_controller.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="pressure__valve_8h_source.html">../includes/pressure_valve.h</a>&quot;</code><br />
 </div>
-<p><a href="pc__bipap__controller_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="vc__ac__controller_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_p_c___b_i_p_a_p___controller.html">PC_BIPAP_Controller</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controller for the BIPAP mode.  <a href="class_p_c___b_i_p_a_p___controller.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa10ac5a42fd47e793be0bf52be4f5612"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_p_c___b_i_p_a_p___controller.html">PC_BIPAP_Controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pc__bipap__controller_8h.html#aa10ac5a42fd47e793be0bf52be4f5612">pcBipapController</a></td></tr>
-<tr class="separator:aa10ac5a42fd47e793be0bf52be4f5612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc20f2e0c9b0cf2ca75c0839a0a31500"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_v_c___a_c___controller.html">VC_AC_Controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vc__ac__controller_8cpp.html#acc20f2e0c9b0cf2ca75c0839a0a31500">vcAcController</a></td></tr>
+<tr class="separator:acc20f2e0c9b0cf2ca75c0839a0a31500"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>PID for BIPAP pressure control. </p>
+<div class="textblock"><p>PID for AC volume control. </p>
 <dl class="section author"><dt>Author</dt><dd>Makers For Life </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2020 Makers For Life </dd></dl>
 
-<p class="definition">Definition in file <a class="el" href="pc__bipap__controller_8h_source.html">pc_bipap_controller.h</a>.</p>
+<p class="definition">Definition in file <a class="el" href="vc__ac__controller_8cpp_source.html">vc_ac_controller.cpp</a>.</p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="aa10ac5a42fd47e793be0bf52be4f5612"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa10ac5a42fd47e793be0bf52be4f5612">&#9670;&nbsp;</a></span>pcBipapController</h2>
+<a id="acc20f2e0c9b0cf2ca75c0839a0a31500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc20f2e0c9b0cf2ca75c0839a0a31500">&#9670;&nbsp;</a></span>vcAcController</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_p_c___b_i_p_a_p___controller.html">PC_BIPAP_Controller</a> pcBipapController</td>
+          <td class="memname"><a class="el" href="class_v_c___a_c___controller.html">VC_AC_Controller</a> vcAcController</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pc__bipap__controller_8cpp_source.html#l00023">23</a> of file <a class="el" href="pc__bipap__controller_8cpp_source.html">pc_bipap_controller.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vc__ac__controller_8cpp_source.html#l00024">24</a> of file <a class="el" href="vc__ac__controller_8cpp_source.html">vc_ac_controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -144,7 +132,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_09e761304027c904456130627fd4dcf5.html">includes</a></li><li class="navelem"><a class="el" href="pc__bipap__controller_8h.html">pc_bipap_controller.h</a></li>
+    <li class="navelem"><a class="el" href="dir_b73b02d482d1c4a3db20c3d9ad52d395.html">srcs</a></li><li class="navelem"><a class="el" href="vc__ac__controller_8cpp.html">vc_ac_controller.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

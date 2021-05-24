@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -117,6 +117,9 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 <li>MASS_FLOW_METER_SENSOR
 : <a class="el" href="config_8h.html#a0c9c70a3531afcd41a02fed9165a101d">config.h</a>
 </li>
+<li>MASS_FLOW_METER_SENSOR_EXPI
+: <a class="el" href="config_8h.html#aa2df59598436398ac82cedfb4478a65f">config.h</a>
+</li>
 <li>MASS_FLOW_PERIOD
 : <a class="el" href="mass__flow__meter_8cpp.html#a8482f3a8ee3451c8d00021fcaee69bdd">mass_flow_meter.cpp</a>
 </li>
@@ -160,8 +163,8 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 : <a class="el" href="parameters_8h.html#a1553dd2d9cec0fe98d552592925b59ca">parameters.h</a>
 </li>
 <li>MFM_calibrateZero()
-: <a class="el" href="mass__flow__meter_8h.html#a7efa544160dce7564d2eb3a55e4a88f1">mass_flow_meter.h</a>
-, <a class="el" href="mass__flow__meter_8cpp.html#a7efa544160dce7564d2eb3a55e4a88f1">mass_flow_meter.cpp</a>
+: <a class="el" href="mass__flow__meter_8cpp.html#a7efa544160dce7564d2eb3a55e4a88f1">mass_flow_meter.cpp</a>
+, <a class="el" href="mass__flow__meter_8h.html#a7efa544160dce7564d2eb3a55e4a88f1">mass_flow_meter.h</a>
 </li>
 <li>MFM_CALIBRATION_IMPOSSIBLE
 : <a class="el" href="mass__flow__meter_8h.html#a000015e745158ce746b2d7cccc11dcb4">mass_flow_meter.h</a>
@@ -181,10 +184,21 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 , <a class="el" href="mass__flow__meter_8h.html#ac595b2c181b4284cde65d8e043f55fa4">mass_flow_meter.h</a>
 </li>
 <li>MFM_expi_read_serial_number()
-: <a class="el" href="mass__flow__meter_8h.html#a5d61853862615b62b1f810bf4a893b46">mass_flow_meter.h</a>
+: <a class="el" href="mass__flow__meter_8cpp.html#a5d61853862615b62b1f810bf4a893b46">mass_flow_meter.cpp</a>
+, <a class="el" href="mass__flow__meter_8h.html#a5d61853862615b62b1f810bf4a893b46">mass_flow_meter.h</a>
 </li>
 <li>MFM_expi_reset()
 : <a class="el" href="mass__flow__meter_8cpp.html#aa408af9e64aaa08d432bc567ea6b3aaf">mass_flow_meter.cpp</a>
+</li>
+<li>MFM_force_release_I2C
+: <a class="el" href="mass__flow__meter_8cpp.html#a9ff4d7938cee8ea20b57e3df48b68519">mass_flow_meter.cpp</a>
+, <a class="el" href="mass__flow__meter_8h.html#a9ff4d7938cee8ea20b57e3df48b68519">mass_flow_meter.h</a>
+</li>
+<li>MFM_FORCE_RELEASE_I2C_FALSE
+: <a class="el" href="mass__flow__meter_8h.html#af8f7236ea713a2b8430326a9ef7d8f7a">mass_flow_meter.h</a>
+</li>
+<li>MFM_FORCE_RELEASE_I2C_TRUE
+: <a class="el" href="mass__flow__meter_8h.html#ae70335dc25731143e6fb02509f7c9802">mass_flow_meter.h</a>
 </li>
 <li>MFM_getOffset()
 : <a class="el" href="mass__flow__meter_8cpp.html#a10f72542756fbf92f84b7adfe9d1e1dc">mass_flow_meter.cpp</a>
@@ -223,8 +237,8 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 , <a class="el" href="mass__flow__meter_8h.html#a8c57538fafa739a68c0bffa50409ca37">mass_flow_meter.h</a>
 </li>
 <li>MFM_read_milliliters()
-: <a class="el" href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">mass_flow_meter.h</a>
-, <a class="el" href="mass__flow__meter_8cpp.html#aa5e55b8a3eb4cecd480dd5297afb8526">mass_flow_meter.cpp</a>
+: <a class="el" href="mass__flow__meter_8cpp.html#aa5e55b8a3eb4cecd480dd5297afb8526">mass_flow_meter.cpp</a>
+, <a class="el" href="mass__flow__meter_8h.html#aa5e55b8a3eb4cecd480dd5297afb8526">mass_flow_meter.h</a>
 </li>
 <li>MFM_read_serial_number()
 : <a class="el" href="mass__flow__meter_8cpp.html#a913f4074e9815121d547ffae0f81f720">mass_flow_meter.cpp</a>
@@ -240,14 +254,11 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 <li>MFM_SDP703_02_I2C_ADDRESS
 : <a class="el" href="mass__flow__meter_8h.html#ab7241fcd25e97a9cdd236958a81ccd5a">mass_flow_meter.h</a>
 </li>
-<li>MFM_SENSOR_EXPI_I2C_ADDRESS
-: <a class="el" href="mass__flow__meter_8h.html#ac2ed58905db560de09884a5995985644">mass_flow_meter.h</a>
-</li>
-<li>MFM_SENSOR_I2C_ADDRESS
-: <a class="el" href="mass__flow__meter_8h.html#a70d3f85e0db489b5a9b00846b85277d0">mass_flow_meter.h</a>
-</li>
 <li>MFM_SFM3019
 : <a class="el" href="config_8h.html#a540e6b1321d4e8ca2d052f4ed62e52d9">config.h</a>
+</li>
+<li>MFM_SFM3019_I2C_ADDRESS
+: <a class="el" href="mass__flow__meter_8h.html#a2204b155c9ad7a7bba538c48279f2050">mass_flow_meter.h</a>
 </li>
 <li>MFM_SFM_3300D
 : <a class="el" href="config_8h.html#a079b6f0d2ee5af8c7b99e949222a3696">config.h</a>
@@ -327,6 +338,9 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 <li>mfmResetStateMachine
 : <a class="el" href="mass__flow__meter_8cpp.html#a8da1cfbf86957eaa18f1ca996c547c0a">mass_flow_meter.cpp</a>
 </li>
+<li>mfmSfm3019SerialNumber
+: <a class="el" href="mass__flow__meter_8cpp.html#a101f414fdda0540bab78c1b1cf74d679">mass_flow_meter.cpp</a>
+</li>
 <li>mfmSfm3300SerialNumberExpi
 : <a class="el" href="mass__flow__meter_8cpp.html#ad605b92a68c4497e21e8b6be1ce971bc">mass_flow_meter.cpp</a>
 </li>
@@ -338,6 +352,9 @@ $(document).ready(function(){initNavTree('globals_m.html',''); initResizable(); 
 </li>
 <li>MIN_BLOWER_SPEED
 : <a class="el" href="parameters_8h.html#a9d2b8b8d0ab40857c2d65732708b8782">parameters.h</a>
+</li>
+<li>MIN_EXPIRATORY_FLOW_OFFSET
+: <a class="el" href="parameters_8h.html#a957fad115bf97a9e7ab975b55d7701be">parameters.h</a>
 </li>
 <li>MIN_PRESSURE_NOT_REACHED
 : <a class="el" href="end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a7c7df05e07cc2f85ac22e3195a5c66c8">end_of_line_test.cpp</a>

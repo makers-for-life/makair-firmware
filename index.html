@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -89,10 +89,14 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p><a class="anchor" id="md_CHANGELOG"></a> </p>
 <h1><a class="anchor" id="autotoc_md8"></a>
 unreleased</h1>
+<p><em>Nothing for now</em></p>
+<h1><a class="anchor" id="autotoc_md9"></a>
+v4.0.0</h1>
 <ul>
 <li>drop support of electronic hardware v1 and v2 (<em>from now on, minimum compatibility is from v3</em>)</li>
 <li>refactor main loop and breathing control (<em>breathing-related computations are now triggered by a hardware timer</em>)</li>
-<li>support several breathing modes (<em>PC-CMV stays the default mode, PC-BIPAP was added</em>)</li>
+<li>support several breathing modes (<em>PC-CMV stays the default mode, PC-VSAI and PC-AC were added</em>)</li>
+<li>added volume controlled ventilation modes (<em>VC-CMV and VC-AC were added</em>)</li>
 <li>telemetry protocol v2 was introduced (<em>basically, this means sending more data</em>)</li>
 <li>drop support of useless "qualification" and "integration test" modes (<em>both are superseded by the EOL test feature</em>)</li>
 <li>add a watchdog for the Raspberry Pi (<em>RPi power supply will be restarted if UI misses sending heartbeats</em>)</li>
@@ -102,18 +106,29 @@ unreleased</h1>
 <li>allow to snooze alarms or start/stop breathing using the serial control protocol</li>
 <li>drop support of old valves and pneumatic systems</li>
 <li>make mass flow meter more reliable</li>
+<li>support for SFM mass flow meters (<em>SFM3019 and SFM_3300D</em>)</li>
+<li>added support for a mass flow meter on the expiratory branch (<em>if it is missing, the expiratory flow rate will be estimated using an algorithm</em>)</li>
 <li>turn the green LED on when alarms are snoozed</li>
+<li>added a facility to pre-configure the ventilator settings upon boot, using a patient height setting (<em>submitting the patient height will update all ventilation hyperparameters to optimum values</em>)</li>
+<li>added configurable alarms for pressure and volume modes, adding to all existing alarms</li>
+<li>sending more measured values for display, e.g. respiratory durations and cycles per minute</li>
+<li>a more precise battery voltage value is now sent over the telemetry protocol (<em>this is used for battery SoC estimations</em>)</li>
 <li>display a special message on LCD screen when watchdog reset was triggered</li>
+<li>ability to detect in a reliable way when AC gets off, and that power is switched to battery</li>
 <li>allow to retry pressure calibration when it fails</li>
+<li>added a ramp-up algorithm on the blower speed controller, in order to prevent current surges in the transformer, which could trigger a temporary handover on batteries (<em>this is a security feature, in cases where batteries would be depleted or not connected, the ventilator would suddenly reboot during use</em>)</li>
+<li>added a compilation flag to disable all hardware buttons (<em>this is used for touchscreen-only MakAir devices, i.e. non-traditional ones</em>)</li>
+<li>added basic support for the motherboard V3 EEPROM chip over I2C (<em>disabled by default until stable</em>)</li>
+<li>a lot of potential exceptions due to possible divisions by zero have been fixed</li>
 <li>increase the size of the hardware buffer used by telemetry</li>
 <li>improve Doxygen documentation</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 v3.0.1</h1>
 <ul>
 <li>fix an issue with the optional mass flow meter</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 v3.0.0</h1>
 <ul>
 <li>implement a respiratory trigger (<em>this helps the MakAir to respect the patient respiratory reflexes when he/she starts to wake up; disabled by default</em>)</li>
@@ -130,33 +145,33 @@ v3.0.0</h1>
 <li>add a safety to shutdown system if battery is very low (<em>in this situation, everything might get damaged if not shutdown</em>)</li>
 <li>change some default settings (<em>now, Ppeak starts at 250 mmH2O and Pplateau at 220 mmH2O</em>)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 v1.5.4</h1>
 <ul>
 <li>improve dynamic update of the peak pressure command according to the measured plateau pressure</li>
 <li>fix telemetry bugs</li>
 <li>fix minor bugs</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 v1.5.3</h1>
 <ul>
 <li>warn if pressure is not stable enough at startup</li>
 <li>improve pressure control</li>
 <li>fix a regression (<em>the PPeak+ button was not functioning anymore</em>)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md14"></a>
 v1.5.2</h1>
 <ul>
 <li>improve pressure control</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 v1.5.1</h1>
 <ul>
 <li>calibrate pressure sensor's offset on startup</li>
 <li>better round displayed pressure values (in cmH2O)</li>
 <li>minor improvement to the pressure control</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 v1.5.0</h1>
 <ul>
 <li>rework pressure and blower control (<em>blower will now take more time to ramp up/down but this will greatly improve the stability of injected air volume in many scenario</em>)</li>
@@ -168,16 +183,16 @@ v1.5.0</h1>
 <li>improve code quality (MISRA)</li>
 <li>add a step in integration test to check O2 pipe</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 v1.4.0</h1>
 <p><em>This release was depublished</em></p>
-<h1><a class="anchor" id="autotoc_md17"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 v1.3.2</h1>
 <ul>
 <li>fix blower control (<em>it used to unexpectedly slow down a bit from times to times</em>)</li>
 <li>improve the measured and displayed pressures for peak and plateau</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 v1.3.1</h1>
 <ul>
 <li>use the green LED near the start button to show whether the breathing mode is ON or not</li>
@@ -185,7 +200,7 @@ v1.3.1</h1>
 <li>fix an issue with a battery alarm being briefly triggered at every boot</li>
 <li>integration test: open both valves at startup</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 v1.3.0</h1>
 <ul>
 <li>add a program to test integration</li>
@@ -194,21 +209,21 @@ v1.3.0</h1>
 <li>handle Emerson valves (<em>through a config flag</em>)</li>
 <li>improve the way buzzer is controlled</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md21"></a>
 v1.2.3</h1>
 <ul>
 <li>fix an issue with buzzer (sometimes it was stuck buzzing whereas no alarm were triggered)</li>
 <li>add battery-related alarms</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md22"></a>
 v1.2.2</h1>
 <ul>
 <li>handle several pneumatic systems _(for the first 2 working typologies of prototype)_</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md22"></a>
+<h1><a class="anchor" id="autotoc_md23"></a>
 v1.2.1</h1>
 <p><em>Unreleased</em></p>
-<h1><a class="anchor" id="autotoc_md23"></a>
+<h1><a class="anchor" id="autotoc_md24"></a>
 v1.2.0</h1>
 <p>First release version </p>
 </div></div><!-- PageDoc -->

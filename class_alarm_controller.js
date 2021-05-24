@@ -9,6 +9,7 @@ var class_alarm_controller =
     [ "triggeredAlarms", "class_alarm_controller.html#a6c7b9386cfef61fee8901a869259cfc2", null ],
     [ "unsnooze", "class_alarm_controller.html#ab8c7e9176331c8ea0a4c15162a7197c4", null ],
     [ "updateCoreData", "class_alarm_controller.html#a339afbe676ec0622e4b4fa449bb4b763", null ],
+    [ "updateEnabledAlarms", "class_alarm_controller.html#ab6691464914a4eed77153494d84e4fe3", null ],
     [ "m_alarms", "class_alarm_controller.html#a9ac7c221ac460e79fe5bd361a29ddb8c", null ],
     [ "m_cycle_number", "class_alarm_controller.html#a3c2e4426f82051802ce60057d395c5d3", null ],
     [ "m_highestPriority", "class_alarm_controller.html#ae11063ec546cd92759a8cf91c5a1964d", null ],

@@ -1,5 +1,6 @@
 var class_ventilation_controller =
 [
+    [ "enabledAlarms", "class_ventilation_controller.html#a01091bcf42cfbb6c8689cbebbd3be722", null ],
     [ "endCycle", "class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2", null ],
     [ "exhale", "class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d", null ],
     [ "inhale", "class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4", null ],

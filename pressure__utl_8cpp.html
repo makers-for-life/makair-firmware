@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -114,7 +114,7 @@ Variables</h2></td></tr>
 <tr class="separator:a465063298e1b0547c221cae3dfd1d2d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc337fe4452f7c18d77d4bc830871010"><td class="memItemLeft" align="right" valign="top">static const int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a> = 45</td></tr>
 <tr class="separator:afc337fe4452f7c18d77d4bc830871010"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a960b598fd4aa3ac1ff20706e105d3d0f"><td class="memItemLeft" align="right" valign="top">static const int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> = 8774</td></tr>
+<tr class="memitem:a960b598fd4aa3ac1ff20706e105d3d0f"><td class="memItemLeft" align="right" valign="top">static const int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> = 2238</td></tr>
 <tr class="separator:a960b598fd4aa3ac1ff20706e105d3d0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b032144ceb9da652f14b83db51c30de"><td class="memItemLeft" align="right" valign="top">static const int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a> = 10000</td></tr>
 <tr class="separator:a7b032144ceb9da652f14b83db51c30de"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,27 +151,27 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The pressure in mmH2O </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00038">38</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                                     {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    int32_t rawPressure = <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(sensorValue);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    int32_t delta = rawPressure - <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// Adjust delta so that the division result will be rounded away from zero.</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// This is needed to guaranty that filteredRawPressure will reach</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// rawPressure when it is constant.</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    int32_t rounding = <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a> - 1;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    delta += (delta &gt; 0) ? rounding : -rounding;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> += delta / <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    int16_t scaledRawPressure =</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> * <a class="code" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> / <a class="code" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> scaledRawPressure - <a class="code" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00051">51</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                                                     {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    int32_t rawPressure = <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(sensorValue);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    int32_t delta = rawPressure - <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Adjust delta so that the division result will be rounded away from zero.</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// This is needed to guaranty that filteredRawPressure will reach</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// rawPressure when it is constant.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    int32_t rounding = <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a> - 1;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    delta += (delta &gt; 0) ? rounding : -rounding;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> += delta / <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    int16_t scaledRawPressure =</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> * <a class="code" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> / <a class="code" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> scaledRawPressure - <a class="code" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 <div class="ttc" id="apressure__utl_8cpp_html_a1e6291c8d4c8db1915cbbed9ed686527"><div class="ttname"><a href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a></div><div class="ttdeci">static int32_t filteredRawPressure</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00016">pressure_utl.cpp:16</a></div></div>
 <div class="ttc" id="apressure__utl_8cpp_html_a465063298e1b0547c221cae3dfd1d2d3"><div class="ttname"><a href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_FILTER_DIVIDER</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00018">pressure_utl.cpp:18</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_a7b032144ceb9da652f14b83db51c30de"><div class="ttname"><a href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_DEN</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00034">pressure_utl.cpp:34</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_a960b598fd4aa3ac1ff20706e105d3d0f"><div class="ttname"><a href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_NUM</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00033">pressure_utl.cpp:33</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_afc337fe4452f7c18d77d4bc830871010"><div class="ttname"><a href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a></div><div class="ttdeci">static const int16_t RAW_PRESSURE_TO_MMH20_CONSTANT</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00028">pressure_utl.cpp:28</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_a7b032144ceb9da652f14b83db51c30de"><div class="ttname"><a href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_DEN</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00047">pressure_utl.cpp:47</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_a960b598fd4aa3ac1ff20706e105d3d0f"><div class="ttname"><a href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_NUM</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00046">pressure_utl.cpp:46</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_afc337fe4452f7c18d77d4bc830871010"><div class="ttname"><a href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a></div><div class="ttdeci">static const int16_t RAW_PRESSURE_TO_MMH20_CONSTANT</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00045">pressure_utl.cpp:45</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -193,8 +193,8 @@ Variables</h2></td></tr>
 <p>Reset the value of void filteredRawPressure to 0. </p>
 <dl class="section note"><dt>Note</dt><dd>Mainly for testing purpose </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00055">55</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{ <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> = 0; }</div>
+<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00068">68</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{ <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> = 0; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -267,7 +267,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00028">28</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00045">45</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
 
 </div>
 </div>
@@ -291,7 +291,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00034">34</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00047">47</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
 
 </div>
 </div>
@@ -305,7 +305,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const int32_t RAW_PRESSURE_TO_MMH20_NUM = 8774</td>
+          <td class="memname">const int32_t RAW_PRESSURE_TO_MMH20_NUM = 2238</td>
         </tr>
       </table>
   </td>
@@ -315,7 +315,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00033">33</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pressure__utl_8cpp_source.html#l00046">46</a> of file <a class="el" href="pressure__utl_8cpp_source.html">pressure_utl.cpp</a>.</p>
 
 </div>
 </div>

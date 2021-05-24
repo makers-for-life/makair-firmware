@@ -2,6 +2,7 @@ var class_p_c___c_m_v___controller =
 [
     [ "PC_CMV_Controller", "class_p_c___c_m_v___controller.html#a31cff1f242801ceb49c5ee626cfcaf5f", null ],
     [ "calculateBlowerIncrement", "class_p_c___c_m_v___controller.html#afdd3651614330c78710fcfdfdb6e7792", null ],
+    [ "enabledAlarms", "class_p_c___c_m_v___controller.html#aa19d422a0f532c292c4ee91318e978bd", null ],
     [ "endCycle", "class_p_c___c_m_v___controller.html#afaa4c4fd5da0002293b21308b58f47fd", null ],
     [ "exhale", "class_p_c___c_m_v___controller.html#aac8b62c14e841fd33840086245e9b28e", null ],
     [ "inhale", "class_p_c___c_m_v___controller.html#a835109bc10dd46b32be1df136efa57ed", null ],
@@ -10,6 +11,7 @@ var class_p_c___c_m_v___controller =
     [ "PCinspiratoryPID", "class_p_c___c_m_v___controller.html#af229afd6ef55b2bbc8f64ca3bbb09c40", null ],
     [ "setup", "class_p_c___c_m_v___controller.html#a9043abae6e27276d7f47d2d0a260e65a", null ],
     [ "m_blowerIncrement", "class_p_c___c_m_v___controller.html#ab96dc54a89d17d1e151994da64005602", null ],
+    [ "m_blowerSpeed", "class_p_c___c_m_v___controller.html#a156e4b906a485a65fc86503335091482", null ],
     [ "m_expiratoryPidFastMode", "class_p_c___c_m_v___controller.html#a23c4b2c76892810ab98298e32613516c", null ],
     [ "m_expiratoryPidIntegral", "class_p_c___c_m_v___controller.html#a74407807e49f42655e5f6e0b68f574fb", null ],
     [ "m_expiratoryPidLastError", "class_p_c___c_m_v___controller.html#a06eda6dd342c2d7f94ac8305455c0a11", null ],

@@ -27,21 +27,22 @@ var NAVTREE =
   [ "software:firmware", "index.html", [
     [ "Changelog", "index.html", [
       [ "unreleased", "index.html#autotoc_md8", null ],
-      [ "v3.0.1", "index.html#autotoc_md9", null ],
-      [ "v3.0.0", "index.html#autotoc_md10", null ],
-      [ "v1.5.4", "index.html#autotoc_md11", null ],
-      [ "v1.5.3", "index.html#autotoc_md12", null ],
-      [ "v1.5.2", "index.html#autotoc_md13", null ],
-      [ "v1.5.1", "index.html#autotoc_md14", null ],
-      [ "v1.5.0", "index.html#autotoc_md15", null ],
-      [ "v1.4.0", "index.html#autotoc_md16", null ],
-      [ "v1.3.2", "index.html#autotoc_md17", null ],
-      [ "v1.3.1", "index.html#autotoc_md18", null ],
-      [ "v1.3.0", "index.html#autotoc_md19", null ],
-      [ "v1.2.3", "index.html#autotoc_md20", null ],
-      [ "v1.2.2", "index.html#autotoc_md21", null ],
-      [ "v1.2.1", "index.html#autotoc_md22", null ],
-      [ "v1.2.0", "index.html#autotoc_md23", null ]
+      [ "v4.0.0", "index.html#autotoc_md9", null ],
+      [ "v3.0.1", "index.html#autotoc_md10", null ],
+      [ "v3.0.0", "index.html#autotoc_md11", null ],
+      [ "v1.5.4", "index.html#autotoc_md12", null ],
+      [ "v1.5.3", "index.html#autotoc_md13", null ],
+      [ "v1.5.2", "index.html#autotoc_md14", null ],
+      [ "v1.5.1", "index.html#autotoc_md15", null ],
+      [ "v1.5.0", "index.html#autotoc_md16", null ],
+      [ "v1.4.0", "index.html#autotoc_md17", null ],
+      [ "v1.3.2", "index.html#autotoc_md18", null ],
+      [ "v1.3.1", "index.html#autotoc_md19", null ],
+      [ "v1.3.0", "index.html#autotoc_md20", null ],
+      [ "v1.2.3", "index.html#autotoc_md21", null ],
+      [ "v1.2.2", "index.html#autotoc_md22", null ],
+      [ "v1.2.1", "index.html#autotoc_md23", null ],
+      [ "v1.2.0", "index.html#autotoc_md24", null ]
     ] ],
     [ "How to build and run the tests", "md_test__r_e_a_d_m_e.html", [
       [ "Install Google Test", "md_test__r_e_a_d_m_e.html#autotoc_md1", null ],
@@ -59,7 +60,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ]
@@ -73,7 +74,7 @@ var NAVTREE =
         [ "Variables", "globals_vars.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Enumerator", "globals_eval.html", null ],
-        [ "Macros", "globals_defs.html", null ]
+        [ "Macros", "globals_defs.html", "globals_defs" ]
       ] ]
     ] ]
   ] ]
@@ -82,10 +83,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "activation_8cpp.html",
-"class_main_controller.html#a18052c85000a37e6882bf02e910f73b6",
-"cpu__load_8h.html#a73e94b79a58d269db4831f15073e1e17",
-"mass__flow__meter_8cpp.html#ae3055f89f4e1bf2b72cb4d09c6184652",
-"screen_8h.html#af192399629572fa31bbf5f790e90de4d"
+"class_blower.html#ab38f44d6dfb478cad1a2965ecbd23266",
+"class_p_c___c_m_v___controller.html#ae08b52b8cb344b4fa8b5287277781315",
+"functions_func_t.html",
+"parameters_8h.html#a1ecf94b7110082c59b3823fb0cc5e42c",
+"screen_8h.html#a61be08c2e2ab346aac63942c7624cf7e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

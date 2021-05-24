@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -95,15 +95,18 @@ $(document).ready(function(){initNavTree('main__controller_8h.html',''); initRes
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="alarm__controller_8h_source.html">../includes/alarm_controller.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="battery_8h_source.html">../includes/battery.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="telemetry_8h_source.html">../includes/telemetry.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="blower_8h_source.html">../includes/blower.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="config_8h_source.html">../includes/config.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cycle_8h_source.html">../includes/cycle.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">../includes/debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="parameters_8h_source.html">../includes/parameters.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="pc__bipap__controller_8h_source.html">../includes/pc_bipap_controller.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="pc__ac__controller_8h_source.html">../includes/pc_ac_controller.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="pc__cmv__controller_8h_source.html">../includes/pc_cmv_controller.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="pc__vsai__controller_8h_source.html">../includes/pc_vsai_controller.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="pressure__valve_8h_source.html">../includes/pressure_valve.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="telemetry_8h_source.html">../includes/telemetry.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vc__ac__controller_8h_source.html">../includes/vc_ac_controller.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vc__cmv__controller_8h_source.html">../includes/vc_cmv_controller.h</a>&quot;</code><br />
 </div>
 <p><a href="main__controller_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -115,7 +118,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a9031fac8a40d276c6ca360fe4b8df8ca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main__controller_8h.html#a9031fac8a40d276c6ca360fe4b8df8ca">MAX_PRESSURE_SAMPLES</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memitem:a9031fac8a40d276c6ca360fe4b8df8ca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main__controller_8h.html#a9031fac8a40d276c6ca360fe4b8df8ca">MAX_PRESSURE_SAMPLES</a>&#160;&#160;&#160;10u</td></tr>
 <tr class="memdesc:a9031fac8a40d276c6ca360fe4b8df8ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of values to aggregate when computing plateau pressure.  <a href="main__controller_8h.html#a9031fac8a40d276c6ca360fe4b8df8ca">More...</a><br /></td></tr>
 <tr class="separator:a9031fac8a40d276c6ca360fe4b8df8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -138,7 +141,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_PRESSURE_SAMPLES&#160;&#160;&#160;10</td>
+          <td class="memname">#define MAX_PRESSURE_SAMPLES&#160;&#160;&#160;10u</td>
         </tr>
       </table>
 </div><div class="memdoc">

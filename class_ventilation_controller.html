@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -102,8 +102,11 @@ $(document).ready(function(){initNavTree('class_ventilation_controller.html','')
  <div class="center">
   <img src="class_ventilation_controller.png" usemap="#VentilationController_map" alt=""/>
   <map id="VentilationController_map" name="VentilationController_map">
-<area href="class_p_c___b_i_p_a_p___controller.html" title="Controller for the BIPAP mode." alt="PC_BIPAP_Controller" shape="rect" coords="0,56,135,80"/>
-<area href="class_p_c___c_m_v___controller.html" title="Controller for the CMV mode." alt="PC_CMV_Controller" shape="rect" coords="145,56,280,80"/>
+<area href="class_p_c___c_m_v___controller.html" title="Controller for the CMV mode." alt="PC_CMV_Controller" shape="rect" coords="0,56,129,80"/>
+<area href="class_p_c___v_s_a_i___controller.html" title="Controller for the VSAI mode." alt="PC_VSAI_Controller" shape="rect" coords="139,56,268,80"/>
+<area href="class_v_c___c_m_v___controller.html" title="Controller for the Volume Controled mode." alt="VC_CMV_Controller" shape="rect" coords="278,56,407,80"/>
+<area href="class_p_c___a_c___controller.html" title="Controller for the AC mode." alt="PC_AC_Controller" shape="rect" coords="0,112,129,136"/>
+<area href="class_v_c___a_c___controller.html" title="Controller for the AC mode." alt="VC_AC_Controller" shape="rect" coords="278,112,407,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -124,12 +127,44 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a01c5b93af022ab3eaa7b899e2cb8b1b2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">endCycle</a> ()=0</td></tr>
 <tr class="memdesc:a01c5b93af022ab3eaa7b899e2cb8b1b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the current breathing cycle.  <a href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">More...</a><br /></td></tr>
 <tr class="separator:a01c5b93af022ab3eaa7b899e2cb8b1b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01091bcf42cfbb6c8689cbebbd3be722"><td class="memItemLeft" align="right" valign="top">virtual struct <a class="el" href="struct_alarms.html">Alarms</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ventilation_controller.html#a01091bcf42cfbb6c8689cbebbd3be722">enabledAlarms</a> () const =0</td></tr>
+<tr class="memdesc:a01091bcf42cfbb6c8689cbebbd3be722"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of alarms that must be enabled for this mode.  <a href="class_ventilation_controller.html#a01091bcf42cfbb6c8689cbebbd3be722">More...</a><br /></td></tr>
+<tr class="separator:a01091bcf42cfbb6c8689cbebbd3be722"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract class for ventilation controllers. </p>
 
-<p class="definition">Definition at line <a class="el" href="ventilation__controller_8h_source.html#l00014">14</a> of file <a class="el" href="ventilation__controller_8h_source.html">ventilation_controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ventilation__controller_8h_source.html#l00015">15</a> of file <a class="el" href="ventilation__controller_8h_source.html">ventilation_controller.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a01091bcf42cfbb6c8689cbebbd3be722"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01091bcf42cfbb6c8689cbebbd3be722">&#9670;&nbsp;</a></span>enabledAlarms()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual struct <a class="el" href="struct_alarms.html">Alarms</a> VentilationController::enabledAlarms </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>List of alarms that must be enabled for this mode. </p>
+
+<p>Implemented in <a class="el" href="class_v_c___c_m_v___controller.html#a14e0ba92cfffe80dd65366ead36f697f">VC_CMV_Controller</a>, <a class="el" href="class_v_c___a_c___controller.html#a7031cd0a17685ae5ec75ab496c36bc40">VC_AC_Controller</a>, <a class="el" href="class_p_c___v_s_a_i___controller.html#abee3a5d4c49b09b878eda54aeabd80ee">PC_VSAI_Controller</a>, <a class="el" href="class_p_c___c_m_v___controller.html#aa19d422a0f532c292c4ee91318e978bd">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___a_c___controller.html#ab996b9c863710d5394b6146498f942aa">PC_AC_Controller</a>.</p>
+
+</div>
+</div>
 <a id="a01c5b93af022ab3eaa7b899e2cb8b1b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a01c5b93af022ab3eaa7b899e2cb8b1b2">&#9670;&nbsp;</a></span>endCycle()</h2>
 
@@ -155,7 +190,7 @@ Public Member Functions</h2></td></tr>
 
 <p>End the current breathing cycle. </p>
 
-<p>Implemented in <a class="el" href="class_p_c___c_m_v___controller.html#afaa4c4fd5da0002293b21308b58f47fd">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ab22df4ff241658718e4772b262df0f7e">PC_BIPAP_Controller</a>.</p>
+<p>Implemented in <a class="el" href="class_v_c___c_m_v___controller.html#a325340bc7f1b06ba7626eeea8cc0fb57">VC_CMV_Controller</a>, <a class="el" href="class_p_c___v_s_a_i___controller.html#a6e39c30de4732d4c9932e34e4d19213d">PC_VSAI_Controller</a>, and <a class="el" href="class_p_c___c_m_v___controller.html#afaa4c4fd5da0002293b21308b58f47fd">PC_CMV_Controller</a>.</p>
 
 </div>
 </div>
@@ -184,7 +219,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Control the exhalation. </p>
 
-<p>Implemented in <a class="el" href="class_p_c___c_m_v___controller.html#aac8b62c14e841fd33840086245e9b28e">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a1568a3afeffc1156abb6f08686f67c5b">PC_BIPAP_Controller</a>.</p>
+<p>Implemented in <a class="el" href="class_v_c___c_m_v___controller.html#a6dbe23cac46d24982c2e120ddda5ce51">VC_CMV_Controller</a>, <a class="el" href="class_v_c___a_c___controller.html#ac884e4748097c30570329fb68e815c91">VC_AC_Controller</a>, <a class="el" href="class_p_c___v_s_a_i___controller.html#af347d4b107abfd0ab8909ea52599d1f9">PC_VSAI_Controller</a>, <a class="el" href="class_p_c___c_m_v___controller.html#aac8b62c14e841fd33840086245e9b28e">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___a_c___controller.html#ae97dd53e3e4837904582024470910d90">PC_AC_Controller</a>.</p>
 
 </div>
 </div>
@@ -213,7 +248,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Control the inhalation. </p>
 
-<p>Implemented in <a class="el" href="class_p_c___c_m_v___controller.html#a835109bc10dd46b32be1df136efa57ed">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a251d34a3a52db08d8f6929016adbfff1">PC_BIPAP_Controller</a>.</p>
+<p>Implemented in <a class="el" href="class_v_c___c_m_v___controller.html#af91c37b346eef27387eb0599c1461764">VC_CMV_Controller</a>, <a class="el" href="class_p_c___v_s_a_i___controller.html#a82f0e2f8ff21096b6d6ba57e02f6aa67">PC_VSAI_Controller</a>, and <a class="el" href="class_p_c___c_m_v___controller.html#a835109bc10dd46b32be1df136efa57ed">PC_CMV_Controller</a>.</p>
 
 </div>
 </div>
@@ -242,7 +277,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Begin a new breathing cycle. </p>
 
-<p>Implemented in <a class="el" href="class_p_c___c_m_v___controller.html#a5eae2207ec3b755384b1b0c58a9e9ef1">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___b_i_p_a_p___controller.html#a599c5ab574f288001754f7e6f6991e43">PC_BIPAP_Controller</a>.</p>
+<p>Implemented in <a class="el" href="class_v_c___c_m_v___controller.html#a9653ba5bb10890ab4bd3557477c8805b">VC_CMV_Controller</a>, <a class="el" href="class_p_c___v_s_a_i___controller.html#ac6a66c54d213b325b09ea4e5f08207c0">PC_VSAI_Controller</a>, and <a class="el" href="class_p_c___c_m_v___controller.html#a5eae2207ec3b755384b1b0c58a9e9ef1">PC_CMV_Controller</a>.</p>
 
 </div>
 </div>
@@ -271,7 +306,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Initialize controller. </p>
 
-<p>Implemented in <a class="el" href="class_p_c___c_m_v___controller.html#a9043abae6e27276d7f47d2d0a260e65a">PC_CMV_Controller</a>, and <a class="el" href="class_p_c___b_i_p_a_p___controller.html#ab292e1c207ee63359361a9036a349da9">PC_BIPAP_Controller</a>.</p>
+<p>Implemented in <a class="el" href="class_v_c___c_m_v___controller.html#ac235fbe144c0b99833f0ee85354e5045">VC_CMV_Controller</a>, <a class="el" href="class_p_c___v_s_a_i___controller.html#a15e9722515cf0609e4ee2072b14c2c24">PC_VSAI_Controller</a>, and <a class="el" href="class_p_c___c_m_v___controller.html#a9043abae6e27276d7f47d2d0a260e65a">PC_CMV_Controller</a>.</p>
 
 </div>
 </div>

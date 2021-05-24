@@ -12,14 +12,16 @@ var dir_09e761304027c904456130627fd4dcf5 =
     [ "cpu_load.h", "cpu__load_8h.html", "cpu__load_8h" ],
     [ "cycle.h", "cycle_8h.html", "cycle_8h" ],
     [ "debug.h", "debug_8h.html", "debug_8h" ],
+    [ "eeprom.h", "eeprom_8h.html", null ],
     [ "end_of_line_test.h", "end__of__line__test_8h.html", "end__of__line__test_8h" ],
     [ "keyboard.h", "keyboard_8h.html", "keyboard_8h" ],
     [ "main_controller.h", "main__controller_8h.html", "main__controller_8h" ],
     [ "main_state_machine.h", "main__state__machine_8h.html", "main__state__machine_8h" ],
     [ "mass_flow_meter.h", "mass__flow__meter_8h.html", "mass__flow__meter_8h" ],
     [ "parameters.h", "parameters_8h.html", "parameters_8h" ],
-    [ "pc_bipap_controller.h", "pc__bipap__controller_8h.html", "pc__bipap__controller_8h" ],
+    [ "pc_ac_controller.h", "pc__ac__controller_8h.html", "pc__ac__controller_8h" ],
     [ "pc_cmv_controller.h", "pc__cmv__controller_8h.html", "pc__cmv__controller_8h" ],
+    [ "pc_vsai_controller.h", "pc__vsai__controller_8h.html", "pc__vsai__controller_8h" ],
     [ "pressure.h", "pressure_8h.html", "pressure_8h" ],
     [ "pressure_utl.h", "pressure__utl_8h.html", "pressure__utl_8h" ],
     [ "pressure_valve.h", "pressure__valve_8h.html", "pressure__valve_8h" ],
@@ -27,6 +29,8 @@ var dir_09e761304027c904456130627fd4dcf5 =
     [ "screen.h", "screen_8h.html", "screen_8h" ],
     [ "serial_control.h", "serial__control_8h.html", "serial__control_8h" ],
     [ "telemetry.h", "telemetry_8h.html", "telemetry_8h" ],
+    [ "vc_ac_controller.h", "vc__ac__controller_8h.html", "vc__ac__controller_8h" ],
+    [ "vc_cmv_controller.h", "vc__cmv__controller_8h.html", "vc__cmv__controller_8h" ],
     [ "ventilation_controller.h", "ventilation__controller_8h.html", [
       [ "VentilationController", "class_ventilation_controller.html", "class_ventilation_controller" ]
     ] ]

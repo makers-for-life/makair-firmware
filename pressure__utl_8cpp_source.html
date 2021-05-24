@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -99,49 +99,62 @@ $(document).ready(function(){initNavTree('pressure__utl_8cpp_source.html',''); i
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">   18</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int32_t <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a> = 5;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// Constants used in original conversion formula:</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">//      RATIO_VOLTAGE_DIVIDER = 0.8192</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">//      V_SUPPLY = 5.08</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">//      KPA_MMH2O = 101.97162129779</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// RAW_PRESSURE_TO_MMH20_CONSTANT is computed from original</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// formula as:</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">//      0.04 / 0.09 * KPA_MMH2O</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">   28</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int16_t <a class="code" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a> = 45;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// RAW_PRESSURE_TO_MMH20_NUM / RAW_PRESSURE_TO_MMH20_DEN is computed</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// from original formula as:</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">//      3.3 / 1024.0 / RATIO_VOLTAGE_DIVIDER / V_SUPPLY / 0.09 * KPA_MMH2O</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">   33</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int32_t <a class="code" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> = 8774;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">   34</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int32_t <a class="code" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a> = 10000;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// FUNCTIONS ==================================================================</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#ae54b5404d86a2ddfcd518d42a8f1d35d">   38</a></span>&#160;int16_t <a class="code" href="pressure__utl_8cpp.html#ae54b5404d86a2ddfcd518d42a8f1d35d">convertSensor2Pressure</a>(uint32_t sensorValue) {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    int32_t rawPressure = <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(sensorValue);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    int32_t delta = rawPressure - <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// Adjust delta so that the division result will be rounded away from zero.</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// This is needed to guaranty that filteredRawPressure will reach</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// rawPressure when it is constant.</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    int32_t rounding = <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a> - 1;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    delta += (delta &gt; 0) ? rounding : -rounding;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> += delta / <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// From the datasheet:</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">// Transfer Function (kPa): Vout = VS×(0.09×P + 0.04)</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// VS is 5.05 volt typical on our boards</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// Transfer function for P in mmH2O, with 1 kPa = 101.97162129779 mmH2O</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">// Vout = VS×(0.09×(P/101.9716) + 0.04)</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// P = (101.9716/0.09)×(Vout/VS-0.04)</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// P(mmH20) = 1133(Vout/VS) - 45</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// The offset really depend on the sensor itself with a great variation</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// There must be a calibration sequence to set the zero.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// VS is 5.05V.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// There is a voltage divider in between Vout and Vadc</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// Vadc = 68/83 Vout</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// With current ADC (12 bits), and mean Vref=3.348V:</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// Vadc = 3.348 * RawAdc/4096 = 0,000817382 * RawAdc</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// Vout = 83/68 * 0,000817382 * RawAdc</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// Vout = 0,000997686 * RawAdc</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// Put it together:</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// P(mmH20) = 1133((0,000997686 * RawAdc)/5.05) - 45</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// P(mmH20) = 0,223837466 * RawAdc - 45</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">   45</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int16_t <a class="code" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a> = 45;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">   46</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int32_t <a class="code" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> = 2238;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">   47</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> int32_t <a class="code" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a> = 10000;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    int16_t scaledRawPressure =</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> * <a class="code" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> / <a class="code" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> scaledRawPressure - <a class="code" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// cppcheck-suppress unusedFunction</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a0f811d290b007099913bf8c1c46bce10">   55</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="pressure__utl_8cpp.html#a0f811d290b007099913bf8c1c46bce10">resetFilteredRawPressure</a>() { <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> = 0; }</div>
-<div class="ttc" id="apressure__utl_8cpp_html_a0f811d290b007099913bf8c1c46bce10"><div class="ttname"><a href="pressure__utl_8cpp.html#a0f811d290b007099913bf8c1c46bce10">resetFilteredRawPressure</a></div><div class="ttdeci">void resetFilteredRawPressure()</div><div class="ttdoc">Reset the value of void filteredRawPressure to 0.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00055">pressure_utl.cpp:55</a></div></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// FUNCTIONS ==================================================================</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#ae54b5404d86a2ddfcd518d42a8f1d35d">   51</a></span>&#160;int16_t <a class="code" href="pressure__utl_8cpp.html#ae54b5404d86a2ddfcd518d42a8f1d35d">convertSensor2Pressure</a>(uint32_t sensorValue) {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    int32_t rawPressure = <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(sensorValue);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    int32_t delta = rawPressure - <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Adjust delta so that the division result will be rounded away from zero.</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// This is needed to guaranty that filteredRawPressure will reach</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// rawPressure when it is constant.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    int32_t rounding = <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a> - 1;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    delta += (delta &gt; 0) ? rounding : -rounding;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> += delta / <a class="code" href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    int16_t scaledRawPressure =</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> * <a class="code" href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a> / <a class="code" href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> scaledRawPressure - <a class="code" href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// cppcheck-suppress unusedFunction</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="pressure__utl_8cpp.html#a0f811d290b007099913bf8c1c46bce10">   68</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="pressure__utl_8cpp.html#a0f811d290b007099913bf8c1c46bce10">resetFilteredRawPressure</a>() { <a class="code" href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a> = 0; }</div>
+<div class="ttc" id="apressure__utl_8cpp_html_a0f811d290b007099913bf8c1c46bce10"><div class="ttname"><a href="pressure__utl_8cpp.html#a0f811d290b007099913bf8c1c46bce10">resetFilteredRawPressure</a></div><div class="ttdeci">void resetFilteredRawPressure()</div><div class="ttdoc">Reset the value of void filteredRawPressure to 0.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00068">pressure_utl.cpp:68</a></div></div>
 <div class="ttc" id="apressure__utl_8cpp_html_a1e6291c8d4c8db1915cbbed9ed686527"><div class="ttname"><a href="pressure__utl_8cpp.html#a1e6291c8d4c8db1915cbbed9ed686527">filteredRawPressure</a></div><div class="ttdeci">static int32_t filteredRawPressure</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00016">pressure_utl.cpp:16</a></div></div>
 <div class="ttc" id="apressure__utl_8cpp_html_a465063298e1b0547c221cae3dfd1d2d3"><div class="ttname"><a href="pressure__utl_8cpp.html#a465063298e1b0547c221cae3dfd1d2d3">RAW_PRESSURE_FILTER_DIVIDER</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_FILTER_DIVIDER</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00018">pressure_utl.cpp:18</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_a7b032144ceb9da652f14b83db51c30de"><div class="ttname"><a href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_DEN</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00034">pressure_utl.cpp:34</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_a960b598fd4aa3ac1ff20706e105d3d0f"><div class="ttname"><a href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_NUM</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00033">pressure_utl.cpp:33</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_ae54b5404d86a2ddfcd518d42a8f1d35d"><div class="ttname"><a href="pressure__utl_8cpp.html#ae54b5404d86a2ddfcd518d42a8f1d35d">convertSensor2Pressure</a></div><div class="ttdeci">int16_t convertSensor2Pressure(uint32_t sensorValue)</div><div class="ttdoc">Convert the analog value from sensor to a pressure value.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00038">pressure_utl.cpp:38</a></div></div>
-<div class="ttc" id="apressure__utl_8cpp_html_afc337fe4452f7c18d77d4bc830871010"><div class="ttname"><a href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a></div><div class="ttdeci">static const int16_t RAW_PRESSURE_TO_MMH20_CONSTANT</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00028">pressure_utl.cpp:28</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_a7b032144ceb9da652f14b83db51c30de"><div class="ttname"><a href="pressure__utl_8cpp.html#a7b032144ceb9da652f14b83db51c30de">RAW_PRESSURE_TO_MMH20_DEN</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_DEN</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00047">pressure_utl.cpp:47</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_a960b598fd4aa3ac1ff20706e105d3d0f"><div class="ttname"><a href="pressure__utl_8cpp.html#a960b598fd4aa3ac1ff20706e105d3d0f">RAW_PRESSURE_TO_MMH20_NUM</a></div><div class="ttdeci">static const int32_t RAW_PRESSURE_TO_MMH20_NUM</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00046">pressure_utl.cpp:46</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_ae54b5404d86a2ddfcd518d42a8f1d35d"><div class="ttname"><a href="pressure__utl_8cpp.html#ae54b5404d86a2ddfcd518d42a8f1d35d">convertSensor2Pressure</a></div><div class="ttdeci">int16_t convertSensor2Pressure(uint32_t sensorValue)</div><div class="ttdoc">Convert the analog value from sensor to a pressure value.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00051">pressure_utl.cpp:51</a></div></div>
+<div class="ttc" id="apressure__utl_8cpp_html_afc337fe4452f7c18d77d4bc830871010"><div class="ttname"><a href="pressure__utl_8cpp.html#afc337fe4452f7c18d77d4bc830871010">RAW_PRESSURE_TO_MMH20_CONSTANT</a></div><div class="ttdeci">static const int16_t RAW_PRESSURE_TO_MMH20_CONSTANT</div><div class="ttdef"><b>Definition:</b> <a href="pressure__utl_8cpp_source.html#l00045">pressure_utl.cpp:45</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -102,8 +102,8 @@ $(document).ready(function(){initNavTree('alarm__controller_8cpp.html',''); init
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad55d50cca187507c63183c393597dcd2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alarm__controller_8cpp.html#ad55d50cca187507c63183c393597dcd2">compare</a> (uint8_t a, uint8_t b)</td></tr>
-<tr class="separator:ad55d50cca187507c63183c393597dcd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6c3515b36442b30a03e09c47cb90b03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alarm__controller_8cpp.html#ac6c3515b36442b30a03e09c47cb90b03">compare</a> (uint8_t a, uint8_t b)</td></tr>
+<tr class="separator:ac6c3515b36442b30a03e09c47cb90b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -118,14 +118,14 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="alarm__controller_8cpp_source.html">alarm_controller.cpp</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ad55d50cca187507c63183c393597dcd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad55d50cca187507c63183c393597dcd2">&#9670;&nbsp;</a></span>compare()</h2>
+<a id="ac6c3515b36442b30a03e09c47cb90b03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6c3515b36442b30a03e09c47cb90b03">&#9670;&nbsp;</a></span>compare()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int compare </td>
+          <td class="memname">bool compare </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>a</em>, </td>
@@ -144,24 +144,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="alarm__controller_8cpp_source.html#l00180">180</a> of file <a class="el" href="alarm__controller_8cpp_source.html">alarm_controller.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                                  {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keywordtype">int</span> result = 0;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordflow">if</span> (a == b) {</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        result = 0;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (a == 0u) {</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        result = 1;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (b == 0u) {</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        result = -1;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (a &lt; b) {</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        result = -1;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        result = 1;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    }</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="alarm__controller_8cpp_source.html#l00239">239</a> of file <a class="el" href="alarm__controller_8cpp_source.html">alarm_controller.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;{ <span class="keywordflow">return</span> a &gt; b; }</div>
 </div><!-- fragment -->
 </div>
 </div>

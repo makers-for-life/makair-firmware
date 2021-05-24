@@ -10,6 +10,7 @@ var mass__flow__meter_8cpp =
     [ "MFM_calibrateZero", "mass__flow__meter_8cpp.html#a7efa544160dce7564d2eb3a55e4a88f1", null ],
     [ "MFM_expi_read_airflow", "mass__flow__meter_8cpp.html#a993a4d096b5f0dc6a343b22afd4eb496", null ],
     [ "MFM_expi_read_milliliters", "mass__flow__meter_8cpp.html#ac595b2c181b4284cde65d8e043f55fa4", null ],
+    [ "MFM_expi_read_serial_number", "mass__flow__meter_8cpp.html#a5d61853862615b62b1f810bf4a893b46", null ],
     [ "MFM_expi_reset", "mass__flow__meter_8cpp.html#aa408af9e64aaa08d432bc567ea6b3aaf", null ],
     [ "MFM_getOffset", "mass__flow__meter_8cpp.html#a10f72542756fbf92f84b7adfe9d1e1dc", null ],
     [ "MFM_init", "mass__flow__meter_8cpp.html#af5cf7a9a29193209b4063ff77d2b85b0", null ],
@@ -21,6 +22,7 @@ var mass__flow__meter_8cpp =
     [ "c", "mass__flow__meter_8cpp.html#a4ff0c932d8f5d13f0af9d12f67972c76", null ],
     [ "i", "mass__flow__meter_8cpp.html#a78f7a37dba921e0b0347b960fb40bc51", null ],
     [ "massFlowTimer", "mass__flow__meter_8cpp.html#a5447c7ea09d250d2f6a3e302d08de8ab", null ],
+    [ "MFM_force_release_I2C", "mass__flow__meter_8cpp.html#a9ff4d7938cee8ea20b57e3df48b68519", null ],
     [ "mfmExpiratoryAirVolumeSumMilliliters", "mass__flow__meter_8cpp.html#a3038f22500d14ea16254451cf538ef3c", null ],
     [ "mfmExpiratoryCalibrationOffset", "mass__flow__meter_8cpp.html#a5a4a99b03a89d4fedb214d47409858ac", null ],
     [ "mfmExpiratoryInstantAirFlow", "mass__flow__meter_8cpp.html#a52d2212f29a4c641a3fa68888e6b2eba", null ],
@@ -40,6 +42,7 @@ var mass__flow__meter_8cpp =
     [ "mfmInspiratorySensorDetected", "mass__flow__meter_8cpp.html#ace683f19098e3a7b47f37a0135e38659", null ],
     [ "mfmLastData", "mass__flow__meter_8cpp.html#a255c9f29401c20768a0e8286a34155f0", null ],
     [ "mfmResetStateMachine", "mass__flow__meter_8cpp.html#a8da1cfbf86957eaa18f1ca996c547c0a", null ],
+    [ "mfmSfm3019SerialNumber", "mass__flow__meter_8cpp.html#a101f414fdda0540bab78c1b1cf74d679", null ],
     [ "mfmSfm3300SerialNumberExpi", "mass__flow__meter_8cpp.html#ad605b92a68c4497e21e8b6be1ce971bc", null ],
     [ "si", "mass__flow__meter_8cpp.html#a98bcf66e30d8d21d4376b7edc623dc11", null ]
 ];

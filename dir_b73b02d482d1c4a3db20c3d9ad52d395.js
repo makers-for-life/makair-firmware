@@ -10,13 +10,15 @@ var dir_b73b02d482d1c4a3db20c3d9ad52d395 =
     [ "buzzer_control.cpp", "buzzer__control_8cpp.html", "buzzer__control_8cpp" ],
     [ "calibration.cpp", "calibration_8cpp.html", "calibration_8cpp" ],
     [ "cpu_load.cpp", "cpu__load_8cpp.html", "cpu__load_8cpp" ],
+    [ "eeprom.cpp", "eeprom_8cpp.html", null ],
     [ "end_of_line_test.cpp", "end__of__line__test_8cpp.html", "end__of__line__test_8cpp" ],
     [ "keyboard.cpp", "keyboard_8cpp.html", "keyboard_8cpp" ],
     [ "main_controller.cpp", "main__controller_8cpp.html", "main__controller_8cpp" ],
     [ "main_state_machine.cpp", "main__state__machine_8cpp.html", "main__state__machine_8cpp" ],
     [ "mass_flow_meter.cpp", "mass__flow__meter_8cpp.html", "mass__flow__meter_8cpp" ],
-    [ "pc_bipap_controller.cpp", "pc__bipap__controller_8cpp.html", "pc__bipap__controller_8cpp" ],
+    [ "pc_ac_controller.cpp", "pc__ac__controller_8cpp.html", "pc__ac__controller_8cpp" ],
     [ "pc_cmv_controller.cpp", "pc__cmv__controller_8cpp.html", "pc__cmv__controller_8cpp" ],
+    [ "pc_vsai_controller.cpp", "pc__vsai__controller_8cpp.html", "pc__vsai__controller_8cpp" ],
     [ "pressure.cpp", "pressure_8cpp.html", "pressure_8cpp" ],
     [ "pressure_utl.cpp", "pressure__utl_8cpp.html", "pressure__utl_8cpp" ],
     [ "pressure_valve.cpp", "pressure__valve_8cpp.html", "pressure__valve_8cpp" ],
@@ -25,5 +27,7 @@ var dir_b73b02d482d1c4a3db20c3d9ad52d395 =
     [ "screen.cpp", "screen_8cpp.html", "screen_8cpp" ],
     [ "serial_control.cpp", "serial__control_8cpp.html", "serial__control_8cpp" ],
     [ "sysclock.cpp", "sysclock_8cpp.html", "sysclock_8cpp" ],
-    [ "telemetry.cpp", "telemetry_8cpp.html", "telemetry_8cpp" ]
+    [ "telemetry.cpp", "telemetry_8cpp.html", "telemetry_8cpp" ],
+    [ "vc_ac_controller.cpp", "vc__ac__controller_8cpp.html", "vc__ac__controller_8cpp" ],
+    [ "vc_cmv_controller.cpp", "vc__cmv__controller_8cpp.html", "vc__cmv__controller_8cpp" ]
 ];

@@ -1,8 +1,10 @@
 var alarm__controller_8h =
 [
+    [ "Alarms", "struct_alarms.html", "struct_alarms" ],
     [ "AlarmController", "class_alarm_controller.html", "class_alarm_controller" ],
     [ "ALARMS_SIZE", "alarm__controller_8h.html#ac4707f9e5fae63a64a4fe478080ee79a", null ],
     [ "RCM_SW_1", "alarm__controller_8h.html#a6f0e2663c71ee9c927b0b8953653a19d", null ],
+    [ "RCM_SW_10", "alarm__controller_8h.html#af9fc27aebad3df43dbfe533de2cf2bd4", null ],
     [ "RCM_SW_11", "alarm__controller_8h.html#a03e19e548bcc92ec6001123a11a8a382", null ],
     [ "RCM_SW_12", "alarm__controller_8h.html#a1497e010dd3f29fac815e898967b6d75", null ],
     [ "RCM_SW_14", "alarm__controller_8h.html#a7f26d70532c7edb3925168944c75743c", null ],
@@ -11,6 +13,16 @@ var alarm__controller_8h =
     [ "RCM_SW_18", "alarm__controller_8h.html#a4ee855bb82cc8f27f2d4d32760ed4ff7", null ],
     [ "RCM_SW_19", "alarm__controller_8h.html#a51f1a16f7aa1fbef996f317abdd5ccc5", null ],
     [ "RCM_SW_2", "alarm__controller_8h.html#ac5bb0104101d427d99efad978abce54d", null ],
+    [ "RCM_SW_20", "alarm__controller_8h.html#a041efb4325db52efc386065afbc72a86", null ],
+    [ "RCM_SW_21", "alarm__controller_8h.html#ab0a9d60736b6132b2a8b8fe562c66ea2", null ],
+    [ "RCM_SW_22", "alarm__controller_8h.html#ad2682cbada99ab820564dacb7fc9f0cd", null ],
+    [ "RCM_SW_23", "alarm__controller_8h.html#a4f9d8f8016c39836b9624358bb5f7141", null ],
     [ "RCM_SW_3", "alarm__controller_8h.html#a31da61aeec4d3cdcb2707710d7131d5e", null ],
+    [ "RCM_SW_4", "alarm__controller_8h.html#a932bd7a86b86816029e46ac1eaec3dba", null ],
+    [ "RCM_SW_5", "alarm__controller_8h.html#a4c8da6ef1238fcbef73dd11443730564", null ],
+    [ "RCM_SW_6", "alarm__controller_8h.html#a5b324762db12455b9f85f3e2cd139240", null ],
+    [ "RCM_SW_7", "alarm__controller_8h.html#afec61ae4ebd68975ced0294f9f0317a2", null ],
+    [ "RCM_SW_8", "alarm__controller_8h.html#a926d8d316410f985e6f6507bf1581de8", null ],
+    [ "RCM_SW_9", "alarm__controller_8h.html#a752791738c356d728e35626e375b74af", null ],
     [ "alarmController", "alarm__controller_8h.html#a3da8ff857dba84bdd627e51a2544604b", null ]
 ];

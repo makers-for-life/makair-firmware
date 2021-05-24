@@ -27,7 +27,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">software:firmware
    </div>
-   <div id="projectbrief">Software Firmware (MakAir — Covid-19 Respirator)</div>
+   <div id="projectbrief">MakAir Firmware</div>
   </td>
  </tr>
  </tbody>
@@ -89,29 +89,34 @@ $(document).ready(function(){initNavTree('ventilation__controller_8h_source.html
 <a href="ventilation__controller_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;../includes/parameters.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// = 0 means that the method is not implemented in this class</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html">   14</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_ventilation_controller.html">VentilationController</a> {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#ad11fb8bf9512fe144a3e61f288be2cfd">   17</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#ad11fb8bf9512fe144a3e61f288be2cfd">setup</a>() = 0;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#abe6c44ce183edca775acd823fa1022cd">   20</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#abe6c44ce183edca775acd823fa1022cd">initCycle</a>() = 0;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4">   23</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4">inhale</a>() = 0;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d">   26</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d">exhale</a>() = 0;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">   29</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">endCycle</a>() = 0;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
-<div class="ttc" id="aclass_ventilation_controller_html"><div class="ttname"><a href="class_ventilation_controller.html">VentilationController</a></div><div class="ttdoc">Abstract class for ventilation controllers.</div><div class="ttdef"><b>Definition:</b> <a href="ventilation__controller_8h_source.html#l00014">ventilation_controller.h:14</a></div></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;../includes/alarm_controller.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;../includes/parameters.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">// = 0 means that the method is not implemented in this class</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_ventilation_controller.html">VentilationController</a> {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#ad11fb8bf9512fe144a3e61f288be2cfd">   18</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#ad11fb8bf9512fe144a3e61f288be2cfd">setup</a>() = 0;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#abe6c44ce183edca775acd823fa1022cd">   21</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#abe6c44ce183edca775acd823fa1022cd">initCycle</a>() = 0;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4">   24</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4">inhale</a>() = 0;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d">   27</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d">exhale</a>() = 0;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="class_ventilation_controller.html#a01091bcf42cfbb6c8689cbebbd3be722">   30</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">endCycle</a>() = 0;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">struct </span><a class="code" href="struct_alarms.html">Alarms</a> <a class="code" href="class_ventilation_controller.html#a01091bcf42cfbb6c8689cbebbd3be722">enabledAlarms</a>() const = 0;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="ttc" id="aclass_ventilation_controller_html"><div class="ttname"><a href="class_ventilation_controller.html">VentilationController</a></div><div class="ttdoc">Abstract class for ventilation controllers.</div><div class="ttdef"><b>Definition:</b> <a href="ventilation__controller_8h_source.html#l00015">ventilation_controller.h:15</a></div></div>
+<div class="ttc" id="aclass_ventilation_controller_html_a01091bcf42cfbb6c8689cbebbd3be722"><div class="ttname"><a href="class_ventilation_controller.html#a01091bcf42cfbb6c8689cbebbd3be722">VentilationController::enabledAlarms</a></div><div class="ttdeci">virtual struct Alarms enabledAlarms() const =0</div><div class="ttdoc">List of alarms that must be enabled for this mode.</div></div>
 <div class="ttc" id="aclass_ventilation_controller_html_a01c5b93af022ab3eaa7b899e2cb8b1b2"><div class="ttname"><a href="class_ventilation_controller.html#a01c5b93af022ab3eaa7b899e2cb8b1b2">VentilationController::endCycle</a></div><div class="ttdeci">virtual void endCycle()=0</div><div class="ttdoc">End the current breathing cycle.</div></div>
 <div class="ttc" id="aclass_ventilation_controller_html_ab72a0f6dee5db97a0bbb03448dea0b0d"><div class="ttname"><a href="class_ventilation_controller.html#ab72a0f6dee5db97a0bbb03448dea0b0d">VentilationController::exhale</a></div><div class="ttdeci">virtual void exhale()=0</div><div class="ttdoc">Control the exhalation.</div></div>
 <div class="ttc" id="aclass_ventilation_controller_html_abe6c44ce183edca775acd823fa1022cd"><div class="ttname"><a href="class_ventilation_controller.html#abe6c44ce183edca775acd823fa1022cd">VentilationController::initCycle</a></div><div class="ttdeci">virtual void initCycle()=0</div><div class="ttdoc">Begin a new breathing cycle.</div></div>
 <div class="ttc" id="aclass_ventilation_controller_html_ac97bb6c605f4c9ec40e46fc0f2f055e4"><div class="ttname"><a href="class_ventilation_controller.html#ac97bb6c605f4c9ec40e46fc0f2f055e4">VentilationController::inhale</a></div><div class="ttdeci">virtual void inhale()=0</div><div class="ttdoc">Control the inhalation.</div></div>
 <div class="ttc" id="aclass_ventilation_controller_html_ad11fb8bf9512fe144a3e61f288be2cfd"><div class="ttname"><a href="class_ventilation_controller.html#ad11fb8bf9512fe144a3e61f288be2cfd">VentilationController::setup</a></div><div class="ttdeci">virtual void setup()=0</div><div class="ttdoc">Initialize controller.</div></div>
+<div class="ttc" id="astruct_alarms_html"><div class="ttname"><a href="struct_alarms.html">Alarms</a></div><div class="ttdoc">List of alarms (named by their code)</div><div class="ttdef"><b>Definition:</b> <a href="alarm__controller_8h_source.html#l00045">alarm_controller.h:45</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
