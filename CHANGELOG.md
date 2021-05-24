@@ -2,6 +2,10 @@
 
 ## unreleased
 
+_Nothing for now_
+
+## v4.0.0
+
 - drop support of electronic hardware v1 and v2
   (_from now on, minimum compatibility is from v3_)
 - refactor main loop and breathing control
