@@ -30,6 +30,8 @@ Code documentation can be [found there](https://makers-for-life.github.io/makair
 
 ## How To Build?
 
+First, make sure `arduino-cli` is installed on your system. The supported version is `0.9.0`. _Newer versions are known to cause issues with compiling the firmware code._
+
 In order to setup your environment and build the code, please follow the following commands (for MacOS):
 
 1. `brew install arduino-cli`
