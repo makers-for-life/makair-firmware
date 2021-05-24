@@ -10,3 +10,7 @@
 /*.ods#
 build/*
 .scannerwork
+
+flash.sh
+
+srcs/srcs.ino

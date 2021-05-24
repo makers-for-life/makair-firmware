@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../includes/alarm_controller.h"
 #include "../includes/parameters.h"
 
 /// Abstract class for ventilation controllers
@@ -27,6 +28,9 @@ class VentilationController {
 
     /// End the current breathing cycle
     virtual void endCycle() = 0;
+
+    /// List of alarms that must be enabled for this mode
+    virtual struct Alarms enabledAlarms() const = 0;
 
  private:
 };

@@ -15,13 +15,13 @@
 #include "../includes/keyboard.h"
 
 // External
-#include "../includes/config.h"
 #include <OneButton.h>
 
 // Internal
 #include "../includes/activation.h"
 #include "../includes/buzzer.h"
 #include "../includes/calibration.h"
+#include "../includes/config.h"
 #include "../includes/debug.h"
 #include "../includes/main_controller.h"
 #include "../includes/parameters.h"
@@ -221,10 +221,12 @@ void scanMatrixLoop() {
 }
 
 void keyboardLoop() {
+#ifndef DISABLE_BUTTONS
     scanMatrixLoop();
     buttonAlarmOff.tick();
     buttonStart.tick();
     buttonStop.tick();
+#endif
 }
 
 // cppcheck-suppress unusedFunction

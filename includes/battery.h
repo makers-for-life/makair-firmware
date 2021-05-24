@@ -17,52 +17,52 @@
  * RawValue = (Vbat*0.1087)*1024/3.348
  * So, Vbat = RawValue * (3.348/(1024*0.1087))
  *
- * 1 bit = 3.348/(1024*0.1087) = 30.07mV
+ * 1 bit = 3.348/(4096*0.1087) = 7.5mV
  */
-#define RAW_BATTERY_MULTIPLIER 0.0300784843606
+#define RAW_BATTERY_MULTIPLIER 0.0075196210
 
 /**
  * Expected voltage in volts when power cord is plugged
  * 27,4 V => 27,4 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_MAINS 907
+#define RAW_VOLTAGE_MAINS 3643u
 
 /**
  * RCM_SW_16
  * Expected voltage in volts when power cord is unplugged
  *  = 27 => 27 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_HIGH 897u
+#define RAW_VOLTAGE_ON_BATTERY_HIGH 3590u
 
 /**
  * Hysteresis is used to prevent fast switching when voltage is at the limit of 2 states
  *  analogRead(PIN) * RAW_BATTERY_MULTIPLIER = 0,1 => 0,1 / RAW_BATTERY_MULTIPLIER = 3
  */
-#define RAW_VOLTAGE_HYSTERESIS 3u
+#define RAW_VOLTAGE_HYSTERESIS 12u
 
 /**
  * RCM_SW_11
- *  = 24,6 => 24,6 / RAW_BATTERY_MULTIPLIER
+ *  = 23,2 => 23,2 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY 817u
+#define RAW_VOLTAGE_ON_BATTERY 3085u
 
 /**
  * RCM_SW_12
- *  = 24 => 24 / RAW_BATTERY_MULTIPLIER
+ *  = 22,6 => 22,6 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_LOW 797u
+#define RAW_VOLTAGE_ON_BATTERY_LOW 3005u
 
 /**
  * Below this value, the machine wont start
  *  = 22 => 22 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 731u
+#define RAW_VOLTAGE_ON_BATTERY_NOT_STARTING_THRESHOLD 3191u
 
 /**
  * Below this value, the machine will stop immediately
  *  = 20 => 20 / RAW_BATTERY_MULTIPLIER
  */
-#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 664u
+#define RAW_VOLTAGE_ON_BATTERY_STOP_THRESHOLD 2660u
 
 /// Number of samples of the moving average
 #define BATTERY_MAX_SAMPLES 20u

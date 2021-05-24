@@ -11,7 +11,7 @@
 #include "../includes/ventilation_controller.h"
 
 /// Controller for the CMV mode
-class PC_CMV_Controller final : public VentilationController {
+class PC_CMV_Controller : public VentilationController {
  public:
     /// Default constructor
     PC_CMV_Controller();
@@ -30,6 +30,16 @@ class PC_CMV_Controller final : public VentilationController {
 
     /// End the current breathing cycle
     void endCycle() override;
+
+    /// List of alarms that must be enabled for this mode
+    struct Alarms enabledAlarms() const override {
+        struct Alarms a = {RCM_SW_1,  RCM_SW_2,  RCM_SW_3,  RCM_SW_4,  RCM_SW_5,
+                           RCM_SW_6,  RCM_SW_7,  0u,  0u,        0u,
+                           RCM_SW_11, RCM_SW_12, RCM_SW_14, RCM_SW_15, RCM_SW_16,
+                           RCM_SW_18, RCM_SW_19, RCM_SW_20, RCM_SW_21, RCM_SW_22,
+                           RCM_SW_23};
+        return a;
+    }
 
  private:
     /// Determine the blower speed to adopt for next cycle
@@ -59,14 +69,14 @@ class PC_CMV_Controller final : public VentilationController {
      */
     int32_t PCexpiratoryPID(int32_t targetPressure, int32_t currentPressure, int32_t dt);
 
+    /// Current blower speed
+    uint16_t m_blowerSpeed;
+
     /// Current blower speed increment (to apply at the beginning of the next cycle)
     int32_t m_blowerIncrement;
 
     /// Error of the last computation of the blower PID
     int32_t m_inspiratoryPidIntegral;
-
-    /// Error of the last computation of the blower PID
-    int32_t m_inspiratoryPidLastError;
 
     /// Fast mode at start of expiration
     bool m_expiratoryPidFastMode;
@@ -83,20 +93,19 @@ class PC_CMV_Controller final : public VentilationController {
     /// Last aperture of the blower valve
     int32_t m_expiratoryValveLastAperture;
 
-    /// Error of the last computation of the patient PID
+    /// Error of the last computation of the expiratory PID
     int32_t m_expiratoryPidLastError;
-
-    /// Last errors in inspiratory PID
-    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-
-    /// Last error index in inspiratory PID
-    int32_t m_inspiratoryPidLastErrorsIndex;
-
     /// Last errors in expiratory PID
     int32_t m_expiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
-
-    /// Last error index in expiratory PID
+    /// Last error index in inspiratory PID
     int32_t m_expiratoryPidLastErrorsIndex;
+
+    /// Error of the last computation of the expiratory PID
+    int32_t m_inspiratoryPidLastError;
+    /// Last errors in inspiratory PID
+    int32_t m_inspiratoryPidLastErrors[PC_NUMBER_OF_SAMPLE_DERIVATIVE_MOVING_MEAN];
+    /// Last error index in inspiratory PID
+    int32_t m_inspiratoryPidLastErrorsIndex;
 };
 
 extern PC_CMV_Controller pcCmvController;

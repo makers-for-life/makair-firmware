@@ -70,6 +70,15 @@ class PressureValve {
      */
     uint16_t openLinear(uint16_t p_command);
 
+    int32_t getSectionBigHoseX100();
+
+    /**
+     * Request opening of the Pressure Valve with a given section (in mm^2)
+     *
+     * @param p_sectionMultiplyBy100 The section to open tha valve (in mm^2 multiplied by 100)
+     */
+    void openSection(int32_t p_sectionMultiplyBy100);
+
     /// Request closing of the Pressure Valve
     void close();
 

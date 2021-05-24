@@ -42,17 +42,36 @@ class Blower {
     void setup();
 
     /**
+     * Run the blower to a given speed applying a ramp-up to prevent high current drain
+     *
+     * @param p_targetSpeed Speed between MIN_BLOWER_SPEED and MAX_BLOWER_SPEED
+     */
+    void runSpeedWithRampUp(uint16_t p_targetSpeed);
+
+    /**
      * Run the blower to a given speed
      *
-     * @param p_speed Speed between MIN_BLOWER_SPEED and MAX_BLOWER_SPEED
+     * @param p_runSpeed Speed between MIN_BLOWER_SPEED and MAX_BLOWER_SPEED
      */
-    void runSpeed(uint16_t p_speed);
+    void runSpeed(uint16_t p_runSpeed);
+
+    void execute();
 
     /// Stops the blower
     void stop();
 
     /// Get speed value
     uint16_t getSpeed() const;
+
+    /// Get target speed value
+    uint16_t getTargetSpeed() const;
+    /**
+     * Given a flow in mL/min, return an estimated pressure just at the output of the blower. This
+     * pressure has been determined using the pressure-flow characteristic of the blower
+     *
+     * @param p_flow inspiratory flow in mL/min
+     */
+    int32_t getBlowerPressure(int32_t p_flow);
 
  private:
     /// Hardware timer used to control the blower
@@ -67,8 +86,14 @@ class Blower {
     /// Current speed
     uint16_t m_speed;
 
+    /// target speed
+    uint16_t m_targetSpeed;
+
     /// Current state
     bool m_stopped;
+
+    // Last call of the runspeed function of the blower
+    uint32_t m_lastCallDate;
 };
 
 extern Blower blower;

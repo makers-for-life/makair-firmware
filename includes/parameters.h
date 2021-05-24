@@ -30,34 +30,99 @@
 #define MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS (1000u * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
 
 // Minimum and maximum bounds of execution parameters
-#define CONST_MAX_PEAK_PRESSURE 700     // arbitrary [mmH2O]
-#define CONST_MIN_PEAK_PRESSURE 100     // arbitrary [mmH2O]
-#define CONST_MAX_PLATEAU_PRESSURE 400  // PP MAX ARDS = 300 [mmH2O]
-#define CONST_MIN_PLATEAU_PRESSURE 100  // arbitrary [mmH2O]
-#define CONST_MAX_PEEP_PRESSURE 300     // PP MAX = 300, or PEEP < PP [mmH2O]
-#define CONST_MIN_PEEP_PRESSURE 50       // arbitrary but > 0 [mmH2O]
-#define CONST_MIN_TRIGGER_OFFSET 0u     // [mmH2O]
-#define CONST_MAX_TRIGGER_OFFSET 100u   // [mmH2O]
-#define CONST_INITIAL_ZERO_PRESSURE 0   // [mmH2O]
-#define CONST_INITIAL_ZERO_VOLUME 0     // [mL]
+#define CONST_MAX_PEAK_PRESSURE 700               // arbitrary [mmH2O]
+#define CONST_MIN_PEAK_PRESSURE 100               // arbitrary [mmH2O]
+#define CONST_MAX_PLATEAU_PRESSURE 400            // PP MAX ARDS = 300 [mmH2O]
+#define CONST_MIN_PLATEAU_PRESSURE 50             // arbitrary [mmH2O]
+#define CONST_MAX_PEEP_PRESSURE 300               // PP MAX = 300, or PEEP < PP [mmH2O]
+#define CONST_MIN_PEEP_PRESSURE 0                 // arbitrary but > 0 [mmH2O]
+#define CONST_MIN_TRIGGER_OFFSET 0u               // [mmH2O]
+#define CONST_MAX_TRIGGER_OFFSET 100u             // [mmH2O]
+#define CONST_INITIAL_ZERO_PRESSURE 0u            // [mmH2O]
+#define CONST_INITIAL_ZERO_VOLUME 0u              // [mL]
+#define CONST_MIN_TIDAL_VOLUME 50u                // [mL]
+#define CONST_MAX_TIDAL_VOLUME 2000u              // [mL]
+#define CONST_MAX_INSPIRATORY_TRIGGER_FLOW 100u   // [%]
+#define CONST_MIN_INSPIRATORY_TRIGGER_FLOW 0u     // [%]
+#define CONST_MAX_EXPIRATORY_TRIGGER_FLOW 100u    // [%]
+#define CONST_MIN_EXPIRATORY_TRIGGER_FLOW 0u      // [%]
+#define CONST_MIN_MIN_INSPIRATION_DURATION 100u   // [in ms]
+#define CONST_MAX_MIN_INSPIRATION_DURATION 3000u  // [in ms]
+#define CONST_MIN_MAX_INSPIRATION_DURATION 200u   // [in ms]
+#define CONST_MAX_MAX_INSPIRATION_DURATION 5000u  // [in ms]
+#define CONST_MIN_PLATEAU_DURATION 0u             // [in ms]
+#define CONST_MAX_PLATEAU_DURATION 2000u          // [in ms]
+#define CONST_MIN_INSPIRATORY_FLOW 5000           // [in ml/min]
+#define CONST_MAX_INSPIRATORY_FLOW 80000          // [in ml/min]
+#define CONST_MIN_INSPIRATORY_DURATION 200u       // [in ms]
+#define CONST_MAX_INSPIRATORY_DURATION 3000u      // [in ms]
+#define CONST_MIN_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 0u    // [in L/min]
+#define CONST_MAX_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 20u   // [in L/min]
+#define CONST_MIN_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 0u     // [in L/min]
+#define CONST_MAX_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 20u    // [in L/min]
+#define CONST_MIN_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 1u   // [in L/min]
+#define CONST_MAX_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 40u  // [in L/min]
+#define CONST_MIN_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 1u    // [in L/min]
+#define CONST_MAX_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 40u   // [in L/min]
+#define CONST_MIN_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD 5u             // [in cpm]
+#define CONST_MAX_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD 25u            // [in cpm]
+#define CONST_MIN_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD 15u           // [in cpm]
+#define CONST_MAX_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD 35u           // [in cpm]
+#define CONST_MIN_LOW_TIDAL_VOLUME_ALARM_THRESHOLD 0u                 // [in mL]
+#define CONST_MAX_LOW_TIDAL_VOLUME_ALARM_THRESHOLD 1000u              // [in mL]
+#define CONST_MIN_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 50u               // [in mL]
+#define CONST_MAX_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 2000u             // [in mL]
+#define CONST_MIN_LEAK_ALARM_THRESHOLD 0u                             // [in cL/min]
+#define CONST_MIN_LEAK_ALARM_THRESHOLD 10000u                         // [in cL/min]
+#define CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD 50                    // [in mmH2O]
+#define CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD 700                   // [in mmH2O]
+#define CONST_MIN_PATIENT_HEIGHT 30                                   // [in cm]
+#define CONST_MAX_PATIENT_HEIGHT 250                                  // [in cm]
+#define CONST_MIN_PATIENT_GENDER 0                                    // [male]
+#define CONST_MAX_PATIENT_GENDER 1                                    // [female]
 
 // Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
 #define CONST_MIN_EXPIRATORY_TERM 10u
 #define CONST_MAX_EXPIRATORY_TERM 60u
 
-#define DEFAULT_PEEP_COMMAND 100
-#define DEFAULT_PLATEAU_COMMAND 200
-#define DEFAULT_PEAK_PRESSURE_COMMAND 200
-#define DEFAULT_EXPIRATORY_TERM_COMMAND 20
-#define DEFAULT_TRIGGER_OFFSET 20
+#define DEFAULT_PEEP_COMMAND 50u                        // in mmH2O
+#define DEFAULT_PLATEAU_COMMAND 200u                    // in mmH2O
+#define DEFAULT_PEAK_PRESSURE_COMMAND 200u              // in mmH2O
+#define DEFAULT_EXPIRATORY_TERM_COMMAND 20u             // 20 means I:E = 10:20 = 1:2
+#define DEFAULT_TIDAL_VOLUME_COMMAND 400u               // in mL
+#define DEFAULT_PLATEAU_DURATION_COMMAND 200u           // in ms
+#define DEFAULT_TRIGGER_OFFSET 20u                      // in mmH2O
+#define DEFAULT_INSPIRATORY_TRIGGER_FLOW_COMMAND 10u    // in percent of current flow
+#define DEFAULT_EXPIRATORY_TRIGGER_FLOW_COMMAND 30u     // in percent of max inspirated flow
+#define DEFAULT_MIN_INSPIRATION_DURATION_COMMAND 200u   // in ms
+#define DEFAULT_MAX_INSPIRATION_DURATION_COMMAND 1000u  // in ms
+#define DEFAULT_TARGET_FLOW_COMMAND 40000u              // in mL/min
+#define DEFAULT_INSPIRATORY_DURATION 800u               // in ms
+#define DEFAULT_LOW_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 3000u    // [in mL/min]
+#define DEFAULT_LOW_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 3000u     // [in mL/min]
+#define DEFAULT_HIGH_INSPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 20000u  // [in mL/min]
+#define DEFAULT_HIGH_EXPIRATORY_MINUTE_VOLUME_ALARM_THRESHOLD 20000u   // [in mL/min]
+#define DEFAULT_LOW_RESPIRATORY_RATE_ALARM_THRESHOLD 16u               // [in cpm]
+#define DEFAULT_HIGH_RESPIRATORY_RATE_ALARM_THRESHOLD 24u              // [in cpm]
+#define DEFAULT_LOW_TIDAL_VOLUME_ALARM_THRESHOLD 200u                  // [in mL]
+#define DEFAULT_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 1000u                // [in mL]
+#define DEFAULT_LEAK_ALARM_THRESHOLD 2000u                             // [in mL/min]
+#define DEFAULT_PEAK_PRESSURE_ALARM_THRESHOLD 500u                     // [in mmH2O]
+#define DEFAULT_PATIENT_HEIGHT 170u                                    // [in cm]
+#define DEFAULT_PATIENT_GENDER 0u                                      // [0 = male, 1 = female]
 
-#define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20
+#define PEAK_PRESSURE_ALARM_THRESHOLD_OFFSET_FROM_PLATEAU 150  // [in mmH2O]
+#define AIR_EXHAUST_THRESHOLD_FROM_PEAK_PRESSURE_ALARM 100     // [in mmH2O]
+
+#define DEFAULT_CYCLE_PER_MINUTE_COMMAND 20u
 #define CONST_MAX_CYCLE 35u
 #define CONST_MIN_CYCLE 5u
 
 #define DEFAULT_PEAK_PRESSURE_DELTA 10u
 
 #define MAX_PRESSURE_OFFSET 40
+
+#define MIN_EXPIRATORY_FLOW_OFFSET 2.5
 
 #define TRIGGER_MODE_ENABLED_BY_DEFAULT false
 
@@ -104,8 +169,10 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 /// Angle when closed
 #define VALVE_CLOSED_STATE 125u
 #define VALVE_PERIOD 1000     // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
-#define FAULHABER_OPENED 640  // PWM duty cycle 64% -> open
+#define FAULHABER_OPENED 660  // PWM duty cycle 64% -> open
 #define FAULHABER_CLOSED 900  // PWM duty cycle 90% -> closed
+
+#define VALVE_RESPONSE_TIME_MS 50  // estimated response time for going to open state to close state
 
 #define PIN_INSPIRATORY_VALVE D5  // PB4 / TIM3_CH1
 #define PIN_EXPIRATORY_VALVE D4   // PB5 / TIM3_CH2
@@ -122,7 +189,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
  */
 ///@{
 
-#define MIN_BLOWER_SPEED 00u
+#define MIN_BLOWER_SPEED 300u
 #define MAX_BLOWER_SPEED 1800u
 #define DEFAULT_BLOWER_SPEED 900u
 
@@ -242,8 +309,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 ///@{
 
 #define ALARM_THRESHOLD_MIN_PRESSURE 20         // RCM-SW-2 + RCM-SW-19
-#define ALARM_THRESHOLD_MAX_PRESSURE 800        // RCM-SW-18
 #define ALARM_THRESHOLD_DIFFERENCE_PERCENT 20   // RCM-SW-1 + RCM-SW-14
 #define ALARM_THRESHOLD_DIFFERENCE_PRESSURE 20  // RCM-SW-3 + RCM-SW-15
 
 ///@}
+
+#define ADC_RESOLUTION_MAKAIR 12

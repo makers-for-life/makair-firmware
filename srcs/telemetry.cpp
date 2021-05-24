@@ -116,7 +116,7 @@ void sendBootMessage() {
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("B:");
+    Serial6.write("B:", 2);
     crc32.update("B:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -129,6 +129,7 @@ void sendBootMessage() {
     crc32.update(deviceId, 12);
 
     Serial6.print("\t");
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
     byte systick[8];  // 64 bits
@@ -138,12 +139,14 @@ void sendBootMessage() {
     crc32.update(systick, 8);
 
     Serial6.print("\t");
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
     Serial6.write(MODE);
     crc32.update(static_cast<uint8_t>(MODE));
 
     Serial6.print("\t");
+    // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
     Serial6.write(value128);
@@ -165,10 +168,66 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t expiratoryTerm,
                         bool triggerEnabled,
                         uint8_t triggerOffset,
-                        bool alarmSnoozed) {
+                        bool alarmSnoozed,
+                        uint8_t cpuLoad,
+                        VentilationModes ventilationMode,
+                        uint8_t inspiratoryTriggerFlow,
+                        uint8_t expiratoryTriggerFlow,
+                        uint16_t tiMinValue,
+                        uint16_t tiMaxValue,
+                        uint8_t lowInspiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
+                        uint8_t lowRespiratoryRateAlarmThreshold,
+                        uint8_t highRespiratoryRateAlarmThreshold,
+                        uint16_t targetTidalVolumeValue,
+                        uint16_t lowTidalVolumeAlarmThresholdValue,
+                        uint16_t highTidalVolumeAlarmThresholdValue,
+                        uint16_t plateauDurationValue,
+                        uint16_t leakAlarmThresholdValue,
+                        uint8_t targetInspiratoryFlow,
+                        uint16_t inspiratoryDurationCommandValue,
+                        uint16_t batteryLevelValue,
+                        uint8_t currentAlarmCodes[ALARMS_SIZE],
+                        uint16_t localeValue,
+                        uint8_t patientHeight,
+                        uint8_t patientGender,
+                        uint16_t peakPressureAlarmThresholdValue) {
+    uint8_t currentAlarmSize = 0;
+    for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
+        if (currentAlarmCodes[i] != 0u) {
+            currentAlarmSize++;
+        } else {
+            break;
+        }
+    }
+
+    uint8_t ventilationModeValue;
+    switch (ventilationMode) {
+    case PC_CMV:
+        ventilationModeValue = 1u;
+        break;
+    case PC_AC:
+        ventilationModeValue = 2u;
+        break;
+    case VC_CMV:
+        ventilationModeValue = 3u;
+        break;
+    case PC_VSAI:
+        ventilationModeValue = 4u;
+        break;
+    case VC_AC:
+        ventilationModeValue = 5u;
+        break;
+    default:
+        ventilationModeValue = 0u;
+        break;
+    }
+
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("O:");
+    Serial6.write("O:", 2);
     crc32.update("O:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -236,6 +295,180 @@ void sendStoppedMessage(uint8_t peakCommand,
     Serial6.write(alarmSnoozed);
     crc32.update(alarmSnoozed);
 
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(cpuLoad);
+    crc32.update(cpuLoad);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(ventilationModeValue);
+    crc32.update(ventilationModeValue);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(inspiratoryTriggerFlow);
+    crc32.update(inspiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(expiratoryTriggerFlow);
+    crc32.update(expiratoryTriggerFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMin[2];  // 16 bits
+    toBytes16(tiMin, tiMinValue);
+    Serial6.write(tiMin, 2);
+    crc32.update(tiMin, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte tiMax[2];  // 16 bits
+    toBytes16(tiMax, tiMaxValue);
+    Serial6.write(tiMax, 2);
+    crc32.update(tiMax, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highInspiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highInspiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(lowExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highExpiratoryMinuteVolumeAlarmThreshold);
+    crc32.update(highExpiratoryMinuteVolumeAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(lowRespiratoryRateAlarmThreshold);
+    crc32.update(lowRespiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(highRespiratoryRateAlarmThreshold);
+    crc32.update(highRespiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte targetTidalVolume[2];  // 16 bits
+    toBytes16(targetTidalVolume, targetTidalVolumeValue);
+    Serial6.write(targetTidalVolume, 2);
+    crc32.update(targetTidalVolume, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte lowTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(lowTidalVolumeAlarmThreshold, lowTidalVolumeAlarmThresholdValue);
+    Serial6.write(lowTidalVolumeAlarmThreshold, 2);
+    crc32.update(lowTidalVolumeAlarmThreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte highTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(highTidalVolumeAlarmThreshold, highTidalVolumeAlarmThresholdValue);
+    Serial6.write(highTidalVolumeAlarmThreshold, 2);
+    crc32.update(highTidalVolumeAlarmThreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte plateauDuration[2];  // 16 bits
+    toBytes16(plateauDuration, plateauDurationValue);
+    Serial6.write(plateauDuration, 2);
+    crc32.update(plateauDuration, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte leakAlarmThreshold[2];  // 16 bits
+    toBytes16(leakAlarmThreshold, leakAlarmThresholdValue);
+    Serial6.write(leakAlarmThreshold, 2);
+    crc32.update(leakAlarmThreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(targetInspiratoryFlow);
+    crc32.update(targetInspiratoryFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte inspiratoryDurationCommand[2];  // 16 bits
+    toBytes16(inspiratoryDurationCommand, inspiratoryDurationCommandValue);
+    Serial6.write(inspiratoryDurationCommand, 2);
+    crc32.update(inspiratoryDurationCommand, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte batteryLevel[2];  // 16 bits
+    toBytes16(batteryLevel, batteryLevelValue);
+    Serial6.write(batteryLevel, 2);
+    crc32.update(batteryLevel, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(currentAlarmSize);
+    crc32.update(currentAlarmSize);
+    Serial6.write(currentAlarmCodes, currentAlarmSize);
+    crc32.update(currentAlarmCodes, currentAlarmSize);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte locale[2];  // 16 bits
+    toBytes16(locale, localeValue);
+    Serial6.write(locale, 2);
+    crc32.update(locale, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(patientHeight);
+    crc32.update(patientHeight);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(patientGender);
+    crc32.update(patientGender);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte peakPressureAlarmThreshold[2];  // 16 bits
+    toBytes16(peakPressureAlarmThreshold, peakPressureAlarmThresholdValue);
+    Serial6.write(peakPressureAlarmThreshold, 2);
+    crc32.update(peakPressureAlarmThreshold, 2);
+
     Serial6.print("\n");
     crc32.update("\n", 1);
 
@@ -265,7 +498,7 @@ void sendDataSnapshot(uint16_t centileValue,
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("D:");
+    Serial6.write("D:", 2);
     crc32.update("D:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -381,8 +614,21 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
                               uint8_t highInspiratoryMinuteVolumeAlarmThreshold,
                               uint8_t lowExpiratoryMinuteVolumeAlarmThreshold,
                               uint8_t highExpiratoryMinuteVolumeAlarmThreshold,
-                              uint8_t lowExpiratoryRateAlarmThreshold,
-                              uint8_t highExpiratoryRateAlarmThreshold) {
+                              uint8_t lowRespiratoryRateAlarmThreshold,
+                              uint8_t highRespiratoryRateAlarmThreshold,
+                              uint16_t targetTidalVolumeValue,
+                              uint16_t lowTidalVolumeAlarmThresholdValue,
+                              uint16_t highTidalVolumeAlarmThresholdValue,
+                              uint16_t plateauDurationValue,
+                              uint16_t leakAlarmThresholdValue,
+                              uint8_t targetInspiratoryFlow,
+                              uint16_t inspiratoryDurationCommandValue,
+                              uint16_t previousInspiratoryDurationValue,
+                              uint16_t batteryLevelValue,
+                              uint16_t localeValue,
+                              uint8_t patientHeight,
+                              uint8_t patientGender,
+                              uint16_t peakPressureAlarmThresholdValue) {
     uint8_t currentAlarmSize = 0;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
@@ -403,17 +649,19 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     case VC_CMV:
         ventilationModeValue = 3u;
         break;
-    case PC_BIPAP:
+    case PC_VSAI:
         ventilationModeValue = 4u;
+        break;
+    case VC_AC:
+        ventilationModeValue = 5u;
         break;
     default:
         ventilationModeValue = 0u;
         break;
     }
-
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("S:");
+    Serial6.write("S:", 2);
     crc32.update("S:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -602,14 +850,112 @@ void sendMachineStateSnapshot(uint32_t cycleValue,
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(lowExpiratoryRateAlarmThreshold);
-    crc32.update(lowExpiratoryRateAlarmThreshold);
+    Serial6.write(lowRespiratoryRateAlarmThreshold);
+    crc32.update(lowRespiratoryRateAlarmThreshold);
 
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(highExpiratoryRateAlarmThreshold);
-    crc32.update(highExpiratoryRateAlarmThreshold);
+    Serial6.write(highRespiratoryRateAlarmThreshold);
+    crc32.update(highRespiratoryRateAlarmThreshold);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte targetTidalVolume[2];  // 16 bits
+    toBytes16(targetTidalVolume, targetTidalVolumeValue);
+    Serial6.write(targetTidalVolume, 2);
+    crc32.update(targetTidalVolume, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte lowTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(lowTidalVolumeAlarmThreshold, lowTidalVolumeAlarmThresholdValue);
+    Serial6.write(lowTidalVolumeAlarmThreshold, 2);
+    crc32.update(lowTidalVolumeAlarmThreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte highTidalVolumeAlarmThreshold[2];  // 16 bits
+    toBytes16(highTidalVolumeAlarmThreshold, highTidalVolumeAlarmThresholdValue);
+    Serial6.write(highTidalVolumeAlarmThreshold, 2);
+    crc32.update(highTidalVolumeAlarmThreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte plateauDuration[2];  // 16 bits
+    toBytes16(plateauDuration, plateauDurationValue);
+    Serial6.write(plateauDuration, 2);
+    crc32.update(plateauDuration, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte leakAlarmThreshold[2];  // 16 bits
+    toBytes16(leakAlarmThreshold, leakAlarmThresholdValue);
+    Serial6.write(leakAlarmThreshold, 2);
+    crc32.update(leakAlarmThreshold, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(targetInspiratoryFlow);
+    crc32.update(targetInspiratoryFlow);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte inspiratoryDurationCommand[2];  // 16 bits
+    toBytes16(inspiratoryDurationCommand, inspiratoryDurationCommandValue);
+    Serial6.write(inspiratoryDurationCommand, 2);
+    crc32.update(inspiratoryDurationCommand, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte previousInspiratoryDuration[2];  // 16 bits
+    toBytes16(previousInspiratoryDuration, previousInspiratoryDurationValue);
+    Serial6.write(previousInspiratoryDuration, 2);
+    crc32.update(previousInspiratoryDuration, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte batteryLevel[2];  // 16 bits
+    toBytes16(batteryLevel, batteryLevelValue);
+    Serial6.write(batteryLevel, 2);
+    crc32.update(batteryLevel, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte locale[2];  // 16 bits
+    toBytes16(locale, localeValue);
+    Serial6.write(locale, 2);
+    crc32.update(locale, 2);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(patientHeight);
+    crc32.update(patientHeight);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(patientGender);
+    crc32.update(patientGender);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte peakPressureAlarmThreshold[2];  // 16 bits
+    toBytes16(peakPressureAlarmThreshold, peakPressureAlarmThresholdValue);
+    Serial6.write(peakPressureAlarmThreshold, 2);
+    crc32.update(peakPressureAlarmThreshold, 2);
 
     Serial6.print("\n");
     crc32.update("\n", 1);
@@ -659,7 +1005,7 @@ void sendAlarmTrap(uint16_t centileValue,
 
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("T:");
+    Serial6.write("T:", 2);
     crc32.update("T:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -763,7 +1109,7 @@ void sendAlarmTrap(uint16_t centileValue,
 void sendControlAck(uint8_t setting, uint16_t valueValue) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
-    Serial6.write("A:");
+    Serial6.write("A:", 2);
     crc32.update("A:", 2);
     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
     crc32.update((uint8_t)PROTOCOL_VERSION);
@@ -805,6 +1151,257 @@ void sendControlAck(uint8_t setting, uint16_t valueValue) {
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
 }
+
+void sendWatchdogRestartFatalError(void) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(1);
+    crc32.update(1);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+// void sendCalibrationFatalError(int16_t pressureOffsetValue,
+//                                int16_t minPressureValue,
+//                                int16_t maxPressureValue,
+//                                int16_t flowAtStartingValue,
+//                                int16_t flowWithBlowerOnValue) {
+//     Serial6.write(header, HEADER_SIZE);
+//     CRC32 crc32;
+//     Serial6.write("E:", 2);
+//     crc32.update("E:", 2);
+//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+//     crc32.update((uint8_t)PROTOCOL_VERSION);
+
+//     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+//     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+//     Serial6.print(VERSION);
+//     crc32.update(VERSION, strlen(VERSION));
+//     Serial6.write(deviceId, 12);
+//     crc32.update(deviceId, 12);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte systick[8];  // 64 bits
+//     toBytes64(systick, computeSystick());
+//     Serial6.write(systick, 8);
+//     crc32.update(systick, 8);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+//     crc32.update(systick, 8);
+
+//     Serial6.write(2);
+//     crc32.update(2);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte pressureOffset[2];  // 16 bits
+//     toBytes16(pressureOffset, pressureOffsetValue);
+//     Serial6.write(pressureOffset, 2);
+//     crc32.update(pressureOffset, 2);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte minPressure[2];  // 16 bits
+//     toBytes16(minPressure, minPressureValue);
+//     Serial6.write(minPressure, 2);
+//     crc32.update(minPressure, 2);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte maxPressure[2];  // 16 bits
+//     toBytes16(maxPressure, maxPressureValue);
+//     Serial6.write(maxPressure, 2);
+//     crc32.update(maxPressure, 2);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte flowAtStarting[2];  // 16 bits
+//     toBytes16(flowAtStarting, flowAtStartingValue);
+//     Serial6.write(flowAtStarting, 2);
+//     crc32.update(flowAtStarting, 2);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte flowWithBlowerOn[2];  // 16 bits
+//     toBytes16(flowWithBlowerOn, flowWithBlowerOnValue);
+//     Serial6.write(flowWithBlowerOn, 2);
+//     crc32.update(flowWithBlowerOn, 2);
+
+//     Serial6.print("\n");
+//     crc32.update("\n", 1);
+
+//     byte crc[4];  // 32 bits
+//     toBytes32(crc, crc32.finalize());
+//     Serial6.write(crc, 4);
+//     Serial6.write(footer, FOOTER_SIZE);
+// }
+
+void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
+
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    Serial6.write(3);
+    crc32.update(3);
+
+    Serial6.print("\t");
+    crc32.update("\t", 1);
+
+    byte batteryLevel[2];  // 16 bits
+    toBytes16(batteryLevel, batteryLevelValue);
+    Serial6.write(batteryLevel, 2);
+    crc32.update(batteryLevel, 2);
+
+    Serial6.print("\n");
+    crc32.update("\n", 1);
+
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
+
+// void sendMassFlowMeterFatalError(void) {
+//     Serial6.write(header, HEADER_SIZE);
+//     CRC32 crc32;
+//     Serial6.write("E:", 2);
+//     crc32.update("E:", 2);
+//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+//     crc32.update((uint8_t)PROTOCOL_VERSION);
+
+//     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+//     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+//     Serial6.print(VERSION);
+//     crc32.update(VERSION, strlen(VERSION));
+//     Serial6.write(deviceId, 12);
+//     crc32.update(deviceId, 12);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte systick[8];  // 64 bits
+//     toBytes64(systick, computeSystick());
+//     Serial6.write(systick, 8);
+//     crc32.update(systick, 8);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     Serial6.write(4);
+//     crc32.update(4);
+
+//     Serial6.print("\n");
+//     crc32.update("\n", 1);
+
+//     byte crc[4];  // 32 bits
+//     toBytes32(crc, crc32.finalize());
+//     Serial6.write(crc, 4);
+//     Serial6.write(footer, FOOTER_SIZE);
+// }
+
+// void sendInconsistentPressureFatalError(uint16_t pressureValue) {
+//     Serial6.write(header, HEADER_SIZE);
+//     CRC32 crc32;
+//     Serial6.write("E:", 2);
+//     crc32.update("E:", 2);
+//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+//     crc32.update((uint8_t)PROTOCOL_VERSION);
+
+//     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+//     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+//     Serial6.print(VERSION);
+//     crc32.update(VERSION, strlen(VERSION));
+//     Serial6.write(deviceId, 12);
+//     crc32.update(deviceId, 12);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte systick[8];  // 64 bits
+//     toBytes64(systick, computeSystick());
+//     Serial6.write(systick, 8);
+//     crc32.update(systick, 8);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     Serial6.write(5);
+//     crc32.update(5);
+
+//     Serial6.print("\t");
+//     crc32.update("\t", 1);
+
+//     byte pressure[2];  // 16 bits
+//     toBytes16(pressure, pressureValue);
+//     Serial6.write(pressure, 2);
+//     crc32.update(pressure, 2);
+
+//     Serial6.print("\n");
+//     crc32.update("\n", 1);
+
+//     byte crc[4];  // 32 bits
+//     toBytes32(crc, crc32.finalize());
+//     Serial6.write(crc, 4);
+//     Serial6.write(footer, FOOTER_SIZE);
+// }
 
 uint8_t mmH2OtoCmH2O(uint16_t pressure) {
     uint8_t result;

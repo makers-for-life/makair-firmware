@@ -74,12 +74,6 @@ void millisecondTimerMSM(void)
     clockMsmTimer++;
     int32_t pressure = inspiratoryPressureSensor.read();
     mainController.updatePressure(pressure);
-    int32_t inspiratoryflow = 0;
-#ifdef MASS_FLOW_METER_ENABLED
-    inspiratoryflow = MFM_read_airflow();
-#endif
-
-    mainController.updateInspiratoryFlow(inspiratoryflow);
 
     if ((clockMsmTimer % 10u) == 0u) {
         // Check if some buttons have been pushed
@@ -135,6 +129,10 @@ void millisecondTimerMSM(void)
         activationController.refreshState();
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
+            // set patient height to default value
+            if (mainController.patientHeight() == 0) {
+                mainController.onPatientHeight(DEFAULT_PATIENT_HEIGHT);
+            }
         }
 
     } else if (msmstep == INIT_CYCLE) {
@@ -146,6 +144,9 @@ void millisecondTimerMSM(void)
 #ifdef MASS_FLOW_METER_ENABLED
         (void)MFM_read_milliliters(true);  // Reset volume integral
 #endif
+#ifdef MASS_FLOW_METER_ENABLED&& MASS_FLOW_METER_SENSOR_EXPI
+        (void)MFM_expi_read_milliliters(true);  // Reset volume integral
+#endif
 
     } else if (msmstep == BREATH) {
         // If breathing
@@ -156,10 +157,21 @@ void millisecondTimerMSM(void)
             if (tick >= mainController.ticksPerCycle()) {
                 msmstep = END_CYCLE;
             } else {
-                mainController.updateFakeExpiratoryFlow();
                 uint32_t currentMicro = micros();
+                int32_t inspiratoryflow = 0;
+                int32_t expiratoryflow = 0;
 #ifdef MASS_FLOW_METER_ENABLED
+                inspiratoryflow = MFM_read_airflow();
                 mainController.updateCurrentDeliveredVolume(MFM_read_milliliters(false));
+#endif
+                mainController.updateInspiratoryFlow(inspiratoryflow);
+
+#ifdef MASS_FLOW_METER_ENABLED&& MASS_FLOW_METER_SENSOR_EXPI
+                expiratoryflow = MFM_expi_read_airflow();
+                mainController.updateExpiratoryFlow(expiratoryflow);
+                mainController.updateCurrentExpiratoryVolume(MFM_expi_read_milliliters(false));
+#else
+                mainController.updateFakeExpiratoryFlow();
 #endif
                 mainController.updateDt(currentMicro - lastMicro);
                 lastMicro = currentMicro;
@@ -177,13 +189,13 @@ void millisecondTimerMSM(void)
         // Check if machine has been paused
         activationController.refreshState();
         if (!activationController.isRunning()) {
-            msmstep = STOPPED;
+            msmstep = SETUP;
         }
     } else if (msmstep == TRIGGER_RAISED) {
         if (activationController.isRunning()) {
             msmstep = END_CYCLE;
         } else {
-            msmstep = STOPPED;
+            msmstep = SETUP;
         }
     } else if (msmstep == END_CYCLE) {
         mainController.endRespiratoryCycle(millis());
@@ -193,7 +205,7 @@ void millisecondTimerMSM(void)
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         } else {
-            msmstep = STOPPED;
+            msmstep = SETUP;
         }
     } else {
         // Do nothing

@@ -2,12 +2,18 @@
 
 ## unreleased
 
+_Nothing for now_
+
+## v4.0.0
+
 - drop support of electronic hardware v1 and v2
   (_from now on, minimum compatibility is from v3_)
 - refactor main loop and breathing control
   (_breathing-related computations are now triggered by a hardware timer_)
 - support several breathing modes
-  (_PC-CMV stays the default mode, PC-BIPAP was added_)
+  (_PC-CMV stays the default mode, PC-VSAI and PC-AC were added_)
+- added volume controlled ventilation modes
+  (_VC-CMV and VC-AC were added_)
 - telemetry protocol v2 was introduced
   (_basically, this means sending more data_)
 - drop support of useless "qualification" and "integration test" modes
@@ -21,9 +27,27 @@
 - allow to snooze alarms or start/stop breathing using the serial control protocol
 - drop support of old valves and pneumatic systems
 - make mass flow meter more reliable
+- support for SFM mass flow meters
+  (_SFM3019 and SFM_3300D_)
+- added support for a mass flow meter on the expiratory branch
+  (_if it is missing, the expiratory flow rate will be estimated using an algorithm_)
 - turn the green LED on when alarms are snoozed
+- added a facility to pre-configure the ventilator settings upon boot, using a patient height setting
+  (_submitting the patient height will update all ventilation hyperparameters to optimum values_)
+- added configurable alarms for pressure and volume modes, adding to all existing alarms
+- sending more measured values for display, e.g. respiratory durations and cycles per minute
+- a more precise battery voltage value is now sent over the telemetry protocol
+  (_this is used for battery SoC estimations_)
 - display a special message on LCD screen when watchdog reset was triggered
+- ability to detect in a reliable way when AC gets off, and that power is switched to battery
 - allow to retry pressure calibration when it fails
+- added a ramp-up algorithm on the blower speed controller, in order to prevent current surges in the transformer, which could trigger a temporary handover on batteries
+  (_this is a security feature, in cases where batteries would be depleted or not connected, the ventilator would suddenly reboot during use_)
+- added a compilation flag to disable all hardware buttons
+  (_this is used for touchscreen-only MakAir devices, i.e. non-traditional ones_)
+- added basic support for the motherboard V3 EEPROM chip over I2C
+  (_disabled by default until stable_)
+- a lot of potential exceptions due to possible divisions by zero have been fixed
 - increase the size of the hardware buffer used by telemetry
 - improve Doxygen documentation
 

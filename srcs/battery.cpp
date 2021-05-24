@@ -34,6 +34,8 @@ void initBattery() {
     // hardware v3 expander is connected to AC ON relay. that remains an optionnal wiring.
     pinMode(PIN_IN_MAINS_CONNECTED, INPUT_PULLUP);
     pinMode(PIN_IN_CONNECTION_TO_SUPPLY_OK, INPUT_PULLUP);
+    analogReadResolution(ADC_RESOLUTION_MAKAIR);
+
     for (uint8_t i = 0; i < BATTERY_MAX_SAMPLES; i++) {
         rawBatterySample[i] = 0;
     }

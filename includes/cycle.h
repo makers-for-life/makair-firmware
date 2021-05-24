@@ -6,6 +6,7 @@
  *****************************************************************************/
 
 #pragma once
+#define NUMBER_OF_VENTILATION_MODES 5u
 
 // ENUMS =================================================================
 
@@ -25,6 +26,8 @@ enum VentilationModes {
     PC_AC = 2,
     /// VC-CMV
     VC_CMV = 3,
-    /// PC-BIPAP
-    PC_BIPAP = 4,
+    /// PC-VSAI
+    PC_VSAI = 4,
+    /// VC-AC
+    VC_AC = 5,
 };

@@ -39,6 +39,7 @@ PC_CMV_Controller::PC_CMV_Controller() {
         m_expiratoryPidLastErrors[i] = 0u;
     }
 
+    m_blowerSpeed = DEFAULT_BLOWER_SPEED;
     m_blowerIncrement = 0;
     m_inspiratoryPidIntegral = 0;
     m_inspiratoryPidLastError = 0;
@@ -48,9 +49,7 @@ PC_CMV_Controller::PC_CMV_Controller() {
     m_expiratoryPidLastError = 0;
 }
 
-void PC_CMV_Controller::setup() {
-    // No specific setup code
-}
+void PC_CMV_Controller::setup() { m_blowerSpeed = DEFAULT_BLOWER_SPEED; }
 
 void PC_CMV_Controller::initCycle() {
     m_plateauPressureReached = false;
@@ -77,16 +76,18 @@ void PC_CMV_Controller::initCycle() {
 
     // Apply blower ramp-up
     if (m_blowerIncrement >= 0) {
-        blower.runSpeed(blower.getSpeed() + static_cast<uint16_t>(abs(m_blowerIncrement)));
+        blower.runSpeedWithRampUp(m_blowerSpeed + static_cast<uint16_t>(abs(m_blowerIncrement)));
     } else {
         // When blower increment is negative, we need to check that it is less than current speed
         // If not, it would result in an overflow
-        if (static_cast<uint16_t>(abs(m_blowerIncrement)) < blower.getSpeed()) {
-            blower.runSpeed(blower.getSpeed() - static_cast<uint16_t>(abs(m_blowerIncrement)));
+        if (static_cast<uint16_t>(abs(m_blowerIncrement)) < m_blowerSpeed) {
+            blower.runSpeedWithRampUp(m_blowerSpeed
+                                      - static_cast<uint16_t>(abs(m_blowerIncrement)));
         } else {
-            blower.runSpeed(MIN_BLOWER_SPEED);
+            blower.runSpeedWithRampUp(MIN_BLOWER_SPEED);
         }
     }
+    m_blowerSpeed = blower.getTargetSpeed();
     m_blowerIncrement = 0;
 }
 
@@ -113,18 +114,6 @@ void PC_CMV_Controller::exhale() {
     // Open the expiratos valve so the patient can exhale outside
     expiratoryValve.open(PCexpiratoryPID(mainController.pressureCommand(),
                                          mainController.pressure(), mainController.dt()));
-
-    // In case the pressure trigger mode is enabled, check if inspiratory trigger is raised
-    if (mainController.triggerModeEnabledCommand() && mainController.isPeepDetected()) {
-        // m_peakPressure > CONST_MIN_PEAK_PRESSURE ensures that the patient is plugged on the
-        // machine
-        if (static_cast<int32_t>(mainController.pressure())
-                < (mainController.pressureCommand()
-                   - static_cast<int32_t>(mainController.pressureTriggerOffsetCommand()))
-            && (mainController.peakPressureMeasure() > CONST_MIN_PEAK_PRESSURE)) {
-            mainController.setTrigger(true);
-        }
-    }
 }
 
 void PC_CMV_Controller::endCycle() { calculateBlowerIncrement(); }

@@ -26,9 +26,6 @@
  */
 #define DEBUG 0
 
-/// Simulation mode allows to run main controller on a computer
-#define SIMULATION false
-
 /// Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor
 #define MASS_FLOW_METER_ENABLED
@@ -46,7 +43,14 @@
 
 /// Defines the type of each Mass Flow Meter
 #define MASS_FLOW_METER_SENSOR MFM_HONEYWELL_HAF
-// #define MASS_FLOW_METER_SENSOR_EXPI MFM_SFM_3300D
+#define MASS_FLOW_METER_SENSOR_EXPI MFM_SFM_3300D
 
 /// Defines the range of the Mass Flow Meter in SLM (standard liter per minute)
 #define MFM_RANGE 200
+
+/**
+ * @name Disables features
+ */
+/// Disable hardware buttons, used when integrating a motherboard in a touch- \
+///   only device.
+// #define DISABLE_BUTTONS

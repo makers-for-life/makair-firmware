@@ -1,8 +1,8 @@
 /******************************************************************************
  * @author Makers For Life
  * @copyright Copyright (c) 2020 Makers For Life
- * @file pc_bipap_controller.h
- * @brief PID for BIPAP pressure control
+ * @file pc_vsai_controller.h
+ * @brief PID for VSAI pressure control
  *****************************************************************************/
 
 #pragma once
@@ -10,11 +10,11 @@
 #include "../includes/parameters.h"
 #include "../includes/ventilation_controller.h"
 
-/// Controller for the BIPAP mode
-class PC_BIPAP_Controller final : public VentilationController {
+/// Controller for the VSAI mode
+class PC_VSAI_Controller final : public VentilationController {
  public:
     /// Default constructor
-    PC_BIPAP_Controller();
+    PC_VSAI_Controller();
 
     /// Initialize controller
     void setup() override;
@@ -30,6 +30,16 @@ class PC_BIPAP_Controller final : public VentilationController {
 
     /// End the current breathing cycle
     void endCycle() override;
+
+    /// List of alarms that must be enabled for this mode
+    struct Alarms enabledAlarms() const override {
+        struct Alarms a = {RCM_SW_1,  RCM_SW_2,  RCM_SW_3,  RCM_SW_4,  RCM_SW_5,
+                           RCM_SW_6,  RCM_SW_7,  RCM_SW_8,  RCM_SW_9,  0u,
+                           RCM_SW_11, RCM_SW_12, RCM_SW_14, RCM_SW_15, RCM_SW_16,
+                           RCM_SW_18, RCM_SW_19, RCM_SW_20, RCM_SW_21, RCM_SW_22,
+                           RCM_SW_22};
+        return a;
+    }
 
  private:
     /// Determine the blower speed to adopt for next cycle
@@ -108,20 +118,8 @@ class PC_BIPAP_Controller final : public VentilationController {
     /// Last error index in expiratory PID
     int32_t m_expiratoryPidLastErrorsIndex;
 
-    /// Last flow values
-    int32_t m_inspiratoryFlowLastValues[NUMBER_OF_SAMPLE_LAST_VALUES];
-
-    /// Last pressure values
-    int32_t m_inspiratoryPressureLastValues[NUMBER_OF_SAMPLE_LAST_VALUES];
-
-    /// Last flow index
-    int32_t m_inspiratoryFlowLastValuesIndex;
-
-    /// Last pressure index
-    int32_t m_inspiratoryPressureLastValuesIndex;
-
     /// Max flow during inspiration
     int32_t m_maxInspiratoryFlow;
 };
 
-extern PC_BIPAP_Controller pcBipapController;
+extern PC_VSAI_Controller pcVsaiController;

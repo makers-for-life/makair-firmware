@@ -85,7 +85,7 @@ void serialControlLoop() {
                 computedCRC.update(rawValue, 2);
                 uint16_t value = toU16(rawValue);
 
-                byte rawExpectedCRC[2];
+                byte rawExpectedCRC[4];
                 Serial6.readBytes(rawExpectedCRC, 4);
                 uint32_t expectedCRC = toU32(rawExpectedCRC);
 
@@ -121,7 +121,7 @@ void serialControlLoop() {
                     break;
 
                 case VentilationMode:
-                    // TODO
+                    mainController.onVentilationModeSet(value);
                     break;
 
                 case PlateauPressure:
@@ -157,43 +157,87 @@ void serialControlLoop() {
                     break;
 
                 case InspiratoryTriggerFlow:
-                    // TODO
+                    mainController.onInspiratoryTriggerFlowSet(value);
                     break;
 
                 case ExpiratoryTriggerFlow:
-                    // TODO
+                    mainController.onExpiratoryTriggerFlowSet(value);
                     break;
 
                 case TiMin:
-                    // TODO
+                    mainController.onTiMinSet(value);
                     break;
 
                 case TiMax:
-                    // TODO
+                    mainController.onTiMaxSet(value);
                     break;
 
                 case LowInspiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
+                    mainController.onLowInspiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case HighInspiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
+                    mainController.onHighInspiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case LowExpiratoryMinuteVolumeAlarmThreshold:
-                    // TODO
+                    mainController.onLowExpiratoryMinuteVolumeAlarmThresholdSet(value);
                     break;
 
                 case HighExpiratoryMinuteVolumeAlarmThreshold:
+                    mainController.onHighExpiratoryMinuteVolumeAlarmThresholdSet(value);
+                    break;
+
+                case LowRespiratoryRateAlarmThreshold:
+                    mainController.onlowRespiratoryRateAlarmThresholdSet(value);
+                    break;
+
+                case HighRespiratoryRateAlarmThreshold:
+                    mainController.onhighRespiratoryRateAlarmThresholdSet(value);
+                    break;
+
+                case TargetTidalVolume:
+                    mainController.onTargetTidalVolumeSet(value);
+                    break;
+
+                case LowTidalVolumeAlarmThreshold:
+                    mainController.onLowTidalVolumeAlarmThresholdSet(value);
+                    break;
+
+                case HighTidalVolumeAlarmThreshold:
+                    mainController.onHighTidalVolumeAlarmThresholdSet(value);
+                    break;
+
+                case PlateauDuration:
+                    mainController.onPlateauDurationSet(value);
+                    break;
+
+                case LeakAlarmThreshold:
+                    mainController.onLeakAlarmThresholdSet(value);
+                    break;
+
+                case TargetInspiratoryFlow:
+                    mainController.onTargetInspiratoryFlow(value);
+                    break;
+
+                case InspiratoryDuration:
+                    mainController.onInspiratoryDuration(value);
+                    break;
+
+                case Locale:
                     // TODO
                     break;
 
-                case LowExpiratoryRateAlarmThreshold:
-                    // TODO
+                case PatientHeight:
+                    mainController.onPatientHeight(value);
                     break;
 
-                case HighExpiratoryRateAlarmThreshold:
-                    // TODO
+                case PatientGender:
+                    mainController.onPatientGender(value);
+                    break;
+
+                case PeakPressureAlarmThreshold:
+                    mainController.onPeakPressureAlarmThreshold(value);
                     break;
 
                 default:
