@@ -154,7 +154,7 @@ void millisecondTimerMSM(void)
         tick = (currentMillis - lastMillis) / MAIN_CONTROLLER_COMPUTE_PERIOD_MS;
 
         if ((currentMillis - lastMainControllerCall) > MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
-            if (tick >= mainController.ticksPerCycle()) {
+            if (tick >= mainController.ticksPerCycle() && false) {
                 msmstep = END_CYCLE;
             } else {
                 uint32_t currentMicro = micros();

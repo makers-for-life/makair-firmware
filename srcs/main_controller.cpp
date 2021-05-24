@@ -111,7 +111,7 @@ MainController::MainController() {
     m_ventilationControllersTable[PC_VSAI] = &pcVsaiController;
     m_ventilationControllersTable[VC_AC] = &vcAcController;
 
-    m_ventilationControllerMode = PC_AC;
+    m_ventilationControllerMode = VC_CMV;
 
     m_ventilationController = m_ventilationControllersTable[m_ventilationControllerMode];
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
@@ -501,10 +501,11 @@ void MainController::updateCurrentExpiratoryVolume(int32_t p_expiratoryVolume) {
 void MainController::computeTickParameters() {
     m_plateauDurationMs = m_inspiratoryDurationCommand;
 
-    m_ticksPerCycle =
-        60u * (1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS) / m_cyclesPerMinuteCommand;
+    m_ticksPerCycle = 10000 * 60u * (1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS)
+                      / m_cyclesPerMinuteCommand;
     m_ticksPerInhalation =
-        (m_plateauDurationMs * 1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS) / 1000u;
+        10000 * (m_plateauDurationMs * 1000000u / MAIN_CONTROLLER_COMPUTE_PERIOD_MICROSECONDS)
+        / 1000u;
 }
 
 void MainController::executeCommands() {

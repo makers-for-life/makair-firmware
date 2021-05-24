@@ -88,14 +88,18 @@ void VC_CMV_Controller::inhale() {
                              * MAIN_CONTROLLER_COMPUTE_PERIOD_MS)
         - mainController.plateauDurationCommand();  // in ms
 
-    if (inspirationRemainingDurationMs > 20) {
+    /*if (inspirationRemainingDurationMs > 20) {
         // m_targetFlowMultiplyBy1000 =
         //     (60 * 1000
         //      * (mainController.tidalVolumeCommand() - mainController.currentDeliveredVolume()))
         //     / inspirationRemainingDurationMs;  // in mL/min
         // m_targetFlowMultiplyBy1000 = max(int32_t(0), m_targetFlowMultiplyBy1000);
         m_targetFlowMultiplyBy1000 = mainController.targetInspiratoryFlowCommand();
-    }
+    }*/
+
+    m_targetFlowMultiplyBy1000 = 15000;
+    mainController.updateCurrentDeliveredVolume(0);
+    // mainController.updateTick(0);
 
     // The safety volume is the volume that will be delivered during the closing of the valve.
     // Taking is into account allows better accuracy on volume delivery
@@ -112,7 +116,8 @@ void VC_CMV_Controller::inhale() {
     // If before plateau
     if (mainController.tick() < mainController.ticksPerInhalation()
                                     - static_cast<uint16_t>(mainController.plateauDurationCommand())
-                                          / MAIN_CONTROLLER_COMPUTE_PERIOD_MS) {
+                                          / MAIN_CONTROLLER_COMPUTE_PERIOD_MS
+        || true) {
         int32_t flow = mainController.inspiratoryFlow();
         int32_t blowerPressure = blower.getBlowerPressure(flow);
         int32_t patientPressure = mainController.pressure();
