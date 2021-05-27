@@ -1228,8 +1228,8 @@ $(document).ready(function(){initNavTree('telemetry_8cpp_source.html',''); initR
 <div class="line"><a name="l01178"></a><span class="lineno"> 1178</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
 <div class="line"><a name="l01179"></a><span class="lineno"> 1179</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
 <div class="line"><a name="l01180"></a><span class="lineno"> 1180</span>&#160; </div>
-<div class="line"><a name="l01181"></a><span class="lineno"> 1181</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(1);</div>
-<div class="line"><a name="l01182"></a><span class="lineno"> 1182</span>&#160;    crc32.update(1);</div>
+<div class="line"><a name="l01181"></a><span class="lineno"> 1181</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)1);</div>
+<div class="line"><a name="l01182"></a><span class="lineno"> 1182</span>&#160;    crc32.update((uint8_t)1);</div>
 <div class="line"><a name="l01183"></a><span class="lineno"> 1183</span>&#160; </div>
 <div class="line"><a name="l01184"></a><span class="lineno"> 1184</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a name="l01185"></a><span class="lineno"> 1185</span>&#160;    crc32.update(<span class="stringliteral">&quot;\n&quot;</span>, 1);</div>
@@ -1240,231 +1240,230 @@ $(document).ready(function(){initNavTree('telemetry_8cpp_source.html',''); initR
 <div class="line"><a name="l01190"></a><span class="lineno"> 1190</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a>, <a class="code" href="telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2">FOOTER_SIZE</a>);</div>
 <div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;}</div>
 <div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160; </div>
-<div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;<span class="comment">// void sendCalibrationFatalError(int16_t pressureOffsetValue,</span></div>
-<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;<span class="comment">//                                int16_t minPressureValue,</span></div>
-<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;<span class="comment">//                                int16_t maxPressureValue,</span></div>
-<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;<span class="comment">//                                int16_t flowAtStartingValue,</span></div>
-<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;<span class="comment">//                                int16_t flowWithBlowerOnValue) {</span></div>
-<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;<span class="comment">//     Serial6.write(header, HEADER_SIZE);</span></div>
-<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;<span class="comment">//     CRC32 crc32;</span></div>
-<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;<span class="comment">//     Serial6.write(&quot;E:&quot;, 2);</span></div>
-<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;<span class="comment">//     crc32.update(&quot;E:&quot;, 2);</span></div>
-<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;<span class="comment">//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version</span></div>
-<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;<span class="comment">//     crc32.update((uint8_t)PROTOCOL_VERSION);</span></div>
+<div class="line"><a name="l01193"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a08f6bf6dae077a820cfe1a5a00806a0e"> 1193</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8cpp.html#a08f6bf6dae077a820cfe1a5a00806a0e">sendCalibrationFatalError</a>(int16_t pressureOffsetValue,</div>
+<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;                               int16_t <a class="code" href="end__of__line__test_8cpp.html#a5b5f7adf0d9af8a20a61407ed0b84f26">minPressureValue</a>,</div>
+<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;                               int16_t <a class="code" href="end__of__line__test_8cpp.html#a058438e5f0963301b55cd80d93eab1b8">maxPressureValue</a>,</div>
+<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;                               int16_t flowAtStartingValue,</div>
+<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;                               int16_t flowWithBlowerOnValue) {</div>
+<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
+<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;    CRC32 crc32;</div>
+<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;    crc32.update(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);  <span class="comment">// Communication protocol version</span></div>
+<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;    crc32.update((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);</div>
 <div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160; </div>
-<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;<span class="comment">//     Serial6.write(static_cast&lt;uint8_t&gt;(strlen(VERSION)));</span></div>
-<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;<span class="comment">//     crc32.update(static_cast&lt;uint8_t&gt;(strlen(VERSION)));</span></div>
-<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;<span class="comment">//     Serial6.print(VERSION);</span></div>
-<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;<span class="comment">//     crc32.update(VERSION, strlen(VERSION));</span></div>
-<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;<span class="comment">//     Serial6.write(deviceId, 12);</span></div>
-<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;<span class="comment">//     crc32.update(deviceId, 12);</span></div>
+<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;    crc32.update(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>);</div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;    crc32.update(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>, strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>));</div>
+<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;    crc32.update(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
 <div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160; </div>
-<div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
+<div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
 <div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160; </div>
-<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;<span class="comment">//     byte systick[8];  // 64 bits</span></div>
-<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;<span class="comment">//     toBytes64(systick, computeSystick());</span></div>
-<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;<span class="comment">//     Serial6.write(systick, 8);</span></div>
-<div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;<span class="comment">//     crc32.update(systick, 8);</span></div>
+<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;    <span class="keywordtype">byte</span> systick[8];  <span class="comment">// 64 bits</span></div>
+<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;    <a class="code" href="telemetry_8cpp.html#af8835013b2542f5155d6647b7b618570">toBytes64</a>(systick, <a class="code" href="telemetry_8cpp.html#a4601d1034f9201149fb34e3b82519f1a">computeSystick</a>());</div>
+<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(systick, 8);</div>
+<div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;    crc32.update(systick, 8);</div>
 <div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160; </div>
-<div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;<span class="comment">//     crc32.update(systick, 8);</span></div>
-<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160; </div>
-<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;<span class="comment">//     Serial6.write(2);</span></div>
-<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;<span class="comment">//     crc32.update(2);</span></div>
-<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160; </div>
-<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160; </div>
-<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;<span class="comment">//     byte pressureOffset[2];  // 16 bits</span></div>
-<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;<span class="comment">//     toBytes16(pressureOffset, pressureOffsetValue);</span></div>
-<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;<span class="comment">//     Serial6.write(pressureOffset, 2);</span></div>
-<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;<span class="comment">//     crc32.update(pressureOffset, 2);</span></div>
-<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160; </div>
-<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160; </div>
-<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;<span class="comment">//     byte minPressure[2];  // 16 bits</span></div>
-<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;<span class="comment">//     toBytes16(minPressure, minPressureValue);</span></div>
-<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;<span class="comment">//     Serial6.write(minPressure, 2);</span></div>
-<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;<span class="comment">//     crc32.update(minPressure, 2);</span></div>
-<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160; </div>
-<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160; </div>
-<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;<span class="comment">//     byte maxPressure[2];  // 16 bits</span></div>
-<div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;<span class="comment">//     toBytes16(maxPressure, maxPressureValue);</span></div>
-<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;<span class="comment">//     Serial6.write(maxPressure, 2);</span></div>
-<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;<span class="comment">//     crc32.update(maxPressure, 2);</span></div>
-<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160; </div>
-<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160; </div>
-<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;<span class="comment">//     byte flowAtStarting[2];  // 16 bits</span></div>
-<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;<span class="comment">//     toBytes16(flowAtStarting, flowAtStartingValue);</span></div>
-<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;<span class="comment">//     Serial6.write(flowAtStarting, 2);</span></div>
-<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;<span class="comment">//     crc32.update(flowAtStarting, 2);</span></div>
-<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160; </div>
-<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160; </div>
-<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;<span class="comment">//     byte flowWithBlowerOn[2];  // 16 bits</span></div>
-<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;<span class="comment">//     toBytes16(flowWithBlowerOn, flowWithBlowerOnValue);</span></div>
-<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;<span class="comment">//     Serial6.write(flowWithBlowerOn, 2);</span></div>
-<div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;<span class="comment">//     crc32.update(flowWithBlowerOn, 2);</span></div>
-<div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160; </div>
-<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;<span class="comment">//     Serial6.print(&quot;\n&quot;);</span></div>
-<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;<span class="comment">//     crc32.update(&quot;\n&quot;, 1);</span></div>
-<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160; </div>
-<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;<span class="comment">//     byte crc[4];  // 32 bits</span></div>
-<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;<span class="comment">//     toBytes32(crc, crc32.finalize());</span></div>
-<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;<span class="comment">//     Serial6.write(crc, 4);</span></div>
-<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;<span class="comment">//     Serial6.write(footer, FOOTER_SIZE);</span></div>
-<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;<span class="comment">// }</span></div>
-<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160; </div>
-<div class="line"><a name="l01276"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a7716bf0d47f2e59ef82c0e0df92c051d"> 1276</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8cpp.html#a7716bf0d47f2e59ef82c0e0df92c051d">sendBatteryDeeplyDischargedFatalError</a>(uint16_t batteryLevelValue) {</div>
-<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
-<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;    CRC32 crc32;</div>
-<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
-<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;    crc32.update(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
-<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);  <span class="comment">// Communication protocol version</span></div>
-<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;    crc32.update((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);</div>
-<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160; </div>
-<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
-<div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;    crc32.update(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
-<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>);</div>
-<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;    crc32.update(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>, strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>));</div>
-<div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
-<div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;    crc32.update(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
-<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160; </div>
-<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
-<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
-<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160; </div>
-<div class="line"><a name="l01294"></a><span class="lineno"> 1294</span>&#160;    <span class="keywordtype">byte</span> systick[8];  <span class="comment">// 64 bits</span></div>
-<div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;    <a class="code" href="telemetry_8cpp.html#af8835013b2542f5155d6647b7b618570">toBytes64</a>(systick, <a class="code" href="telemetry_8cpp.html#a4601d1034f9201149fb34e3b82519f1a">computeSystick</a>());</div>
-<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(systick, 8);</div>
-<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160;    crc32.update(systick, 8);</div>
-<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160; </div>
-<div class="line"><a name="l01299"></a><span class="lineno"> 1299</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
-<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
-<div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160; </div>
-<div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(3);</div>
-<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;    crc32.update(3);</div>
-<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160; </div>
-<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
-<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
-<div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160; </div>
-<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;    <span class="keywordtype">byte</span> batteryLevel[2];  <span class="comment">// 16 bits</span></div>
-<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(batteryLevel, batteryLevelValue);</div>
-<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(batteryLevel, 2);</div>
-<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;    crc32.update(batteryLevel, 2);</div>
-<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160; </div>
-<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;    crc32.update(<span class="stringliteral">&quot;\n&quot;</span>, 1);</div>
-<div class="line"><a name="l01315"></a><span class="lineno"> 1315</span>&#160; </div>
-<div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;    <span class="keywordtype">byte</span> crc[4];  <span class="comment">// 32 bits</span></div>
-<div class="line"><a name="l01317"></a><span class="lineno"> 1317</span>&#160;    <a class="code" href="telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234">toBytes32</a>(crc, crc32.finalize());</div>
-<div class="line"><a name="l01318"></a><span class="lineno"> 1318</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(crc, 4);</div>
-<div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a>, <a class="code" href="telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2">FOOTER_SIZE</a>);</div>
-<div class="line"><a name="l01320"></a><span class="lineno"> 1320</span>&#160;}</div>
-<div class="line"><a name="l01321"></a><span class="lineno"> 1321</span>&#160; </div>
-<div class="line"><a name="l01322"></a><span class="lineno"> 1322</span>&#160;<span class="comment">// void sendMassFlowMeterFatalError(void) {</span></div>
-<div class="line"><a name="l01323"></a><span class="lineno"> 1323</span>&#160;<span class="comment">//     Serial6.write(header, HEADER_SIZE);</span></div>
-<div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160;<span class="comment">//     CRC32 crc32;</span></div>
-<div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;<span class="comment">//     Serial6.write(&quot;E:&quot;, 2);</span></div>
-<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;<span class="comment">//     crc32.update(&quot;E:&quot;, 2);</span></div>
-<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;<span class="comment">//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version</span></div>
-<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;<span class="comment">//     crc32.update((uint8_t)PROTOCOL_VERSION);</span></div>
-<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160; </div>
-<div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;<span class="comment">//     Serial6.write(static_cast&lt;uint8_t&gt;(strlen(VERSION)));</span></div>
-<div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;<span class="comment">//     crc32.update(static_cast&lt;uint8_t&gt;(strlen(VERSION)));</span></div>
-<div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;<span class="comment">//     Serial6.print(VERSION);</span></div>
-<div class="line"><a name="l01333"></a><span class="lineno"> 1333</span>&#160;<span class="comment">//     crc32.update(VERSION, strlen(VERSION));</span></div>
-<div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;<span class="comment">//     Serial6.write(deviceId, 12);</span></div>
-<div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160;<span class="comment">//     crc32.update(deviceId, 12);</span></div>
-<div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160; </div>
-<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160; </div>
-<div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;<span class="comment">//     byte systick[8];  // 64 bits</span></div>
-<div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;<span class="comment">//     toBytes64(systick, computeSystick());</span></div>
-<div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;<span class="comment">//     Serial6.write(systick, 8);</span></div>
-<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;<span class="comment">//     crc32.update(systick, 8);</span></div>
-<div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160; </div>
-<div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160; </div>
-<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;<span class="comment">//     Serial6.write(4);</span></div>
-<div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;<span class="comment">//     crc32.update(4);</span></div>
-<div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160; </div>
-<div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160;<span class="comment">//     Serial6.print(&quot;\n&quot;);</span></div>
-<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160;<span class="comment">//     crc32.update(&quot;\n&quot;, 1);</span></div>
-<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160; </div>
-<div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;<span class="comment">//     byte crc[4];  // 32 bits</span></div>
-<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;<span class="comment">//     toBytes32(crc, crc32.finalize());</span></div>
-<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;<span class="comment">//     Serial6.write(crc, 4);</span></div>
-<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;<span class="comment">//     Serial6.write(footer, FOOTER_SIZE);</span></div>
-<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;<span class="comment">// }</span></div>
-<div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160; </div>
-<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160;<span class="comment">// void sendInconsistentPressureFatalError(uint16_t pressureValue) {</span></div>
-<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;<span class="comment">//     Serial6.write(header, HEADER_SIZE);</span></div>
-<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;<span class="comment">//     CRC32 crc32;</span></div>
-<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;<span class="comment">//     Serial6.write(&quot;E:&quot;, 2);</span></div>
-<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;<span class="comment">//     crc32.update(&quot;E:&quot;, 2);</span></div>
-<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160;<span class="comment">//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version</span></div>
-<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160;<span class="comment">//     crc32.update((uint8_t)PROTOCOL_VERSION);</span></div>
-<div class="line"><a name="l01367"></a><span class="lineno"> 1367</span>&#160; </div>
-<div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;<span class="comment">//     Serial6.write(static_cast&lt;uint8_t&gt;(strlen(VERSION)));</span></div>
-<div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;<span class="comment">//     crc32.update(static_cast&lt;uint8_t&gt;(strlen(VERSION)));</span></div>
-<div class="line"><a name="l01370"></a><span class="lineno"> 1370</span>&#160;<span class="comment">//     Serial6.print(VERSION);</span></div>
-<div class="line"><a name="l01371"></a><span class="lineno"> 1371</span>&#160;<span class="comment">//     crc32.update(VERSION, strlen(VERSION));</span></div>
-<div class="line"><a name="l01372"></a><span class="lineno"> 1372</span>&#160;<span class="comment">//     Serial6.write(deviceId, 12);</span></div>
-<div class="line"><a name="l01373"></a><span class="lineno"> 1373</span>&#160;<span class="comment">//     crc32.update(deviceId, 12);</span></div>
-<div class="line"><a name="l01374"></a><span class="lineno"> 1374</span>&#160; </div>
-<div class="line"><a name="l01375"></a><span class="lineno"> 1375</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160; </div>
-<div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160;<span class="comment">//     byte systick[8];  // 64 bits</span></div>
-<div class="line"><a name="l01379"></a><span class="lineno"> 1379</span>&#160;<span class="comment">//     toBytes64(systick, computeSystick());</span></div>
-<div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;<span class="comment">//     Serial6.write(systick, 8);</span></div>
-<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;<span class="comment">//     crc32.update(systick, 8);</span></div>
-<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160; </div>
-<div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160; </div>
-<div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;<span class="comment">//     Serial6.write(5);</span></div>
-<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160;<span class="comment">//     crc32.update(5);</span></div>
-<div class="line"><a name="l01388"></a><span class="lineno"> 1388</span>&#160; </div>
-<div class="line"><a name="l01389"></a><span class="lineno"> 1389</span>&#160;<span class="comment">//     Serial6.print(&quot;\t&quot;);</span></div>
-<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;<span class="comment">//     crc32.update(&quot;\t&quot;, 1);</span></div>
-<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160; </div>
-<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;<span class="comment">//     byte pressure[2];  // 16 bits</span></div>
-<div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160;<span class="comment">//     toBytes16(pressure, pressureValue);</span></div>
-<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;<span class="comment">//     Serial6.write(pressure, 2);</span></div>
-<div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160;<span class="comment">//     crc32.update(pressure, 2);</span></div>
-<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160; </div>
-<div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160;<span class="comment">//     Serial6.print(&quot;\n&quot;);</span></div>
-<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;<span class="comment">//     crc32.update(&quot;\n&quot;, 1);</span></div>
-<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160; </div>
-<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;<span class="comment">//     byte crc[4];  // 32 bits</span></div>
-<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;<span class="comment">//     toBytes32(crc, crc32.finalize());</span></div>
-<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;<span class="comment">//     Serial6.write(crc, 4);</span></div>
-<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;<span class="comment">//     Serial6.write(footer, FOOTER_SIZE);</span></div>
-<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;<span class="comment">// }</span></div>
-<div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160; </div>
-<div class="line"><a name="l01406"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e"> 1406</a></span>&#160;uint8_t <a class="code" href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a>(uint16_t pressure) {</div>
-<div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;    uint8_t result;</div>
-<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;    uint16_t lastDigit = pressure % 10u;</div>
-<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160; </div>
-<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;    <span class="keywordflow">if</span> (lastDigit &lt; 5u) {</div>
-<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;        result = (pressure / 10u);</div>
-<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;        result = (pressure / 10u) + 1u;</div>
-<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;    }</div>
-<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160; </div>
-<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;}</div>
+<div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160; </div>
+<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)2);</div>
+<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;    crc32.update((uint8_t)2);</div>
+<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160; </div>
+<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160; </div>
+<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;    <span class="keywordtype">byte</span> pressureOffset[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(pressureOffset, pressureOffsetValue);</div>
+<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(pressureOffset, 2);</div>
+<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;    crc32.update(pressureOffset, 2);</div>
+<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160; </div>
+<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160; </div>
+<div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;    <span class="keywordtype">byte</span> minPressure[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(minPressure, <a class="code" href="end__of__line__test_8cpp.html#a5b5f7adf0d9af8a20a61407ed0b84f26">minPressureValue</a>);</div>
+<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(minPressure, 2);</div>
+<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;    crc32.update(minPressure, 2);</div>
+<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160; </div>
+<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160; </div>
+<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;    <span class="keywordtype">byte</span> maxPressure[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(maxPressure, <a class="code" href="end__of__line__test_8cpp.html#a058438e5f0963301b55cd80d93eab1b8">maxPressureValue</a>);</div>
+<div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(maxPressure, 2);</div>
+<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;    crc32.update(maxPressure, 2);</div>
+<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160; </div>
+<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160; </div>
+<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;    <span class="keywordtype">byte</span> flowAtStarting[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(flowAtStarting, flowAtStartingValue);</div>
+<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(flowAtStarting, 2);</div>
+<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;    crc32.update(flowAtStarting, 2);</div>
+<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160; </div>
+<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160; </div>
+<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;    <span class="keywordtype">byte</span> flowWithBlowerOn[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(flowWithBlowerOn, flowWithBlowerOnValue);</div>
+<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(flowWithBlowerOn, 2);</div>
+<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;    crc32.update(flowWithBlowerOn, 2);</div>
+<div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160; </div>
+<div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;    crc32.update(<span class="stringliteral">&quot;\n&quot;</span>, 1);</div>
+<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160; </div>
+<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;    <span class="keywordtype">byte</span> crc[4];  <span class="comment">// 32 bits</span></div>
+<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;    <a class="code" href="telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234">toBytes32</a>(crc, crc32.finalize());</div>
+<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(crc, 4);</div>
+<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a>, <a class="code" href="telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2">FOOTER_SIZE</a>);</div>
+<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;}</div>
+<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160; </div>
+<div class="line"><a name="l01275"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a7716bf0d47f2e59ef82c0e0df92c051d"> 1275</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8cpp.html#a7716bf0d47f2e59ef82c0e0df92c051d">sendBatteryDeeplyDischargedFatalError</a>(uint16_t batteryLevelValue) {</div>
+<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
+<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;    CRC32 crc32;</div>
+<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;    crc32.update(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);  <span class="comment">// Communication protocol version</span></div>
+<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;    crc32.update((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);</div>
+<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160; </div>
+<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;    crc32.update(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>);</div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;    crc32.update(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>, strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>));</div>
+<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;    crc32.update(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160; </div>
+<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160; </div>
+<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;    <span class="keywordtype">byte</span> systick[8];  <span class="comment">// 64 bits</span></div>
+<div class="line"><a name="l01294"></a><span class="lineno"> 1294</span>&#160;    <a class="code" href="telemetry_8cpp.html#af8835013b2542f5155d6647b7b618570">toBytes64</a>(systick, <a class="code" href="telemetry_8cpp.html#a4601d1034f9201149fb34e3b82519f1a">computeSystick</a>());</div>
+<div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(systick, 8);</div>
+<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;    crc32.update(systick, 8);</div>
+<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160; </div>
+<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01299"></a><span class="lineno"> 1299</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160; </div>
+<div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)3);</div>
+<div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;    crc32.update((uint8_t)3);</div>
+<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160; </div>
+<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160; </div>
+<div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160;    <span class="keywordtype">byte</span> batteryLevel[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(batteryLevel, batteryLevelValue);</div>
+<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(batteryLevel, 2);</div>
+<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160;    crc32.update(batteryLevel, 2);</div>
+<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160; </div>
+<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    crc32.update(<span class="stringliteral">&quot;\n&quot;</span>, 1);</div>
+<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160; </div>
+<div class="line"><a name="l01315"></a><span class="lineno"> 1315</span>&#160;    <span class="keywordtype">byte</span> crc[4];  <span class="comment">// 32 bits</span></div>
+<div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;    <a class="code" href="telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234">toBytes32</a>(crc, crc32.finalize());</div>
+<div class="line"><a name="l01317"></a><span class="lineno"> 1317</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(crc, 4);</div>
+<div class="line"><a name="l01318"></a><span class="lineno"> 1318</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a>, <a class="code" href="telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2">FOOTER_SIZE</a>);</div>
+<div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;}</div>
+<div class="line"><a name="l01320"></a><span class="lineno"> 1320</span>&#160; </div>
+<div class="line"><a name="l01321"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a03a9070c493c798b674e458ac76a9700"> 1321</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8cpp.html#a03a9070c493c798b674e458ac76a9700">sendMassFlowMeterFatalError</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l01322"></a><span class="lineno"> 1322</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
+<div class="line"><a name="l01323"></a><span class="lineno"> 1323</span>&#160;    CRC32 crc32;</div>
+<div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;    crc32.update(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);  <span class="comment">// Communication protocol version</span></div>
+<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;    crc32.update((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);</div>
+<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160; </div>
+<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;    crc32.update(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>);</div>
+<div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;    crc32.update(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>, strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>));</div>
+<div class="line"><a name="l01333"></a><span class="lineno"> 1333</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;    crc32.update(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160; </div>
+<div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160; </div>
+<div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160;    <span class="keywordtype">byte</span> systick[8];  <span class="comment">// 64 bits</span></div>
+<div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;    <a class="code" href="telemetry_8cpp.html#af8835013b2542f5155d6647b7b618570">toBytes64</a>(systick, <a class="code" href="telemetry_8cpp.html#a4601d1034f9201149fb34e3b82519f1a">computeSystick</a>());</div>
+<div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(systick, 8);</div>
+<div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;    crc32.update(systick, 8);</div>
+<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160; </div>
+<div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160; </div>
+<div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)4);</div>
+<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;    crc32.update((uint8_t)4);</div>
+<div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160; </div>
+<div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160;    crc32.update(<span class="stringliteral">&quot;\n&quot;</span>, 1);</div>
+<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160; </div>
+<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;    <span class="keywordtype">byte</span> crc[4];  <span class="comment">// 32 bits</span></div>
+<div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;    <a class="code" href="telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234">toBytes32</a>(crc, crc32.finalize());</div>
+<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(crc, 4);</div>
+<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a>, <a class="code" href="telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2">FOOTER_SIZE</a>);</div>
+<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;}</div>
+<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160; </div>
+<div class="line"><a name="l01359"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a2ee25affd7ee489a8ad0a478f45fc3bd"> 1359</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="telemetry_8cpp.html#a2ee25affd7ee489a8ad0a478f45fc3bd">sendInconsistentPressureFatalError</a>(uint16_t <a class="code" href="end__of__line__test_8cpp.html#a51ebb0a43f32a3a424b25f92ef66a740">pressureValue</a>) {</div>
+<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a>, <a class="code" href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a>);</div>
+<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;    CRC32 crc32;</div>
+<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;    crc32.update(<span class="stringliteral">&quot;E:&quot;</span>, 2);</div>
+<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);  <span class="comment">// Communication protocol version</span></div>
+<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160;    crc32.update((uint8_t)<a class="code" href="telemetry_8h.html#a277f7abca2044f354abe265252cb9252">PROTOCOL_VERSION</a>);</div>
+<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160; </div>
+<div class="line"><a name="l01367"></a><span class="lineno"> 1367</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;    crc32.update(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>)));</div>
+<div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>);</div>
+<div class="line"><a name="l01370"></a><span class="lineno"> 1370</span>&#160;    crc32.update(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>, strlen(<a class="code" href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>));</div>
+<div class="line"><a name="l01371"></a><span class="lineno"> 1371</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01372"></a><span class="lineno"> 1372</span>&#160;    crc32.update(<a class="code" href="telemetry_8cpp.html#acc10ad826017d2fc50836961a928529a">deviceId</a>, 12);</div>
+<div class="line"><a name="l01373"></a><span class="lineno"> 1373</span>&#160; </div>
+<div class="line"><a name="l01374"></a><span class="lineno"> 1374</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01375"></a><span class="lineno"> 1375</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160; </div>
+<div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160;    <span class="keywordtype">byte</span> systick[8];  <span class="comment">// 64 bits</span></div>
+<div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160;    <a class="code" href="telemetry_8cpp.html#af8835013b2542f5155d6647b7b618570">toBytes64</a>(systick, <a class="code" href="telemetry_8cpp.html#a4601d1034f9201149fb34e3b82519f1a">computeSystick</a>());</div>
+<div class="line"><a name="l01379"></a><span class="lineno"> 1379</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(systick, 8);</div>
+<div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;    crc32.update(systick, 8);</div>
+<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160; </div>
+<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160; </div>
+<div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write((uint8_t)5);</div>
+<div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;    crc32.update((uint8_t)5);</div>
+<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160; </div>
+<div class="line"><a name="l01388"></a><span class="lineno"> 1388</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\t&quot;</span>);</div>
+<div class="line"><a name="l01389"></a><span class="lineno"> 1389</span>&#160;    crc32.update(<span class="stringliteral">&quot;\t&quot;</span>, 1);</div>
+<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160; </div>
+<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;    <span class="keywordtype">byte</span> pressure[2];  <span class="comment">// 16 bits</span></div>
+<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;    <a class="code" href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a>(pressure, <a class="code" href="end__of__line__test_8cpp.html#a51ebb0a43f32a3a424b25f92ef66a740">pressureValue</a>);</div>
+<div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(pressure, 2);</div>
+<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;    crc32.update(pressure, 2);</div>
+<div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160; </div>
+<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.print(<span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160;    crc32.update(<span class="stringliteral">&quot;\n&quot;</span>, 1);</div>
+<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160; </div>
+<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;    <span class="keywordtype">byte</span> crc[4];  <span class="comment">// 32 bits</span></div>
+<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;    <a class="code" href="telemetry_8cpp.html#ab8863bbbd9f5615734eb1b31bab87234">toBytes32</a>(crc, crc32.finalize());</div>
+<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(crc, 4);</div>
+<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;    <a class="code" href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a>.write(<a class="code" href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a>, <a class="code" href="telemetry_8cpp.html#af45093f3b0c3f71f312fe992755d92f2">FOOTER_SIZE</a>);</div>
+<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;}</div>
+<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160; </div>
+<div class="line"><a name="l01405"></a><span class="lineno"><a class="line" href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e"> 1405</a></span>&#160;uint8_t <a class="code" href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a>(uint16_t pressure) {</div>
+<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160;    uint8_t result;</div>
+<div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;    uint16_t lastDigit = pressure % 10u;</div>
+<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160; </div>
+<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;    <span class="keywordflow">if</span> (lastDigit &lt; 5u) {</div>
+<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;        result = (pressure / 10u);</div>
+<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;        result = (pressure / 10u) + 1u;</div>
+<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;    }</div>
+<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160; </div>
+<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;}</div>
 <div class="ttc" id="aalarm_8h_html_a5a708c1a1540361a33a030066a7c321b"><div class="ttname"><a href="alarm_8h.html#a5a708c1a1540361a33a030066a7c321b">AlarmPriority</a></div><div class="ttdeci">AlarmPriority</div><div class="ttdoc">Priority levels of an alarm.</div><div class="ttdef"><b>Definition:</b> <a href="alarm_8h_source.html#l00018">alarm.h:18</a></div></div>
 <div class="ttc" id="aalarm_8h_html_a5a708c1a1540361a33a030066a7c321ba383d8ec7d904898290bf24c1b0487e7c"><div class="ttname"><a href="alarm_8h.html#a5a708c1a1540361a33a030066a7c321ba383d8ec7d904898290bf24c1b0487e7c">ALARM_HIGH</a></div><div class="ttdeci">@ ALARM_HIGH</div><div class="ttdef"><b>Definition:</b> <a href="alarm_8h_source.html#l00018">alarm.h:18</a></div></div>
 <div class="ttc" id="aalarm_8h_html_a5a708c1a1540361a33a030066a7c321ba69dd7fdd09220fa73354de90ec02ab0d"><div class="ttname"><a href="alarm_8h.html#a5a708c1a1540361a33a030066a7c321ba69dd7fdd09220fa73354de90ec02ab0d">ALARM_LOW</a></div><div class="ttdeci">@ ALARM_LOW</div><div class="ttdef"><b>Definition:</b> <a href="alarm_8h_source.html#l00018">alarm.h:18</a></div></div>
@@ -1480,21 +1479,26 @@ $(document).ready(function(){initNavTree('telemetry_8cpp_source.html',''); initR
 <div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88">CyclePhases</a></div><div class="ttdeci">CyclePhases</div><div class="ttdoc">Defines the 2 main phases of the respiratory cycle.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00014">cycle.h:14</a></div></div>
 <div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88a63e9f8e263aa7c737c4ceca47bd20f29">EXHALATION</a></div><div class="ttdeci">@ EXHALATION</div><div class="ttdoc">Exhalation and pause.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00019">cycle.h:18</a></div></div>
 <div class="ttc" id="acycle_8h_html_aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0"><div class="ttname"><a href="cycle_8h.html#aff4abe7cc03a1c634e5583d338448b88ab4687c42ca2ec518e856e8516abf02a0">INHALATION</a></div><div class="ttdeci">@ INHALATION</div><div class="ttdoc">Inspiration and inspiration holding.</div><div class="ttdef"><b>Definition:</b> <a href="cycle_8h_source.html#l00016">cycle.h:16</a></div></div>
+<div class="ttc" id="aend__of__line__test_8cpp_html_a058438e5f0963301b55cd80d93eab1b8"><div class="ttname"><a href="end__of__line__test_8cpp.html#a058438e5f0963301b55cd80d93eab1b8">maxPressureValue</a></div><div class="ttdeci">int32_t maxPressureValue</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00033">end_of_line_test.cpp:33</a></div></div>
 <div class="ttc" id="aend__of__line__test_8cpp_html_a51ebb0a43f32a3a424b25f92ef66a740"><div class="ttname"><a href="end__of__line__test_8cpp.html#a51ebb0a43f32a3a424b25f92ef66a740">pressureValue</a></div><div class="ttdeci">int32_t pressureValue</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00030">end_of_line_test.cpp:30</a></div></div>
+<div class="ttc" id="aend__of__line__test_8cpp_html_a5b5f7adf0d9af8a20a61407ed0b84f26"><div class="ttname"><a href="end__of__line__test_8cpp.html#a5b5f7adf0d9af8a20a61407ed0b84f26">minPressureValue</a></div><div class="ttdeci">int32_t minPressureValue</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00032">end_of_line_test.cpp:32</a></div></div>
 <div class="ttc" id="amass__flow__meter_8cpp_html_a78f7a37dba921e0b0347b960fb40bc51"><div class="ttname"><a href="mass__flow__meter_8cpp.html#a78f7a37dba921e0b0347b960fb40bc51">i</a></div><div class="ttdeci">uint16_t i</div><div class="ttdef"><b>Definition:</b> <a href="mass__flow__meter_8cpp_source.html#l00091">mass_flow_meter.cpp:91</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a1c6d5de492ac61ad29aec7aa9a436bbf"><div class="ttname"><a href="parameters_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a></div><div class="ttdeci">#define VERSION</div><div class="ttdoc">Current version of the software.</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00020">parameters.h:20</a></div></div>
 <div class="ttc" id="arespirator_8cpp_html_a60ee64aca41dc35ed6de6b83da35ec99"><div class="ttname"><a href="respirator_8cpp.html#a60ee64aca41dc35ed6de6b83da35ec99">Serial6</a></div><div class="ttdeci">HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX)</div></div>
+<div class="ttc" id="atelemetry_8cpp_html_a03a9070c493c798b674e458ac76a9700"><div class="ttname"><a href="telemetry_8cpp.html#a03a9070c493c798b674e458ac76a9700">sendMassFlowMeterFatalError</a></div><div class="ttdeci">void sendMassFlowMeterFatalError(void)</div><div class="ttdoc">Send a &quot;mass flow meter&quot; fatal error.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01321">telemetry.cpp:1321</a></div></div>
+<div class="ttc" id="atelemetry_8cpp_html_a08f6bf6dae077a820cfe1a5a00806a0e"><div class="ttname"><a href="telemetry_8cpp.html#a08f6bf6dae077a820cfe1a5a00806a0e">sendCalibrationFatalError</a></div><div class="ttdeci">void sendCalibrationFatalError(int16_t pressureOffsetValue, int16_t minPressureValue, int16_t maxPressureValue, int16_t flowAtStartingValue, int16_t flowWithBlowerOnValue)</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01193">telemetry.cpp:1193</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a0f2800eae023496c57ace31c40fb26b2"><div class="ttname"><a href="telemetry_8cpp.html#a0f2800eae023496c57ace31c40fb26b2">sendWatchdogRestartFatalError</a></div><div class="ttdeci">void sendWatchdogRestartFatalError(void)</div><div class="ttdoc">Send a &quot;watchdog restart&quot; fatal error.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01155">telemetry.cpp:1155</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a218ba2143825b823a9cd16fc63c60d89"><div class="ttname"><a href="telemetry_8cpp.html#a218ba2143825b823a9cd16fc63c60d89">header</a></div><div class="ttdeci">static const uint8_t header[HEADER_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00031">telemetry.cpp:31</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a28e4c84127e54cf26498fc0a6d20c1f9"><div class="ttname"><a href="telemetry_8cpp.html#a28e4c84127e54cf26498fc0a6d20c1f9">footer</a></div><div class="ttdeci">static const uint8_t footer[FOOTER_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00033">telemetry.cpp:33</a></div></div>
+<div class="ttc" id="atelemetry_8cpp_html_a2ee25affd7ee489a8ad0a478f45fc3bd"><div class="ttname"><a href="telemetry_8cpp.html#a2ee25affd7ee489a8ad0a478f45fc3bd">sendInconsistentPressureFatalError</a></div><div class="ttdeci">void sendInconsistentPressureFatalError(uint16_t pressureValue)</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01359">telemetry.cpp:1359</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a43134b8daee7c21190be0c7f335deb2e"><div class="ttname"><a href="telemetry_8cpp.html#a43134b8daee7c21190be0c7f335deb2e">sendControlAck</a></div><div class="ttdeci">void sendControlAck(uint8_t setting, uint16_t valueValue)</div><div class="ttdoc">Send a &quot;control ack&quot; message.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01109">telemetry.cpp:1109</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a4601d1034f9201149fb34e3b82519f1a"><div class="ttname"><a href="telemetry_8cpp.html#a4601d1034f9201149fb34e3b82519f1a">computeSystick</a></div><div class="ttdeci">uint64_t computeSystick(void)</div><div class="ttdoc">Compute current systick.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00105">telemetry.cpp:105</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a46ccd6539de37e53697fe5e3981cdd0b"><div class="ttname"><a href="telemetry_8cpp.html#a46ccd6539de37e53697fe5e3981cdd0b">sendBootMessage</a></div><div class="ttdeci">void sendBootMessage()</div><div class="ttdoc">Send a &quot;boot&quot; message.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00114">telemetry.cpp:114</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a49999be01380f41cc0d0f1f1406fb277"><div class="ttname"><a href="telemetry_8cpp.html#a49999be01380f41cc0d0f1f1406fb277">HEADER_SIZE</a></div><div class="ttdeci">#define HEADER_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00030">telemetry.cpp:30</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a58847ba6e44352308e4733ee03bd5be6"><div class="ttname"><a href="telemetry_8cpp.html#a58847ba6e44352308e4733ee03bd5be6">toBytes16</a></div><div class="ttdeci">void toBytes16(byte bytes[], uint16_t data)</div><div class="ttdoc">Convert a u16 so that it can be sent through serial.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00044">telemetry.cpp:44</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a73d6572224ad0ac84a8587615cef947c"><div class="ttname"><a href="telemetry_8cpp.html#a73d6572224ad0ac84a8587615cef947c">FIRST_BYTE</a></div><div class="ttdeci">#define FIRST_BYTE</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00028">telemetry.cpp:28</a></div></div>
-<div class="ttc" id="atelemetry_8cpp_html_a7716bf0d47f2e59ef82c0e0df92c051d"><div class="ttname"><a href="telemetry_8cpp.html#a7716bf0d47f2e59ef82c0e0df92c051d">sendBatteryDeeplyDischargedFatalError</a></div><div class="ttdeci">void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue)</div><div class="ttdoc">Send a &quot;battery deeply discharged&quot; fatal error.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01276">telemetry.cpp:1276</a></div></div>
-<div class="ttc" id="atelemetry_8cpp_html_a8702358b7d9d239791b9f951ffce847e"><div class="ttname"><a href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a></div><div class="ttdeci">uint8_t mmH2OtoCmH2O(uint16_t pressure)</div><div class="ttdoc">Convert and round a pressure in mmH2O to a pressure in cmH2O.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01406">telemetry.cpp:1406</a></div></div>
+<div class="ttc" id="atelemetry_8cpp_html_a7716bf0d47f2e59ef82c0e0df92c051d"><div class="ttname"><a href="telemetry_8cpp.html#a7716bf0d47f2e59ef82c0e0df92c051d">sendBatteryDeeplyDischargedFatalError</a></div><div class="ttdeci">void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue)</div><div class="ttdoc">Send a &quot;battery deeply discharged&quot; fatal error.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01275">telemetry.cpp:1275</a></div></div>
+<div class="ttc" id="atelemetry_8cpp_html_a8702358b7d9d239791b9f951ffce847e"><div class="ttname"><a href="telemetry_8cpp.html#a8702358b7d9d239791b9f951ffce847e">mmH2OtoCmH2O</a></div><div class="ttdeci">uint8_t mmH2OtoCmH2O(uint16_t pressure)</div><div class="ttdoc">Convert and round a pressure in mmH2O to a pressure in cmH2O.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l01405">telemetry.cpp:1405</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a88aec787f92afb6d95b6f9abeadb890a"><div class="ttname"><a href="telemetry_8cpp.html#a88aec787f92afb6d95b6f9abeadb890a">initTelemetry</a></div><div class="ttdeci">void initTelemetry(void)</div><div class="ttdoc">Prepare Serial6 to send telemetry data.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00109">telemetry.cpp:109</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a8b71cd7e79c3332f56a412548029016e"><div class="ttname"><a href="telemetry_8cpp.html#a8b71cd7e79c3332f56a412548029016e">sendAlarmTrap</a></div><div class="ttdeci">void sendAlarmTrap(uint16_t centileValue, int16_t pressureValue, CyclePhases phase, uint32_t cycleValue, uint8_t alarmCode, AlarmPriority alarmPriority, bool triggered, uint32_t expectedValue, uint32_t measuredValue, uint32_t cyclesSinceTriggerValue)</div><div class="ttdoc">Send a &quot;alarm trap&quot; message.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00969">telemetry.cpp:969</a></div></div>
 <div class="ttc" id="atelemetry_8cpp_html_a97399a768c8533f8e4a4c565b099b2a6"><div class="ttname"><a href="telemetry_8cpp.html#a97399a768c8533f8e4a4c565b099b2a6">computeDeviceId</a></div><div class="ttdeci">void computeDeviceId(void)</div><div class="ttdoc">Compute device ID.</div><div class="ttdef"><b>Definition:</b> <a href="telemetry_8cpp_source.html#l00085">telemetry.cpp:85</a></div></div>
