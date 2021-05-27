@@ -20,6 +20,7 @@
 #include "../includes/pressure.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
+#include "../includes/telemetry.h"
 
 // External
 #include "Arduino.h"
@@ -118,6 +119,18 @@ void Calibration_Init() {
             displayFlowMeterOffset(MFM_getOffset());
             delay(1000);
 #endif
+
+            // Send calibration fatal error to telemetry?
+            if (calibrationValid == false) {
+                // MFM reports an out-of-range value, it might not be connected
+                if ((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)) {
+                    // MFM failure (eg. not connected)
+                    sendMassFlowMeterFatalError();
+                } else {
+                    // Other calibration errors
+                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue, maxOffsetValue, flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
+                }
+            }
         }
         // Reset values to default state
         calibationStarted = false;
