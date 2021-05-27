@@ -103,11 +103,26 @@ void Calibration_Init() {
             blower.stop();
 
             // Happens when flow meter fails
-            if (((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)
-                 || (flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
+            bool isMassFlowMeterOutOfRange = ((flowMeterFlowAtStarting < -1000)
+                                              || (flowMeterFlowAtStarting > 1000));
+
+            if ((isMassFlowMeterOutOfRange == true)
+                || ((flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
                 // Invalid calibration
                 calibrationValid = false;
                 displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
+
+                // MFM reports an out-of-range value, it might not be connected
+                if (isMassFlowMeterOutOfRange == true) {
+                    // MFM failure (eg. not connected)
+                    sendMassFlowMeterFatalError();
+                } else {
+                    // Other calibration errors
+                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue,
+                                              maxOffsetValue, flowMeterFlowAtStarting,
+                                              flowMeterFlowWithBlowerOn);
+                }
+
                 Buzzer_High_Prio_Start();
                 Calibration_Read_Keyboard();
             } else {
@@ -120,20 +135,6 @@ void Calibration_Init() {
             displayFlowMeterOffset(MFM_getOffset());
             delay(1000);
 #endif
-
-            // Send calibration fatal error to telemetry?
-            if (calibrationValid == false) {
-                // MFM reports an out-of-range value, it might not be connected
-                if ((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)) {
-                    // MFM failure (eg. not connected)
-                    sendMassFlowMeterFatalError();
-                } else {
-                    // Other calibration errors
-                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue,
-                                              maxOffsetValue, flowMeterFlowAtStarting,
-                                              flowMeterFlowWithBlowerOn);
-                }
-            }
         }
         // Reset values to default state
         calibationStarted = false;
