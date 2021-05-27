@@ -128,7 +128,9 @@ void Calibration_Init() {
                     sendMassFlowMeterFatalError();
                 } else {
                     // Other calibration errors
-                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue, maxOffsetValue, flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
+                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue,
+                                              maxOffsetValue, flowMeterFlowAtStarting,
+                                              flowMeterFlowWithBlowerOn);
                 }
             }
         }
