@@ -1356,51 +1356,51 @@ void sendMassFlowMeterFatalError(void) {
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-// void sendInconsistentPressureFatalError(uint16_t pressureValue) {
-//     Serial6.write(header, HEADER_SIZE);
-//     CRC32 crc32;
-//     Serial6.write("E:", 2);
-//     crc32.update("E:", 2);
-//     Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
-//     crc32.update((uint8_t)PROTOCOL_VERSION);
+void sendInconsistentPressureFatalError(uint16_t pressureValue) {
+    Serial6.write(header, HEADER_SIZE);
+    CRC32 crc32;
+    Serial6.write("E:", 2);
+    crc32.update("E:", 2);
+    Serial6.write((uint8_t)PROTOCOL_VERSION);  // Communication protocol version
+    crc32.update((uint8_t)PROTOCOL_VERSION);
 
-//     Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
-//     crc32.update(static_cast<uint8_t>(strlen(VERSION)));
-//     Serial6.print(VERSION);
-//     crc32.update(VERSION, strlen(VERSION));
-//     Serial6.write(deviceId, 12);
-//     crc32.update(deviceId, 12);
+    Serial6.write(static_cast<uint8_t>(strlen(VERSION)));
+    crc32.update(static_cast<uint8_t>(strlen(VERSION)));
+    Serial6.print(VERSION);
+    crc32.update(VERSION, strlen(VERSION));
+    Serial6.write(deviceId, 12);
+    crc32.update(deviceId, 12);
 
-//     Serial6.print("\t");
-//     crc32.update("\t", 1);
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
-//     byte systick[8];  // 64 bits
-//     toBytes64(systick, computeSystick());
-//     Serial6.write(systick, 8);
-//     crc32.update(systick, 8);
+    byte systick[8];  // 64 bits
+    toBytes64(systick, computeSystick());
+    Serial6.write(systick, 8);
+    crc32.update(systick, 8);
 
-//     Serial6.print("\t");
-//     crc32.update("\t", 1);
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
-//     Serial6.write((uint8_t)5);
-//     crc32.update((uint8_t)5);
+    Serial6.write((uint8_t)5);
+    crc32.update((uint8_t)5);
 
-//     Serial6.print("\t");
-//     crc32.update("\t", 1);
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
-//     byte pressure[2];  // 16 bits
-//     toBytes16(pressure, pressureValue);
-//     Serial6.write(pressure, 2);
-//     crc32.update(pressure, 2);
+    byte pressure[2];  // 16 bits
+    toBytes16(pressure, pressureValue);
+    Serial6.write(pressure, 2);
+    crc32.update(pressure, 2);
 
-//     Serial6.print("\n");
-//     crc32.update("\n", 1);
+    Serial6.print("\n");
+    crc32.update("\n", 1);
 
-//     byte crc[4];  // 32 bits
-//     toBytes32(crc, crc32.finalize());
-//     Serial6.write(crc, 4);
-//     Serial6.write(footer, FOOTER_SIZE);
-// }
+    byte crc[4];  // 32 bits
+    toBytes32(crc, crc32.finalize());
+    Serial6.write(crc, 4);
+    Serial6.write(footer, FOOTER_SIZE);
+}
 
 uint8_t mmH2OtoCmH2O(uint16_t pressure) {
     uint8_t result;

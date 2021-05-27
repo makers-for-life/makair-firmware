@@ -72,6 +72,7 @@ void Calibration_Init() {
             // Invalid calibration
             calibrationValid = false;
             displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
+            sendInconsistentPressureFatalError(inspiratoryPressureSensorOffset);
             Buzzer_High_Prio_Start();
             Calibration_Read_Keyboard();
         } else {
