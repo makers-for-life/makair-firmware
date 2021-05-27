@@ -60,6 +60,12 @@ arduino-cli upload --port {SERIAL_PORT} --fqbn STMicroelectronics:stm32:Nucleo_6
 
 _Make sure to replace {SERIAL_PORT} with your serial port, which should begin with `/dev/`._
 
+## Scripts
+
+A few scripts are available, eg. to automate repeated manual actions:
+
+1. **Compile & Flash**: `./scripts/compile_and_flash.sh` (compiles firmware and flashes it over the plugged STM32 programmer);
+
 ## Configuration
 
 The configuration options can be found in the following files:
