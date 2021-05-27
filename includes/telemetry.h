@@ -141,8 +141,8 @@ void sendBatteryDeeplyDischargedFatalError(uint16_t batteryLevelValue);
 /// Send a "mass flow meter" fatal error
 void sendMassFlowMeterFatalError(void);
 
-/// Send a "inconsistent pressure" fatal error
-void sendInconsistentPressureFatalError(uint16_t pressureValue);
+// /// Send a "inconsistent pressure" fatal error
+// void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
 /**
  * Convert and round a pressure in mmH2O to a pressure in cmH2O
