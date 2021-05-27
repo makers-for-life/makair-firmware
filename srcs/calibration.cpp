@@ -20,6 +20,7 @@
 #include "../includes/pressure.h"
 #include "../includes/pressure_valve.h"
 #include "../includes/screen.h"
+#include "../includes/telemetry.h"
 
 // External
 #include "Arduino.h"
@@ -71,6 +72,7 @@ void Calibration_Init() {
             // Invalid calibration
             calibrationValid = false;
             displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
+            sendInconsistentPressureFatalError(inspiratoryPressureSensorOffset);
             Buzzer_High_Prio_Start();
             Calibration_Read_Keyboard();
         } else {
@@ -101,11 +103,26 @@ void Calibration_Init() {
             blower.stop();
 
             // Happens when flow meter fails
-            if (((flowMeterFlowAtStarting < -1000) || (flowMeterFlowAtStarting > 1000)
-                 || (flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
+            bool isMassFlowMeterOutOfRange = ((flowMeterFlowAtStarting < -1000)
+                                              || (flowMeterFlowAtStarting > 1000));
+
+            if ((isMassFlowMeterOutOfRange == true)
+                || ((flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
                 // Invalid calibration
                 calibrationValid = false;
                 displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
+
+                // MFM reports an out-of-range value, it might not be connected
+                if (isMassFlowMeterOutOfRange == true) {
+                    // MFM failure (eg. not connected)
+                    sendMassFlowMeterFatalError();
+                } else {
+                    // Other calibration errors
+                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue,
+                                              maxOffsetValue, flowMeterFlowAtStarting,
+                                              flowMeterFlowWithBlowerOn);
+                }
+
                 Buzzer_High_Prio_Start();
                 Calibration_Read_Keyboard();
             } else {
