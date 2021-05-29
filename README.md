@@ -66,6 +66,7 @@ _Make sure to replace {SERIAL_PORT} with your serial port, which should begin wi
 A few scripts are available, eg. to automate repeated manual actions:
 
 1. **Compile & Flash**: `./scripts/compile_and_flash.sh` (compiles firmware and flashes it over the plugged STM32 programmer);
+2. **Compile Only**: `./scripts/compile_only.sh` (compiles firmware, useful to check for code mistakes);
 
 ## Configuration
 
