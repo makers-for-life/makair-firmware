@@ -2,6 +2,7 @@
 /.vscode/
 /local/
 .DS_Store
+/builds/*
 !/builds/.gitkeep
 /*.csv
 /*.ods
