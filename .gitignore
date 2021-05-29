@@ -1,13 +1,9 @@
 /.pio/
 /.vscode/
+
 /local/
-.DS_Store
 /builds/*
 !/builds/.gitkeep
-/*.csv
-/*.ods
-/*.csv#
-/*.ods#
-.scannerwork
 
-srcs/srcs.ino
+.DS_Store
+.scannerwork
