@@ -1,16 +1,11 @@
 /.pio/
 /.vscode/
-/local/
-.DS_Store
-/output/*
-!/output/.gitkeep
-/*.csv
-/*.ods
-/*.csv#
-/*.ods#
-build/*
-.scannerwork
 
-flash.sh
+/local/
+/builds/*
+!/builds/.gitkeep
+
+.DS_Store
+.scannerwork
 
 srcs/srcs.ino

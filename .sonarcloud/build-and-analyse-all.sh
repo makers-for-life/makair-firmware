@@ -16,7 +16,7 @@ do
       export MODE=${softwareModes[$softwareIndex]}
       export HARDWARE_VERSION=${hardwareVersions[$hardwareIndex]}
 
-      path="build/${SOFTWARE_FULLNAME}/bo"
+      path="builds/${SOFTWARE_FULLNAME}/bo"
 
       mkdir -p "$path"
 
