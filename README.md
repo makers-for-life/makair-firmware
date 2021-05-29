@@ -44,7 +44,7 @@ In order to setup your environment and build the code, please follow the followi
 Then, compile the project:
 
 ```sh
-arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production
+arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output builds/respirator-production
 ```
 
 ## How To Flash?
@@ -56,7 +56,7 @@ In order to flash the firmware that you just built using the instructions above:
 3. Make sure that [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) is installed on your computer, and run:
 
 ```sh
-arduino-cli upload --port {SERIAL_PORT} --fqbn STMicroelectronics:stm32:Nucleo_64:pnum=NUCLEO_F411RE,upload_method=swdMethod --input output/respirator-production
+arduino-cli upload --port {SERIAL_PORT} --fqbn STMicroelectronics:stm32:Nucleo_64:pnum=NUCLEO_F411RE,upload_method=swdMethod --input builds/respirator-production
 ```
 
 _Make sure to replace {SERIAL_PORT} with your serial port, which should begin with `/dev/`._

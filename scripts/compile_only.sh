@@ -9,7 +9,7 @@ pushd "$BASE_DIR" > /dev/null
 
   sleep 0.5
 
-  rm -f ./output/* || exit 1
+  rm -f ./builds/* || exit 1
 
   echo "Old builds cleared."
 
@@ -18,7 +18,7 @@ pushd "$BASE_DIR" > /dev/null
 
   sleep 0.5
 
-  arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output output/respirator-production || exit 1
+  arduino-cli compile --fqbn STMicroelectronics:stm32:Nucleo_64:opt=o3std,pnum=NUCLEO_F411RE --verbose srcs/respirator.cpp --output builds/respirator-production || exit 1
 
   sleep 0.5
 
