@@ -26,7 +26,7 @@ jobs:
         # build unit test
         mkdir build_test
         cd build_test
-        cmake $GITHUB_WORKSPACE/test/
+        cmake $GITHUB_WORKSPACE/tests/
         cmake --build .
         # Run tests
         ctest

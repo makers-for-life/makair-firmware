@@ -16,7 +16,7 @@
 1. Create a build folder and navigate to it
 2. Run:
     ```
-    cmake PATH/TO/test
+    cmake PATH/TO/tests
     cmake --build .
     ```
 In the build folder, the test executable will be created.
