@@ -62,7 +62,7 @@ void eolScreenMessage(char* message, bool isFailed) {
     screen.print(eolTestNumber);
     if (isFailed) {
         screen.setCursor(15, 0);
-        screen.print("ECHEC");
+        screen.print("FAIL");
     } else {
         screen.setCursor(18, 0);
         screen.print("OK");
@@ -306,7 +306,7 @@ void millisecondTimerEOL(void)
             totalPushed += buttonsPushed[i];
         }
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Please press each\nbutton... \n %d / 11 OK", totalPushed);
+                       "Please press each\nbutton... \n %d / %d OK", totalPushed, EOL_TOTALBUTTONS);
         if (totalPushed == EOL_TOTALBUTTONS) {
             eolTestNumber++;
             while (digitalRead(PIN_BTN_START) == HIGH) {
@@ -361,7 +361,7 @@ void millisecondTimerEOL(void)
     } else if (eolstep == MAX_PRESSURE_NOT_REACHED) {
         // FAIL: Case max pressure was not reached
         blower.stop();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pressure increase\nimpossible ! ");
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pressure increase\nimpossible! ");
     } else if (eolstep == MAX_PRESSURE_REACHED_OK) {
         // Close the valves and wait 1000 ms
         inspiratoryValve.close();
@@ -418,7 +418,7 @@ void millisecondTimerEOL(void)
         }
     } else if (eolstep == MIN_PRESSURE_NOT_REACHED) {
         // FAIL: Case emptying the system did not work
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Opening valves\nimpossible ! ");
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Opening valves\nimpossible! ");
     } else if (eolstep == USER_CONFIRMATION_BEFORE_O2_TEST) {
         // Ask the operator to open the oxygen entrance, and wait for confirmation
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
@@ -455,7 +455,7 @@ void millisecondTimerEOL(void)
     } else if (eolstep == O2_PRESSURE_NOT_REACH) {
         // FAIL: the pressure did not bo above 100 mmh2O during O2 test
         blower.stop();
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pipe O2\nBlocked ! ");
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pipe O2\nBlocked! ");
     } else if (eolstep == WAIT_USER_BEFORE_LONG_RUN) {
         // Wait for user to press start before long run.
         blower.stop();
