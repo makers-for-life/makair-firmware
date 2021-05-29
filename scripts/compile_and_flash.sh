@@ -1,5 +1,13 @@
 #!/bin/bash
 
+##
+#  compile_and_flash.sh
+#  Compile & Flash utility
+#
+#  Copyright 2021, Makers For Life
+#  Author: Makers For Life
+##
+
 ABSPATH=$(cd "$(dirname "$0")"; pwd)
 BASE_DIR="$ABSPATH/../"
 
