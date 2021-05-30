@@ -19,7 +19,6 @@
 
 /// Internals
 #include "../includes/main_controller.h"
-#include "../includes/end_of_line_test.h"
 
 // INITIALISATION =============================================================
 

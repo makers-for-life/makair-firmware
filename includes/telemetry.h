@@ -11,6 +11,7 @@
 
 #include "../includes/alarm_controller.h"
 #include "../includes/cycle.h"
+#include "../includes/end_of_line_test.h"
 
 /// Current version of the telemetry protocol
 #define PROTOCOL_VERSION 2u
@@ -145,7 +146,7 @@ void sendMassFlowMeterFatalError(void);
 void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
 /// Send an "end-of-line test" snapshot
-void sendEolTestSnapshot(uint8_t step, uint8_t content, char error[]);
+void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]);
 
 /**
  * Convert and round a pressure in mmH2O to a pressure in cmH2O
