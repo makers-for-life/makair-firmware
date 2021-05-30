@@ -19,6 +19,7 @@
 
 /// Internals
 #include "../includes/main_controller.h"
+#include "../includes/end_of_line_test.h"
 
 // INITIALISATION =============================================================
 
@@ -1402,7 +1403,7 @@ void sendInconsistentPressureFatalError(uint16_t pressureValue) {
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-void sendEolTestSnapshot(uint8_t step, uint8_t content, char error_trace[]) {
+void sendEolTestSnapshot(uint8_t step, uint8_t state, char error_trace[]) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("L:", 2);
@@ -1434,11 +1435,11 @@ void sendEolTestSnapshot(uint8_t step, uint8_t content, char error_trace[]) {
     Serial6.print("\t");
     crc32.update("\t", 1);
 
-    Serial6.write(content);
-    crc32.update(content);
+    Serial6.write(state);
+    crc32.update(state);
 
     // Append error trace? (only if step is "error")
-    if (content == 2) {
+    if (state == STATE_ERROR) {
         Serial6.print("\t");
         crc32.update("\t", 1);
 

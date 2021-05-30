@@ -87,56 +87,6 @@ void eolScreenMessage(char* message, bool isFailed) {
     }
 }
 
-enum TestStep {
-    START,
-    SUPPLY_TO_EXPANDER_NOT_CONNECTED,
-    CHECK_FAN,
-    TEST_BAT_DEAD,
-    BATTERY_DEEP_DISCHARGE,
-    DISCONNECT_MAINS,
-    CONNECT_MAINS,
-    CHECK_BUZZER,
-    // cppcheck-suppress misra-c2012-12.3
-    CHECK_ALL_BUTTONS,
-    CHECK_UI_SCREEN,
-    // cppcheck-suppress misra-c2012-12.3
-    PLUG_AIR_TEST_SYTEM,
-    // cppcheck-suppress misra-c2012-12.3
-    REACH_MAX_PRESSURE,
-    // cppcheck-suppress misra-c2012-12.3
-    MAX_PRESSURE_REACHED_OK,
-    // cppcheck-suppress misra-c2012-12.3
-    MAX_PRESSURE_NOT_REACHED,
-    // cppcheck-suppress misra-c2012-12.3
-    START_LEAK_MESURE,
-    // cppcheck-suppress misra-c2012-12.3
-    LEAK_IS_TOO_HIGH,
-    // cppcheck-suppress misra-c2012-12.3
-    REACH_NULL_PRESSURE,
-    // cppcheck-suppress misra-c2012-12.3
-    MIN_PRESSURE_NOT_REACHED,
-    USER_CONFIRMATION_BEFORE_O2_TEST,
-    // cppcheck-suppress misra-c2012-12.3
-    START_O2_TEST,
-    // cppcheck-suppress misra-c2012-12.3
-    O2_PRESSURE_NOT_REACH,
-    WAIT_USER_BEFORE_LONG_RUN,
-    // cppcheck-suppress misra-c2012-12.3
-    START_LONG_RUN_BLOWER,
-    // cppcheck-suppress misra-c2012-12.3
-    PRESSURE_NOT_STABLE,
-    FLOW_NOT_STABLE,
-    END_SUCCESS,
-    DISPLAY_PRESSURE,
-    DISPLAY_FLOW
-};
-
-enum TestState {
-    STATE_IN_PROGRESS,
-    STATE_ERROR,
-    STATE_SUCCESS
-};
-
 TestState eolState = STATE_IN_PROGRESS;
 TestStep eolstep = START;
 TestStep previousEolStep = START;
