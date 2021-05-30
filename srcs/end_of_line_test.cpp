@@ -141,7 +141,6 @@ TestState eolState = STATE_IN_PROGRESS;
 TestStep eolstep = START;
 TestStep previousEolStep = START;
 boolean eolFail = false;
-char eolErrorTrace[] = "";
 #define EOLSCREENSIZE 100
 char eolScreenBuffer[EOLSCREENSIZE + 1];
 #define EOL_TOTALBUTTONS 11
@@ -168,7 +167,7 @@ void millisecondTimerEOL(void)
     }
     if ((clockEOLTimer % 500u) == 0u) {
         // Send EOL snapshot to telemetry every 500 ms, no more
-        sendEolTestSnapshot(eolstep, eolState, eolErrorTrace);
+        sendEolTestSnapshot(eolstep, eolState, "");
     }
 
     batteryLoop(0);
