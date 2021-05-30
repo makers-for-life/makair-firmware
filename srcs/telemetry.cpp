@@ -1403,7 +1403,7 @@ void sendInconsistentPressureFatalError(uint16_t pressureValue) {
     Serial6.write(footer, FOOTER_SIZE);
 }
 
-void sendEolTestSnapshot(uint8_t step, uint8_t state, char error_trace[]) {
+void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("L:", 2);
