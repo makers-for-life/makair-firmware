@@ -1402,6 +1402,7 @@ void sendInconsistentPressureFatalError(uint16_t pressureValue) {
     Serial6.write(footer, FOOTER_SIZE);
 }
 
+#ifndef SIMULATOR
 void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
@@ -1456,6 +1457,7 @@ void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]) {
     Serial6.write(crc, 4);
     Serial6.write(footer, FOOTER_SIZE);
 }
+#endif
 
 uint8_t mmH2OtoCmH2O(uint16_t pressure) {
     uint8_t result;

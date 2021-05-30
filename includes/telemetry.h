@@ -4,14 +4,16 @@
  * @file telemetry.h
  * @brief Implementation of the telemetry protocol
  *****************************************************************************/
-
 #pragma once
 
 #include <stdint.h>
 
 #include "../includes/alarm_controller.h"
+#include "../includes/config.h"
 #include "../includes/cycle.h"
+#ifndef SIMULATOR
 #include "../includes/end_of_line_test.h"
+#endif
 
 /// Current version of the telemetry protocol
 #define PROTOCOL_VERSION 2u
@@ -145,8 +147,11 @@ void sendMassFlowMeterFatalError(void);
 // /// Send a "inconsistent pressure" fatal error
 void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
+#ifndef SIMULATOR  // Disable the following function when in simulator
 /// Send an "end-of-line test" snapshot
 void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]);
+
+#endif
 
 /**
  * Convert and round a pressure in mmH2O to a pressure in cmH2O

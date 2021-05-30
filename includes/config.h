@@ -17,7 +17,6 @@
 
 /// Defines the current mode
 #define MODE MODE_PROD
-
 /**
  * Activates debug traces
  *
@@ -54,3 +53,6 @@
 /// Disable hardware buttons, used when integrating a motherboard in a touch- \
 ///   only device.
 // #define DISABLE_BUTTONS
+
+// Uncomment when compiling for the simulator
+//#define SIMULATOR
