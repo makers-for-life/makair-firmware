@@ -144,6 +144,9 @@ void sendMassFlowMeterFatalError(void);
 // /// Send a "inconsistent pressure" fatal error
 void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
+/// Send an "end-of-line test" snapshot
+void sendEolTestSnapshot(uint8_t step, uint8_t content, char error[]);
+
 /**
  * Convert and round a pressure in mmH2O to a pressure in cmH2O
  *

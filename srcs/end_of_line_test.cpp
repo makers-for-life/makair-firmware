@@ -131,9 +131,17 @@ enum TestStep {
     DISPLAY_FLOW
 };
 
+enum TestState {
+    STATE_IN_PROGRESS,
+    STATE_ERROR,
+    STATE_SUCCESS
+};
+
+TestState eolState = STATE_IN_PROGRESS;
 TestStep eolstep = START;
 TestStep previousEolStep = START;
 boolean eolFail = false;
+char eolErrorTrace[] = "";
 #define EOLSCREENSIZE 100
 char eolScreenBuffer[EOLSCREENSIZE + 1];
 #define EOL_TOTALBUTTONS 11
@@ -153,9 +161,14 @@ void millisecondTimerEOL(void)
     static int minbatlevel = 5000;
     static int maxbatlevel = 0;
     static int buttonsPushed[EOL_TOTALBUTTONS];
+
     if ((clockEOLTimer % 100u) == 0u) {
         // Refresh screen every 100 ms, no more
         eolScreenMessage(eolScreenBuffer, eolFail);
+    }
+    if ((clockEOLTimer % 500u) == 0u) {
+        // Send EOL snapshot to telemetry every 500 ms, no more
+        sendEolTestSnapshot(eolstep, eolState, eolErrorTrace);
     }
 
     batteryLoop(0);
@@ -164,6 +177,7 @@ void millisecondTimerEOL(void)
     if (eolstep == START) {
         if (!isMainsAvailable()) {
             eolstep = SUPPLY_TO_EXPANDER_NOT_CONNECTED;
+            eolState = STATE_ERROR;
         } else {
             eolstep = CHECK_FAN;
             eolMSCount = 0;
@@ -200,6 +214,7 @@ void millisecondTimerEOL(void)
                 eolstep = DISCONNECT_MAINS;
             } else if (batlevel < 2200) {  // Test if battery is under 22V
                 eolstep = BATTERY_DEEP_DISCHARGE;
+                eolState = STATE_ERROR;
             } else {
                 eolTestNumber++;
                 blower.stop();
@@ -357,6 +372,7 @@ void millisecondTimerEOL(void)
         if (eolMSCount > 20000u) {
             eolFail = true;
             eolstep = MAX_PRESSURE_NOT_REACHED;
+            eolState = STATE_ERROR;
         }
     } else if (eolstep == MAX_PRESSURE_NOT_REACHED) {
         // FAIL: Case max pressure was not reached
@@ -391,6 +407,7 @@ void millisecondTimerEOL(void)
             } else {
                 eolFail = true;
                 eolstep = LEAK_IS_TOO_HIGH;
+                eolState = STATE_ERROR;
             }
         }
     } else if (eolstep == LEAK_IS_TOO_HIGH) {
@@ -415,6 +432,7 @@ void millisecondTimerEOL(void)
             eolMSCount = 0;
             eolFail = true;
             eolstep = MIN_PRESSURE_NOT_REACHED;
+            eolState = STATE_ERROR;
         }
     } else if (eolstep == MIN_PRESSURE_NOT_REACHED) {
         // FAIL: Case emptying the system did not work
@@ -449,6 +467,7 @@ void millisecondTimerEOL(void)
             eolMSCount = 0;
             eolFail = true;
             eolstep = O2_PRESSURE_NOT_REACH;
+            eolState = STATE_ERROR;
         } else {
             // Do nothing
         }
@@ -492,10 +511,12 @@ void millisecondTimerEOL(void)
             minFlowValue = min(minFlowValue, flowValue);
             if ((maxPressureValue - minPressureValue) > 40) {  // 40 mmH2O
                 eolstep = PRESSURE_NOT_STABLE;
+                eolState = STATE_ERROR;
                 eolMSCount = 0;
             }
             if ((maxFlowValue - minFlowValue) > 5500) {  // 5500 mL/min
                 eolstep = FLOW_NOT_STABLE;
+                eolState = STATE_ERROR;
                 eolMSCount = 0;
             }
         }
@@ -503,10 +524,12 @@ void millisecondTimerEOL(void)
         if (eolMSCount > 60000u) {
             if ((maxPressureValue - minPressureValue) < 40) {
                 eolstep = END_SUCCESS;
+                eolState = STATE_SUCCESS;
                 eolMSCount = 0;
                 eolTestNumber++;
             } else {
                 eolstep = PRESSURE_NOT_STABLE;
+                eolState = STATE_ERROR;
                 eolMSCount = 0;
             }
         }
@@ -544,6 +567,7 @@ void millisecondTimerEOL(void)
             }
             eolMSCount = 0;
             eolstep = DISPLAY_PRESSURE;
+            eolState = STATE_SUCCESS;
         }
 
     } else if (eolstep == DISPLAY_PRESSURE) {
@@ -560,6 +584,7 @@ void millisecondTimerEOL(void)
                 continue;
             }
             eolstep = DISPLAY_FLOW;
+            eolState = STATE_SUCCESS;
         }
 
     } else if (eolstep == DISPLAY_FLOW) {
@@ -576,6 +601,7 @@ void millisecondTimerEOL(void)
                 continue;
             }
             eolstep = DISPLAY_PRESSURE;
+            eolState = STATE_SUCCESS;
         }
 
     } else {
