@@ -7,6 +7,10 @@
 
 #pragma once
 
+// INCLUDES ===================================================================
+
+// Internal
+
 #include "../includes/blower.h"
 #include "../includes/pressure_valve.h"
 
@@ -69,7 +73,10 @@ enum TestState {
     STATE_SUCCESS
 };
 
+// CLASS ======================================================================
+
 /// Controls the running of the embedded auto tests
+// cppcheck-suppress misra-c2012-5.2 ; false positive
 class EolTest {
  public:
     /// Default constructor
