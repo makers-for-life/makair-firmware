@@ -149,7 +149,7 @@ void sendInconsistentPressureFatalError(uint16_t pressureValue);
 
 #ifndef SIMULATOR  // Disable the following function when in simulator
 /// Send an "end-of-line test" snapshot
-void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]);
+void sendEolTestSnapshot(TestStep step, TestState state, char message[]);
 
 #endif
 

@@ -1403,7 +1403,7 @@ void sendInconsistentPressureFatalError(uint16_t pressureValue) {
 }
 
 #ifndef SIMULATOR
-void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]) {
+void sendEolTestSnapshot(TestStep step, TestState state, char message[]) {
     Serial6.write(header, HEADER_SIZE);
     CRC32 crc32;
     Serial6.write("L:", 2);
@@ -1438,16 +1438,13 @@ void sendEolTestSnapshot(TestStep step, TestState state, char error_trace[]) {
     Serial6.write(state);
     crc32.update(state);
 
-    // Append error trace? (only if step is "error")
-    if (state == STATE_ERROR) {
-        Serial6.print("\t");
-        crc32.update("\t", 1);
+    Serial6.print("\t");
+    crc32.update("\t", 1);
 
-        Serial6.write(static_cast<uint8_t>(strlen(error_trace)));
-        crc32.update(static_cast<uint8_t>(strlen(error_trace)));
-        Serial6.print(error_trace);
-        crc32.update(error_trace, strlen(error_trace));
-    }
+    Serial6.write(static_cast<uint8_t>(strlen(message)));
+    crc32.update(static_cast<uint8_t>(strlen(message)));
+    Serial6.print(message);
+    crc32.update(message, strlen(message));
 
     Serial6.print("\n");
     crc32.update("\n", 1);
