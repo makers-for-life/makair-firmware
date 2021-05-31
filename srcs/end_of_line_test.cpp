@@ -509,8 +509,8 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Pressure not stable\nMax= %d mmH2O \nMin= %d mmH2O", maxPressureValue,
                        minPressureValue);
-        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O", maxPressureValue,
-                       minPressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O",
+                       maxPressureValue, minPressureValue);
     } else if (eolstep == FLOW_NOT_STABLE) {
         // FAIL: flow was not stable during long run test
         blower.stop();
@@ -549,8 +549,8 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pressure \nMax= %d mmH2O \nMin= %d mmH2O",
                        maxPressureValue, minPressureValue);
-        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O", maxPressureValue,
-                       minPressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O",
+                       maxPressureValue, minPressureValue);
         if (digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
