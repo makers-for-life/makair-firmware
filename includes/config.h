@@ -55,4 +55,4 @@
 // #define DISABLE_BUTTONS
 
 // Uncomment when compiling for the simulator
-//#define SIMULATOR
+// #define SIMULATOR
