@@ -584,7 +584,7 @@ void millisecondTimerEOL(void)
 
     // Clear out trace string buffer? (if step changed)
     if (previousEolStep != eolstep) {
-        memset(eolTrace, 0, EOLTRACESIZE);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "");
     }
 
     previousEolStep = eolstep;
