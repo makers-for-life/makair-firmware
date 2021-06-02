@@ -134,7 +134,7 @@ void millisecondTimerEOL(void)
 
     // First step: reset the step count
     if (eolstep == START) {
-        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "To begin press\nbutton START");
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "\nTo begin press\nbutton START");
 
         // Wait the operator to press start to begin the EOL test
         if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
