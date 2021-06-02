@@ -109,8 +109,6 @@ void millisecondTimerEOL(void)
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
-    static int minbatlevel = 5000;
-    static int maxbatlevel = 0;
     static int buttonsPushed[EOL_TOTALBUTTONS];
 
     if ((clockEOLTimer % 100u) == 0u) {
@@ -201,18 +199,15 @@ void millisecondTimerEOL(void)
             eolstep = TEST_BAT_DEAD;
         }
     } else if (eolstep == CONNECT_MAINS) {
-        // Ask the operator to reconnect the machine and wait for a voltage raise of 0.4 V
-        // (or direct info from supply)
+        // Ask the operator to reconnect the machine and wait for direct info from supply
         batlevel = getBatteryLevelX100();
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nPlug AC...\nV=%02d.%02d",
                        batlevel / 100, batlevel % 100);
         (void)snprintf(eolTrace, EOLTRACESIZE, "Voltage: %02d.%02dV", batlevel / 100,
                        batlevel % 100);
-        minbatlevel = min(minbatlevel, batlevel);
-        maxbatlevel = max(maxbatlevel, batlevel);
-        // Wait for 400 mV raise, or mains connected signal
-        if (((maxbatlevel - minbatlevel) > 40) || isMainsConnected()) {
+        // Wait for mains connected signal
+        if (isMainsConnected()) {
             BuzzerControl_On();
             eolTestNumber++;
             blower.stop();
