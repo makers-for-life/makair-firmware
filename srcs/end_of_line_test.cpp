@@ -121,7 +121,12 @@ void millisecondTimerEOL(void)
         // Send EOL snapshot to telemetry every 500 ms, no more
         sendEolTestSnapshot(eolstep, eolState, eolTrace);
     }
+    if ((clockEOLTimer % 10u) == 0u) {
+        // Check for pending serial messages
+        serialControlLoop();
+    }
 
+    // Check for battery state
     batteryLoop(0);
 
     // First step: reset the step count
@@ -301,9 +306,6 @@ void millisecondTimerEOL(void)
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Press continue\nbutton on\ntouchscreen");
-
-        // Check serial from the UI
-        serialControlLoop();
 
         if (eolStepConfirmed == true) {
             eolstep = PLUG_AIR_TEST_SYTEM;
