@@ -305,7 +305,7 @@ void millisecondTimerEOL(void)
         // Check serial from the UI
         serialControlLoop();
 
-        if (eolStepConfirmed) {
+        if (eolStepConfirmed == true) {
             eolstep = PLUG_AIR_TEST_SYTEM;
             eolMSCount = 0;
         }
@@ -586,14 +586,13 @@ void millisecondTimerEOL(void)
         // Do nothing
     }
 
-    // Clear out trace string buffer? (if step changed)
+    // Perform cleanup work? (if step changed)
     if (previousEolStep != eolstep) {
+        // Clear out trace string buffer
         (void)snprintf(eolTrace, EOLTRACESIZE, "");
 
-        // Switch back step confirmed tag back to false? (as step changed)
-        if (eolStepConfirmed) {
-            eolStepConfirmed = false;
-        }
+        // Switch back step confirmed tag back to false (as step changed)
+        eolStepConfirmed = false;
     }
 
     previousEolStep = eolstep;
