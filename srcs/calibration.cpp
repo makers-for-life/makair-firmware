@@ -80,7 +80,7 @@ void Calibration_Init() {
             restartWaitTimer = 0;
 
             while (startButtonPressed == false) {
-                restartWaitTimer += RESTART_READ_KEYBOARD_DELAY;
+                restartWaitTimer += (uint32_t)RESTART_READ_KEYBOARD_DELAY;
 
                 // Heartbeat fatal error periodically
                 if ((restartWaitTimer % 1000u) == 0u) {
@@ -132,7 +132,7 @@ void Calibration_Init() {
                 restartWaitTimer = 0;
 
                 while (startButtonPressed == false) {
-                    restartWaitTimer += RESTART_READ_KEYBOARD_DELAY;
+                    restartWaitTimer += (uint32_t)RESTART_READ_KEYBOARD_DELAY;
 
                     // Heartbeat fatal error periodically
                     if ((restartWaitTimer % 1000u) == 0u) {
