@@ -131,7 +131,7 @@ void setup(void) {
         Buzzer_Init();
         Buzzer_High_Prio_Start();
         displayWatchdogError();
-        while (1) {
+        while (true) {
             sendWatchdogRestartFatalError();
             delay(2000);
         }
