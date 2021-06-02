@@ -9,6 +9,7 @@ var telemetry_8h =
     [ "sendCalibrationFatalError", "telemetry_8h.html#a08f6bf6dae077a820cfe1a5a00806a0e", null ],
     [ "sendControlAck", "telemetry_8h.html#a1e68a93b679a3fc9bce6763f0cd51acf", null ],
     [ "sendDataSnapshot", "telemetry_8h.html#ae730b3b966e50bca90def7ca0f05855e", null ],
+    [ "sendEolTestSnapshot", "telemetry_8h.html#a86eb836ed25adb8bb440e26fd16ff996", null ],
     [ "sendInconsistentPressureFatalError", "telemetry_8h.html#a2ee25affd7ee489a8ad0a478f45fc3bd", null ],
     [ "sendMachineStateSnapshot", "telemetry_8h.html#afa17ef83e6ccbde8ff27928ca8e58f93", null ],
     [ "sendMassFlowMeterFatalError", "telemetry_8h.html#a03a9070c493c798b674e458ac76a9700", null ],

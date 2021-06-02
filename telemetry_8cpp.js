@@ -13,6 +13,7 @@ var telemetry_8cpp =
     [ "sendCalibrationFatalError", "telemetry_8cpp.html#a08f6bf6dae077a820cfe1a5a00806a0e", null ],
     [ "sendControlAck", "telemetry_8cpp.html#a43134b8daee7c21190be0c7f335deb2e", null ],
     [ "sendDataSnapshot", "telemetry_8cpp.html#ae730b3b966e50bca90def7ca0f05855e", null ],
+    [ "sendEolTestSnapshot", "telemetry_8cpp.html#a86eb836ed25adb8bb440e26fd16ff996", null ],
     [ "sendInconsistentPressureFatalError", "telemetry_8cpp.html#a2ee25affd7ee489a8ad0a478f45fc3bd", null ],
     [ "sendMachineStateSnapshot", "telemetry_8cpp.html#afa17ef83e6ccbde8ff27928ca8e58f93", null ],
     [ "sendMassFlowMeterFatalError", "telemetry_8cpp.html#a03a9070c493c798b674e458ac76a9700", null ],

@@ -32,7 +32,8 @@ var serial__control_8h =
       [ "Locale", "serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffac3c5a745b1ceb3f7475235886438b2e7", null ],
       [ "PatientHeight", "serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffa0127449cc856e419dd5481b140e32a68", null ],
       [ "PatientGender", "serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffa5b88092a6d51a10a0c7c9b5ec03963cb", null ],
-      [ "PeakPressureAlarmThreshold", "serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffaf973d18d23bd1a7ee67e06b8bd78dec5", null ]
+      [ "PeakPressureAlarmThreshold", "serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffaf973d18d23bd1a7ee67e06b8bd78dec5", null ],
+      [ "EolConfirm", "serial__control_8h.html#aec7a43c83ee819a3c3ace06266b738ffa5f5cba01e36106e7fd797fda1a63d4c8", null ]
     ] ],
     [ "serialControlLoop", "serial__control_8h.html#a1320b9482bc49b53502cf2d18f067bf9", null ]
 ];

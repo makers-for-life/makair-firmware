@@ -107,6 +107,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ace2feb0dc2df42604e99013ab8e413a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6">isRunning</a> ()</td></tr>
 <tr class="memdesc:ace2feb0dc2df42604e99013ab8e413a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if test mode is enabled.  <a href="class_eol_test.html#ace2feb0dc2df42604e99013ab8e413a6">More...</a><br /></td></tr>
 <tr class="separator:ace2feb0dc2df42604e99013ab8e413a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22efb7f47017fa24bf7576219bcbad46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_eol_test.html#a22efb7f47017fa24bf7576219bcbad46">onConfirm</a> ()</td></tr>
+<tr class="memdesc:a22efb7f47017fa24bf7576219bcbad46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle EOL confirm control setting from telemetry.  <a href="class_eol_test.html#a22efb7f47017fa24bf7576219bcbad46">More...</a><br /></td></tr>
+<tr class="separator:a22efb7f47017fa24bf7576219bcbad46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d6e78d6306154d1b69cff46dab9a6a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_eol_test.html#a3d6e78d6306154d1b69cff46dab9a6a5">setupAndStart</a> ()</td></tr>
 <tr class="memdesc:a3d6e78d6306154d1b69cff46dab9a6a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run test mode.  <a href="class_eol_test.html#a3d6e78d6306154d1b69cff46dab9a6a5">More...</a><br /></td></tr>
 <tr class="separator:a3d6e78d6306154d1b69cff46dab9a6a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,7 +123,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Controls the running of the embedded auto tests. </p>
 
-<p class="definition">Definition at line <a class="el" href="end__of__line__test_8h_source.html#l00021">21</a> of file <a class="el" href="end__of__line__test_8h_source.html">end_of_line_test.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8h_source.html#l00080">80</a> of file <a class="el" href="end__of__line__test_8h_source.html">end_of_line_test.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aef077d9f967d29b14bd4b363983e4784"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aef077d9f967d29b14bd4b363983e4784">&#9670;&nbsp;</a></span>EolTest()</h2>
@@ -139,9 +142,9 @@ Private Attributes</h2></td></tr>
 
 <p>Default constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00044">44</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{ <a class="code" href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">testActive</a> = 0; }</div>
-<div class="ttc" id="aclass_eol_test_html_aa195c95d0ecb51786d98fe1bac2b442b"><div class="ttname"><a href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">EolTest::testActive</a></div><div class="ttdeci">uint32_t testActive</div><div class="ttdoc">Test mode activation state.</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8h_source.html#l00041">end_of_line_test.h:41</a></div></div>
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00043">43</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{ <a class="code" href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">testActive</a> = 0; }</div>
+<div class="ttc" id="aclass_eol_test_html_aa195c95d0ecb51786d98fe1bac2b442b"><div class="ttname"><a href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">EolTest::testActive</a></div><div class="ttdeci">uint32_t testActive</div><div class="ttdoc">Test mode activation state.</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8h_source.html#l00103">end_of_line_test.h:103</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -163,15 +166,15 @@ Private Attributes</h2></td></tr>
 
 <p>Enable test mode. </p>
 
-<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00047">47</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                       {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">testActive</a> = <a class="code" href="end__of__line__test_8h.html#a88783f0374c57c8a849d129ff87d116b">EOL_TEST_ACTIVE</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#a6c6e5dbf03b41a3d62470655b4e52db8">::clockEOLTimer</a> = 0;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a> = <span class="keyword">new</span> HardwareTimer(TIM9);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00046">46</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                       {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">testActive</a> = <a class="code" href="end__of__line__test_8h.html#a88783f0374c57c8a849d129ff87d116b">EOL_TEST_ACTIVE</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#a6c6e5dbf03b41a3d62470655b4e52db8">::clockEOLTimer</a> = 0;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a> = <span class="keyword">new</span> HardwareTimer(TIM9);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
 <div class="ttc" id="aend__of__line__test_8cpp_html_a6c6e5dbf03b41a3d62470655b4e52db8"><div class="ttname"><a href="end__of__line__test_8cpp.html#a6c6e5dbf03b41a3d62470655b4e52db8">clockEOLTimer</a></div><div class="ttdeci">uint32_t clockEOLTimer</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00027">end_of_line_test.cpp:27</a></div></div>
-<div class="ttc" id="aend__of__line__test_8cpp_html_af405cda4b88ff72991b6fae1ec19f44e"><div class="ttname"><a href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">eolTimer</a></div><div class="ttdeci">HardwareTimer * eolTimer</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00039">end_of_line_test.cpp:39</a></div></div>
-<div class="ttc" id="aend__of__line__test_8h_html_a88783f0374c57c8a849d129ff87d116b"><div class="ttname"><a href="end__of__line__test_8h.html#a88783f0374c57c8a849d129ff87d116b">EOL_TEST_ACTIVE</a></div><div class="ttdeci">#define EOL_TEST_ACTIVE</div><div class="ttdoc">This an arbitrary value allowing to check if test mode is active.</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8h_source.html#l00018">end_of_line_test.h:18</a></div></div>
+<div class="ttc" id="aend__of__line__test_8cpp_html_af405cda4b88ff72991b6fae1ec19f44e"><div class="ttname"><a href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">eolTimer</a></div><div class="ttdeci">HardwareTimer * eolTimer</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00038">end_of_line_test.cpp:38</a></div></div>
+<div class="ttc" id="aend__of__line__test_8h_html_a88783f0374c57c8a849d129ff87d116b"><div class="ttname"><a href="end__of__line__test_8h.html#a88783f0374c57c8a849d129ff87d116b">EOL_TEST_ACTIVE</a></div><div class="ttdeci">#define EOL_TEST_ACTIVE</div><div class="ttdoc">This an arbitrary value allowing to check if test mode is active.</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8h_source.html#l00022">end_of_line_test.h:22</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -193,8 +196,33 @@ Private Attributes</h2></td></tr>
 <p>Check if test mode is enabled. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if test mode is enabled </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00053">53</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{ <span class="keywordflow">return</span> (<a class="code" href="end__of__line__test_8h.html#a88783f0374c57c8a849d129ff87d116b">EOL_TEST_ACTIVE</a> == <a class="code" href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">testActive</a>); }</div>
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00052">52</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{ <span class="keywordflow">return</span> (<a class="code" href="end__of__line__test_8h.html#a88783f0374c57c8a849d129ff87d116b">EOL_TEST_ACTIVE</a> == <a class="code" href="class_eol_test.html#aa195c95d0ecb51786d98fe1bac2b442b">testActive</a>); }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a22efb7f47017fa24bf7576219bcbad46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22efb7f47017fa24bf7576219bcbad46">&#9670;&nbsp;</a></span>onConfirm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EolTest::onConfirm </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handle EOL confirm control setting from telemetry. </p>
+
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00621">621</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;                        {</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#aebf08d8d35c76b3ef03d2dc1a3a40557">eolStepConfirmed</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;}</div>
+<div class="ttc" id="aend__of__line__test_8cpp_html_aebf08d8d35c76b3ef03d2dc1a3a40557"><div class="ttname"><a href="end__of__line__test_8cpp.html#aebf08d8d35c76b3ef03d2dc1a3a40557">eolStepConfirmed</a></div><div class="ttdeci">boolean eolStepConfirmed</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00098">end_of_line_test.cpp:98</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -215,36 +243,36 @@ Private Attributes</h2></td></tr>
 
 <p>Run test mode. </p>
 
-<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00588">588</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;                            {</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;    <span class="comment">// Set a 1 ms timer for the event loop</span></div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    <span class="comment">// Prescaler at 10 kHz; stm32f411 clock is 100 mHz</span></div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;setPrescaleFactor((::<a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">eolTimer</a>-&gt;getTimerClkFreq() / 10000) - 1);</div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;    <span class="comment">// Set the period at 1 ms</span></div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;setOverflow(10);</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;setMode(1, TIMER_OUTPUT_COMPARE, NC);</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;attachInterrupt(<a class="code" href="end__of__line__test_8cpp.html#afb1e26d3cf34b14ea036ff101538a380">millisecondTimerEOL</a>);</div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;resume();</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160; </div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#ae48bbcf6297f857652dca92370c1c65a">expiratoryValve</a>.<a class="code" href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">close</a>();</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#ae48bbcf6297f857652dca92370c1c65a">expiratoryValve</a>.<a class="code" href="class_pressure_valve.html#a95cc22d9a5422382adff84ee55f5c01c">execute</a>();</div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#a7bb8803dc6a908aa072adbf27e7d8b9c">inspiratoryValve</a>.<a class="code" href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">close</a>();</div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#a7bb8803dc6a908aa072adbf27e7d8b9c">inspiratoryValve</a>.<a class="code" href="class_pressure_valve.html#a95cc22d9a5422382adff84ee55f5c01c">execute</a>();</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160; </div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    <span class="comment">// define the 3x3 matrix keyboard input and output</span></div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a8ac4a9275869e3b0df021f4b48f701ba">PIN_OUT_COL1</a>, OUTPUT);</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a4a9ed4bcc15b0f059d45d99250bfb034">PIN_OUT_COL2</a>, OUTPUT);</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#afa96c5ab5d67237eba2ea792f97012ab">PIN_OUT_COL3</a>, OUTPUT);</div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a8ac4a9275869e3b0df021f4b48f701ba">PIN_OUT_COL1</a>, LOW);</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a4a9ed4bcc15b0f059d45d99250bfb034">PIN_OUT_COL2</a>, LOW);</div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#afa96c5ab5d67237eba2ea792f97012ab">PIN_OUT_COL3</a>, LOW);</div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a89667550975324236d5d452a966eb17b">PIN_IN_ROW1</a>, INPUT);</div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#af58cba84e6cc23719e693ef01182841e">PIN_IN_ROW2</a>, INPUT);</div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a68283df3216e525608f482b0a31e4222">PIN_IN_ROW3</a>, INPUT);</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8cpp_source.html#l00625">625</a> of file <a class="el" href="end__of__line__test_8cpp_source.html">end_of_line_test.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;                            {</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    <span class="comment">// Set a 1 ms timer for the event loop</span></div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;    <span class="comment">// Prescaler at 10 kHz; stm32f411 clock is 100 mHz</span></div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;setPrescaleFactor((::<a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">eolTimer</a>-&gt;getTimerClkFreq() / 10000) - 1);</div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    <span class="comment">// Set the period at 1 ms</span></div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;setOverflow(10);</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;setMode(1, TIMER_OUTPUT_COMPARE, NC);</div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;attachInterrupt(<a class="code" href="end__of__line__test_8cpp.html#afb1e26d3cf34b14ea036ff101538a380">millisecondTimerEOL</a>);</div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;    <a class="code" href="end__of__line__test_8cpp.html#af405cda4b88ff72991b6fae1ec19f44e">::eolTimer</a>-&gt;resume();</div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160; </div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#ae48bbcf6297f857652dca92370c1c65a">expiratoryValve</a>.<a class="code" href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">close</a>();</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#ae48bbcf6297f857652dca92370c1c65a">expiratoryValve</a>.<a class="code" href="class_pressure_valve.html#a95cc22d9a5422382adff84ee55f5c01c">execute</a>();</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#a7bb8803dc6a908aa072adbf27e7d8b9c">inspiratoryValve</a>.<a class="code" href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">close</a>();</div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;    <a class="code" href="pressure__valve_8cpp.html#a7bb8803dc6a908aa072adbf27e7d8b9c">inspiratoryValve</a>.<a class="code" href="class_pressure_valve.html#a95cc22d9a5422382adff84ee55f5c01c">execute</a>();</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160; </div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;    <span class="comment">// define the 3x3 matrix keyboard input and output</span></div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a8ac4a9275869e3b0df021f4b48f701ba">PIN_OUT_COL1</a>, OUTPUT);</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a4a9ed4bcc15b0f059d45d99250bfb034">PIN_OUT_COL2</a>, OUTPUT);</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#afa96c5ab5d67237eba2ea792f97012ab">PIN_OUT_COL3</a>, OUTPUT);</div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a8ac4a9275869e3b0df021f4b48f701ba">PIN_OUT_COL1</a>, LOW);</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#a4a9ed4bcc15b0f059d45d99250bfb034">PIN_OUT_COL2</a>, LOW);</div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    digitalWrite(<a class="code" href="parameters_8h.html#afa96c5ab5d67237eba2ea792f97012ab">PIN_OUT_COL3</a>, LOW);</div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a89667550975324236d5d452a966eb17b">PIN_IN_ROW1</a>, INPUT);</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#af58cba84e6cc23719e693ef01182841e">PIN_IN_ROW2</a>, INPUT);</div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;    pinMode(<a class="code" href="parameters_8h.html#a68283df3216e525608f482b0a31e4222">PIN_IN_ROW3</a>, INPUT);</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;}</div>
 <div class="ttc" id="aclass_pressure_valve_html_a95cc22d9a5422382adff84ee55f5c01c"><div class="ttname"><a href="class_pressure_valve.html#a95cc22d9a5422382adff84ee55f5c01c">PressureValve::execute</a></div><div class="ttdeci">void execute()</div><div class="ttdoc">Command the valve to go to the requested aperture.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8h_source.html#l00090">pressure_valve.h:90</a></div></div>
 <div class="ttc" id="aclass_pressure_valve_html_aeadd7baf8d4b728c89a824673a6d5eda"><div class="ttname"><a href="class_pressure_valve.html#aeadd7baf8d4b728c89a824673a6d5eda">PressureValve::close</a></div><div class="ttdeci">void close()</div><div class="ttdoc">Request closing of the Pressure Valve.</div><div class="ttdef"><b>Definition:</b> <a href="pressure__valve_8cpp_source.html#l00054">pressure_valve.cpp:54</a></div></div>
-<div class="ttc" id="aend__of__line__test_8cpp_html_afb1e26d3cf34b14ea036ff101538a380"><div class="ttname"><a href="end__of__line__test_8cpp.html#afb1e26d3cf34b14ea036ff101538a380">millisecondTimerEOL</a></div><div class="ttdeci">void millisecondTimerEOL(HardwareTimer *)</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00145">end_of_line_test.cpp:145</a></div></div>
+<div class="ttc" id="aend__of__line__test_8cpp_html_afb1e26d3cf34b14ea036ff101538a380"><div class="ttname"><a href="end__of__line__test_8cpp.html#afb1e26d3cf34b14ea036ff101538a380">millisecondTimerEOL</a></div><div class="ttdeci">void millisecondTimerEOL(HardwareTimer *)</div><div class="ttdef"><b>Definition:</b> <a href="end__of__line__test_8cpp_source.html#l00109">end_of_line_test.cpp:109</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a4a9ed4bcc15b0f059d45d99250bfb034"><div class="ttname"><a href="parameters_8h.html#a4a9ed4bcc15b0f059d45d99250bfb034">PIN_OUT_COL2</a></div><div class="ttdeci">#define PIN_OUT_COL2</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00236">parameters.h:236</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a68283df3216e525608f482b0a31e4222"><div class="ttname"><a href="parameters_8h.html#a68283df3216e525608f482b0a31e4222">PIN_IN_ROW3</a></div><div class="ttdeci">#define PIN_IN_ROW3</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00240">parameters.h:240</a></div></div>
 <div class="ttc" id="aparameters_8h_html_a89667550975324236d5d452a966eb17b"><div class="ttname"><a href="parameters_8h.html#a89667550975324236d5d452a966eb17b">PIN_IN_ROW1</a></div><div class="ttdeci">#define PIN_IN_ROW1</div><div class="ttdef"><b>Definition:</b> <a href="parameters_8h_source.html#l00238">parameters.h:238</a></div></div>
@@ -279,7 +307,7 @@ Private Attributes</h2></td></tr>
 
 <p>Test mode activation state. </p>
 
-<p class="definition">Definition at line <a class="el" href="end__of__line__test_8h_source.html#l00041">41</a> of file <a class="el" href="end__of__line__test_8h_source.html">end_of_line_test.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="end__of__line__test_8h_source.html#l00103">103</a> of file <a class="el" href="end__of__line__test_8h_source.html">end_of_line_test.h</a>.</p>
 
 </div>
 </div>

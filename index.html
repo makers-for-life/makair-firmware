@@ -89,7 +89,15 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p><a class="anchor" id="md_CHANGELOG"></a> </p>
 <h1><a class="anchor" id="autotoc_md8"></a>
 unreleased</h1>
-<p><em>Nothing for now</em></p>
+<ul>
+<li>fixed malformatted fatal error telemetry messages (<em>existing ones did not pass CRC checks</em>)</li>
+<li>implemented new fatal error telemetry messages (<em>SFM sensor failure, battery deep discharge, calibration errors</em>)</li>
+<li>sending "end of production line" telemetry snapshots (<em>used for the UI to show current EOL step</em>)</li>
+<li>handling "end of production line" control messages (<em>used to continue to next EOL step</em>)</li>
+<li>if hardware buttons are disabled, then the "end of production line" will skip the buttons test step</li>
+<li>added automation and convenience scripts (<em>used to compile and flash to auto-detected serial port</em>)</li>
+<li>refactored project structure (<em>some directories and files have been moved</em>)</li>
+</ul>
 <h1><a class="anchor" id="autotoc_md9"></a>
 v4.0.0</h1>
 <ul>

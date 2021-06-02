@@ -2,7 +2,7 @@ var searchData=
 [
   ['battery_2ecpp_36',['battery.cpp',['../battery_8cpp.html',1,'']]],
   ['battery_2eh_37',['battery.h',['../battery_8h.html',1,'']]],
-  ['battery_5fdeep_5fdischarge_38',['BATTERY_DEEP_DISCHARGE',['../end__of__line__test_8cpp.html#a1b27e756657d91a764281d00d13683c5a741bfa0192fd05befb6cc263cc9e78cc',1,'end_of_line_test.cpp']]],
+  ['battery_5fdeep_5fdischarge_38',['BATTERY_DEEP_DISCHARGE',['../end__of__line__test_8h.html#a1b27e756657d91a764281d00d13683c5a741bfa0192fd05befb6cc263cc9e78cc',1,'end_of_line_test.h']]],
   ['battery_5fmax_5fsamples_39',['BATTERY_MAX_SAMPLES',['../battery_8h.html#a216384132a8739114132f6254995eda6',1,'battery.h']]],
   ['batterycurrentsample_40',['batteryCurrentSample',['../battery_8cpp.html#a668d7b50d9e8ddd49096d3a35f8fdc2d',1,'battery.cpp']]],
   ['batteryloop_41',['batteryLoop',['../battery_8h.html#afd4a9e033e9ae6ed54a354650969f914',1,'batteryLoop(uint32_t p_cycleNumber):&#160;battery.cpp'],['../battery_8cpp.html#afd4a9e033e9ae6ed54a354650969f914',1,'batteryLoop(uint32_t p_cycleNumber):&#160;battery.cpp']]],
