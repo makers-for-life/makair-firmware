@@ -2,6 +2,10 @@
 
 ## unreleased
 
+_Nothing for now_
+
+## v4.1.0
+
 - fixed malformatted fatal error telemetry messages
   (_existing ones did not pass CRC checks_)
 - implemented new fatal error telemetry messages
