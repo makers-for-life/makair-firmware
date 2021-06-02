@@ -68,6 +68,10 @@ A few scripts are available, eg. to automate repeated manual actions:
 1. **Compile & Flash**: `./scripts/compile_and_flash.sh` (compiles firmware and flashes it over the plugged STM32 programmer);
 2. **Compile Only**: `./scripts/compile_only.sh` (compiles firmware, useful to check for code mistakes);
 
+Some specialized scripts are available, eg. that target older hardwares:
+
+1. **Compile & Flash (HW3)**: `./scripts/compile_and_flash_hardware_v3.sh` (compiles firmware and flashes it to Hardware V3);
+
 ## Configuration
 
 The configuration options can be found in the following files:
