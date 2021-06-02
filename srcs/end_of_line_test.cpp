@@ -56,7 +56,7 @@ bool EolTest::isRunning() { return (EOL_TEST_ACTIVE == testActive); }
 void eolScreenMessage(char* message, bool isFailed) {
     screen.clear();
     // cppcheck-suppress misra-c2012-12.3
-    if (eolTestNumber == 0 && !isFailed) {
+    if (eolTestNumber == (uint32_t)0 && !isFailed) {
         screen.setCursor(0, 0);
         screen.print("EOL TEST");
     } else {
