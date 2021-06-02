@@ -2,7 +2,19 @@
 
 ## unreleased
 
-_Nothing for now_
+- fixed malformatted fatal error telemetry messages
+  (_existing ones did not pass CRC checks_)
+- implemented new fatal error telemetry messages
+  (_SFM sensor failure, battery deep discharge, calibration errors_)
+- sending "end of production line" telemetry snapshots
+  (_used for the UI to show current EOL step_)
+- handling "end of production line" control messages
+  (_used to continue to next EOL step_)
+- if hardware buttons are disabled, then the "end of production line" will skip the buttons test step
+- added automation and convenience scripts
+  (_used to compile and flash to auto-detected serial port_)
+- refactored project structure
+  (_some directories and files have been moved_)
 
 ## v4.0.0
 

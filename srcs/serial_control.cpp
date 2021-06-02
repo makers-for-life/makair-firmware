@@ -240,6 +240,10 @@ void serialControlLoop() {
                     mainController.onPeakPressureAlarmThreshold(value);
                     break;
 
+                case EolConfirm:
+                    eolTest.onConfirm();
+                    break;
+
                 default:
                     DBG_DO({
                         Serial.print("Unknown control setting: ");

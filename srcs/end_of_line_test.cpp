@@ -26,7 +26,7 @@
 
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
-uint32_t eolTestNumber = 1;
+uint32_t eolTestNumber = 0;
 int32_t pressureValue = 0;
 int32_t flowValue = 0;
 int32_t minPressureValue = INT32_MAX;
@@ -34,7 +34,6 @@ int32_t maxPressureValue = 0;
 int32_t minFlowValue = INT32_MAX;
 int32_t maxFlowValue = 0;
 
-const VentilationController* defaultVentilationController;
 EolTest eolTest = EolTest();
 HardwareTimer* eolTimer;
 
@@ -57,15 +56,20 @@ bool EolTest::isRunning() { return (EOL_TEST_ACTIVE == testActive); }
 void eolScreenMessage(char* message, bool isFailed) {
     screen.clear();
     // cppcheck-suppress misra-c2012-12.3
-    screen.setCursor(0, 0);
-    screen.print("EOL TEST  #");
-    screen.print(eolTestNumber);
-    if (isFailed) {
-        screen.setCursor(15, 0);
-        screen.print("FAIL");
+    if (eolTestNumber == (uint32_t)0 && !isFailed) {
+        screen.setCursor(0, 0);
+        screen.print("EOL TEST");
     } else {
-        screen.setCursor(18, 0);
-        screen.print("OK");
+        screen.setCursor(0, 0);
+        screen.print("EOL TEST  #");
+        screen.print(eolTestNumber);
+        if (isFailed) {
+            screen.setCursor(15, 0);
+            screen.print("FAIL");
+        } else {
+            screen.setCursor(18, 0);
+            screen.print("OK");
+        }
     }
 
     // Print line by line, respect newlines
@@ -87,55 +91,15 @@ void eolScreenMessage(char* message, bool isFailed) {
     }
 }
 
-enum TestStep {
-    START,
-    SUPPLY_TO_EXPANDER_NOT_CONNECTED,
-    CHECK_FAN,
-    TEST_BAT_DEAD,
-    BATTERY_DEEP_DISCHARGE,
-    DISCONNECT_MAINS,
-    CONNECT_MAINS,
-    CHECK_BUZZER,
-    // cppcheck-suppress misra-c2012-12.3
-    CHECK_ALL_BUTTONS,
-    CHECK_UI_SCREEN,
-    // cppcheck-suppress misra-c2012-12.3
-    PLUG_AIR_TEST_SYTEM,
-    // cppcheck-suppress misra-c2012-12.3
-    REACH_MAX_PRESSURE,
-    // cppcheck-suppress misra-c2012-12.3
-    MAX_PRESSURE_REACHED_OK,
-    // cppcheck-suppress misra-c2012-12.3
-    MAX_PRESSURE_NOT_REACHED,
-    // cppcheck-suppress misra-c2012-12.3
-    START_LEAK_MESURE,
-    // cppcheck-suppress misra-c2012-12.3
-    LEAK_IS_TOO_HIGH,
-    // cppcheck-suppress misra-c2012-12.3
-    REACH_NULL_PRESSURE,
-    // cppcheck-suppress misra-c2012-12.3
-    MIN_PRESSURE_NOT_REACHED,
-    USER_CONFIRMATION_BEFORE_O2_TEST,
-    // cppcheck-suppress misra-c2012-12.3
-    START_O2_TEST,
-    // cppcheck-suppress misra-c2012-12.3
-    O2_PRESSURE_NOT_REACH,
-    WAIT_USER_BEFORE_LONG_RUN,
-    // cppcheck-suppress misra-c2012-12.3
-    START_LONG_RUN_BLOWER,
-    // cppcheck-suppress misra-c2012-12.3
-    PRESSURE_NOT_STABLE,
-    FLOW_NOT_STABLE,
-    END_SUCCESS,
-    DISPLAY_PRESSURE,
-    DISPLAY_FLOW
-};
-
+TestState eolState = STATE_IN_PROGRESS;
 TestStep eolstep = START;
 TestStep previousEolStep = START;
 boolean eolFail = false;
+boolean eolStepConfirmed = false;
+#define EOLTRACESIZE 60
 #define EOLSCREENSIZE 100
 char eolScreenBuffer[EOLSCREENSIZE + 1];
+char eolTrace[EOLTRACESIZE];
 #define EOL_TOTALBUTTONS 11
 int16_t eolMatrixCurrentColumn = 1;
 
@@ -150,24 +114,47 @@ void millisecondTimerEOL(void)
     clockEOLTimer++;
     eolMSCount++;
     static int batlevel = 0;
-    static int minbatlevel = 5000;
-    static int maxbatlevel = 0;
     static int buttonsPushed[EOL_TOTALBUTTONS];
+
     if ((clockEOLTimer % 100u) == 0u) {
         // Refresh screen every 100 ms, no more
         eolScreenMessage(eolScreenBuffer, eolFail);
     }
+    if ((clockEOLTimer % 500u) == 0u) {
+        // Send EOL snapshot to telemetry every 500 ms, no more
+        sendEolTestSnapshot(eolstep, eolState, eolTrace);
+    }
+    if ((clockEOLTimer % 10u) == 0u) {
+        // Check for pending serial messages
+        serialControlLoop();
+    }
 
+    // Check for battery state
     batteryLoop(0);
 
     // First step: reset the step count
     if (eolstep == START) {
-        if (!isMainsAvailable()) {
-            eolstep = SUPPLY_TO_EXPANDER_NOT_CONNECTED;
-        } else {
-            eolstep = CHECK_FAN;
-            eolMSCount = 0;
-            mainController.setup();
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "\nTo begin press\nbutton START");
+
+        // Wait the operator to press start to begin the EOL test
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
+
+            // Error out immediately if power supply expander is not available
+            if (!isMainsAvailable()) {
+                eolstep = SUPPLY_TO_EXPANDER_NOT_CONNECTED;
+                eolState = STATE_ERROR;
+            } else {
+                // Move to first step (check ventirad fans)
+                eolTestNumber++;
+                eolMSCount = 0;
+                eolstep = CHECK_FAN;
+
+                // Important: setup main controller for later use (ONCE!)
+                mainController.setup();
+            }
         }
     } else if (eolstep == SUPPLY_TO_EXPANDER_NOT_CONNECTED) {
         eolFail = true;
@@ -180,7 +167,7 @@ void millisecondTimerEOL(void)
         // The operator should check that both fans are running, and hit "start" to confirm
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Check fans\nthen press\nbutton START");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -195,11 +182,14 @@ void millisecondTimerEOL(void)
         if (eolMSCount < 5000u) {
             (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\n  V=%02d.%02d",
                            batlevel / 100, batlevel % 100);
+            (void)snprintf(eolTrace, EOLTRACESIZE, "Voltage: %02d.%02dV", batlevel / 100,
+                           batlevel % 100);
         } else {
             if (isMainsConnected()) {
                 eolstep = DISCONNECT_MAINS;
             } else if (batlevel < 2200) {  // Test if battery is under 22V
                 eolstep = BATTERY_DEEP_DISCHARGE;
+                eolState = STATE_ERROR;
             } else {
                 eolTestNumber++;
                 blower.stop();
@@ -212,6 +202,8 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Test Vbat Failure\nBATTERY IS TO LOW\n  V=%02d.%d", batlevel / 100,
                        batlevel % 100);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Voltage: %02d.%02dV", batlevel / 100,
+                       batlevel % 100);
     } else if (eolstep == DISCONNECT_MAINS) {
         // Ask the operator to unplug the machine
         batlevel = getBatteryLevelX100();
@@ -219,21 +211,22 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Test Vbat\nUnplug AC...\n  V=%02d.%02d", batlevel / 100,
                        batlevel % 100);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Voltage: %02d.%02dV", batlevel / 100,
+                       batlevel % 100);
         if (!isMainsConnected()) {
             eolMSCount = 0;
             eolstep = TEST_BAT_DEAD;
         }
     } else if (eolstep == CONNECT_MAINS) {
-        // Ask the operator to reconnect the machine and wait for a voltage raise of 0.4 V
-        // (or direct info from supply)
+        // Ask the operator to reconnect the machine and wait for direct info from supply
         batlevel = getBatteryLevelX100();
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test Vbat\nPlug AC...\nV=%02d.%02d",
                        batlevel / 100, batlevel % 100);
-        minbatlevel = min(minbatlevel, batlevel);
-        maxbatlevel = max(maxbatlevel, batlevel);
-        // Wait for 400 mV raise, or mains connected signal
-        if (((maxbatlevel - minbatlevel) > 40) || isMainsConnected()) {
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Voltage: %02d.%02dV", batlevel / 100,
+                       batlevel % 100);
+        // Wait for mains connected signal
+        if (isMainsConnected()) {
             BuzzerControl_On();
             eolTestNumber++;
             blower.stop();
@@ -243,10 +236,16 @@ void millisecondTimerEOL(void)
         // Run the buzzer (previous step) and ask the operator to hit the STOP button
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Check Buzzer\nthen press\nbutton PAUSE");
-        if (digitalRead(PIN_BTN_STOP) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_STOP) == HIGH) {
             BuzzerControl_Off();
             eolTestNumber++;
-            eolstep = CHECK_ALL_BUTTONS;
+
+            #ifndef DISABLE_BUTTONS
+                eolstep = CHECK_ALL_BUTTONS;
+            #else
+                eolTestNumber++;
+                eolstep = CHECK_UI_SCREEN;
+            #endif
         }
     } else if (eolstep == CHECK_ALL_BUTTONS) {
         // Ask the operator to hit each button
@@ -307,26 +306,22 @@ void millisecondTimerEOL(void)
         }
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Please press each\nbutton... \n %d / %d OK", totalPushed, EOL_TOTALBUTTONS);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressed: %d / %d", totalPushed, EOL_TOTALBUTTONS);
         if (totalPushed == EOL_TOTALBUTTONS) {
             eolTestNumber++;
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;  // Wait release if still pressed in previous test
             }
             eolstep = CHECK_UI_SCREEN;
-            mainController.sendStopMessageToUi();
-            defaultVentilationController = mainController.ventilationControllerNextCommand();
         }
     } else if (eolstep == CHECK_UI_SCREEN) {
         // Ask the operator to activate the trigger on the UI screen. It allows to test
         // communication with the UI, and tactile function of the UI.
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Change ventilation\nmode on\ntouchscreen");
+                       "Press continue\nbutton on\ntouchscreen");
 
-        // Check serial from the UI
-        serialControlLoop();
-
-        if (mainController.ventilationControllerNextCommand() != defaultVentilationController) {
+        if (eolStepConfirmed == true) {
             eolstep = PLUG_AIR_TEST_SYTEM;
             eolMSCount = 0;
         }
@@ -335,7 +330,10 @@ void millisecondTimerEOL(void)
         // start
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Plug testing\npipes then press\nSTART");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
             eolMSCount = 0;
             eolstep = REACH_MAX_PRESSURE;
         }
@@ -349,6 +347,7 @@ void millisecondTimerEOL(void)
         blower.runSpeed(1790);
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Increasing pressure\n  \nP = %d mmH2O",
                        pressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
         if (pressureValue > 650) {
             eolMSCount = 0;
             eolTestNumber++;
@@ -357,6 +356,7 @@ void millisecondTimerEOL(void)
         if (eolMSCount > 20000u) {
             eolFail = true;
             eolstep = MAX_PRESSURE_NOT_REACHED;
+            eolState = STATE_ERROR;
         }
     } else if (eolstep == MAX_PRESSURE_NOT_REACHED) {
         // FAIL: Case max pressure was not reached
@@ -383,6 +383,7 @@ void millisecondTimerEOL(void)
         pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Leak Test...\n  \nP = %d mmH2O",
                        pressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
         if (eolMSCount > 10000u) {
             eolMSCount = 0;
             if (pressureValue > 400) {
@@ -391,12 +392,14 @@ void millisecondTimerEOL(void)
             } else {
                 eolFail = true;
                 eolstep = LEAK_IS_TOO_HIGH;
+                eolState = STATE_ERROR;
             }
         }
     } else if (eolstep == LEAK_IS_TOO_HIGH) {
         // FAIL: Case Leak is too high
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Important Leak\nPfinal = %d mmH2O",
                        pressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
     } else if (eolstep == REACH_NULL_PRESSURE) {
         // Open the valves to empty the lung system
         expiratoryValve.open();
@@ -406,6 +409,7 @@ void millisecondTimerEOL(void)
         pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Opening valves...\n  \nP = %d mmH2O",
                        pressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
         if (pressureValue < 20) {
             eolMSCount = 0;
             eolTestNumber++;
@@ -415,6 +419,7 @@ void millisecondTimerEOL(void)
             eolMSCount = 0;
             eolFail = true;
             eolstep = MIN_PRESSURE_NOT_REACHED;
+            eolState = STATE_ERROR;
         }
     } else if (eolstep == MIN_PRESSURE_NOT_REACHED) {
         // FAIL: Case emptying the system did not work
@@ -423,7 +428,7 @@ void millisecondTimerEOL(void)
         // Ask the operator to open the oxygen entrance, and wait for confirmation
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Open oxygen\nthen press\nbutton START");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -441,6 +446,7 @@ void millisecondTimerEOL(void)
         pressureValue = inspiratoryPressureSensor.read();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Test O2...\n  \nP = %d mmH2O",
                        pressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
         if (pressureValue > 100) {
             eolstep = WAIT_USER_BEFORE_LONG_RUN;
             eolTestNumber++;
@@ -449,6 +455,7 @@ void millisecondTimerEOL(void)
             eolMSCount = 0;
             eolFail = true;
             eolstep = O2_PRESSURE_NOT_REACH;
+            eolState = STATE_ERROR;
         } else {
             // Do nothing
         }
@@ -461,7 +468,7 @@ void millisecondTimerEOL(void)
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Close oxygen\nthen press\nbutton START");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -483,7 +490,9 @@ void millisecondTimerEOL(void)
         flowValue = 0;
 #endif
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-            "Testing Blower\nstabilization\n\n P= %d mmH2O", pressureValue);
+            "Testing blower\nP= %d mmH2O \nF= %d SLM", pressureValue, flowValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O; Flow: %d SLM", pressureValue,
+                       flowValue);
 
         if (eolMSCount > 10000u) {
             maxPressureValue = max(maxPressureValue, pressureValue);
@@ -492,10 +501,12 @@ void millisecondTimerEOL(void)
             minFlowValue = min(minFlowValue, flowValue);
             if ((maxPressureValue - minPressureValue) > 40) {  // 40 mmH2O
                 eolstep = PRESSURE_NOT_STABLE;
+                eolState = STATE_ERROR;
                 eolMSCount = 0;
             }
             if ((maxFlowValue - minFlowValue) > 5500) {  // 5500 mL/min
                 eolstep = FLOW_NOT_STABLE;
+                eolState = STATE_ERROR;
                 eolMSCount = 0;
             }
         }
@@ -503,10 +514,12 @@ void millisecondTimerEOL(void)
         if (eolMSCount > 60000u) {
             if ((maxPressureValue - minPressureValue) < 40) {
                 eolstep = END_SUCCESS;
+                eolState = STATE_SUCCESS;
                 eolMSCount = 0;
                 eolTestNumber++;
             } else {
                 eolstep = PRESSURE_NOT_STABLE;
+                eolState = STATE_ERROR;
                 eolMSCount = 0;
             }
         }
@@ -520,6 +533,8 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Pressure not stable\nMax= %d mmH2O \nMin= %d mmH2O", maxPressureValue,
                        minPressureValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O",
+                       maxPressureValue, minPressureValue);
     } else if (eolstep == FLOW_NOT_STABLE) {
         // FAIL: flow was not stable during long run test
         blower.stop();
@@ -529,6 +544,8 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Flow not stable\nMax= %d SLM \nMin= %d SLM", maxFlowValue, minFlowValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d SLM; Minimum: %d SLM", maxFlowValue,
+                       minFlowValue);
     } else if (eolstep == END_SUCCESS) {
         // SUCESS: end of the procedure
         blower.stop();
@@ -538,12 +555,13 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "********************\n**** SUCCESS !! ****\n********************");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
             eolMSCount = 0;
             eolstep = DISPLAY_PRESSURE;
+            eolState = STATE_SUCCESS;
         }
 
     } else if (eolstep == DISPLAY_PRESSURE) {
@@ -555,11 +573,14 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Pressure \nMax= %d mmH2O \nMin= %d mmH2O",
                        maxPressureValue, minPressureValue);
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O",
+                       maxPressureValue, minPressureValue);
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
             eolstep = DISPLAY_FLOW;
+            eolState = STATE_SUCCESS;
         }
 
     } else if (eolstep == DISPLAY_FLOW) {
@@ -571,18 +592,34 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Flow\nMax= %d SLM \nMin= %d SLM",
                        maxFlowValue, minFlowValue);
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d SLM; Minimum: %d SLM", maxFlowValue,
+                       minFlowValue);
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
             eolstep = DISPLAY_PRESSURE;
+            eolState = STATE_SUCCESS;
         }
 
     } else {
         // Do nothing
     }
 
+    // Perform cleanup work? (if step changed)
+    if (previousEolStep != eolstep) {
+        // Clear out trace string buffer
+        (void)snprintf(eolTrace, EOLTRACESIZE, "");
+
+        // Switch back step confirmed tag back to false (as step changed)
+        eolStepConfirmed = false;
+    }
+
     previousEolStep = eolstep;
+}
+
+void EolTest::onConfirm() {
+    eolStepConfirmed = true;
 }
 
 void EolTest::setupAndStart() {

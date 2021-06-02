@@ -9,9 +9,9 @@
 | V1.2.x | First release version on Hardware V1 | ✅
 | V1.3.x | Add Hardware V2 support | ✅
 | V1.5.x | Rework ventilation algorithms (pressure control, alarms, code quality) | ✅
-| V3.0.x | Support for triggers, add mass flow meter, add Hardware V3 support | ✅
+| V3.0.x | Add Hardware V3 support, support for triggers, add mass flow meter | ✅
 | V4.0.x | Protocol V2 with ventilation modes, drop Hardware V1 & V2 support | ✅
-| V4.1.x | End-of-line test and fatal errors on the UI, store user settings on the EEPROM | ❌
+| V4.1.x | End-of-line test and fatal errors on the UI | ❌
 
 For a full history of all minor versions, as well as details of all changes, see [CHANGELOG.md](CHANGELOG.md).
 
@@ -67,6 +67,10 @@ A few scripts are available, eg. to automate repeated manual actions:
 
 1. **Compile & Flash**: `./scripts/compile_and_flash.sh` (compiles firmware and flashes it over the plugged STM32 programmer);
 2. **Compile Only**: `./scripts/compile_only.sh` (compiles firmware, useful to check for code mistakes);
+
+Some specialized scripts are available, eg. that target older hardwares:
+
+1. **Compile & DFU (HW3)**: `./scripts/compile_and_dfu_hardware_v3.sh` (compiles firmware and flashes it to Hardware V3);
 
 ## Configuration
 
