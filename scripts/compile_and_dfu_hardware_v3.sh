@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ##
-#  compile_and_flash.sh
-#  Compile & Flash HW3 utility
+#  compile_and_dfu_hardware_v3.sh
+#  Compile & DFU HW3 utility
 #
 #  Copyright 2021, Makers For Life
 #  Author: Makers For Life

@@ -70,7 +70,7 @@ A few scripts are available, eg. to automate repeated manual actions:
 
 Some specialized scripts are available, eg. that target older hardwares:
 
-1. **Compile & Flash (HW3)**: `./scripts/compile_and_flash_hardware_v3.sh` (compiles firmware and flashes it to Hardware V3);
+1. **Compile & DFU (HW3)**: `./scripts/compile_and_dfu_hardware_v3.sh` (compiles firmware and flashes it to Hardware V3);
 
 ## Configuration
 
