@@ -57,9 +57,11 @@ void setup(void) {
     initBattery();
     if (isBatteryDeepDischarged()) {
         displayBatteryDeepDischarge();
+
+        // Heartbeat fatal error periodically
         while (true) {
             sendBatteryDeeplyDischargedFatalError(getBatteryLevelX100());
-            delay(2000);
+            delay(1000);
         }
     }
 
@@ -131,9 +133,11 @@ void setup(void) {
         Buzzer_Init();
         Buzzer_High_Prio_Start();
         displayWatchdogError();
+
+        // Heartbeat fatal error periodically
         while (true) {
             sendWatchdogRestartFatalError();
-            delay(2000);
+            delay(1000);
         }
     }
 

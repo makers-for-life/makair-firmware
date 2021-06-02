@@ -31,9 +31,11 @@ int32_t pressureOffsetSum;
 uint32_t pressureOffsetCount;
 int32_t minOffsetValue = 0;
 int32_t maxOffsetValue = 0;
+uint32_t restartWaitTimer = 0;
 bool startButtonPressed = false;
 bool calibationStarted = false;
 bool calibrationValid = false;
+#define RESTART_READ_KEYBOARD_DELAY 100
 
 void Calibration_Init() {
     // Restart calibration process when invalid
@@ -72,9 +74,21 @@ void Calibration_Init() {
             // Invalid calibration
             calibrationValid = false;
             displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
-            sendInconsistentPressureFatalError(inspiratoryPressureSensorOffset);
             Buzzer_High_Prio_Start();
-            Calibration_Read_Keyboard();
+
+            // Wait for user to press start to restart calibration
+            restartWaitTimer = 0;
+
+            while (startButtonPressed == false) {
+                restartWaitTimer += RESTART_READ_KEYBOARD_DELAY;
+
+                // Heartbeat fatal error periodically
+                if ((restartWaitTimer % 1000u) == 0u) {
+                    sendInconsistentPressureFatalError(inspiratoryPressureSensorOffset);
+                }
+
+                Calibration_Read_Keyboard_Delayed();
+            }
         } else {
             calibrationValid = true;
             inspiratoryPressureSensor.setPressureSensorOffset(inspiratoryPressureSensorOffset);
@@ -112,19 +126,31 @@ void Calibration_Init() {
                 calibrationValid = false;
                 displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
 
-                // MFM reports an out-of-range value, it might not be connected
-                if (isMassFlowMeterOutOfRange == true) {
-                    // MFM failure (eg. not connected)
-                    sendMassFlowMeterFatalError();
-                } else {
-                    // Other calibration errors
-                    sendCalibrationFatalError(inspiratoryPressureSensorOffset, minOffsetValue,
-                                              maxOffsetValue, flowMeterFlowAtStarting,
-                                              flowMeterFlowWithBlowerOn);
-                }
-
                 Buzzer_High_Prio_Start();
-                Calibration_Read_Keyboard();
+
+                // Wait for user to press start to restart calibration
+                restartWaitTimer = 0;
+
+                while (startButtonPressed == false) {
+                    restartWaitTimer += RESTART_READ_KEYBOARD_DELAY;
+
+                    // Heartbeat fatal error periodically
+                    if ((restartWaitTimer % 1000u) == 0u) {
+                        // MFM reports an out-of-range value, it might not be connected
+                        if (isMassFlowMeterOutOfRange == true) {
+                            // MFM failure (eg. not connected)
+                            sendMassFlowMeterFatalError();
+                        } else {
+                            // Other calibration errors
+                            sendCalibrationFatalError(inspiratoryPressureSensorOffset,
+                                                      minOffsetValue, maxOffsetValue,
+                                                      flowMeterFlowAtStarting,
+                                                      flowMeterFlowWithBlowerOn);
+                        }
+                    }
+
+                    Calibration_Read_Keyboard_Delayed();
+                }
             } else {
                 calibrationValid = true;
             }
@@ -168,11 +194,9 @@ void Calibration_Wait_Measure_Pressure(uint16_t ms) {
     }
 }
 
-void Calibration_Read_Keyboard() {
-    while (startButtonPressed == false) {
-        keyboardLoop();
-        delay(100);
-    }
+void Calibration_Read_Keyboard_Delayed() {
+    keyboardLoop();
+    delay(RESTART_READ_KEYBOARD_DELAY);
 }
 
 void Calibration_Restart() { startButtonPressed = true; }

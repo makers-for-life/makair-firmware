@@ -22,8 +22,8 @@ void Calibration_Init(void);
  */
 void Calibration_Wait_Measure_Pressure(uint16_t ms);
 
-///  Read keyboard duing calibration process
-void Calibration_Read_Keyboard(void);
+///  Read keyboard duing calibration process (delayed)
+void Calibration_Read_Keyboard_Delayed(void);
 
 ///  Restart calibration process
 void Calibration_Restart(void);
