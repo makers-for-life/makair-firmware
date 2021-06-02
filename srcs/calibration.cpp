@@ -84,7 +84,7 @@ void Calibration_Init() {
 
                 // Heartbeat fatal error periodically
                 if ((restartWaitTimer % 1000u) == 0u) {
-                    sendInconsistentPressureFatalError(inspiratoryPressureSensorOffset);
+                    sendInconsistentPressureFatalError(maxOffsetValue - minOffsetValue);
                 }
 
                 Calibration_Read_Keyboard_Delayed();
