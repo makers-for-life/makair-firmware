@@ -26,7 +26,7 @@
 
 uint32_t clockEOLTimer = 0;
 uint32_t eolMSCount = 0;
-uint32_t eolTestNumber = 1;
+uint32_t eolTestNumber = 0;
 int32_t pressureValue = 0;
 int32_t flowValue = 0;
 int32_t minPressureValue = INT32_MAX;
@@ -56,15 +56,20 @@ bool EolTest::isRunning() { return (EOL_TEST_ACTIVE == testActive); }
 void eolScreenMessage(char* message, bool isFailed) {
     screen.clear();
     // cppcheck-suppress misra-c2012-12.3
-    screen.setCursor(0, 0);
-    screen.print("EOL TEST  #");
-    screen.print(eolTestNumber);
-    if (isFailed) {
-        screen.setCursor(15, 0);
-        screen.print("FAIL");
+    if (eolTestNumber == 0 && !isFailed) {
+        screen.setCursor(0, 0);
+        screen.print("EOL TEST");
     } else {
-        screen.setCursor(18, 0);
-        screen.print("OK");
+        screen.setCursor(0, 0);
+        screen.print("EOL TEST  #");
+        screen.print(eolTestNumber);
+        if (isFailed) {
+            screen.setCursor(15, 0);
+            screen.print("FAIL");
+        } else {
+            screen.setCursor(18, 0);
+            screen.print("OK");
+        }
     }
 
     // Print line by line, respect newlines
@@ -129,6 +134,8 @@ void millisecondTimerEOL(void)
 
     // First step: reset the step count
     if (eolstep == START) {
+        (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "To begin press\nbutton START");
+
         // Wait the operator to press start to begin the EOL test
         if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
@@ -141,8 +148,9 @@ void millisecondTimerEOL(void)
                 eolState = STATE_ERROR;
             } else {
                 // Move to first step (check ventirad fans)
-                eolstep = CHECK_FAN;
+                eolTestNumber++;
                 eolMSCount = 0;
+                eolstep = CHECK_FAN;
 
                 // Important: setup main controller for later use (ONCE!)
                 mainController.setup();
