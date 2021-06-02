@@ -34,7 +34,6 @@ int32_t maxPressureValue = 0;
 int32_t minFlowValue = INT32_MAX;
 int32_t maxFlowValue = 0;
 
-const VentilationController* defaultVentilationController;
 EolTest eolTest = EolTest();
 HardwareTimer* eolTimer;
 
@@ -91,6 +90,7 @@ TestState eolState = STATE_IN_PROGRESS;
 TestStep eolstep = START;
 TestStep previousEolStep = START;
 boolean eolFail = false;
+boolean eolStepConfirmed = false;
 #define EOLTRACESIZE 60
 #define EOLSCREENSIZE 100
 char eolScreenBuffer[EOLSCREENSIZE + 1];
@@ -145,7 +145,7 @@ void millisecondTimerEOL(void)
         // The operator should check that both fans are running, and hit "start" to confirm
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Check fans\nthen press\nbutton START");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -217,10 +217,16 @@ void millisecondTimerEOL(void)
         // Run the buzzer (previous step) and ask the operator to hit the STOP button
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Check Buzzer\nthen press\nbutton PAUSE");
-        if (digitalRead(PIN_BTN_STOP) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_STOP) == HIGH) {
             BuzzerControl_Off();
             eolTestNumber++;
-            eolstep = CHECK_ALL_BUTTONS;
+
+            #ifndef DISABLE_BUTTONS
+                eolstep = CHECK_ALL_BUTTONS;
+            #else
+                eolTestNumber++;
+                eolstep = CHECK_UI_SCREEN;
+            #endif
         }
     } else if (eolstep == CHECK_ALL_BUTTONS) {
         // Ask the operator to hit each button
@@ -288,20 +294,18 @@ void millisecondTimerEOL(void)
                 continue;  // Wait release if still pressed in previous test
             }
             eolstep = CHECK_UI_SCREEN;
-            mainController.sendStopMessageToUi();
-            defaultVentilationController = mainController.ventilationControllerNextCommand();
         }
     } else if (eolstep == CHECK_UI_SCREEN) {
         // Ask the operator to activate the trigger on the UI screen. It allows to test
         // communication with the UI, and tactile function of the UI.
 
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-                       "Change ventilation\nmode on\ntouchscreen");
+                       "Press continue\nbutton on\ntouchscreen");
 
         // Check serial from the UI
         serialControlLoop();
 
-        if (mainController.ventilationControllerNextCommand() != defaultVentilationController) {
+        if (eolStepConfirmed) {
             eolstep = PLUG_AIR_TEST_SYTEM;
             eolMSCount = 0;
         }
@@ -310,7 +314,7 @@ void millisecondTimerEOL(void)
         // start
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Plug testing\npipes then press\nSTART");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             eolMSCount = 0;
             eolstep = REACH_MAX_PRESSURE;
         }
@@ -405,7 +409,7 @@ void millisecondTimerEOL(void)
         // Ask the operator to open the oxygen entrance, and wait for confirmation
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Open oxygen\nthen press\nbutton START");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -445,7 +449,7 @@ void millisecondTimerEOL(void)
         blower.stop();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Close oxygen\nthen press\nbutton START");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -531,7 +535,7 @@ void millisecondTimerEOL(void)
         expiratoryValve.execute();
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "********************\n**** SUCCESS !! ****\n********************");
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -551,7 +555,7 @@ void millisecondTimerEOL(void)
                        maxPressureValue, minPressureValue);
         (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d mmH2O; Minimum: %d mmH2O",
                        maxPressureValue, minPressureValue);
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -570,7 +574,7 @@ void millisecondTimerEOL(void)
                        maxFlowValue, minFlowValue);
         (void)snprintf(eolTrace, EOLTRACESIZE, "Maximum: %d SLM; Minimum: %d SLM", maxFlowValue,
                        minFlowValue);
-        if (digitalRead(PIN_BTN_START) == HIGH) {
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
             while (digitalRead(PIN_BTN_START) == HIGH) {
                 continue;
             }
@@ -585,9 +589,18 @@ void millisecondTimerEOL(void)
     // Clear out trace string buffer? (if step changed)
     if (previousEolStep != eolstep) {
         (void)snprintf(eolTrace, EOLTRACESIZE, "");
+
+        // Switch back step confirmed tag back to false? (as step changed)
+        if (eolStepConfirmed) {
+            eolStepConfirmed = false;
+        }
     }
 
     previousEolStep = eolstep;
+}
+
+void EolTest::onConfirm() {
+    eolStepConfirmed = true;
 }
 
 void EolTest::setupAndStart() {

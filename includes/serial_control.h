@@ -89,6 +89,8 @@ enum ControlSetting {
     PatientGender = 29,
     /// Threshold for peak pressure alarm in mmH2O (value bounds must be between 50 and 700)
     PeakPressureAlarmThreshold = 30,
+    /// Confirm end-of-line test step (value bounds must be between 0 and 0)
+    EolConfirm = 31,
 };
 
 /**

@@ -92,6 +92,9 @@ class EolTest {
      */
     bool isRunning();
 
+    /// Handle EOL confirm control setting from telemetry
+    void onConfirm();
+
     /// Run test mode
     void setupAndStart();
 
