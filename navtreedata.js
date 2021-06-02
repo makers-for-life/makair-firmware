@@ -27,22 +27,23 @@ var NAVTREE =
   [ "software:firmware", "index.html", [
     [ "Changelog", "index.html", [
       [ "unreleased", "index.html#autotoc_md8", null ],
-      [ "v4.0.0", "index.html#autotoc_md9", null ],
-      [ "v3.0.1", "index.html#autotoc_md10", null ],
-      [ "v3.0.0", "index.html#autotoc_md11", null ],
-      [ "v1.5.4", "index.html#autotoc_md12", null ],
-      [ "v1.5.3", "index.html#autotoc_md13", null ],
-      [ "v1.5.2", "index.html#autotoc_md14", null ],
-      [ "v1.5.1", "index.html#autotoc_md15", null ],
-      [ "v1.5.0", "index.html#autotoc_md16", null ],
-      [ "v1.4.0", "index.html#autotoc_md17", null ],
-      [ "v1.3.2", "index.html#autotoc_md18", null ],
-      [ "v1.3.1", "index.html#autotoc_md19", null ],
-      [ "v1.3.0", "index.html#autotoc_md20", null ],
-      [ "v1.2.3", "index.html#autotoc_md21", null ],
-      [ "v1.2.2", "index.html#autotoc_md22", null ],
-      [ "v1.2.1", "index.html#autotoc_md23", null ],
-      [ "v1.2.0", "index.html#autotoc_md24", null ]
+      [ "v4.1.0", "index.html#autotoc_md9", null ],
+      [ "v4.0.0", "index.html#autotoc_md10", null ],
+      [ "v3.0.1", "index.html#autotoc_md11", null ],
+      [ "v3.0.0", "index.html#autotoc_md12", null ],
+      [ "v1.5.4", "index.html#autotoc_md13", null ],
+      [ "v1.5.3", "index.html#autotoc_md14", null ],
+      [ "v1.5.2", "index.html#autotoc_md15", null ],
+      [ "v1.5.1", "index.html#autotoc_md16", null ],
+      [ "v1.5.0", "index.html#autotoc_md17", null ],
+      [ "v1.4.0", "index.html#autotoc_md18", null ],
+      [ "v1.3.2", "index.html#autotoc_md19", null ],
+      [ "v1.3.1", "index.html#autotoc_md20", null ],
+      [ "v1.3.0", "index.html#autotoc_md21", null ],
+      [ "v1.2.3", "index.html#autotoc_md22", null ],
+      [ "v1.2.2", "index.html#autotoc_md23", null ],
+      [ "v1.2.1", "index.html#autotoc_md24", null ],
+      [ "v1.2.0", "index.html#autotoc_md25", null ]
     ] ],
     [ "How to build and run the tests", "md_test__r_e_a_d_m_e.html", [
       [ "Install Google Test", "md_test__r_e_a_d_m_e.html#autotoc_md1", null ],
@@ -86,8 +87,8 @@ var NAVTREEINDEX =
 "class_blower.html#aa8d7ed93ae09574c4a402e79f75eabc8",
 "class_p_c___c_m_v___controller.html#ab96dc54a89d17d1e151994da64005602",
 "functions_func_e.html",
-"parameters_8h.html#a1553dd2d9cec0fe98d552592925b59ca",
-"screen_8cpp.html#af192399629572fa31bbf5f790e90de4d"
+"parameters_8h.html#a138921074f6fbef7204383e9ec887205",
+"screen_8cpp.html#aea9312c2a12fc8e9fef16a9bdfd9b581"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
