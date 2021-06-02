@@ -129,13 +129,24 @@ void millisecondTimerEOL(void)
 
     // First step: reset the step count
     if (eolstep == START) {
-        if (!isMainsAvailable()) {
-            eolstep = SUPPLY_TO_EXPANDER_NOT_CONNECTED;
-            eolState = STATE_ERROR;
-        } else {
-            eolstep = CHECK_FAN;
-            eolMSCount = 0;
-            mainController.setup();
+        // Wait the operator to press start to begin the EOL test
+        if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
+
+            // Error out immediately if power supply expander is not available
+            if (!isMainsAvailable()) {
+                eolstep = SUPPLY_TO_EXPANDER_NOT_CONNECTED;
+                eolState = STATE_ERROR;
+            } else {
+                // Move to first step (check ventirad fans)
+                eolstep = CHECK_FAN;
+                eolMSCount = 0;
+
+                // Important: setup main controller for later use (ONCE!)
+                mainController.setup();
+            }
         }
     } else if (eolstep == SUPPLY_TO_EXPANDER_NOT_CONNECTED) {
         eolFail = true;
@@ -312,6 +323,9 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
                        "Plug testing\npipes then press\nSTART");
         if (eolStepConfirmed || digitalRead(PIN_BTN_START) == HIGH) {
+            while (digitalRead(PIN_BTN_START) == HIGH) {
+                continue;
+            }
             eolMSCount = 0;
             eolstep = REACH_MAX_PRESSURE;
         }
