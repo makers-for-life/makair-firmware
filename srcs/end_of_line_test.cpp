@@ -482,8 +482,9 @@ void millisecondTimerEOL(void)
         flowValue = 0;
 #endif
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE,
-            "Testing Blower\nstabilization\n\n P= %d mmH2O", pressureValue);
-        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
+            "Testing blower\nP= %d mmH2O \nF= %d SLM", pressureValue, flowValue);
+        (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O; Flow: %d SLM", pressureValue,
+                       flowValue);
 
         if (eolMSCount > 10000u) {
             maxPressureValue = max(maxPressureValue, pressureValue);
