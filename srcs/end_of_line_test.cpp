@@ -338,7 +338,7 @@ void millisecondTimerEOL(void)
             eolstep = REACH_MAX_PRESSURE;
         }
     } else if (eolstep == REACH_MAX_PRESSURE) {
-        // Turn on the blower and check if able to reach the max pressure 650 mmH2O
+        // Turn on the blower and check if able to reach the max pressure 600 mmH2O
         expiratoryValve.close();
         expiratoryValve.execute();
         inspiratoryValve.open();
@@ -348,7 +348,7 @@ void millisecondTimerEOL(void)
         (void)snprintf(eolScreenBuffer, EOLSCREENSIZE, "Increasing pressure\n  \nP = %d mmH2O",
                        pressureValue);
         (void)snprintf(eolTrace, EOLTRACESIZE, "Pressure: %d mmH2O", pressureValue);
-        if (pressureValue > 650) {
+        if (pressureValue > 600) {
             eolMSCount = 0;
             eolTestNumber++;
             eolstep = MAX_PRESSURE_REACHED_OK;
