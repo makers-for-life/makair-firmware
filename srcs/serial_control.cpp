@@ -240,9 +240,11 @@ void serialControlLoop() {
                     mainController.onPeakPressureAlarmThreshold(value);
                     break;
 
+#ifndef SIMULATOR
                 case EolConfirm:
                     eolTest.onConfirm();
                     break;
+#endif
 
                 default:
                     DBG_DO({
