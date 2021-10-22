@@ -27,7 +27,7 @@ AlarmController alarmController;
 AlarmController::AlarmController()
     : m_highestPriority(AlarmPriority::ALARM_NONE),
       m_snoozeTime(0u),
-      m_alarms({
+      m_alarms{
 
           /**
            * RCM-SW-2
@@ -169,7 +169,7 @@ AlarmController::AlarmController()
            * The device shall embed a medium priority alarm 107 when expiratory flow is too low
            */
           Alarm(AlarmPriority::ALARM_MEDIUM, RCM_SW_23, 3u),
-      }),
+      },
 
       m_tick(0u),
       m_unsnooze(true),
