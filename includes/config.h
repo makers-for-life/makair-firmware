@@ -57,5 +57,5 @@
 // Uncomment when compiling for the simulator
 //#define SIMULATOR
 
-// Uncomment when compiling for WASM
+// Uncomment when compiling for WASM (you also need to uncomment SIMULATOR too)
 //#define SIMULATOR_WASM
