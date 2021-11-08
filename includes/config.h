@@ -55,7 +55,7 @@
 // #define DISABLE_BUTTONS
 
 // Uncomment when compiling for the simulator
-//#define SIMULATOR
+// #define SIMULATOR
 
 // Uncomment when compiling for WASM (you also need to uncomment SIMULATOR too)
-//#define SIMULATOR_WASM
+// #define SIMULATOR_WASM
