@@ -142,7 +142,7 @@ void sendBootMessage() {
     // cppcheck-suppress misra-c2012-12.3 ; false positive
     crc32.update("\t", 1);
 
-    Serial6.write(MODE);
+    Serial6.write(static_cast<uint8_t>(MODE));
     crc32.update(static_cast<uint8_t>(MODE));
 
     Serial6.print("\t");
