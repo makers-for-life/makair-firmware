@@ -25,7 +25,7 @@
  */
 #define DEBUG 0
 
-/// Defines if the device has a Mass Flow Meter or not
+// Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor
 #define MASS_FLOW_METER_ENABLED
 
@@ -50,8 +50,8 @@
 /**
  * @name Disables features
  */
-/// Disable hardware buttons, used when integrating a motherboard in a touch- \
-///   only device.
+/* Disable hardware buttons, used when integrating a motherboard in a touch-
+   only device.*/
 // #define DISABLE_BUTTONS
 
 // Uncomment when compiling for the simulator

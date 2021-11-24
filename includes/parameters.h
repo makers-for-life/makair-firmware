@@ -73,7 +73,7 @@
 #define CONST_MIN_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 50u               // [in mL]
 #define CONST_MAX_HIGH_TIDAL_VOLUME_ALARM_THRESHOLD 2000u             // [in mL]
 #define CONST_MIN_LEAK_ALARM_THRESHOLD 0u                             // [in cL/min]
-#define CONST_MIN_LEAK_ALARM_THRESHOLD 10000u                         // [in cL/min]
+#define CONST_MAX_LEAK_ALARM_THRESHOLD 10000u                         // [in cL/min]
 #define CONST_MIN_PEAK_PRESSURE_ALARM_THRESHOLD 50                    // [in mmH2O]
 #define CONST_MAX_PEAK_PRESSURE_ALARM_THRESHOLD 700                   // [in mmH2O]
 #define CONST_MIN_PATIENT_HEIGHT 30                                   // [in cm]

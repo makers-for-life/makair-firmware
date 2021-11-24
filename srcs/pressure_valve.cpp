@@ -5,8 +5,6 @@
  * @brief Tools to control Pressure Valves
  *****************************************************************************/
 
-#pragma once
-
 // INCLUDES ===================================================================
 
 // Associated header
@@ -121,13 +119,13 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
     Then when made an order 3 regression between correctedOpenningValue and openningValue. This
     is the relation below:
     */
-    command = (uint16_t)(
-        (((76u * intermediateValue) / 10u)
-         - (((985u * intermediateValue) * intermediateValue) / 100000u)
-         + (((((44u * intermediateValue) * intermediateValue) / 1000u) * intermediateValue)
-            / 10000u)
-         - 1140u)
-        / 10u);
+    command = (uint16_t)((((76u * intermediateValue) / 10u)
+                          - (((985u * intermediateValue) * intermediateValue) / 100000u)
+                          + (((((44u * intermediateValue) * intermediateValue) / 1000u)
+                              * intermediateValue)
+                             / 10000u)
+                          - 1140u)
+                         / 10u);
 
     // cppcheck-suppress misra-c2012-12.3 ; cppcheck error
     command = min(max(uint16_t(minApertureAngle), command), uint16_t(maxApertureAngle));

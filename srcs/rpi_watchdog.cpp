@@ -5,8 +5,6 @@
  * @brief Watchdog for the Raspberry PI
  *****************************************************************************/
 
-#pragma once
-
 // INCLUDES ===================================================================
 
 #include "../includes/rpi_watchdog.h"

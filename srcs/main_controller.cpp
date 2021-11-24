@@ -5,7 +5,8 @@
  * @brief Core logic to control the breathing cycle
  *****************************************************************************/
 
-#pragma once
+// Disable some useless warning at compile time
+#pragma GCC diagnostic ignored "-Wtype-limits"
 
 // INCLUDES ===================================================================
 
@@ -1159,7 +1160,7 @@ void MainController::onPlateauDurationSet(uint16_t p_plateauDuration) {
 // cppcheck-suppress unusedFunction
 void MainController::onLeakAlarmThresholdSet(uint16_t p_leakAlarmThreshold) {
     if ((p_leakAlarmThreshold >= CONST_MIN_LEAK_ALARM_THRESHOLD)
-        && (p_leakAlarmThreshold <= CONST_MIN_LEAK_ALARM_THRESHOLD)) {
+        && (p_leakAlarmThreshold <= CONST_MAX_LEAK_ALARM_THRESHOLD)) {
         m_leakAlarmThresholdNextCommand = 10u * p_leakAlarmThreshold;
     }
 

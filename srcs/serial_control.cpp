@@ -5,8 +5,6 @@
  * @brief Handle control protocol on the serial input
  *****************************************************************************/
 
-#pragma once
-
 #include "../includes/config.h"
 
 // INCLUDES ===================================================================

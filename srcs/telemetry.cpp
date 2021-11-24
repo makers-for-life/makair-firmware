@@ -5,8 +5,6 @@
  * @brief Implementation of the telemetry protocol
  *****************************************************************************/
 
-#pragma once
-
 // INCLUDES ===================================================================
 
 // Associated header

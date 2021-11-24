@@ -260,29 +260,21 @@ class MainController {
     /// Get the desired number of cycles per minute
     inline uint16_t cyclesPerMinuteCommand() const { return m_cyclesPerMinuteCommand; }
     /// Get the value of the inspiratory trigger pressure command
-    inline const int16_t pressureTriggerOffsetCommand() const {
-        return m_pressureTriggerOffsetCommand;
-    }
+    inline int16_t pressureTriggerOffsetCommand() const { return m_pressureTriggerOffsetCommand; }
     /// Get the enabling state of trigger mode
-    inline const bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
+    inline bool triggerModeEnabledCommand() { return m_triggerModeEnabledCommand; }
     /// Get the value of the inspiratory trigger flow command
-    inline const int16_t inspiratoryTriggerFlowCommand() const {
-        return m_inspiratoryTriggerFlowCommand;
-    }
+    inline int16_t inspiratoryTriggerFlowCommand() const { return m_inspiratoryTriggerFlowCommand; }
     /// Get the value of the expiratory trigger flow command
-    inline const int16_t expiratoryTriggerFlowCommand() const {
-        return m_expiratoryTriggerFlowCommand;
-    }
+    inline int16_t expiratoryTriggerFlowCommand() const { return m_expiratoryTriggerFlowCommand; }
     /// Get the value of the minimum duration of inspiration in ms
-    inline const int16_t tiMinCommand() const { return m_tiMinCommand; }
+    inline int16_t tiMinCommand() const { return m_tiMinCommand; }
     /// Get the value of the max duration of inspiration in ms
-    inline const int16_t tiMaxCommand() const { return m_tiMaxCommand; }
+    inline int16_t tiMaxCommand() const { return m_tiMaxCommand; }
     /// get target inspiratory flow in mL/min (used in VC modes)
-    inline const int32_t targetInspiratoryFlowCommand() const {
-        return m_targetInspiratoryFlowCommand;
-    }
+    inline int32_t targetInspiratoryFlowCommand() const { return m_targetInspiratoryFlowCommand; }
     /// Get duration of inspiration command
-    inline const int16_t inspiratoryDurationCommand() const { return m_inspiratoryDurationCommand; }
+    inline int16_t inspiratoryDurationCommand() const { return m_inspiratoryDurationCommand; }
 
     /// Get the desired tidal Volume for the next cycle (used in VC modes)
     inline int16_t tidalVolumeNextCommand() const { return m_tidalVolumeNextCommand; }
@@ -297,33 +289,33 @@ class MainController {
     /// Get the desired number of cycles per minute for the next cycle
     inline uint16_t cyclesPerMinuteNextCommand() const { return m_cyclesPerMinuteNextCommand; }
     /// Get the value of the inspiratory trigger pressure command for the next cycle
-    inline const int16_t pressureTriggerOffsetNextCommand() const {
+    inline int16_t pressureTriggerOffsetNextCommand() const {
         return m_pressureTriggerOffsetNextCommand;
     }
     /// Get the enabling state of trigger mode for the next cycle
-    inline const bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
+    inline bool triggerModeEnabledNextCommand() { return m_triggerModeEnabledNextCommand; }
     /// Get the value of the inspiratory trigger flow command for the next cycle
-    inline const int16_t inspiratoryTriggerFlowNextCommand() const {
+    inline int16_t inspiratoryTriggerFlowNextCommand() const {
         return m_inspiratoryTriggerFlowNextCommand;
     }
     /// Get the value of the expiratory trigger flow command for the next cycle
-    inline const int16_t expiratoryTriggerFlowNextCommand() const {
+    inline int16_t expiratoryTriggerFlowNextCommand() const {
         return m_expiratoryTriggerFlowNextCommand;
     }
     /// Get the value of the minimum duration of inspiration in ms for the next cycle
-    inline const int16_t tiMinNextCommand() const { return m_tiMinNextCommand; }
+    inline int16_t tiMinNextCommand() const { return m_tiMinNextCommand; }
     /// Get the value of the max duration of inspiration in ms for the next cycle
-    inline const int16_t tiMaxNextCommand() const { return m_tiMaxNextCommand; }
+    inline int16_t tiMaxNextCommand() const { return m_tiMaxNextCommand; }
     /// get target inspiratory flow in mL/min (used in VC modes) for next cycle
-    inline const int32_t targetInspiratoryFlowNextCommand() const {
+    inline int32_t targetInspiratoryFlowNextCommand() const {
         return m_targetInspiratoryFlowNextCommand;
     }
     /// Get duration of inspiration command fo next cycle
-    inline const int16_t inspiratoryDurationNextCommand() const {
+    inline int16_t inspiratoryDurationNextCommand() const {
         return m_inspiratoryDurationNextCommand;
     }
     /// Ventilation controller pointer for the next cycle
-    inline const VentilationController* ventilationControllerNextCommand() const {
+    inline VentilationController* ventilationControllerNextCommand() const {
         return m_ventilationControllerNextCommand;
     }
 
@@ -378,13 +370,13 @@ class MainController {
     inline CyclePhases phase() const { return m_phase; }
 
     /// Get the state of the inspiratory trigger
-    inline const bool triggered() const { return m_triggered; }
+    inline bool triggered() const { return m_triggered; }
 
     /// Reset the trigger to false
-    inline const void setTrigger(bool triggerValue) { m_triggered = triggerValue; }
+    inline void setTrigger(bool triggerValue) { m_triggered = triggerValue; }
 
     /// Get if the PEEP has been detected during this cycle
-    inline const bool isPeepDetected() { return m_isPeepDetected; }
+    inline bool isPeepDetected() { return m_isPeepDetected; }
 
     /// Get last pressure values
     inline int16_t* lastPressureValues() { return m_lastPressureValues; }

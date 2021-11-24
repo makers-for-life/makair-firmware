@@ -5,8 +5,6 @@
  * @brief Describes an alarm and handle its dynamic state
  *****************************************************************************/
 
-#pragma once
-
 // INCLUDES ===================================================================
 
 // Externals
