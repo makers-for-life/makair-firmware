@@ -58,7 +58,7 @@ uint32_t toU32(byte bytes[]) {
 // cppcheck-suppress unusedFunction
 void serialControlLoop() {
     // Let's note this current time to avoid blocking too long here
-    int time = millis();
+    uint32_t time = millis();
 
     // We need to ensure we received the whole message
     while (((time + 2) >= millis()) && (Serial6.available() >= 11)) {
