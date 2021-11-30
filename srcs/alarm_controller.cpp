@@ -166,8 +166,7 @@ AlarmController::AlarmController()
            * RCM-SW-23
            * The device shall embed a medium priority alarm 107 when expiratory flow is too low
            */
-          Alarm(AlarmPriority::ALARM_MEDIUM, RCM_SW_23, 3u),
-      },
+          Alarm(AlarmPriority::ALARM_MEDIUM, RCM_SW_23, 3u)},
 
       m_tick(0u),
       m_pressure(0u),
