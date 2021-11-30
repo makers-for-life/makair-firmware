@@ -112,7 +112,7 @@ MainController::MainController() {
     m_ventilationControllersTable[PC_VSAI] = &pcVsaiController;
     m_ventilationControllersTable[VC_AC] = &vcAcController;
 
-    m_ventilationControllerMode = PC_AC;
+    m_ventilationControllerMode = VC_AC;
 
     m_ventilationController = m_ventilationControllersTable[m_ventilationControllerMode];
     m_ventilationControllerNextCommand = m_ventilationControllersTable[m_ventilationControllerMode];
