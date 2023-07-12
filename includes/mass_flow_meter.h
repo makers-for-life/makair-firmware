@@ -80,10 +80,12 @@ uint32_t MFM_read_serial_number(void);
  */
 uint32_t MFM_expi_read_serial_number(void);
 
+void tcaselect(uint8_t i);
+
 #define MFM_SFM_3300D_I2C_ADDRESS 0x40
 #define MFM_HONEYWELL_HAF_I2C_ADDRESS 0x49
 #define MFM_SDP703_02_I2C_ADDRESS 0x40
-#define MFM_SFM3019_I2C_ADDRESS 0x2E
+#define MFM_SFM3019_I2C_ADDRESS 0x40
 
 // exposed for other peripherals sharing I2C bus pause the timer.
 extern volatile uint16_t MFM_force_release_I2C;

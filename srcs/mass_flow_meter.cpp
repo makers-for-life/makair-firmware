@@ -113,6 +113,7 @@ void MFM_Timer_Callback(void)
         if (!mfmFaultCondition) {
 #if MASS_FLOW_METER_SENSOR == MFM_SFM3019
             Wire.begin();
+            tcaselect(0);
             uint8_t readCountbis = Wire.requestFrom(MFM_SFM3019_I2C_ADDRESS, 3);
             mfmLastData.c[1] = Wire.read();
             mfmLastData.c[0] = Wire.read();
@@ -191,7 +192,9 @@ void MFM_Timer_Callback(void)
 #if MASS_FLOW_METER_SENSOR_EXPI == MFM_SFM_3300D
             // begin() and end() everytime you read... the lib never free buffers if you don't do
             // this.
+            
             Wire.begin();
+            tcaselect(0);
             // do not request crc, only two bytes
             uint8_t readCountExpi = Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 2);
             mfmLastData.c[1] = Wire.read();
@@ -561,6 +564,18 @@ int32_t MFM_read_airflow(void) {
     }
     return r;
 }
+
+
+void tcaselect(uint8_t i)
+{
+  if (i > 7)
+    return;
+  Wire.beginTransmission(0x70);
+  Wire.write(1 << i);
+  Wire.endTransmission();
+}
+
+
 
 // cppcheck-suppress unusedFunction
 int32_t MFM_expi_read_airflow(void) {

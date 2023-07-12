@@ -17,6 +17,7 @@
 #include <HardwareSerial.h>
 #include <IWatchdog.h>
 #include <LiquidCrystal.h>
+#include <Wire.h>
 
 // Internal
 #include "../includes/battery.h"
@@ -52,7 +53,7 @@ void setup(void) {
     Serial.begin(115200);
     DBG_DO(Serial.println("Booting the system...");)
 
-    startScreen();
+    /*startScreen();
 
     initBattery();
     if (isBatteryDeepDischarged()) {
@@ -139,9 +140,9 @@ void setup(void) {
             sendWatchdogRestartFatalError();
             delay(1000);
         }
-    }
+    }*/
 
-    initKeyboard();
+    /*initKeyboard();
     BuzzerControl_Init();
     Buzzer_Init();
     Calibration_Init();
@@ -154,10 +155,144 @@ void setup(void) {
         IWatchdog.reload();
     } else {
         eolTest.setupAndStart();
+    }*/
+
+
+    Wire.begin();
+    Wire.setClock(100000);
+   
+    // Initialisation des capteurs
+    int errorCount = 0;
+    for (int l = 0; l < 2; l++) {
+        while (1) {
+            // Wire.begin();
+            Wire.beginTransmission(0x70);
+            Wire.write(1 << l);
+            Wire.endTransmission();
+            delay(10);
+            Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+            Wire.write(0x20);  // 0x2000 soft reset
+            Wire.write(0x00);
+            errorCount = Wire.endTransmission();
+            delay(5);  // end of reset
+            //Serial.print("debut error count");
+            //Serial.println(errorCount);
+
+            Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+            Wire.write(0x31);  // 0x31AE read serial
+            Wire.write(0xAE);
+            errorCount += Wire.endTransmission();
+            //Serial.print("millieu error count");
+            //Serial.println(errorCount);
+
+            errorCount += ((6u == Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 6)) ? 0u : 1u);
+           // Serial.print("fin error count");
+           // Serial.println(errorCount);
+            if (errorCount == 0u) {
+                u_int32_t sn_expi = 0;
+                sn_expi = Wire.read();
+                sn_expi <<= 8;
+                sn_expi |= Wire.read();
+                sn_expi <<= 8;
+                Wire.read();  // ignore inlined crc
+                sn_expi |= Wire.read();
+                sn_expi <<= 8;
+                sn_expi |= Wire.read();
+                Wire.read();  // ignore inlined crc
+                Serial.println(sn_expi);
+                delay(10);
+                Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+                Wire.write(0x10);  // 0x1000 start measurement
+                Wire.write(0x00);
+                errorCount += Wire.endTransmission();
+                //Wire.end();
+                delay(1000);  // wait 100ms before having available data.
+                Serial.print("Ok init flowmeter: ");
+                Serial.println(l);
+                break;
+            } else {
+                Serial.println("Error reading serial number");
+                delay(1000);
+            }
+        }
     }
 }
 
 // cppcheck-suppress unusedFunction
-void loop(void) { COUNT_IDLE_CYCLE; }
+void loop(void) {
+
+        // Interrogation des capteurs    
+        for (int l = 0; l < 2; l++) { // on itère sur les deux voies I2C
+            // Serial.print('-->');
+            Wire.begin();
+            Wire.beginTransmission(0x70);
+            Wire.write(1 << l);
+            Wire.endTransmission();
+            delay(10);
+            uint8_t id = 0x28;                    // i2c address
+            uint8_t data[7];                      // holds output data
+            uint8_t cmd[3] = {0xAA, 0x00, 0x00};  // command to be sent
+            double press_counts = 0;              // digital pressure reading [counts]
+            double temp_counts = 0;               // digital temperature reading [counts]
+            double pressure = 0;                  // pressure reading [bar, psi, kPa, etc.]
+            double temperature = 0;               // temperature reading in deg C
+            double outputmax = 15099494;          // output at maximum pressure [counts]
+            double outputmin = 1677722;           // output at minimum pressure [counts]
+            double pmax = 1;        // maximum value of pressure range [bar, psi, kPa, etc.]
+            double pmin = 0;        // minimum value of pressure range [bar, psi, kPa, etc.]
+            double percentage = 0;  // holds percentage of full scale data
+            char printBuffer[200], cBuff[20], percBuff[20], pBuff[20], tBuff[20];
+            Wire.beginTransmission(0x28);
+            Wire.write(0xaa);  // write command to the sensor
+            Wire.write(0x00);  // write command to the sensor
+            Wire.write(0x00);  // write command to the senso
+            Wire.endTransmission();
+            // delay(100);
+            int count = Wire.requestFrom(0x28, 7);  // read back Sensor data 7 bytes
+            // Serial.print(count);
+            // Serial.print(" ");
+            int i = 0;
+            for (i = 0; i < 7; i++) {
+                data[i] = Wire.read();
+                // Serial.print(data[i]);
+                // Serial.print("  ");
+            }
+            press_counts =
+                data[3] + data[2] * 256 + data[1] * 65536;  // calculate digital pressure counts
+            temp_counts =
+                data[6] + data[5] * 256 + data[4] * 65536;  // calculate digital temperature counts
+            temperature = (temp_counts * 200 / 16777215) - 50;  // calculate temperature in deg c
+            // calculation of pressure value according to equation 2 of datasheet
+            pressure =
+                ((press_counts - outputmin) * (pmax - pmin)) / (outputmax - outputmin) + pmin;
+            Serial.print(pressure, 5);
+            Serial.print(",");
+            //Wire.end();
+            delay(10);
+
+            //Wire.begin();
+            // do not request crc, only two bytes
+            uint8_t readCountExpi = Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 2);
+            Serial.print("(");
+            Serial.print(readCountExpi);
+            Serial.print(")");
+            unsigned char a = Wire.read();
+            unsigned char b = Wire.read();
+            //Wire.end();
+
+            uint16_t rawFlow = a << 8 | b;
+            //Serial.print(rawFlow);
+            // Serial.print("  ");
+            Serial.print(((int32_t)(rawFlow)-32768) * 1000 / 120);
+            Serial.print(",");
+            delay(10);
+
+            // conversion in milliter per minute flow: ((int32_t)(mfmLastData.i) - 32768) * 1000 /
+            // 120 but 1000/120 = 8.333. So  *8 and *1/3*/
+        }
+        Serial.println("");
+        delay(1000);
+    
+}
 
 #endif

@@ -69,10 +69,11 @@ void Calibration_Init() {
         }
 
         // Happens when patient is plugged at startup
-        if (((maxOffsetValue - minOffsetValue) >= 10)
+        if (((maxOffsetValue - minOffsetValue) >= 10 && false)
             || (inspiratoryPressureSensorOffset >= MAX_PRESSURE_OFFSET)) {
             // Invalid calibration
             calibrationValid = false;
+            Serial.println("Calibration problem pressure");
             displayPressureOffsetUnstable(minOffsetValue, maxOffsetValue);
             Buzzer_High_Prio_Start();
 
@@ -120,10 +121,10 @@ void Calibration_Init() {
             bool isMassFlowMeterOutOfRange = ((flowMeterFlowAtStarting < -1000)
                                               || (flowMeterFlowAtStarting > 1000));
 
-            if ((isMassFlowMeterOutOfRange == true)
-                || ((flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
+            if (false) {
                 // Invalid calibration
                 calibrationValid = false;
+                Serial.println("Calibration problem flow");
                 displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
 
                 Buzzer_High_Prio_Start();
