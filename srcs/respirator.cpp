@@ -242,7 +242,7 @@ void loop(void) {
         Wire.beginTransmission(0x70);
         Wire.write(1 << l);
         Wire.endTransmission();
-        delay(10);
+        delay(2);
         uint8_t id = 0x28;                    // i2c address
         uint8_t data[7];                      // holds output data
         uint8_t cmd[3] = {0xAA, 0x00, 0x00};  // command to be sent
@@ -261,10 +261,13 @@ void loop(void) {
         Wire.write(0x00);  // write command to the sensor
         Wire.write(0x00);  // write command to the senso
         Wire.endTransmission();
-         delay(1);
         int count = Wire.requestFrom(0x28, 7);  // read back Sensor data 7 bytes
+        if(count!=7){
+            Serial.println("erreur request from pressure");
+        }
         // Serial.print(count);
         // Serial.print(" ");
+        // delay(1);
         int i = 0;
         for (i = 0; i < 7; i++) {
             if (Wire.available()) {
@@ -297,7 +300,7 @@ void loop(void) {
             b = Wire.read();
         }
         // unsigned char b = Wire.read();
-          
+        Wire.end();
 
         uint16_t rawFlow = a << 8 | b;
         // Serial.print(rawFlow);
