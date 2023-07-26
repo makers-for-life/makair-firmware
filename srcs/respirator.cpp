@@ -169,7 +169,7 @@ void setup(void) {
     IWatchdog.reload();
 
     Wire.begin();
-    Wire.setClock(100000);
+    Wire.setClock(400000);
 
     // Initialisation des capteurs
     int errorCount = 0;
@@ -234,6 +234,7 @@ void setup(void) {
 void loop(void) {
 
     // Interrogation des capteurs
+    
     for (int l = 0; l < 2; l++) {  // on itère sur les deux voies I2C
         IWatchdog.reload();
         // Serial.print('-->');
@@ -296,7 +297,7 @@ void loop(void) {
             b = Wire.read();
         }
         // unsigned char b = Wire.read();
-          Wire.end();
+          
 
         uint16_t rawFlow = a << 8 | b;
         // Serial.print(rawFlow);
@@ -308,6 +309,7 @@ void loop(void) {
         // 120 but 1000/120 = 8.333. So  *8 and *1/3*/
     }
     Serial.println("");
+    //Wire.end();
 }
 
 #endif
