@@ -47,10 +47,14 @@ HardwareTimer* hardwareTimer3;  // valves command
 
 HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
 
+float pressuresValues[2];
+float flowsValues[2];
+void measure();
+
 void setup(void) {
     // Nothing should be sent to Serial in production, but this will avoid crashing the program if
     // some Serial.print() was forgotten
-    Serial.begin(1000000);
+    Serial.begin(115200);
     DBG_DO(Serial.println("Booting the system...");)
 
     /*startScreen();
@@ -67,7 +71,7 @@ void setup(void) {
     }
 
     initTelemetry();
-    sendBootMessage();
+    sendBootMessage();*/
 
     // Timer for valves
     hardwareTimer3 = new HardwareTimer(TIM3);
@@ -89,8 +93,10 @@ void setup(void) {
     blower = Blower(hardwareTimer1, TIM_CHANNEL_ESC_BLOWER, PIN_ESC_BLOWER);
     blower.setup();
 
+    inspiratoryPressureSensor = PressureSensor();
+
     // Init controllers
-    mainController = MainController();
+    /*mainController = MainController();
     alarmController = AlarmController();
 
     // Init sensors
@@ -165,7 +171,7 @@ void setup(void) {
             delay(1000);
         }
     }
-    IWatchdog.begin(WATCHDOG_TIMEOUT);
+    // IWatchdog.begin(WATCHDOG_TIMEOUT);
     IWatchdog.reload();
 
     Wire.begin();
@@ -233,8 +239,124 @@ void setup(void) {
 // cppcheck-suppress unusedFunction
 void loop(void) {
 
+    inspiratoryValve.open();
+    expiratoryValve.open();
+    delay(2000);
+
+    // Caractérisation William (wide angles) V2
+    // int32_t blower_values[15] = {1000, 900, 1100, 1000, 1200, 1400, 1800, 1600, 1700, 1750, 1800,
+    // 1750, 1700, 1600, 1500};
+    int32_t blower_values[15] = {250,  500,  750,  1000, 1200, 1250, 1300, 1400,
+                                 1500, 1600, 1750, 1250, 750,  500,  250};
+    int32_t expiratory_angle_values[15] = {99, 97, 95, 93, 91, 90, 85, 60,
+                                           45, 30, 15, 0,  45, 90, 95};
+    int32_t inspiratory_angle_values[15] = {99, 97, 95, 93, 91, 90, 85, 60,
+                                            45, 30, 15, 0,  45, 90, 95};
+
+    // Caractérisation William (middle angles & blower values) V3
+    // int32_t blower_values[15] = {250, 500, 750, 1000, 1200, 1250, 1300, 1400, 1500, 1600, 1750,
+    // 1250, 750, 500, 250}; int32_t expiratory_angle_values[15]  = {95, 85, 75, 65, 55, 45, 35, 40,
+    // 50, 60, 70, 80, 90, 92, 97}; int32_t inspiratory_angle_values[15] = {95, 85, 75, 65, 55, 45,
+    // 35, 40, 50, 60, 70, 80, 90, 92, 97};
+
+    Serial.println(
+        "index\tblower speed	(0-1800)\tinspiratoryValveOpenning(0-125)\t "
+        "expiratoryValveOpenning(0-125)	\tinspiratoryFlow(mL/	"
+        "min)\texpiratoryFlow(mL/"
+        "min)\tinspiratoryPressure(mmH2O)\texpiratoryPressure(mmH2O)\tBlowerpressure(mmH2O)");
+
+    int32_t i = 2;
+    // blower.runSpeed(blower_values[i]);
+
+    float sumFlowInspi = 0;
+    float sumFlowExpi = 0;
+    float sumPressureInspi = 0;
+    float sumPressureExpi = 0;
+    float sumPressureBlower = 0;
+    for (int32_t j = 0; j < 100; j++) {
+        expiratoryValve.execute();
+        inspiratoryValve.execute();
+        measure();
+        sumFlowInspi += flowsValues[1];
+        sumFlowExpi += flowsValues[0];
+        sumPressureInspi += pressuresValues[1];
+        sumPressureExpi += pressuresValues[0];
+        sumPressureBlower += inspiratoryPressureSensor.read();
+        delay(5);
+    }
+    Serial.print(i);
+    Serial.print("\t");
+    Serial.print(0);
+    Serial.print("\t");
+    Serial.print(-1);
+    Serial.print("\t");
+    Serial.print(-1);
+    Serial.print("\t");
+    Serial.print(sumFlowInspi / 100);
+    Serial.print("\t");
+    Serial.print(sumFlowExpi / 100);
+    Serial.print("\t");
+    Serial.print(sumPressureInspi, 2);
+    Serial.print("\t");
+    Serial.print(sumPressureExpi, 2);
+    Serial.print("\t");
+    Serial.print(sumPressureBlower / 100);
+    Serial.println();
+
+    inspiratoryValve.open();
+    expiratoryValve.close();
+    delay(1000);
+
+    blower.runSpeed(blower_values[i]);
+
+    for (int32_t k = 0; k < 15; k++) {
+        expiratoryValve.open(expiratory_angle_values[k]);
+        for (int32_t l = 0; l < 15; l++) {
+            inspiratoryValve.open(inspiratory_angle_values[l]);
+            inspiratoryValve.execute();
+            expiratoryValve.execute();
+            delay(2000);
+            float sumFlowInspi = 0;
+            float sumFlowExpi = 0;
+            float sumPressureInspi = 0;
+            float sumPressureExpi = 0;
+            float sumPressureBlower = 0;
+            for (int32_t j = 0; j < 100; j++) {
+                expiratoryValve.execute();
+                inspiratoryValve.execute();
+                measure();
+                sumFlowInspi += flowsValues[1];
+                sumFlowExpi += flowsValues[0];
+                sumPressureInspi += pressuresValues[1];
+                sumPressureExpi += pressuresValues[0];
+                sumPressureBlower += inspiratoryPressureSensor.read();
+                delay(5);
+            }
+            Serial.print(i);
+            Serial.print("\t");
+            Serial.print(blower_values[i]);
+            Serial.print("\t");
+            Serial.print(inspiratory_angle_values[l]);
+            Serial.print("\t");
+            Serial.print(expiratory_angle_values[k]);
+            Serial.print("\t");
+            Serial.print(sumFlowInspi / 100);
+            Serial.print("\t");
+            Serial.print(sumFlowExpi / 100);
+            Serial.print("\t");
+            Serial.print(sumPressureInspi, 2);
+            Serial.print("\t");
+            Serial.print(sumPressureExpi, 2);
+            Serial.print("\t");
+            Serial.print(sumPressureBlower / 100);
+            Serial.println();
+        }
+    }
+}
+
+void measure() {
     // Interrogation des capteurs
-    
+    uint32_t lastMicros = micros();
     for (int l = 0; l < 2; l++) {  // on itère sur les deux voies I2C
         IWatchdog.reload();
         // Serial.print('-->');
@@ -262,7 +384,7 @@ void loop(void) {
         Wire.write(0x00);  // write command to the senso
         Wire.endTransmission();
         int count = Wire.requestFrom(0x28, 7);  // read back Sensor data 7 bytes
-        if(count!=7){
+        if (count != 7) {
             Serial.println("erreur request from pressure");
         }
         // Serial.print(count);
@@ -284,10 +406,11 @@ void loop(void) {
         temperature = (temp_counts * 200 / 16777215) - 50;  // calculate temperature in deg c
         // calculation of pressure value according to equation 2 of datasheet
         pressure = ((press_counts - outputmin) * (pmax - pmin)) / (outputmax - outputmin) + pmin;
-        Serial.print(pressure, 5);
-        Serial.print(",");
-        // Wire.end();
-        // delay(10);
+        pressuresValues[l] = pressure;
+        // Serial.print(pressuresValues[l], 5);
+        // Serial.print(",");
+        //  Wire.end();
+        //  delay(10);
 
         // Wire.begin();
         //  do not request crc, only two bytes
@@ -305,14 +428,16 @@ void loop(void) {
         uint16_t rawFlow = a << 8 | b;
         // Serial.print(rawFlow);
         //  Serial.print("  ");
-        Serial.print(((int32_t)(rawFlow)-32768) * 1000 / 120);
-        Serial.print(",");
-        // delay(10);
-        // conversion in milliter per minute flow: ((int32_t)(mfmLastData.i) - 32768) * 1000 /
-        // 120 but 1000/120 = 8.333. So  *8 and *1/3*/
+        flowsValues[l] = ((int32_t)(rawFlow)-32768) * 1000 / 120;
+        // Serial.print(flowsValues[l]);
+        // Serial.print(",");
+        //  delay(10);
+        //  conversion in milliter per minute flow: ((int32_t)(mfmLastData.i) - 32768) * 1000 /
+        //  120 but 1000/120 = 8.333. So  *8 and *1/3*/
     }
-    Serial.println("");
-    //Wire.end();
+    // Serial.print(micros() - lastMicros);
+    // Serial.println("");
+    //  Wire.end();
 }
 
 #endif
