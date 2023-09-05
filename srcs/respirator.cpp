@@ -326,7 +326,7 @@ void loop(void) {
         float t = millis() - timeInit;
 
         if (millis() - timeBlower >= 24000) {
-            blowerValue = 900.0 + 900.0 * sin(2.0 * 3.14159 * (t / 1000.0) / (600.0));
+            blowerValue = 450.0 + 450.0 * sin(2.0 * 3.14159 * (t / 1000.0) / (600.0));
             timeBlower = millis();
         }
         if (millis() - timeValves >= 4000) {
@@ -358,9 +358,9 @@ void loop(void) {
             Serial.print("\t");
             Serial.print(flowsValues[0]);
             Serial.print("\t");
-            Serial.print(pressuresValues[1], 2);
+            Serial.print(pressuresValues[1]*100, 3);
             Serial.print("\t");
-            Serial.print(pressuresValues[0], 2);
+            Serial.print(pressuresValues[0]*100, 3);
             Serial.print("\t");
             Serial.print(inspiratoryPressureSensor.read());
             Serial.println();
