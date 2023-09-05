@@ -179,7 +179,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define TIM_CHANNEL_INSPIRATORY_VALVE 1
 #define TIM_CHANNEL_EXPIRATORY_VALVE 2
 #define ESC_PPM_PERIOD                                                                             \
-    10000  // ESC should be driven in 50 Hz. 100 Hz is a security against ESC or nucleo bugs. Some
+    1000  // ESC should be driven in 50 Hz. 100 Hz is a security against ESC or nucleo bugs. Some
            // ESC stops very quickly
 
 ///@}
@@ -190,8 +190,9 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 ///@{
 
 #define MIN_BLOWER_SPEED 000u
-#define MAX_BLOWER_SPEED 10000u
-#define DEFAULT_BLOWER_SPEED 5000u
+#define MAX_BLOWER_SPEED 600u
+#define TOP_BLOWER_SPEED 1800u
+#define DEFAULT_BLOWER_SPEED 500u
 
 ///@}
 

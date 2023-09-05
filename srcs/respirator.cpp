@@ -260,7 +260,7 @@ void loop(void) {
     // 35, 40, 50, 60, 70, 80, 90, 92, 97};
 
     Serial.println(
-        "index\tblower speed	(0-1800)\tinspiratoryValveOpenning(0-125)\t "
+        "index\ttime(ms)\tblower speed	(0-1800)\tinspiratoryValveOpenning(0-125)\t "
         "expiratoryValveOpenning(0-125)	\tinspiratoryFlow(mL/	"
         "min)\texpiratoryFlow(mL/"
         "min)\tinspiratoryPressure(mmH2O)\texpiratoryPressure(mmH2O)\tBlowerpressure(mmH2O)");
@@ -268,92 +268,107 @@ void loop(void) {
     int32_t i = 2;
     // blower.runSpeed(blower_values[i]);
 
+    /* while(true) {
+         if(Serial.available()){
+             int value = Serial.parseInt();
+             Serial.println(value);
+             blower.runSpeed(value);
+         }
+
+     }
+     blower.stop();
+     delay(10000000);*/
+
+    // Première boucle pour  mesurer les offsets
     float sumFlowInspi = 0;
     float sumFlowExpi = 0;
     float sumPressureInspi = 0;
     float sumPressureExpi = 0;
     float sumPressureBlower = 0;
-    for (int32_t j = 0; j < 100; j++) {
+    for (int32_t j = 0; j < 200; j++) {
         expiratoryValve.execute();
         inspiratoryValve.execute();
         measure();
-        sumFlowInspi += flowsValues[1];
-        sumFlowExpi += flowsValues[0];
-        sumPressureInspi += pressuresValues[1];
-        sumPressureExpi += pressuresValues[0];
-        sumPressureBlower += inspiratoryPressureSensor.read();
-        delay(5);
+        Serial.print(i);
+        Serial.print("\t");
+        Serial.print(millis());
+        Serial.print("\t");
+        Serial.print(0);
+        Serial.print("\t");
+        Serial.print(-1);
+        Serial.print("\t");
+        Serial.print(-1);
+        Serial.print("\t");
+        Serial.print(flowsValues[1]);
+        Serial.print("\t");
+        Serial.print(flowsValues[0]);
+        Serial.print("\t");
+        Serial.print(pressuresValues[1], 2);
+        Serial.print("\t");
+        Serial.print(pressuresValues[0], 2);
+        Serial.print("\t");
+        Serial.print(inspiratoryPressureSensor.read());
+        Serial.println();
     }
-    Serial.print(i);
-    Serial.print("\t");
-    Serial.print(0);
-    Serial.print("\t");
-    Serial.print(-1);
-    Serial.print("\t");
-    Serial.print(-1);
-    Serial.print("\t");
-    Serial.print(sumFlowInspi / 100);
-    Serial.print("\t");
-    Serial.print(sumFlowExpi / 100);
-    Serial.print("\t");
-    Serial.print(sumPressureInspi, 2);
-    Serial.print("\t");
-    Serial.print(sumPressureExpi, 2);
-    Serial.print("\t");
-    Serial.print(sumPressureBlower / 100);
-    Serial.println();
 
     inspiratoryValve.open();
     expiratoryValve.close();
     delay(1000);
+    uint32_t timeInit = millis();
+    uint32_t timeBlower = millis();
+    uint32_t timeValves = millis();
+    uint32_t timeMeasure = millis();
+    float blowerValue = 0.0;
+    float angleInspi = 0.0;
+    float angleExpi = 0.0;
 
-    blower.runSpeed(blower_values[i]);
+    while (millis() - timeInit < 600000) {
+        float t = millis() - timeInit;
 
-    for (int32_t k = 0; k < 15; k++) {
-        expiratoryValve.open(expiratory_angle_values[k]);
-        for (int32_t l = 0; l < 15; l++) {
-            inspiratoryValve.open(inspiratory_angle_values[l]);
-            inspiratoryValve.execute();
-            expiratoryValve.execute();
-            delay(2000);
-            float sumFlowInspi = 0;
-            float sumFlowExpi = 0;
-            float sumPressureInspi = 0;
-            float sumPressureExpi = 0;
-            float sumPressureBlower = 0;
-            for (int32_t j = 0; j < 100; j++) {
-                expiratoryValve.execute();
-                inspiratoryValve.execute();
-                measure();
-                sumFlowInspi += flowsValues[1];
-                sumFlowExpi += flowsValues[0];
-                sumPressureInspi += pressuresValues[1];
-                sumPressureExpi += pressuresValues[0];
-                sumPressureBlower += inspiratoryPressureSensor.read();
-                delay(5);
-            }
+        if (millis() - timeBlower >= 24000) {
+            blowerValue = 900.0 + 900.0 * sin(2.0 * 3.14159 * (t / 1000.0) / (600.0));
+            timeBlower = millis();
+        }
+        if (millis() - timeValves >= 4000) {
+            angleInspi = 50.0 + 50.0 * sin(2.0 * 3.14159 * (t / 1000.0) / (20 * 3.14159));
+            angleExpi = 50.0 + 50.0 * sin(2.0 * 3.14159 * (t / 1000.0) / (25 * 3.14159));
+            timeValves = millis();
+        }
+
+        blower.runSpeed(blowerValue);
+        expiratoryValve.open(angleExpi);
+        inspiratoryValve.open(angleInspi);
+        inspiratoryValve.execute();
+        expiratoryValve.execute();
+
+        if (millis() - timeMeasure >= 100) {
+            timeMeasure = millis();
+            measure();
             Serial.print(i);
             Serial.print("\t");
-            Serial.print(blower_values[i]);
+            Serial.print(millis());
             Serial.print("\t");
-            Serial.print(inspiratory_angle_values[l]);
+            Serial.print(blowerValue);
             Serial.print("\t");
-            Serial.print(expiratory_angle_values[k]);
+            Serial.print(angleInspi);
             Serial.print("\t");
-            Serial.print(sumFlowInspi / 100);
+            Serial.print(angleExpi);
             Serial.print("\t");
-            Serial.print(sumFlowExpi / 100);
+            Serial.print(flowsValues[1]);
             Serial.print("\t");
-            Serial.print(sumPressureInspi, 2);
+            Serial.print(flowsValues[0]);
             Serial.print("\t");
-            Serial.print(sumPressureExpi, 2);
+            Serial.print(pressuresValues[1], 2);
             Serial.print("\t");
-            Serial.print(sumPressureBlower / 100);
+            Serial.print(pressuresValues[0], 2);
+            Serial.print("\t");
+            Serial.print(inspiratoryPressureSensor.read());
             Serial.println();
         }
     }
+    blower.runSpeed(0);
+    delay(10000000);
 }
-
 void measure() {
     // Interrogation des capteurs
     uint32_t lastMicros = micros();
