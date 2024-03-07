@@ -71,6 +71,8 @@ void Blower::runSpeed(uint16_t p_runSpeed) {
     if ((p_runSpeed >= MIN_BLOWER_SPEED) && (p_runSpeed <= MAX_BLOWER_SPEED)) {
         // do not forcefully set the capture compare again and again if speed do not change
         if (m_stopped || (m_speed != p_runSpeed)) {
+            //Serial.print("Blower speed:");
+            Serial.println(BlowerSpeed2MicroSeconds(p_runSpeed));
             actuator->setCaptureCompare(timerChannel, BlowerSpeed2MicroSeconds(p_runSpeed),
                                         MICROSEC_COMPARE_FORMAT);
             m_speed = p_runSpeed;

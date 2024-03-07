@@ -17,7 +17,7 @@
 // PARAMETERS =================================================================
 
 /// Current version of the software
-#define VERSION "dev"
+#define VERSION "dms"
 
 /**
  * @name Core parameters
@@ -164,10 +164,10 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 ///@{
 
 /// Angle when opened
-#define VALVE_OPEN_STATE 0u
+#define VALVE_OPEN_STATE 0
 
 /// Angle when closed
-#define VALVE_CLOSED_STATE 125u
+#define VALVE_CLOSED_STATE 125
 #define VALVE_PERIOD 1000     // 1 kHz Faulhaber motors are controlled with a 1 kHz PWM
 #define FAULHABER_OPENED 660  // PWM duty cycle 64% -> open
 #define FAULHABER_CLOSED 900  // PWM duty cycle 90% -> closed
@@ -179,7 +179,7 @@ static const int32_t PID_PATIENT_SAFETY_PEEP_OFFSET = 0;
 #define TIM_CHANNEL_INSPIRATORY_VALVE 1
 #define TIM_CHANNEL_EXPIRATORY_VALVE 2
 #define ESC_PPM_PERIOD                                                                             \
-    10000  // ESC should be driven in 50 Hz. 100 Hz is a security against ESC or nucleo bugs. Some
+    50  // ESC should be driven in 50 Hz. 100 Hz is a security against ESC or nucleo bugs. Some
            // ESC stops very quickly
 
 ///@}

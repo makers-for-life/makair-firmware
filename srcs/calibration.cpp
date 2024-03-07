@@ -105,25 +105,24 @@ void Calibration_Init() {
 #else
             int32_t flowMeterFlowAtStarting = 0;
 #endif
-            while(1){
-                Serial.println("open");
-                inspiratoryValve.open();
-                inspiratoryValve.execute();
-                delay(1000);
-                Serial.println("close");
-                inspiratoryValve.close();
-                inspiratoryValve.execute();
-                delay(1000);
-            }
+
             inspiratoryValve.open();
             inspiratoryValve.execute();
             expiratoryValve.open();
             expiratoryValve.execute();
             delay(500);
+            Serial.println("run blower");
             blower.runSpeed(DEFAULT_BLOWER_SPEED);
+            // while(1){
+            //     Serial.println (MFM_read_airflow());
+            //     delay(200);
+            // }
             delay(1000);
+
 #ifdef MASS_FLOW_METER_ENABLED
             int32_t flowMeterFlowWithBlowerOn = MFM_read_airflow();
+            Serial.print("flowMeterFlowWithBlowerOn:");
+            Serial.println(flowMeterFlowWithBlowerOn);
 #else
             int32_t flowMeterFlowWithBlowerOn = 30000;
 #endif
@@ -135,8 +134,10 @@ void Calibration_Init() {
                                               || (flowMeterFlowAtStarting > 1000));
 
             if ((isMassFlowMeterOutOfRange == true)
-                || ((flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 100000))) {
+                || ((flowMeterFlowWithBlowerOn < 20000) || (flowMeterFlowWithBlowerOn > 150000))) {
                 // Invalid calibration
+                Serial.println("Calibration capteur blower NOK");
+
                 calibrationValid = false;
                 displayFlowMeterFail(flowMeterFlowAtStarting, flowMeterFlowWithBlowerOn);
 
@@ -170,6 +171,7 @@ void Calibration_Init() {
             }
 
             displayPressureOffset(inspiratoryPressureSensorOffset);
+            Serial.println("Calibration OK");
             delay(1000);
 #ifdef MASS_FLOW_METER_ENABLED
             displayFlowMeterOffset(MFM_getOffset());

@@ -112,6 +112,7 @@ void initTelemetry(void) {
 }
 
 void sendBootMessage() {
+    //Serial.println("sendBootMessage");
     uint8_t value128 = 128u;
 
     Serial6.write(header, HEADER_SIZE);
@@ -195,6 +196,7 @@ void sendStoppedMessage(uint8_t peakCommand,
                         uint8_t patientGender,
                         uint16_t peakPressureAlarmThresholdValue) {
     uint8_t currentAlarmSize = 0;
+    Serial.println("sendStoppedMessage");
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         if (currentAlarmCodes[i] != 0u) {
             currentAlarmSize++;

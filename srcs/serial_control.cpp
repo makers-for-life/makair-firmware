@@ -113,6 +113,7 @@ void serialControlLoop() {
 
                 switch (setting) {
                 case Heartbeat:
+                Serial.println("HEartbeat");
                     if (value == DISABLE_RPI_WATCHDOG) {
                         rpiWatchdog.disable();
                     } else {

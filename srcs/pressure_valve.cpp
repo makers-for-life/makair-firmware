@@ -154,7 +154,8 @@ void PressureValve::execute() {
     }
 
     if (command != position) {
-        dxl_Position(minApertureAngle + ((maxApertureAngle-minApertureAngle)*position)/4095);
+        //Serial.println((4095*(position-maxApertureAngle))/(maxApertureAngle-minApertureAngle));
+        dxl_Position((4095*(position-minApertureAngle))/(maxApertureAngle-minApertureAngle));
         position = command;
     }
 }
@@ -169,11 +170,11 @@ void PressureValve::open(uint16_t p_command) { command = p_command; }
 
 //For now it empty the buffer and print the frame;  TBD : check if no error + cut the frame correctly when 2 instructions are sent one after another
 void dxl_Read_Data(){
-  Serial6.enableHalfDuplexRx();
+  Serial7.enableHalfDuplexRx();
   int j = 0;
   delay(3);               //3ms = empirique; laisse le temps à la trame d'arriver et d'être traitée. Le servomoteur est programmé pour envoyer une trame de réponse 500µs après réception de la trame de commande (ce temps est paramétrable est peu être réduit)
-  while (Serial6.available()){
-    byte incomingByte = Serial6.read();
+  while (Serial7.available()){
+    byte incomingByte = Serial7.read();
     dxl_Frame_Received[j]=incomingByte;
     j++;
   }
@@ -194,7 +195,7 @@ void dxl_Write_Frame(){
   dxl_CRC[1] = (CRC_Calc >> 8) & 0x00FF;  //poids fort
   dxl_Frame_To_Send[dxl_Frame_size-2] = dxl_CRC[0];
   dxl_Frame_To_Send[dxl_Frame_size-1] = dxl_CRC[1];
-  Serial6.write(dxl_Frame_To_Send,dxl_Frame_size);
+  Serial7.write(dxl_Frame_To_Send,dxl_Frame_size);
   //dxl_Read_Data();                  //TBD: check CRC and No error
 }
 
@@ -204,6 +205,8 @@ void dxl_OperatingMode(char Mode[3]){
   dxl_Param[1]                              = 0x00;
   if (strcmp(Mode, "PWM") ==0){dxl_Param[2] = 0x10;}
   if (strcmp(Mode, "Pos") ==0){dxl_Param[2] = 0x03;}
+  Serial.print("Moteur mode :");
+  Serial.println(Mode);
   dxl_Length[0]                             = 0x06;
   dxl_Length[1]                             = 0x00;
   dxl_Write_Frame();

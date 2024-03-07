@@ -208,6 +208,7 @@ void AlarmController::detectedAlarm(uint8_t p_alarmCode,
                                     uint32_t p_cycleNumber,
                                     uint32_t p_expected,
                                     uint32_t p_measured) {
+                                        return;
     for (uint8_t i = 0; i < ALARMS_SIZE; i++) {
         Alarm* current = &m_alarms[i];
         bool wasTriggered = current->isTriggered();

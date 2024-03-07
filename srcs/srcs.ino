@@ -70,6 +70,7 @@ void setup(void) {
     initTelemetry();
     sendBootMessage();
 
+
     // Timer for valves
     hardwareTimer3 = new HardwareTimer(TIM3);
     hardwareTimer3->setOverflow(VALVE_PERIOD, MICROSEC_FORMAT);

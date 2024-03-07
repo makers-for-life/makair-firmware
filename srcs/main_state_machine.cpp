@@ -70,6 +70,7 @@ void millisecondTimerMSM(HardwareTimer*)  // NOLINT(readability/casting)
 void millisecondTimerMSM(void)
 #endif
 {
+    //Serial.println("millisecondTimerMSM");
     IWatchdog.reload();
     clockMsmTimer++;
     int32_t pressure = inspiratoryPressureSensor.read();
@@ -93,16 +94,16 @@ void millisecondTimerMSM(void)
 
     // Because this kind of LCD screen is not reliable, we need to reset it every 5 min or
     // so
-    if ((clockMsmTimer % 300000u) == 0u) {
-        DBG_DO(Serial.println("resetting LCD screen");)
-        resetScreen();
-        clearAlarmDisplayCache();
-    }
+    // if ((clockMsmTimer % 300000u) == 0u) {
+    //     DBG_DO(Serial.println("resetting LCD screen");)
+    //     resetScreen();
+    //     clearAlarmDisplayCache();
+    // }
 
     // Refresh screen every 300 ms, no more
-    if ((clockMsmTimer % 300u) == 0u) {
-        mainStateMachine.ScreenUpdate();
-    }
+    // if ((clockMsmTimer % 300u) == 0u) {
+    //     mainStateMachine.ScreenUpdate();
+    // }
 
     // Check that the UI software on the Raspberry PI has sent a heartbeat in the last 60s
     // Otherwise restart the power
@@ -113,13 +114,13 @@ void millisecondTimerMSM(void)
     if (msmstep == SETUP) {
         mainController.setup();
         mainStateMachine.ScreenUpdate();
-        displayMachineStopped();
+        //displayMachineStopped();
         msmstep = STOPPED;
     } else if (msmstep == STOPPED) {
         // Executed just after booting, until the first start
         if ((clockMsmTimer % 100u) == 0u) {
             mainController.stop(millis());
-            displayMachineStopped();
+            //displayMachineStopped();
         }
 
         if ((clockMsmTimer % 10u) == 0u) {
@@ -199,9 +200,9 @@ void millisecondTimerMSM(void)
         }
     } else if (msmstep == END_CYCLE) {
         mainController.endRespiratoryCycle(millis());
-        displayCurrentInformation(mainController.peakPressureMeasure(),
-                                  mainController.plateauPressureMeasure(),
-                                  mainController.peepMeasure());
+        // displayCurrentInformation(mainController.peakPressureMeasure(),
+        //                           mainController.plateauPressureMeasure(),
+        //                           mainController.peepMeasure());
         if (activationController.isRunning()) {
             msmstep = INIT_CYCLE;
         } else {
