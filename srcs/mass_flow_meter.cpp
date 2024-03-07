@@ -44,6 +44,8 @@ volatile uint16_t MFM_force_release_I2C = MFM_FORCE_RELEASE_I2C_FALSE;
 uint32_t mfmHoneywellHafSerialNumber = 0;
 
 uint32_t mfmSfm3300SerialNumberExpi = 0;
+uint32_t mfmSfm3300SerialNumberInspi = 0;
+
 uint32_t mfmSfm3019SerialNumber = 0;
 HardwareTimer* massFlowTimer = NULL;
 
@@ -223,6 +225,41 @@ void MFM_Timer_Callback(void)
             }
 
 #endif
+#if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
+            // begin() and end() everytime you read... the lib never free buffers if you don't do
+            // this.
+            Wire.begin();
+            // do not request crc, only two bytes
+            uint8_t readCountInspi = Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 2);
+            mfmLastData.c[1] = Wire.read();
+            mfmLastData.c[0] = Wire.read();
+            Wire.end();
+
+            // conversion in milliter per minute flow: ((int32_t)(mfmLastData.i) - 32768) * 1000 /
+            // 120 but 1000/120 = 8.333. So  *8 and *1/3
+            mfmInspiratoryLastValueFixedFloat =
+                (((int32_t)(mfmLastData.i) - 32768) * 8) + (((int32_t)(mfmLastData.i) - 32768) / 3);
+
+            if (readCountInspi != 2u) {
+                mfmExpiSFM3300FailCounter++;
+                // sfm 3300d needs 100ms after start of measurement before sending data.
+                // in case of bus failure, mfmFaultCondition is already true at this point
+                if ((mfmExpiSFM3300FailCounter > 12u) || mfmFaultCondition) {
+                    mfmFaultCondition = true;
+                    mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+                    mfmInspiratoryAirVolumeSumMilliliters = 1000000000;  // 1e9
+                }
+            } else {
+                // valid data
+                mfmInspiratoryInstantAirFlow = mfmInspiratoryLastValueFixedFloat;
+                if ((mfmInspiratoryLastValueFixedFloat > 500)
+                    || (mfmInspiratoryLastValueFixedFloat < -500)) {  // less than 0.5 SPLM is noise
+                    mfmInspiratoryAirVolumeSumMilliliters +=
+                        (mfmInspiratoryLastValueFixedFloat - mfmInspiratoryCalibrationOffset);
+                }
+            }
+
+#endif
         } else {
             if (mfmResetStateMachine == MFM_WAIT_RESET_PERIODS) {
                 // Reset attempt
@@ -297,6 +334,15 @@ void MFM_Timer_Callback(void)
 #endif
 
 #if MASS_FLOW_METER_SENSOR_EXPI == MFM_SFM_3300D
+                Wire.begin();
+                Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+                Wire.write(0x10);
+                Wire.write(0x00);
+                mfmFaultCondition = (0 != Wire.endTransmission()) || mfmFaultCondition;
+                mfmExpiSFM3300FailCounter = 0;
+                Wire.end();
+#endif
+#if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
                 Wire.begin();
                 Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
                 Wire.write(0x10);
@@ -500,6 +546,49 @@ bool MFM_init(void) {
     }
 #endif
 
+#if MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
+    Wire.begin();  // Join I2C bus (address is optional for master)
+    Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+    Wire.write(0x20);  // 0x2000 soft reset
+    Wire.write(0x00);
+    errorCount = Wire.endTransmission();
+    delay(5);  // end of reset
+
+    Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+    Wire.write(0x31);  // 0x31AE read serial
+    Wire.write(0xAE);
+    errorCount += Wire.endTransmission();
+
+    errorCount += ((6u == Wire.requestFrom(MFM_SFM_3300D_I2C_ADDRESS, 6)) ? 0u : 1u);
+    if (errorCount == 0u) {
+        u_int32_t sn_expi = 0;
+        sn_expi = Wire.read();
+        sn_expi <<= 8;
+        sn_expi |= Wire.read();
+        sn_expi <<= 8;
+        Wire.read();  // ignore inlined crc
+        sn_expi |= Wire.read();
+        sn_expi <<= 8;
+        sn_expi |= Wire.read();
+        Wire.read();  // ignore inlined crc
+        mfmSfm3300SerialNumberInspi = sn_expi;
+        Serial.print("mfmSfm3300SerialNumberInspi:");
+        Serial.println(mfmSfm3300SerialNumberInspi);
+    }
+    delay(10);
+    Wire.beginTransmission(MFM_SFM_3300D_I2C_ADDRESS);
+    Wire.write(0x10);  // 0x1000 start measurement
+    Wire.write(0x00);
+    errorCount += Wire.endTransmission();
+    Wire.end();
+    delay(100);  // wait 100ms before having available data.
+
+    if (errorCount != 0u) {
+        mfmFaultCondition = true;
+        mfmResetStateMachine = MFM_WAIT_RESET_PERIODS;
+    }
+#endif
+
 #if MASS_FLOW_METER_SENSOR == MFM_HONEYWELL_HAF
 
     /*
@@ -583,6 +672,8 @@ uint32_t MFM_read_serial_number(void) {
     return mfmHoneywellHafSerialNumber;
 #elif MASS_FLOW_METER_SENSOR == MFM_SFM3019
     return mfmSfm3019SerialNumber;
+#elif MASS_FLOW_METER_SENSOR == MFM_SFM_3300D
+    return mfmSfm3300SerialNumberInspi;
 #endif
     return 0;
 }

@@ -77,7 +77,7 @@ void millisecondTimerMSM(void)
 
     if ((clockMsmTimer % 10u) == 0u) {
         // Check if some buttons have been pushed
-        keyboardLoop();
+        //keyboardLoop();
         // Check if battery state has changed
         batteryLoop(mainController.cycleNumber());
         // Check serial input

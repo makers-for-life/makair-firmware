@@ -22,6 +22,14 @@
  * @return Value in microsends for the valve controller
  */
 uint16_t valveAngle2MicroSeconds(uint16_t value);
+unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size);
+void dxl_EnableTorque(bool Enable);
+void dxl_LED(bool Power);
+void dxl_PWM(int16_t PWM);
+void dxl_Position(uint32_t Pos_Pulse);
+void dxl_OperatingMode(char Mode[3]);
+void dxl_Write_Frame();
+void dxl_Read_Data();
 
 // CLASS =================================================================
 
@@ -68,16 +76,6 @@ class PressureValve {
      * @param p_command The angle in degree
      * @return The linearized angle calculated by this function
      */
-    uint16_t openLinear(uint16_t p_command);
-
-    int32_t getSectionBigHoseX100();
-
-    /**
-     * Request opening of the Pressure Valve with a given section (in mm^2)
-     *
-     * @param p_sectionMultiplyBy100 The section to open tha valve (in mm^2 multiplied by 100)
-     */
-    void openSection(int32_t p_sectionMultiplyBy100);
 
     /// Request closing of the Pressure Valve
     void close();
@@ -87,21 +85,9 @@ class PressureValve {
      *
      * @note Nothing will happen if this function is not called after requesting a new aperture
      */
-    inline void execute() {
-        // On évite d'aller plus loin que les limites de la valve
-        if (command < minApertureAngle) {
-            command = minApertureAngle;
-        } else if (command > maxApertureAngle) {
-            command = maxApertureAngle;
-        } else {
-        }
-
-        if (command != position) {
-            actuator->setCaptureCompare(timerChannel, valveAngle2MicroSeconds(command),
-                                        MICROSEC_COMPARE_FORMAT);
-            position = command;
-        }
-    }
+    void execute();
+    void openSection(int32_t p_sectionMultiplyBy100);
+    uint16_t openLinear(uint16_t p_command);
 
     /// Minimum valve aperture angle in degrees
     inline uint16_t minAperture() const { return minApertureAngle; }

@@ -183,15 +183,21 @@ void Buzzer_Resume() {
     BuzzerTim->resume();
 }
 
-void Buzzer_High_Prio_Start(void) { Buzzer_Start(Buzzer_High_Prio, BUZZER_HIGH_PRIO_SIZE, true); }
+void Buzzer_High_Prio_Start(void) {
+     //Buzzer_Start(Buzzer_High_Prio, BUZZER_HIGH_PRIO_SIZE, true);
+      }
 
 void Buzzer_Medium_Prio_Start(void) {
-    Buzzer_Start(Buzzer_Medium_Prio, BUZZER_MEDIUM_PRIO_SIZE, true);
+    //Buzzer_Start(Buzzer_Medium_Prio, BUZZER_MEDIUM_PRIO_SIZE, true);
 }
 
-void Buzzer_Low_Prio_Start(void) { Buzzer_Start(Buzzer_Low_Prio, BUZZER_LOW_PRIO_SIZE, false); }
+void Buzzer_Low_Prio_Start(void) {
+    // Buzzer_Start(Buzzer_Low_Prio, BUZZER_LOW_PRIO_SIZE, false);
+     }
 
-void Buzzer_Boot_Start(void) { Buzzer_Start(Buzzer_Boot, BUZZER_BOOT_SIZE, false); }
+void Buzzer_Boot_Start(void) {
+    //Buzzer_Start(Buzzer_Boot, BUZZER_BOOT_SIZE, false);
+    }
 
 void Buzzer_Stop(void) {
     Active_Buzzer_Repeat = false;

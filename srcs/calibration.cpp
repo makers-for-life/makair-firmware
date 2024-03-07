@@ -67,6 +67,8 @@ void Calibration_Init() {
         } else {
             inspiratoryPressureSensorOffset = 0;
         }
+        Serial.print("Pressure offset");
+        Serial.println(inspiratoryPressureSensorOffset);
 
         // Happens when patient is plugged at startup
         if (((maxOffsetValue - minOffsetValue) >= 10)
@@ -97,10 +99,22 @@ void Calibration_Init() {
         if (calibrationValid) {
 #ifdef MASS_FLOW_METER_ENABLED
             int32_t flowMeterFlowAtStarting = MFM_read_airflow();
+            Serial.print("flowMeterFlowAtStarting:");
+            Serial.println(flowMeterFlowAtStarting);
             (void)MFM_calibrateZero();
 #else
             int32_t flowMeterFlowAtStarting = 0;
 #endif
+            while(1){
+                Serial.println("open");
+                inspiratoryValve.open();
+                inspiratoryValve.execute();
+                delay(1000);
+                Serial.println("close");
+                inspiratoryValve.close();
+                inspiratoryValve.execute();
+                delay(1000);
+            }
             inspiratoryValve.open();
             inspiratoryValve.execute();
             expiratoryValve.open();

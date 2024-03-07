@@ -449,7 +449,7 @@ void MainController::updateExpiratoryFlow(int32_t p_currentExpiratoryFlow) {
 // cppcheck-suppress unusedFunction
 void MainController::updateFakeExpiratoryFlow() {
     // get section in mm2 x 100
-    int32_t A2MultiplyBy100 = expiratoryValve.getSectionBigHoseX100();
+    int32_t A2MultiplyBy100 = 0;//expiratoryValve.getSectionBigHoseX100();
     int32_t A1MultiplyBy100 = 7853;
     int32_t rhoMultiplyBy10 = 12;
     int32_t pressure = max(int32_t(0), m_pressure - int32_t(50));

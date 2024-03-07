@@ -23,7 +23,7 @@
  * When DEBUG = 1, additional code is added to send debug traces using serial
  * When DEBUG = 2, information are sent in serial for PID debug
  */
-#define DEBUG 0
+#define DEBUG 1
 
 /// Defines if the device has a Mass Flow Meter or not
 // Comment out when no sensor
@@ -41,8 +41,8 @@
 ///@}
 
 /// Defines the type of each Mass Flow Meter
-#define MASS_FLOW_METER_SENSOR MFM_HONEYWELL_HAF
-#define MASS_FLOW_METER_SENSOR_EXPI MFM_SFM_3300D
+#define MASS_FLOW_METER_SENSOR MFM_SFM_3300D
+//#define MASS_FLOW_METER_SENSOR_EXPI MFM_SFM_3300D
 
 /// Defines the range of the Mass Flow Meter in SLM (standard liter per minute)
 #define MFM_RANGE 200
@@ -52,7 +52,7 @@
  */
 /// Disable hardware buttons, used when integrating a motherboard in a touch- \
 ///   only device.
-// #define DISABLE_BUTTONS
+#define DISABLE_BUTTONS
 
 // Uncomment when compiling for the simulator
 // #define SIMULATOR
