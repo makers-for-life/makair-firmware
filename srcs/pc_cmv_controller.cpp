@@ -97,7 +97,7 @@ void PC_CMV_Controller::inhale() {
                                                    mainController.pressure(), mainController.dt());
 
     inspiratoryValve.open(inspiratoryPidValue);
-    expiratoryValve.close();
+    //expiratoryValve.close();
 
     // m_plateauStartTime is used for blower regulations, -5 is added to help blower convergence
     if ((mainController.pressure() > (mainController.plateauPressureCommand() - 5))
@@ -109,11 +109,12 @@ void PC_CMV_Controller::inhale() {
 
 void PC_CMV_Controller::exhale() {
     // Close the inspiratory valve
-    inspiratoryValve.close();
+    inspiratoryValve.open(VALVE_CLOSED_STATE-PCexpiratoryPID(mainController.pressureCommand(),
+                                         mainController.pressure(), mainController.dt()));
 
     // Open the expiratos valve so the patient can exhale outside
-    expiratoryValve.open(PCexpiratoryPID(mainController.pressureCommand(),
-                                         mainController.pressure(), mainController.dt()));
+    // expiratoryValve.open(PCexpiratoryPID(mainController.pressureCommand(),
+    //                                      mainController.pressure(), mainController.dt()));
 }
 
 void PC_CMV_Controller::endCycle() { calculateBlowerIncrement(); }
