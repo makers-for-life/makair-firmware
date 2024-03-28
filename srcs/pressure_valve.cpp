@@ -43,8 +43,8 @@ PressureValve::PressureValve() {}
 PressureValve::PressureValve(HardwareTimer* p_hardwareTimer,
                              uint16_t p_timerChannel,
                              uint16_t p_valvePin,
-                             uint16_t p_openApertureAngle,
-                             uint16_t p_closeApertureAngle) {
+                             int16_t p_openApertureAngle,
+                             int16_t p_closeApertureAngle) {
     actuator = p_hardwareTimer;
     timerChannel = p_timerChannel;
     valvePin = p_valvePin;
@@ -65,10 +65,10 @@ void PressureValve::setup() {
 
 
 // Linearization has been made experimentaly
-uint16_t PressureValve::openLinear(uint16_t p_command) {
-    uint16_t cappedCommand =
+int16_t PressureValve::openLinear(int16_t p_command) {
+    int16_t cappedCommand =
         // cppcheck-suppress misra-c2012-12.3 ; cppcheck error
-        min(max(uint16_t(minApertureAngle), p_command), uint16_t(maxApertureAngle));
+        min(max(int16_t(minApertureAngle), p_command), int16_t(maxApertureAngle));
 
     positionLinear = cappedCommand;
     // The cappedCommand is in [ 0 ; 125 ], but the valve is only effective in [30; 100]
@@ -108,7 +108,7 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
     Then when made an order 3 regression between correctedOpenningValue and openningValue. This
     is the relation below:
     */
-    command = (uint16_t)(
+    command = (int16_t)(
         (((76u * intermediateValue) / 10u)
          - (((985u * intermediateValue) * intermediateValue) / 100000u)
          + (((((44u * intermediateValue) * intermediateValue) / 1000u) * intermediateValue)
@@ -117,7 +117,7 @@ uint16_t PressureValve::openLinear(uint16_t p_command) {
         / 10u);
 
     // cppcheck-suppress misra-c2012-12.3 ; cppcheck error
-    command = min(max(uint16_t(minApertureAngle), command), uint16_t(maxApertureAngle));
+    command = min(max(int16_t(minApertureAngle), command), int16_t(maxApertureAngle));
 
     return command;
 }
@@ -145,10 +145,10 @@ void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
 }
 
 void PressureValve::execute() {
-    
+
     // Position milieu - les deux vannes sont ouvertes
     int Pos_dxl_valve_open = 2048 ;
-    // Position vanne expiratoire fermée 
+    // Position vanne expiratoire fermée
     int Pos_dxl_exp_valve_closed = 2300;
     // Position vanne insipratoire fermée
     int Pos_dxl_insp_valve_closed = 1800;
@@ -173,7 +173,7 @@ void PressureValve::open() { command = openApertureAngle; }
 
 void PressureValve::close() { command = closeApertureAngle; }
 
-void PressureValve::open(uint16_t p_command) { command = p_command; }
+void PressureValve::open(int16_t p_command) { command = p_command; }
 
 
 

@@ -51,8 +51,8 @@ class PressureValve {
     PressureValve(HardwareTimer* p_hardwareTimer,
                   uint16_t p_timerChannel,
                   uint16_t p_valvePin,
-                  uint16_t p_openApertureAngle,
-                  uint16_t p_closeApertureAngle);
+                  int16_t p_openApertureAngle,
+                  int16_t p_closeApertureAngle);
     /**
      * Initialize this valve
      *
@@ -68,7 +68,7 @@ class PressureValve {
      *
      * @param p_command The angle in degree
      */
-    void open(uint16_t p_command);
+    void open(int16_t p_command);
 
     /**
      * Request opening of the Pressure Valve with a given angle with linearization
@@ -87,35 +87,35 @@ class PressureValve {
      */
     void execute();
     void openSection(int32_t p_sectionMultiplyBy100);
-    uint16_t openLinear(uint16_t p_command);
+    int16_t openLinear(int16_t p_command);
 
     /// Minimum valve aperture angle in degrees
-    inline uint16_t minAperture() const { return minApertureAngle; }
+    inline int16_t minAperture() const { return minApertureAngle; }
 
     /// Maximum valve aperture angle in degrees
-    inline uint16_t maxAperture() const { return maxApertureAngle; }
+    inline int16_t maxAperture() const { return maxApertureAngle; }
 
     /// Value of the requested aperture
-    uint16_t command;
+    int16_t command;
 
     /// Current aperture
-    uint16_t position;
+    int16_t position;
 
     /// Current aperture linear
-    uint16_t positionLinear;
+    int16_t positionLinear;
 
  private:
     /// Minimum valve aperture angle in degrees
-    uint16_t minApertureAngle;
+    int16_t minApertureAngle;
 
     /// Maximum valve aperture angle in degrees
-    uint16_t maxApertureAngle;
+    int16_t maxApertureAngle;
 
     /// Open aperture angle in degrees
-    uint16_t openApertureAngle;
+    int16_t openApertureAngle;
 
     /// Close aperture angle in degrees
-    uint16_t closeApertureAngle;
+    int16_t closeApertureAngle;
 
     /// Hardware time for this valve
     HardwareTimer* actuator;
