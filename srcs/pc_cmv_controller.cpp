@@ -109,14 +109,13 @@ void PC_CMV_Controller::inhale() {
 
 void PC_CMV_Controller::exhale() {
     // Close the inspiratory valve
-    inspiratoryValve.open(VALVE_CLOSED_STATE-PCexpiratoryPID(mainController.pressureCommand(),
+    inspiratoryValve.open(-PCexpiratoryPID(mainController.pressureCommand(),
                                          mainController.pressure(), mainController.dt()));
 
     // Open the expiratos valve so the patient can exhale outside
     // expiratoryValve.open(PCexpiratoryPID(mainController.pressureCommand(),
     //                                      mainController.pressure(), mainController.dt()));
 }
-
 void PC_CMV_Controller::endCycle() { calculateBlowerIncrement(); }
 
 void PC_CMV_Controller::calculateBlowerIncrement() {

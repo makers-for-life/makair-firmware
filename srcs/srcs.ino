@@ -44,7 +44,7 @@
 HardwareTimer* hardwareTimer1;  // ESC command
 HardwareTimer* hardwareTimer3;  // valves command
 
-HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX);
+HardwareSerial Serial6(PIN_TELEMETRY_SERIAL_RX, PIN_TELEMETRY_SERIAL_TX); 
 HardwareSerial Serial7(PC6);
 
 void setup(void) {

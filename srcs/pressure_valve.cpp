@@ -17,9 +17,9 @@
 
 // Internal libraries
 #include "../includes/parameters.h"
+#include "Arduino.h"
 
 // INITIALISATION =============================================================
-
 PressureValve expiratoryValve;
 PressureValve inspiratoryValve;
 
@@ -145,20 +145,29 @@ void PressureValve::openSection(int32_t p_sectionMultiplyBy100) {
 }
 
 void PressureValve::execute() {
+    
+    // Position milieu - les deux vannes sont ouvertes
+    int Pos_dxl_valve_open = 2048 ;
+    // Position vanne expiratoire fermée 
+    int Pos_dxl_exp_valve_closed = 2300;
+    // Position vanne insipratoire fermée
+    int Pos_dxl_insp_valve_closed = 1800;
+
     // On évite d'aller plus loin que les limites de la valve
-    if (command < minApertureAngle) {
-        command = minApertureAngle;
-    } else if (command > maxApertureAngle) {
+    if (command > maxApertureAngle) {
         command = maxApertureAngle;
-    } else {
+    }
+    else {
     }
 
     if (command != position) {
         //Serial.println((4095*(position-maxApertureAngle))/(maxApertureAngle-minApertureAngle));
-        dxl_Position((4095*(position-minApertureAngle))/(maxApertureAngle-minApertureAngle));
+        dxl_Position(Pos_dxl_valve_open+((Pos_dxl_exp_valve_closed-Pos_dxl_valve_open)*position/maxApertureAngle));
         position = command;
     }
 }
+
+
 
 void PressureValve::open() { command = openApertureAngle; }
 
